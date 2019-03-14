@@ -88,8 +88,8 @@ parameters:
     saveInXlVals: true
     description: "Choose version of Xebialabs DevOps Platform:"
     options:
-      - 8.5.2
-    value: 8.5.2
+      - 8.5.3
+    value: 8.5.3
   - name: xldAdminPass
     type: Input
     secret: true
