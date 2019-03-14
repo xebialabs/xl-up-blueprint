@@ -1,0 +1,51 @@
+{{if eq .K8sSetup "AWS EKS"}}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XL-PLATFORM
+    children:
+      - name: EKS-MASTER
+        type: k8s.Master
+        apiServerURL: !value apiServerURL
+        skipTLS: true
+        isEKS: true
+        clusterName: !value eksClusterName
+        accessKey: !value AWSAccessKey
+        accessSecret: !value AWSAccessSecret
+{{end}}
+{{if eq .K8sSetup "Local K8s from Docker for Mac/Windows"}}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XL-PLATFORM
+    children:
+      - name: K8s-MASTER-LOCAL
+        type: k8s.Master
+        apiServerURL: !value localApiServerURL
+        skipTLS: true
+        {{if .useKubeconfig }}
+        tlsCert: !value K8sClientCert
+        tlsPrivateKey: !value K8sClientCertKey
+        {{else}}
+        tlsCert: !value K8sClientCertFile
+        tlsPrivateKey: !value K8sClientCertKeyFile
+        {{end}}
+{{end}}
+{{if eq .K8sSetup "Plain multinode K8s cluster"}}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XL-PLATFORM
+    children:
+      - name: K8s-MASTER
+        type: k8s.Master
+        apiServerURL: !value apiServerURL
+        skipTLS: true
+        {{if .useKubeconfig }}
+        tlsCert: !value K8sClientCert
+        tlsPrivateKey: !value K8sClientCertKey
+        {{else}}
+        tlsCert: !value K8sClientCertFile
+        tlsPrivateKey: !value K8sClientCertKeyFile
+        {{end}}
+{{end}}

@@ -1,0 +1,36 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner
+  namespace: xebialabs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: {{ NFS_PROVISIONER_NAME }}
+            - name: NFS_SERVER
+              value: {{ NFS_SERVER }}
+            - name: NFS_PATH
+              value: {{ NFS_PATH }}
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: {{ NFS_SERVER }}
+            path: {{ NFS_PATH }}

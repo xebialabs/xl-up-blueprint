@@ -1,0 +1,342 @@
+{{if  eq .K8sSetup "AWS EKS" }}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XEBIALABS
+    children:
+      - name: EKS-MASTER
+        type: k8s.Master
+        apiServerURL: !value apiServerURL
+        skipTLS: true
+        isEKS: true
+        clusterName: !value eksClusterName
+        accessKey: !value AWSAccessKey
+        accessSecret: !value AWSAccessSecret
+{{end}}
+{{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XEBIALABS
+    children:
+      - name: K8s-MASTER-LOCAL
+        type: k8s.Master
+        apiServerURL: !value localApiServerURL
+        skipTLS: true
+        {{if .useKubeconfig }}
+        tlsCert: !value K8sClientCert
+        tlsPrivateKey: !value K8sClientCertKey
+        {{else}}
+        tlsCert: !value K8sClientCertFile
+        tlsPrivateKey: !value K8sClientCertKeyFile
+        {{end}}
+{{end}}
+{{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XEBIALABS
+    children:
+      - name: K8s-MASTER
+        type: k8s.Master
+        apiServerURL: !value apiServerURL
+        skipTLS: true
+        {{if .useKubeconfig }}
+        tlsCert: !value K8sClientCert
+        tlsPrivateKey: !value K8sClientCertKey
+        {{else}}
+        tlsCert: !value K8sClientCertFile
+        tlsPrivateKey: !value K8sClientCertKeyFile
+        {{end}}
+{{end}}
+---
+apiVersion: xl-deploy/v1
+kind: Environments
+spec:
+  - directory: Environments/XEBIALABS
+    children:
+      - name: DICTIONARY
+        type: udm.Dictionary
+        entries:
+          XL_VERSION: !value xlVersion
+        {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+          POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
+        {{end}}
+        {{if  .InstallXLR }}
+          XLR_REPORT_DB_NAME: !value xlrReportDbName
+          XLR_DB_NAME: !value xlrDbName
+          XLR_REPORT_DB_USER: !value xlrReportDbUser
+          XLR_DB_USER: !value xlrDbUser
+        {{end}}
+        {{if  .InstallXLD }}
+          {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+          XLD_WORK_HOSTPATH: !value xldWorkHostpath
+          {{end}}
+          XLD_DB_NAME: !value xldDbName
+          XLD_DB_USER: !value xldDbUser
+          {{if  eq .K8sSetup "AWS EKS" }}
+          EFS_ID: !value efsId
+          EFS_REGION: !value efsRegion
+          {{end}}
+        {{end}}
+        {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+          NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
+          NFS_SERVER: !value nsfServerHost
+          NFS_PATH: !value nsfSharePath
+        {{end}}
+          POSTGRES_MAX_CONN: !value postgresMaxConn
+          POSTGRES_SHARED_BUFF: !value postgresSharedBuff
+          POSTGRES_SYNC_COMMIT: !value postgresSyncCommit
+          POSTGRES_EFFECT_CACHE_SIZE: !value postgresEffectCacheSize
+          POSTGRES_MAX_WALL_SIZE: !value postgresMaxWallSize
+        encryptedEntries:
+        {{if  .InstallXLR }}
+          XLR_KEYSTORE_PASS: !value xlKeyStorePass
+          XLR_KEYSTORE: {{ .xlKeyStore | b64enc }}
+          XLR_LIC: {{ .xlrLic | b64enc }}
+          XLR_REPORT_DB_PASS: !value xlrReportDbPass
+          XLR_DB_PASS: !value xlrDbPass
+          XLR_ADMIN_PASS: !value xlrAdminPass
+        {{end}}
+        {{if  .InstallXLD }}
+          XLD_KEYSTORE: {{ .xlKeyStore | b64enc }}
+          XLD_KEYSTORE_PASS: !value xlKeyStorePass
+          XLD_LIC: {{ .xldLic | b64enc }}
+          XLD_DB_PASS: !value xldDbPass
+          XLD_ADMIN_PASS: !value xldAdminPass
+        {{end}}
+      - name: K8S
+        type: udm.Environment
+        members:
+          {{if  eq .K8sSetup "AWS EKS" }}
+          - Infrastructure/XEBIALABS/EKS-MASTER
+          {{end}}
+          {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+          - Infrastructure/XEBIALABS/K8s-MASTER
+          {{end}}
+          {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+          - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL
+          {{end}}
+        dictionaries:
+          - Environments/XEBIALABS/DICTIONARY
+---
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+  - directory: Applications/XEBIALABS
+    children:
+      - directory: XL-K8S-FOUNDATION
+        children:
+          - name: K8s-NameSpace
+            type: udm.Application
+            lastVersion: 1.0.0
+            children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: xebialabs
+                    type: k8s.NamespaceSpec
+                    namespaceName: xebialabs
+          - name: K8s-Ingress-Controller
+            type: udm.Application
+            lastVersion: 1.0.0
+            children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: haproxy-ingress-controller
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+                  {{if  eq .K8sSetup "AWS EKS" }}
+                  - name: service-l7
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+                  {{end}}
+                  - name: default-backend
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+                  - name: xebialabs-service-internal
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+                applicationDependencies:
+                  {{if not ( eq .K8sSetup "Local K8s from Docker for Mac/Windows" )}}
+                  PostgreSQL: "1.0.0"
+                  {{end}}
+                undeployDependencies: "true"
+          {{if  eq .K8sSetup "AWS EKS" }}
+          - name: K8s-StorageClass
+            type: udm.Application
+            lastVersion: 1.0.0
+            children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: gp2
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+          {{end}}
+
+          - name: PostgreSQL
+            type: udm.Application
+            lastVersion: 1.0.0
+            children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: xl-PostgreSQL
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+                applicationDependencies:
+                  {{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+                    {{if  eq .K8sSetup "AWS EKS" }}
+                  K8s-StorageClass: "1.0.0"
+                    {{else}}
+                  K8s-NFS-Client-Provisioner: "1.0.0"
+                    {{end}}
+                  {{end}}
+                undeployDependencies: "true"
+
+          {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+          - name: K8s-NFS-Client-Provisioner
+            type: udm.Application
+            lastVersion: 1.0.0
+            children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: rbac
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+                  - name: deployment
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+                  - name: storageclass
+                    type: k8s.ResourcesFile
+                    file: !file ../kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+          {{end}}
+          {{if  .InstallMonitoring }}
+          - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
+            children:
+            - name: Elasticsearch-Logging
+              type: udm.Application
+              lastVersion: 1.0.0
+              children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                 - name: Elasticsearch-Logging
+                   type: k8s.ResourcesFile
+                   file: !file "../kubernetes/efk-stack/elasticsearch-logging.yaml"
+                applicationDependencies:
+                  K8s-Ingress-Controller: "1.0.0"
+                undeployDependencies: "true"
+            - name: Fluentd
+              type: udm.Application
+              lastVersion: 1.0.0
+              children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                - name: Fluentd-esconfig
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/efk-stack/fluentd-esconfig.yaml"
+                - name: Fluentd-config
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/efk-stack/fluentd-config.yaml"
+                applicationDependencies:
+                  Elasticsearch-Logging: "1.0.0"
+                undeployDependencies: "true"
+            - name: Kibana
+              type: udm.Application
+              lastVersion: 1.0.0
+              children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                - name: Kibana
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/efk-stack/kibana.yaml"
+                applicationDependencies:
+                  Fluentd: "1.0.0"
+                undeployDependencies: "true"
+            - name: Kube-State-Metrics
+              type: udm.Application
+              children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                - name: kube-state-metrics-serviceaccount
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml"
+                - name: kube-state-metrics-clusterrolebinding
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml"
+                - name: kube-state-metrics-service
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml"
+                - name: kube-state-metrics-role
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml"
+                - name: kube-state-metrics-rolebinding
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml"
+                - name: kube-state-metrics-clusterrole
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml"
+                - name: kube-state-metrics-deployment
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml"
+                applicationDependencies:
+                  K8s-Ingress-Controller: "1.0.0"
+                undeployDependencies: "true"
+            - name: Prometheus
+              type: udm.Application
+              children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                - name: prometheus-deployment
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/prometheus.yaml"
+                applicationDependencies:
+                  Kube-State-Metrics: "1.0.0"
+                undeployDependencies: "true"
+            - name: Grafana-Dashboard
+              type: udm.Application
+              children:
+              - name: 1.0.0
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                - name: grafana-deployment
+                  type: k8s.ResourcesFile
+                  file: !file "../kubernetes/pg-stack/grafana.yaml"
+                - name: grafana-configmap
+                  type: k8s.ResourcesFile
+                  delimiters: '## ##'
+                  file: !file "../kubernetes/pg-stack/grafana-configmap.yaml"
+                applicationDependencies:
+                  Prometheus: "1.0.0"
+                undeployDependencies: "true"
+          {{end}}

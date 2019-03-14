@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: haproxy-ingress-serviceaccount
+  namespace: xebialabs
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ingress-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - nodes
+      - pods
+      - secrets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ingress-controller
+  namespace: xebialabs
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - pods
+      - secrets
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+    verbs:
+      - get
+      - create
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: haproxy-ingress-serviceaccount
+    namespace: xebialabs
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: haproxy-ingress-serviceaccount
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ingress-controller
+  namespace: xebialabs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: haproxy-ingress-serviceaccount
+    namespace: xebialabs
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: haproxy-ingress-serviceaccount
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-ingress
+  namespace: xebialabs
+data:
+  dynamic-scaling: "true"
+  backend-server-slots-increment: "4"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: haproxy-ingress
+    app.kubernetes.io/part-of: haproxy-ingress
+  name: haproxy-ingress
+  namespace: xebialabs
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: haproxy-ingress
+      app.kubernetes.io/part-of: haproxy-ingress
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: haproxy-ingress
+        app.kubernetes.io/part-of: haproxy-ingress
+        app: haproxy-ingress
+    spec:
+      serviceAccountName: haproxy-ingress-serviceaccount
+      containers:
+        - name: haproxy-ingress
+          image: quay.io/jcmoraisjr/haproxy-ingress:v0.6
+          args:
+            - --default-backend-service=$(POD_NAMESPACE)/ingress-default-backend
+            - --default-ssl-certificate=$(POD_NAMESPACE)/tls-secret
+            - --configmap=$(POD_NAMESPACE)/haproxy-ingress
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+            - name: stat
+              containerPort: 1936
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace

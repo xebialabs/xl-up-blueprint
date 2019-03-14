@@ -1,0 +1,12 @@
+apiVersion: xl/v1
+kind: Import
+metadata:
+  imports:
+    - xebialabs/xl-k8s-foundation.yaml
+    {{if .InstallXLD}}
+    - xebialabs/xl-deploy.yaml
+    {{end}}
+    {{if .InstallXLR}}
+    - xebialabs/xl-release.yaml
+    {{end}}
+    - xebialabs/deployments.yaml

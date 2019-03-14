@@ -1,0 +1,174 @@
+{{$XLD_ADMIN_PASS := "{{XLD_ADMIN_PASS}}"}}
+{{$XLD_DB_NAME := "{{XLD_DB_NAME}}"}}
+{{$XLD_DB_USER := "{{XLD_DB_USER}}"}}
+{{$XLD_DB_PASS := "{{XLD_DB_PASS}}"}}
+{{$XLD_LIC := "{{XLD_LIC}}"}}
+{{$XLD_KEYSTORE_PASS := "{{XLD_KEYSTORE_PASS}}"}}
+{{$XLD_KEYSTORE := "{{XLD_KEYSTORE}}"}}
+{{$XLD_WORK_HOSTPATH := "{{XLD_WORK_HOSTPATH}}"}}
+{{$XL_VERSION := "{{XL_VERSION}}"}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: xl-deploy-local-db
+  namespace: xebialabs
+  labels:
+    app: xl-deploy
+spec:
+  selector:
+    app: xl-deploy
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 4516
+      targetPort: 4516
+      protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: xl-deploy-local-db
+  namespace: xebialabs
+  labels:
+    app: xl-deploy
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /xl-deploy/
+            backend:
+              serviceName: xl-deploy-local-db
+              servicePort: 4516
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: xl-deploy
+  namespace: xebialabs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xl-deploy
+  serviceName: xl-deploy
+  template:
+    metadata:
+      labels:
+        app: xl-deploy
+    spec:
+      initContainers:
+        - name: fix-the-volume-permission
+          image: busybox
+          command:
+            - sh
+            - -c
+            - chown -R 10001 /opt/xebialabs/xl-deploy-server/work
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: work
+              mountPath: /opt/xebialabs/xl-deploy-server/work
+        - name: wait-for-postgresql
+          image: alpine:3.6
+          command:
+            - sh
+            - -c
+            - >
+              until nc -z -w 2 $POSTGRES_SVC $POSTGRES_PORT && echo database ok; do
+              sleep 2;
+              done;
+          env:
+            - name: POSTGRES_SVC
+              value: postgresql
+            - name: POSTGRES_PORT
+              value: "5432"
+      containers:
+        - name: xl-deploy
+          image: xebialabs/xl-deploy:{{$XL_VERSION}}
+          imagePullPolicy: Always
+          env:
+            - name: ADMIN_PASSWORD
+              value: {{$XLD_ADMIN_PASS}}
+            - name: XL_CLUSTER_MODE
+              value: default
+            - name: XL_DB_URL
+              value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
+            - name: XL_DB_USERNAME
+              value: {{$XLD_DB_USER}}
+            - name: XL_DB_PASSWORD
+              value: "{{$XLD_DB_PASS}}"
+            - name: XL_METRICS_ENABLED
+              value: "false"
+            - name: XL_LICENSE
+              value: {{$XLD_LIC}}
+            - name: REPOSITORY_KEYSTORE_PASSPHRASE
+              value: {{$XLD_KEYSTORE_PASS}}
+            - name: REPOSITORY_KEYSTORE
+              value: {{$XLD_KEYSTORE}}
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: "1"
+            limits:
+              memory: "3Gi"
+              cpu: "1.5"
+          ports:
+            - name: http
+              containerPort: 4516
+          readinessProbe:
+            httpGet:
+              path: /deployit/ha/health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 6
+          volumeMounts:
+            - name: work
+              mountPath: /opt/xebialabs/xl-deploy-server/work
+      {{if eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+      volumes:
+        # Use hostPath to persist your data on your local machine
+        - name: work
+          hostPath:
+            path: {{$XLD_WORK_HOSTPATH}}
+        #Use emptyDir for ephemeral xld and xlr. When pod dies the data is gone
+        #- name: repository
+        #  emptyDir: {}
+        #- name: work
+        #  emptyDir: {}
+      {{end}}
+  {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+  volumeClaimTemplates:
+    - metadata:
+        name: repository
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{if eq .K8sSetup "AWS EKS" }}
+        storageClassName: gp2
+        {{end}}
+        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
+        storageClassName: managed-nfs-storage
+        {{end}}
+        resources:
+          requests:
+            storage: 5Gi
+    - metadata:
+        name: work
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{if eq .K8sSetup "AWS EKS" }}
+        storageClassName: gp2
+        {{end}}
+        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
+        storageClassName: managed-nfs-storage
+        {{end}}
+        resources:
+          requests:
+            storage: 2Gi
+  {{end}}

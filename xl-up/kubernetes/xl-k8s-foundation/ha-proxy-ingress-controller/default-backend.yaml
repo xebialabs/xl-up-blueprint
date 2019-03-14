@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: ingress-default-backend
+  name: ingress-default-backend
+  namespace: xebialabs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: ingress-default-backend
+  template:
+    metadata:
+      labels:
+        run: ingress-default-backend
+    spec:
+      containers:
+        - name: ingress-default-backend
+          image: gcr.io/google_containers/defaultbackend:1.4
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: ingress-default-backend
+  name: ingress-default-backend
+  namespace: xebialabs
+spec:
+  ports:
+    - name: port-1
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    run: ingress-default-backend
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-default-backend
+  namespace: xebialabs
+  labels:
+    app: ingress-default-backend
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/affinity: cookie
+    ingress.kubernetes.io/session-cookie-name: JSESSIONID
+    ingress.kubernetes.io/session-cookie-strategy: prefix
+    ingress.kubernetes.io/config-backend: |
+      option httpchk head /ha/health HTTP/1.0
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: ingress-default-backend
+              servicePort: 8080

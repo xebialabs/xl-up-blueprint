@@ -1,0 +1,59 @@
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- directory: Applications/XEBIALABS
+  children:
+  - directory: XL-RELEASE
+    children:
+{{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+    - directory: EXTERNAL-DB
+      children:
+      - directory: ACTIVE-ACTIVE
+        children:
+        - name: XL-Release-Active-Active
+          type: udm.Application
+          children:
+          - name: !value xlVersion
+            orchestrator:
+              - sequential-by-dependency
+            type: udm.DeploymentPackage
+            deployables:
+            - name: xlr-deployment
+              type: k8s.ResourcesFile
+              file: !file ../kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+            applicationDependencies:
+              {{if  .InstallXLD }}
+              XL-Deploy-Hot-Standby: !value xlVersion
+              {{end}}
+              {{if  not .InstallXLD}}
+                {{if  not .InstallMonitoring}}
+              K8s-Ingress-Controller: "1.0.0"
+                {{else}}
+              Grafana-Dashboard: "1.0.0"
+              Kibana: "1.0.0"
+                {{end}}
+              {{end}}
+            undeployDependencies: "true"
+{{end}}
+    - directory: LOCAL-DB
+      children:
+      - name: XL-Release-Sinlge-Node
+        type: udm.Application
+        children:
+        - name: !value xlVersion
+          orchestrator:
+            - sequential-by-dependency
+          type: udm.DeploymentPackage
+          deployables:
+          - name: xlr-deployment
+            type: k8s.ResourcesFile
+            file: !file ../kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+          applicationDependencies:
+            {{if  .InstallXLD }}
+            XL-Deploy-Single-Node: !value xlVersion
+            {{end}}
+            {{if  not .InstallXLD}}
+            K8s-Ingress-Controller: "1.0.0"
+            PostgreSQL: "1.0.0"
+            {{end}}
+          undeployDependencies: "true"

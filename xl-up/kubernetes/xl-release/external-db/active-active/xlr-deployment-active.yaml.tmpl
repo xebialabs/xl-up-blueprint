@@ -1,0 +1,149 @@
+{{$XLR_ADMIN_PASS := "{{XLR_ADMIN_PASS}}"}}
+{{$XLR_DB_NAME := "{{XLR_DB_NAME}}"}}
+{{$XLR_DB_USER := "{{XLR_DB_USER}}"}}
+{{$XLR_DB_PASS := "{{XLR_DB_USER}}"}}
+{{$XLR_LIC := "{{XLR_LIC}}"}}
+{{$XLR_REPORT_DB_NAME := "{{XLR_REPORT_DB_NAME}}"}}
+{{$XLR_REPORT_DB_USER := "{{XLR_REPORT_DB_USER}}"}}
+{{$XLR_REPORT_DB_PASS := "{{XLR_REPORT_DB_PASS}}"}}
+{{$XLR_KEYSTORE_PASS := "{{XLR_KEYSTORE_PASS}}"}}
+{{$XLR_KEYSTORE := "{{XLR_KEYSTORE}}"}}
+{{$XL_VERSION := "{{XL_VERSION}}"}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: xl-release-cluster
+  namespace: xebialabs
+  labels:
+    app: xl-release
+spec:
+  selector:
+    app: xl-release
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 5516
+      targetPort: 5516
+      protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: xl-release
+  namespace: xebialabs
+  labels:
+    app: xl-release
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/affinity: cookie
+    ingress.kubernetes.io/session-cookie-name: JSESSIONID
+    ingress.kubernetes.io/session-cookie-strategy: prefix
+    ingress.kubernetes.io/config-backend: |
+      option httpchk head /ha/health HTTP/1.0
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /xl-release/
+            backend:
+              serviceName: xl-release-cluster
+              servicePort: 5516
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: xl-release
+  namespace: xebialabs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: xl-release
+  serviceName: xl-release
+  template:
+    metadata:
+      labels:
+        app: xl-release
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9100'
+    spec:
+      {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - xl-release
+              topologyKey: "kubernetes.io/hostname"
+      {{end}}
+      initContainers:
+        - name: wait-for-db
+          image: alpine:3.6
+          command:
+            - sh
+            - -c
+            - >
+              until nc -z -w 2 $POSTGRES_SVC $POSTGRES_PORT && echo database ok; do
+                sleep 2;
+              done;
+          env:
+           - name: POSTGRES_SVC
+             value: postgresql
+           - name: POSTGRES_PORT
+             value: "5432"
+      containers:
+        - name: xl-release
+          image: xebialabs/xl-release:{{$XL_VERSION}}
+          imagePullPolicy: Always
+          env:
+            - name: ADMIN_PASSWORD
+              value: {{$XLR_ADMIN_PASS}}
+            - name: XL_CLUSTER_MODE
+              value: full
+            - name: XL_DB_URL
+              value: jdbc:postgresql://postgresql:5432/{{$XLR_DB_NAME}}
+            - name: XL_DB_USERNAME
+              value: {{$XLR_DB_USER}}
+            - name: XL_DB_PASSWORD
+              value: "{{$XLR_DB_PASS}}"
+            - name: XL_METRICS_ENABLED
+              value: "false"
+            - name: XL_LICENSE
+              value: {{$XLR_LIC}}
+            - name: SERVER_URL
+              value: "http://localhost:5516"
+            - name: XL_REPORT_DB_URL
+              value: jdbc:postgresql://postgresql:5432/{{$XLR_REPORT_DB_NAME}}
+            - name: XL_REPORT_DB_USERNAME
+              value: {{$XLR_REPORT_DB_USER}}
+            - name: XL_REPORT_DB_PASSWORD
+              value: "{{$XLR_REPORT_DB_PASS}}"
+            - name: REPOSITORY_KEYSTORE_PASSPHRASE
+              value: {{$XLR_KEYSTORE_PASS}}
+            - name: REPOSITORY_KEYSTORE
+              value: {{$XLR_KEYSTORE}}
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "0.7"
+            limits:
+              memory: "3Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 5516
+            - name: jmx-exporter
+              containerPort: 9100
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 6

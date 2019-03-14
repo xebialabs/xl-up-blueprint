@@ -1,0 +1,154 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: elasticsearch-logging
+  namespace: xebialabs
+  labels:
+    app: elasticsearch-logging
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: elasticsearch-logging
+  labels:
+    app: elasticsearch-logging
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "services"
+  - "namespaces"
+  - "endpoints"
+  verbs:
+  - "get"
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: xebialabs
+  name: elasticsearch-logging
+  labels:
+    app: elasticsearch-logging
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+subjects:
+- kind: ServiceAccount
+  name: elasticsearch-logging
+  namespace: xebialabs
+  apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: elasticsearch-logging
+  apiGroup: ""
+---
+# Elasticsearch deployment itself
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch-logging
+  namespace: xebialabs
+  labels:
+    app: elasticsearch-logging
+    version: v6.5.0
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  serviceName: elasticsearch-logging
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch-logging
+      version: v6.5.0
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-logging
+        version: v6.5.0
+        kubernetes.io/cluster-service: "true"
+        app: elasticsearch-logging
+    spec:
+      serviceAccountName: elasticsearch-logging
+      initContainers:
+      - name: elasticsearch-logging-init
+        image: alpine:3.6
+        command: ["/sbin/sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      - name: fix-the-volume-permission
+        image: busybox
+        imagePullPolicy: Always
+        command:
+          - sh
+          - -c
+          - chown -R 1000 /usr/share/elasticsearch/data
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: data
+            mountPath: /usr/share/elasticsearch/data
+      containers:
+      - image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.0
+        name: elasticsearch-logging
+        resources:
+          limits:
+            cpu: 1.5
+          requests:
+            cpu: 0.5
+            memory: 2500m
+        ports:
+        - containerPort: 9200
+          name: db
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+        env:
+        - name: MINIMUM_MASTER_NODES
+          value: "1"
+        - name: ES_JAVA_OPTS
+          value: "-Xms2g -Xmx2g"
+        - name: "NAMESPACE"
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+  {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{if eq .K8sSetup "AWS EKS" }}
+        storageClassName: gp2
+        {{end}}
+        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
+        storageClassName: managed-nfs-storage
+        {{end}}
+        resources:
+          requests:
+            storage: 10Gi
+  {{end}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-logging
+  namespace: xebialabs
+  labels:
+    app: elasticsearch-logging
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/name: "Elasticsearch"
+spec:
+  ports:
+  - port: 9200
+    protocol: TCP
+    targetPort: db
+  selector:
+    app: elasticsearch-logging
