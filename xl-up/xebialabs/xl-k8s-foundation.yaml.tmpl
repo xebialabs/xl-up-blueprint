@@ -59,6 +59,7 @@ spec:
         type: udm.Dictionary
         entries:
           XL_VERSION: !value xlVersion
+          DOCKER_REPO: !value dockerRepo
         {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
         {{end}}
