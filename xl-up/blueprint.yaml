@@ -118,6 +118,14 @@ parameters:
       - 8.5.2
     value: 8.5.2
 
+  - name: dockerRepo
+    type: Select
+    saveInXlVals: true
+    description: "Choose docker repository:"
+    options:
+      - xebialabs
+    value: xebialabs
+
   - name: xldAdminPass
     type: Input
     secret: true
@@ -159,14 +167,14 @@ parameters:
     type: Input
     saveInXlVals: true
     description: "Enter your AWS EFS ID:"
-    dependsOnTrue: !expression "K8sSetup == 'AWS EKS'"
+    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
     default: fs-38d079f0
 
   - name: efsRegion
     type: Input
     saveInXlVals: true
     description: "Enter your AWS EFS Region:"
-    dependsOnTrue: !expression "K8sSetup == 'AWS EKS'"
+    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
     default: eu-west-1
 
   - name: nsfServerHost
