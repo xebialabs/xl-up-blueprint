@@ -14,6 +14,7 @@ parameters:
       - Local K8s from Docker for Mac/Windows
       - AWS EKS
       - Plain multinode K8s cluster
+    default: Local K8s from Docker for Mac/Windows
 
   - name: useKubeconfig
     type: Confirm
@@ -41,14 +42,12 @@ parameters:
     description: "Enter the path of your K8s Client Certificate:"
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
     saveInXlVals: true
-    default: /tmp/k8sClientCert.crt
 
   - name: K8sClientCertKeyFile
     type: File
     description: "Enter the path of your K8s Client Certificate Key:"
     saveInXlVals: true
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    default: /tmp/k8sClientCertKey.key
 
   - name: K8sClientCert
     type: Editor
@@ -139,7 +138,6 @@ parameters:
     saveInXlVals: true
     description: "Enter the path of the  XL Deploy License:"
     dependsOnTrue: InstallXLD
-    default: /tmp/deployit-license.lic
 
   - name: xldDbName
     type: Input
@@ -168,21 +166,18 @@ parameters:
     saveInXlVals: true
     description: "Enter your AWS EFS ID:"
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-    default: fs-38d079f0
 
   - name: efsRegion
     type: Input
     saveInXlVals: true
     description: "Enter your AWS EFS Region:"
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-    default: eu-west-1
 
   - name: nsfServerHost
     type: Input
     saveInXlVals: true
     description: "Enter your NFS Server name or ip:"
     dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster'"
-    default: 172.16.0.45
 
   - name: nsfSharePath
     type: Input
