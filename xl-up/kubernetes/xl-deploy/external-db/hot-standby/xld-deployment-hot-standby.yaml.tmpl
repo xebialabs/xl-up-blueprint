@@ -86,8 +86,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
     spec:
-      securityContext:
-          runAsUser: 0
       {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
       affinity:
         podAntiAffinity:
