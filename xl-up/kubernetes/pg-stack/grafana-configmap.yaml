@@ -1411,6 +1411,331 @@ data:
             "x": 0,
             "y": 39
           },
+          "id": 138,
+          "panels": [],
+          "title": "K8s Foundation",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "decimals": 3,
+          "description": "This graph attempts to show you RAM use of your application vs its requests",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 9,
+            "w": 10,
+            "x": 0,
+            "y": 40
+          },
+          "height": "",
+          "id": 135,
+          "isNew": true,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": true,
+          "targets": [
+            {
+              "expr": "container_memory_working_set_bytes{namespace=~\"xebialabs\", container_name=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod_name }}",
+              "metric": "container_cpu",
+              "refId": "A",
+              "step": 10
+            },
+            {
+              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"xebialabs\",container=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod }}  (requested)",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": "",
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "K8s Foundation Containers: RAM Usage vs Requested",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 2,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "bytes",
+              "label": "",
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": true,
+          "colorPostfix": false,
+          "colorPrefix": false,
+          "colorValue": false,
+          "colors": [
+            "#629e51",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "${DS_PROMETHEUS}",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 3,
+            "x": 10,
+            "y": 40
+          },
+          "id": 139,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum (kube_pod_container_status_restarts_total{app=\"kube-state-metrics\",namespace=\"xebialabs\",container=~\"elasticsearch-logging|kibana-logging|postgresql|grafana|fluentd-es|haproxy-ingress|ingress-default-backend|kube-state-metrics|addon-resizer\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "1,2",
+          "title": "Containers Restarts",
+          "type": "singlestat",
+          "valueFontSize": "110%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "decimals": 3,
+          "description": "This graph attempts to show you CPU use of your application vs its requests",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 9,
+            "w": 11,
+            "x": 13,
+            "y": 40
+          },
+          "height": "",
+          "id": 136,
+          "isNew": true,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": true,
+          "targets": [
+            {
+              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"xebialabs\", container_name=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}[2m])) by (pod_name)",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "1m",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod_name }}",
+              "metric": "container_cpu",
+              "refId": "A",
+              "step": 10
+            },
+            {
+              "expr": "sum(container_spec_cpu_shares{namespace=~\"xebialabs\", pod_name=~\"elasticsearch-logging.*|kibana-logging.*|postgresql.*|grafana.*\"}) by (pod_name) / 1000",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "1m",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod_name }} (requested)",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": "",
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "K8s Foundation Containers: CPU Core Usage vs Requested",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 2,
+            "value_type": "cumulative"
+          },
+          "transparent": false,
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "none",
+              "label": "",
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 49
+          },
           "id": 131,
           "panels": [],
           "title": "K8S cluster",
@@ -1422,7 +1747,7 @@ data:
             "h": 2,
             "w": 24,
             "x": 0,
-            "y": 40
+            "y": 50
           },
           "id": 86,
           "links": [],
@@ -1455,7 +1780,7 @@ data:
             "h": 6,
             "w": 4,
             "x": 0,
-            "y": 42
+            "y": 52
           },
           "height": "180px",
           "id": 106,
@@ -1545,7 +1870,7 @@ data:
             "h": 6,
             "w": 4,
             "x": 4,
-            "y": 42
+            "y": 52
           },
           "height": "180px",
           "id": 109,
@@ -1636,7 +1961,7 @@ data:
             "h": 12,
             "w": 7,
             "x": 8,
-            "y": 42
+            "y": 52
           },
           "height": "180px",
           "id": 104,
@@ -1716,7 +2041,7 @@ data:
             "h": 12,
             "w": 9,
             "x": 15,
-            "y": 42
+            "y": 52
           },
           "hideTimeOverride": true,
           "id": 90,
@@ -1853,7 +2178,7 @@ data:
             "h": 6,
             "w": 4,
             "x": 0,
-            "y": 48
+            "y": 58
           },
           "height": "180px",
           "id": 107,
@@ -1943,7 +2268,7 @@ data:
             "h": 6,
             "w": 4,
             "x": 4,
-            "y": 48
+            "y": 58
           },
           "height": "180px",
           "id": 108,
@@ -2053,7 +2378,7 @@ data:
       "timezone": "browser",
       "title": "XebiaLabs Monitoring",
       "uid": "xebilabs-monitoring",
-      "version": 14
+      "version": 5
     }
   prometheus-datasource.json: |
     {
