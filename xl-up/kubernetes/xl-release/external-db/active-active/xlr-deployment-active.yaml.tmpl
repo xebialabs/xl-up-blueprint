@@ -9,6 +9,7 @@
 {{$XLR_KEYSTORE_PASS := "{{XLR_KEYSTORE_PASS}}"}}
 {{$XLR_KEYSTORE := "{{XLR_KEYSTORE}}"}}
 {{$XL_VERSION := "{{XL_VERSION}}"}}
+{{$DOCKER_REPO := "{{DOCKER_REPO}}"}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -99,7 +100,7 @@ spec:
              value: "5432"
       containers:
         - name: xl-release
-          image: xebialabs/xl-release:{{$XL_VERSION}}
+          image: {{$DOCKER_REPO}}/xl-release:{{$XL_VERSION}}
           imagePullPolicy: Always
           env:
             - name: ADMIN_PASSWORD

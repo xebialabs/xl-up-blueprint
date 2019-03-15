@@ -7,7 +7,7 @@
 {{$XLD_KEYSTORE := "{{XLD_KEYSTORE}}"}}
 {{$XLD_WORK_HOSTPATH := "{{XLD_WORK_HOSTPATH}}"}}
 {{$XL_VERSION := "{{XL_VERSION}}"}}
-
+{{$DOCKER_REPO := "{{DOCKER_REPO}}"}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -89,7 +89,7 @@ spec:
               value: "5432"
       containers:
         - name: xl-deploy
-          image: xebialabs/xl-deploy:{{$XL_VERSION}}
+          image: {{$DOCKER_REPO}}/xl-deploy:{{$XL_VERSION}}
           imagePullPolicy: Always
           env:
             - name: ADMIN_PASSWORD
