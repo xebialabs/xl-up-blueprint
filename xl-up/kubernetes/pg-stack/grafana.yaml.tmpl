@@ -66,11 +66,11 @@ spec:
             port: http
         resources:
           limits:
-            cpu: 200m
-            memory: 200Mi
+            cpu: 500m
+            memory: 1Gi
           requests:
             cpu: 100m
-            memory: 100Mi
+            memory: 0.2Gi
         volumeMounts:
         - mountPath: /var/lib/grafana
           name: grafana-storage
