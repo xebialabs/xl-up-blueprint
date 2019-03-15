@@ -14,6 +14,7 @@ parameters:
       - Local K8s from Docker for Mac/Windows
       - AWS EKS
       - Plain multinode K8s cluster
+    default: "Local K8s from Docker for Mac/Windows"
 
   - name: useKubeconfig
     type: Confirm
@@ -41,14 +42,12 @@ parameters:
     description: "Enter the path of your K8s Client Certificate:"
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
     saveInXlVals: true
-    default: /tmp/k8sClientCert.crt
 
   - name: K8sClientCertKeyFile
     type: File
     description: "Enter the path of your K8s Client Certificate Key:"
     saveInXlVals: true
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    default: /tmp/k8sClientCertKey.key
 
   - name: K8sClientCert
     type: Editor
@@ -80,8 +79,6 @@ parameters:
     type: Confirm
     description: "Do you want to use AWS credentials from ~/.aws/credentials file?"
     dependsOnTrue: !expression "isAwsCfgAvailable"
-    # if this is set then in case the question is skipped and default value is true, but this is a string not a boolean. if !useAWSconfig  is used will fail because the you cannot use !string. BUG in blueprint feature
-    #default: true
     saveInXlVals: true
 
   - name: AWSAccessKey
@@ -139,7 +136,6 @@ parameters:
     saveInXlVals: true
     description: "Enter the path of the  XL Deploy License:"
     dependsOnTrue: InstallXLD
-    default: /tmp/deployit-license.lic
 
   - name: xldDbName
     type: Input
@@ -168,35 +164,30 @@ parameters:
     saveInXlVals: true
     description: "Enter your AWS EFS ID:"
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-    default: fs-38d079f0
 
   - name: efsRegion
     type: Input
     saveInXlVals: true
     description: "Enter your AWS EFS Region:"
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-    default: eu-west-1
 
   - name: nsfServerHost
     type: Input
     saveInXlVals: true
     description: "Enter your NFS Server name or ip:"
     dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster'"
-    default: 172.16.0.45
 
   - name: nsfSharePath
     type: Input
     saveInXlVals: true
     description: "Enter your NFS share path:"
     dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster'"
-    default: /xebialabs-k8s
 
   - name: xldWorkHostpath
     type: Input
     saveInXlVals: true
     description: "Enter the local directory path that will be used as a work directory for XL Deploy:"
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows' && InstallXLD"
-    default: /tmp/xld-work
 
   - name: xlrAdminPass
     type: Input
@@ -211,7 +202,6 @@ parameters:
     saveInXlVals: true
     description: "Enter the path of  XL Release License:"
     dependsOnTrue: InstallXLR
-    default: /tmp/xl-release-license.lic
 
   - name: xlrDbName
     type: Input
@@ -257,25 +247,16 @@ parameters:
     dependsOnTrue: InstallXLR
     default: !expression "randPassword()"
 
-  - name: xlrRepositoryHostpath
-    type: Input
-    saveInXlVals: true
-    description: "Enter the local directory path where XL Release will store its own repository:"
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows' && InstallXLR"
-    default: /tmp/xlr-repository
-
   - name: xlKeyStore
     type: File
     saveInXlVals: true
     description: "Enter the path of your XL KeyStore:"
-    default: /tmp/keystore.jceks
 
   - name: xlKeyStorePass
     type: Input
     secret: true
     saveInXlVals: true
     description: "Enter your XL KeyStore Password"
-    default: test123
 
   - name: InstallMonitoring
     type: Confirm
@@ -304,7 +285,6 @@ parameters:
     saveInXlVals: true
     description: "Enter the local directory path where  Postgresql will store its data:"
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows'"
-    default: /tmp/xl-postgresql
 
   - name: postgresMaxConn
     type: Input
