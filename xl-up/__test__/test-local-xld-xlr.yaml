@@ -14,7 +14,7 @@ expected-files:
   - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
   - kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
   - kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
-non-expected-files:
+not-expected-files:
   #xl-k8s-foundation
   - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
