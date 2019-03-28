@@ -15,6 +15,7 @@ parameters:
       - AWS EKS
       - Plain multinode K8s cluster
     default: "Local K8s from Docker for Mac/Windows"
+    saveInXlVals: true
 
   - name: useKubeconfig
     type: Confirm
@@ -101,11 +102,13 @@ parameters:
     type: Confirm
     description: "Would you like to install XL Deploy?"
     default: true
+    saveInXlVals: true
 
   - name: InstallXLR
     type: Confirm
     description: "Would you like to install XL Release?"
     default: true
+    saveInXlVals: true
 
   - name: xlVersion
     type: Select
@@ -330,38 +333,38 @@ files:
   - path: kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
   - path: kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
   - path: kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'AWS EKS' && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   - path: kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
   - path: kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   - path: kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   - path: kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   #xl-deploy
   - path: xebialabs/xl-deploy.yaml.tmpl
     dependsOnTrue: InstallXLD
   - path: kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
-    dependsOnTrue: InstallXLD
+    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'Local K8s from Docker for Mac/Windows'"
   - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
-    dependsOnTrue: InstallXLD
+    dependsOnTrue:  !expression "InstallXLD && K8sSetup == 'AWS EKS'"
   - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
-    dependsOnTrue: InstallXLD
+    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
   - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
-    dependsOnTrue: InstallXLD
+    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
   - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
-    dependsOnTrue: InstallXLD
+    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
   - path: kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml.tmpl
-    dependsOnTrue: InstallXLD
+    dependsOnTrue: !expression "InstallXLR && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   - path: kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml.tmpl
-    dependsOnTrue: InstallXLD
+    dependsOnTrue: !expression "InstallXLD && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   #xl-release
   - path: xebialabs/xl-release.yaml.tmpl
     dependsOnTrue: InstallXLR
   - path: kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
-    dependsOnTrue: InstallXLR
+    dependsOnTrue: !expression "InstallXLR && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
   - path: kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
-    dependsOnTrue: InstallXLR
+    dependsOnTrue: !expression "InstallXLR && K8sSetup == 'Local K8s from Docker for Mac/Windows'"
   #efk
   - path: kubernetes/efk-stack/elasticsearch-logging.yaml.tmpl
     dependsOnTrue: InstallMonitoring
