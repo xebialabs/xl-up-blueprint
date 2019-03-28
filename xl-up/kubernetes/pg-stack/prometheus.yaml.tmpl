@@ -38,14 +38,15 @@ metadata:
   name: prometheus
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: prometheus-deployment
+  name: prometheus
   namespace: xebialabs
   labels:
     app: prometheus
     purpose: metrics-collector
 spec:
+  serviceName: "prometheus"
   replicas: 1
   selector:
     matchLabels:
@@ -58,19 +59,52 @@ spec:
         purpose: metrics-collector
     spec:
       serviceAccountName: prometheus
+      initContainers:
+        - name: "init-chown-data"
+          image: "busybox:latest"
+          command: ["chown", "-R", "65534:65534", "/data"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              subPath: ""
       containers:
       - name: prometheus
         image: prom/prometheus:v2.7.2
+        args:
+          - --config.file=/etc/prometheus/prometheus.yml
+          - --storage.tsdb.path=/data
+          - --web.console.libraries=/etc/prometheus/console_libraries
+          - --web.console.templates=/etc/prometheus/consoles
+          - --web.enable-lifecycle
         ports:
           - containerPort: 9090
         volumeMounts:
           - name: config-volume
             mountPath: /etc/prometheus/prometheus.yml
             subPath: prometheus.yml
+          - name: data
+            mountPath: /data
+            subPath: ""
       volumes:
         - name: config-volume
           configMap:
            name: prometheus-config
+  {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{if eq .K8sSetup "AWS EKS" }}
+        storageClassName: gp2
+        {{end}}
+        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
+        storageClassName: managed-nfs-storage
+        {{end}}
+        resources:
+          requests:
+            storage: 10Gi
+  {{end}}
 ---
 kind: Service
 apiVersion: v1

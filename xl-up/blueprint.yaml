@@ -112,8 +112,8 @@ parameters:
     saveInXlVals: true
     description: "Choose version of Xebialabs DevOps Platform:"
     options:
-      - 8.5.2
-    value: 8.5.2
+      - 8.6.1
+    value: 8.6.1
 
   - name: dockerRepo
     type: Select
@@ -372,7 +372,7 @@ files:
   - path: kubernetes/efk-stack/kibana.yaml.tmpl
   #pg-stack
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/prometheus.yaml
+  - path: kubernetes/pg-stack/prometheus.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/pg-stack/grafana.yaml.tmpl
     dependsOnTrue: InstallMonitoring
