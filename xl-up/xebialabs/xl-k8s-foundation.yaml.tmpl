@@ -240,6 +240,12 @@ spec:
                  - name: Elasticsearch-Logging
                    type: k8s.ResourcesFile
                    file: !file "../kubernetes/efk-stack/elasticsearch-logging.yaml"
+                 - name: Elasticsearch-Curator-Cronjob
+                   type: k8s.ResourcesFile
+                   file: !file "../kubernetes/efk-stack/es-curator-cronjob.yaml"
+                 - name: Elasticsearch-Curator-Configmap
+                   type: k8s.ResourcesFile
+                   file: !file "../kubernetes/efk-stack/es-curator-configmap.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "1.0.0"
                 undeployDependencies: "true"
