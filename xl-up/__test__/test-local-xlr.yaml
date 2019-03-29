@@ -1,12 +1,10 @@
-answers-file: local-xld-xlr.yaml
+answers-file: local-xlr.yaml
 expected-files:
   - xebialabs/common.yaml
   - xebialabs/deployments.yaml
-  - xebialabs/xl-deploy.yaml
   - xebialabs/xl-release.yaml
   - xebialabs/xl-k8s-foundation.yaml
   #xl-deploy xl-release
-  - kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   #xl-k8s-foundation
   - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
@@ -14,6 +12,8 @@ expected-files:
   - kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
   - kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
 not-expected-files:
+  - xebialabs/xl-deploy.yaml
+  - kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   #xl-k8s-foundation
   - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
@@ -48,11 +48,8 @@ expected-xl-values:
   K8sSetup: Local K8s from Docker for Mac/Windows
   useKubeconfig: false
   localApiServerURL: https://host.docker.internal:6443
-  InstallXLD: true
+  InstallXLD: false
   InstallXLR: true
-  xldDbName: xl-deploy
-  xldDbUser: xl-deploy
-  xldWorkHostpath: /tmp/xld-work
   xlrDbName: xl-release
   xlrDbUser: xl-release
   xlrReportDbName: xl-release-report
@@ -60,8 +57,6 @@ expected-xl-values:
   PostgresqlWorkHostpath: /tmp/xld-work
 expected-xl-secrets:
   xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
   xlrAdminPass: password
   xlrDbPass: xl-release
   xlrReportDbPass: xl-release-report
