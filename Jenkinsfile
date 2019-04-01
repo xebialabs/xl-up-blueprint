@@ -20,7 +20,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "python3 integration_tests.py"
+                sh "python3.6 integration_tests.py"
             }
         }
     }
