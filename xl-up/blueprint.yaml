@@ -20,7 +20,7 @@ parameters:
     type: Confirm
     description: "Do you want to use K8s current-context from ~/.kube/config?"
     dependsOnTrue: !fn k8s.config().IsAvailable
-    default: true
+    default: !fn k8s.config().IsAvailable
     saveInXlVals: true
 
   - name: apiServerURL
@@ -87,7 +87,7 @@ parameters:
     description: "What is the AWS Access Key ID?"
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
-    default: !fn aws.credentials().AccessKeyID
+    default: !fn aws.credentials(K8sSetup, 'AWS EKS').AccessKeyID
 
   - name: AWSAccessSecret
     type: Input
@@ -95,7 +95,7 @@ parameters:
     description: "What is the AWS Secret Access Key?"
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
-    default: !fn aws.credentials().SecretAccessKey
+    default: !fn aws.credentials(K8sSetup, 'AWS EKS').SecretAccessKey
 
   - name: InstallXLD
     type: Confirm
