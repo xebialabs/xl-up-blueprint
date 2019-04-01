@@ -180,7 +180,9 @@ if __name__ == '__main__':
 
             command = ['xl', 'blueprint', '-b', '../{}'.format(blueprint_dir), '-sa', '../{}'.format(answers_file)]
             print('Executing: {}'.format(' '.join(command)))
-            result = subprocess.run(command, capture_output=True, env=env)
+            # does not work on python 3.6
+            #result = subprocess.run(command, capture_output=True, env=env)
+            result = subprocess.run(command, env=env)
             if not result.returncode == 0:
                 if result.stdout:
                     print('stdout: {}'.format(result.stdout))

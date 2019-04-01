@@ -47,7 +47,6 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: Local K8s from Docker for Mac/Windows
   useKubeconfig: false
-  localApiServerURL: https://host.docker.internal:6443
   InstallXLD: true
   InstallXLR: true
   xldDbName: xl-deploy

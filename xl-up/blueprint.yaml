@@ -21,7 +21,7 @@ parameters:
     type: Confirm
     description: "Do you want to use K8s current-context from ~/.kube/config?"
     dependsOnTrue: !fn k8s.config().IsAvailable
-    default: true
+    default: !fn k8s.config().IsAvailable
     saveInXlVals: true
 
   - name: apiServerURL
