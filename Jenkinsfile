@@ -26,7 +26,7 @@ pipeline {
                         sh "python3.6 integration_tests.py"
                         githubNotify context: "Testing blueprint", status: "SUCCESS"
                     } catch (err) {
-                        ithubNotify context: "Testing blueprint", status: "FAILURE"
+                        githubNotify context: "Testing blueprint", status: "FAILURE"
                         throw err
                     }
                 }
