@@ -1,0 +1,59 @@
+answers-file: local-xld.yaml
+expected-files:
+  - xebialabs/common.yaml
+  - xebialabs/deployments.yaml
+  - xebialabs/xl-deploy.yaml
+  - xebialabs/xl-k8s-foundation.yaml
+  #xl-deploy xl-release
+  - kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  #xl-k8s-foundation
+  - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+  - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+  - kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+not-expected-files:
+  - xebialabs/xl-release.yaml
+  - kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  #xl-k8s-foundation
+  - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+  - kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
+  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
+  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
+  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
+  - kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+  #xl-deploy xl-release
+  - kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
+  - kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  #efk
+  - kubernetes/efk-stack/elasticsearch-logging.yaml
+  - kubernetes/efk-stack/fluentd-config.yaml
+  - kubernetes/efk-stack/fluentd-esconfig.yaml
+  - kubernetes/efk-stack/kibana.yaml
+  #pg
+  - kubernetes/pg-stack/prometheus.yaml
+  - kubernetes/pg-stack/grafana.yaml
+  - kubernetes/pg-stack/grafana-configmap.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
+  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+expected-xl-values:
+  K8sSetup: Local K8s from Docker for Mac/Windows
+  useKubeconfig: false
+  InstallXLD: true
+  InstallXLR: false
+  xldDbName: xl-deploy
+  xldDbUser: xl-deploy
+  xldWorkHostpath: /tmp/xld-work
+  PostgresqlWorkHostpath: /tmp/xld-work
+expected-xl-secrets:
+  xlKeyStorePass: test123
+  xldAdminPass: password
+  xldDbPass: xl-deploy
