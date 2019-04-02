@@ -19,17 +19,17 @@ pipeline {
             }
 
             steps {
-
-                try {
-                    githubNotify context: "Testing blueprint", status: "PENDING"
-                    checkout scm
-                    sh "python3.6 integration_tests.py"
-                    githubNotify context: "Testing blueprint", status: "SUCCESS"
-                } catch (err) {
-                    ithubNotify context: "Testing blueprint", status: "FAILURE"
-                    throw err
+                script {
+                    try {
+                        githubNotify context: "Testing blueprint", status: "PENDING"
+                        checkout scm
+                        sh "python3.6 integration_tests.py"
+                        githubNotify context: "Testing blueprint", status: "SUCCESS"
+                    } catch (err) {
+                        ithubNotify context: "Testing blueprint", status: "FAILURE"
+                        throw err
+                    }
                 }
-
 
             }
         }
