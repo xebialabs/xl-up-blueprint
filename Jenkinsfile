@@ -1,5 +1,7 @@
 #!groovy
 
+@Field def slackRoom = '#team-kube-love'
+
 pipeline {
     agent none
 
@@ -25,8 +27,10 @@ pipeline {
                         checkout scm
                         sh "python3.6 integration_tests.py"
                         githubNotify context: "Testing blueprint", status: "SUCCESS"
+                        notifySlack("Testing blueprint succeeded", "good")
                     } catch (err) {
                         githubNotify context: "Testing blueprint", status: "FAILURE"
+                        notifySlack("Testing blueprint failed", "danger")
                         throw err
                     }
                 }
@@ -34,4 +38,9 @@ pipeline {
             }
         }
     }
+}
+
+def notifySlack(String message, String notificationColor) {
+    slackSend(color: "${notificationColor}", message: "$message (<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>)",
+            channel: slackRoom, tokenCredentialId: "slack-token")
 }
