@@ -14,7 +14,6 @@ parameters:
       - Local K8s from Docker for Mac/Windows
       - AWS EKS
       - Plain multinode K8s cluster
-    default: "Local K8s from Docker for Mac/Windows"
     saveInXlVals: true
 
   - name: useKubeconfig
