@@ -1,6 +1,6 @@
 #!groovy
 
-@Field def slackRoom = '#team-kube-love'
+def slackRoom = '#team-kube-love'
 
 pipeline {
     agent none
