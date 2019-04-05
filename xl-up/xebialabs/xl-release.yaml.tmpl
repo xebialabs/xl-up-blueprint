@@ -35,6 +35,7 @@ spec:
               {{end}}
             undeployDependencies: "true"
 {{end}}
+    {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
     - directory: LOCAL-DB
       children:
       - name: XL-Release-Sinlge-Node
@@ -57,3 +58,4 @@ spec:
             PostgreSQL: "1.0.0"
             {{end}}
           undeployDependencies: "true"
+  {{end}}
