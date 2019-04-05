@@ -1,0 +1,21 @@
+K8sSetup: Local K8s from Docker for Mac/Windows
+useKubeconfig: true
+InstallXLD: true
+InstallXLR: true
+xldAdminPass: password
+xldLic: /path/to/deployit-license.lic
+xldDbName: xl-deploy
+xldDbUser: xl-deploy
+xldDbPass: xl-deploy
+xldWorkHostpath: /path/to/xld-work
+xlrAdminPass: password
+xlrLic: /path/to/xl-release-license.lic
+xlrDbName: xl-release
+xlrDbUser: xl-release
+xlrDbPass: xl-release
+xlrReportDbName: xl-release-report
+xlrReportDbUser: xl-release-report
+xlrReportDbPass: xl-release-report
+xlKeyStore: /path/to/keystore.jceks
+xlKeyStorePass: test123
+PostgresqlWorkHostpath: √/xl-postgresql
