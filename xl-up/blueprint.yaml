@@ -267,6 +267,12 @@ parameters:
     dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker for Mac/Windows'"
     saveInXlVals: true
 
+  - name: MonitoringDataRetention
+    type: Input
+    description: "How many days you want to keep the monitoring data?"
+    value: 7
+    dependsOnTrue: !expression "InstallMonitoring"
+
   - name: monitoringUser
     type: Input
     saveInXlVals: true
@@ -368,18 +374,22 @@ files:
   #efk
   - path: kubernetes/efk-stack/elasticsearch-logging.yaml.tmpl
     dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/es-curator-cronjob.yaml
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/es-curator-configmap.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
   - path: kubernetes/efk-stack/fluentd-config.yaml
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/efk-stack/fluentd-esconfig.yaml
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/efk-stack/kibana.yaml.tmpl
-  #pg-stack
     dependsOnTrue: InstallMonitoring
+  #pg-stack
   - path: kubernetes/pg-stack/prometheus.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/pg-stack/grafana.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana-configmap.yaml
+  - path: kubernetes/pg-stack/grafana-configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
     dependsOnTrue: InstallMonitoring

@@ -19,6 +19,8 @@ expected-files:
   - kubernetes/efk-stack/fluentd-config.yaml
   - kubernetes/efk-stack/fluentd-esconfig.yaml
   - kubernetes/efk-stack/kibana.yaml
+  - kubernetes/efk-stack/es-curator-cronjob.yaml
+  - kubernetes/efk-stack/es-curator-configmap.yaml
   #pg
   - kubernetes/pg-stack/prometheus.yaml
   - kubernetes/pg-stack/grafana.yaml

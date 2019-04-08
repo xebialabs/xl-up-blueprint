@@ -1,3 +1,7 @@
+{{$POD_NAME := "{{ pod_name }}"}}
+{{$POD := "{{ pod }}"}}
+{{$NODE := "{{ node }}"}}
+{{$K8S_POD_NAME := "{{ kubernetes_pod_name }}"}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -81,6 +85,7 @@ data:
       "id": null,
       "links": [],
       "panels": [
+       {{if .InstallXLD}}
         {
           "collapsed": false,
           "gridPos": {
@@ -187,7 +192,7 @@ data:
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }}  (used)",
+              "legendFormat": "{{$POD_NAME}}  (used)",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -198,7 +203,7 @@ data:
               "hide": false,
               "instant": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ pod }}  (requested)",
+              "legendFormat": "{{$POD}}  (requested)",
               "refId": "B"
             }
           ],
@@ -385,14 +390,14 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "Used [{{kubernetes_pod_name}}]",
+              "legendFormat": "Used [{{$K8S_POD_NAME}}]",
               "refId": "A"
             },
             {
               "expr": "sum (jvm_memory_bytes_max{job=\"kubernetes-pods\", app=\"xl-deploy\"}) by (kubernetes_pod_name)",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "Max  [{{kubernetes_pod_name}}]",
+              "legendFormat": "Max  [{{$K8S_POD_NAME}}]",
               "refId": "B"
             }
           ],
@@ -501,7 +506,7 @@ data:
               "instant": false,
               "interval": "1m",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (used)",
+              "legendFormat": "{{$POD_NAME}} (used)",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -513,7 +518,7 @@ data:
               "instant": false,
               "interval": "1m",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (requested)",
+              "legendFormat": "{{$POD_NAME}} (requested)",
               "refId": "B"
             }
           ],
@@ -693,7 +698,7 @@ data:
               "expr": "jvm_threads_current{job=\"kubernetes-pods\", app=\"xl-deploy\"}",
               "format": "time_series",
               "intervalFactor": 5,
-              "legendFormat": "Current threads [{{kubernetes_pod_name}}]",
+              "legendFormat": "Current threads [{{$K8S_POD_NAME}}]",
               "metric": "jvm_threads_current",
               "refId": "A",
               "step": 10
@@ -702,7 +707,7 @@ data:
               "expr": "jvm_threads_daemon{job=\"kubernetes-pods\", app=\"xl-deploy\"}",
               "format": "time_series",
               "intervalFactor": 5,
-              "legendFormat": "Daemon threads [{{kubernetes_pod_name}}]",
+              "legendFormat": "Daemon threads [{{$K8S_POD_NAME}}]",
               "metric": "jvm_threads_daemon",
               "refId": "B",
               "step": 10
@@ -711,7 +716,7 @@ data:
               "expr": "jvm_threads_deadlocked{job=\"kubernetes-pods\", app=\"xl-deploy\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "Deadlocked threads [{{kubernetes_pod_name}}]",
+              "legendFormat": "Deadlocked threads [{{$K8S_POD_NAME}}]",
               "refId": "C"
             }
           ],
@@ -757,6 +762,8 @@ data:
             "alignLevel": null
           }
         },
+        {{end}}
+        {{if .InstallXLR}}
         {
           "collapsed": false,
           "gridPos": {
@@ -834,7 +841,7 @@ data:
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (used)",
+              "legendFormat": "{{$POD_NAME}} (used)",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -845,7 +852,7 @@ data:
               "hide": false,
               "instant": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }}  (requested)",
+              "legendFormat": "{{$POD_NAME}}  (requested)",
               "refId": "B"
             }
           ],
@@ -1031,14 +1038,14 @@ data:
               "expr": "sum (jvm_memory_bytes_used{job=\"kubernetes-pods\", app=\"xl-release\"}) by (kubernetes_pod_name)",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "Used [{{kubernetes_pod_name}}]",
+              "legendFormat": "Used [{{$K8S_POD_NAME}}]",
               "refId": "A"
             },
             {
               "expr": "sum (jvm_memory_bytes_max{job=\"kubernetes-pods\", app=\"xl-release\"}) by (kubernetes_pod_name)",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "Max  [{{kubernetes_pod_name}}]",
+              "legendFormat": "Max  [{{$K8S_POD_NAME}}]",
               "refId": "B"
             }
           ],
@@ -1147,7 +1154,7 @@ data:
               "instant": false,
               "interval": "1m",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (used)",
+              "legendFormat": "{{$POD_NAME}} (used)",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -1159,7 +1166,7 @@ data:
               "instant": false,
               "interval": "1m",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (requested)",
+              "legendFormat": "{{$POD_NAME}} (requested)",
               "refId": "B"
             }
           ],
@@ -1339,7 +1346,7 @@ data:
               "expr": "jvm_threads_current{job=\"kubernetes-pods\", app=\"xl-release\"}",
               "format": "time_series",
               "intervalFactor": 5,
-              "legendFormat": "Current threads [{{kubernetes_pod_name}}]",
+              "legendFormat": "Current threads [{{$K8S_POD_NAME}}]",
               "metric": "jvm_threads_current",
               "refId": "A",
               "step": 10
@@ -1348,7 +1355,7 @@ data:
               "expr": "jvm_threads_daemon{job=\"kubernetes-pods\", app=\"xl-release\"}",
               "format": "time_series",
               "intervalFactor": 5,
-              "legendFormat": "Daemon threads [{{kubernetes_pod_name}}]",
+              "legendFormat": "Daemon threads [{{$K8S_POD_NAME}}]",
               "metric": "jvm_threads_daemon",
               "refId": "B",
               "step": 10
@@ -1357,7 +1364,7 @@ data:
               "expr": "jvm_threads_deadlocked{job=\"kubernetes-pods\", app=\"xl-release\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "Deadlocked threads [{{kubernetes_pod_name}}]",
+              "legendFormat": "Deadlocked threads [{{$K8S_POD_NAME}}]",
               "refId": "C"
             }
           ],
@@ -1403,6 +1410,7 @@ data:
             "alignLevel": null
           }
         },
+        {{end}}
         {
           "collapsed": false,
           "gridPos": {
@@ -1473,7 +1481,7 @@ data:
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (used)",
+              "legendFormat": "{{$POD_NAME}} (used)",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -1484,7 +1492,7 @@ data:
               "hide": false,
               "instant": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ pod }}  (requested)",
+              "legendFormat": "{{$POD}}  (requested)",
               "refId": "B"
             }
           ],
@@ -1669,7 +1677,7 @@ data:
               "instant": false,
               "interval": "1m",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (used)",
+              "legendFormat": "{{$POD_NAME}} (used)",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -1681,7 +1689,7 @@ data:
               "instant": false,
               "interval": "1m",
               "intervalFactor": 1,
-              "legendFormat": "{{ pod_name }} (requested)",
+              "legendFormat": "{{$POD_NAME}} (requested)",
               "refId": "B"
             }
           ],
@@ -2133,7 +2141,7 @@ data:
               "hide": false,
               "instant": true,
               "intervalFactor": 1,
-              "legendFormat": "{{ node }}",
+              "legendFormat": "{{$NODE}}",
               "refId": "B"
             },
             {
@@ -2143,7 +2151,7 @@ data:
               "instant": true,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{ node }}",
+              "legendFormat": "{{$NODE}}",
               "refId": "A"
             }
           ],

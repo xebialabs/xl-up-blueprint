@@ -85,9 +85,7 @@ spec:
                         type: k8s.ResourcesFile
                         file: !file ../kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
                     applicationDependencies:
-                      {{if  .InstallXLD }}
                       K8s-Ingress-Controller: "1.0.0"
                       PostgreSQL: "1.0.0"
-                      {{end}}
                     undeployDependencies: "true"
           {{end}}

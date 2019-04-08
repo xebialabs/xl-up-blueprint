@@ -43,6 +43,8 @@ spec:
             value: http://elasticsearch-logging.xebialabs.svc:9200
           - name: SERVER_BASEPATH
             value: /kibana
+          - name: KIBANA_DEFAULTAPPID
+            value: dashboard/xl-platform-logs-dashboard
         ports:
         - containerPort: 5601
           name: ui
