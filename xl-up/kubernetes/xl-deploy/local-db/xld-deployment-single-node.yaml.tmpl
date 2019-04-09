@@ -134,7 +134,7 @@ spec:
       volumes:
         # Use hostPath to persist your data on your local machine or emptyDir for minikube
         - name: work
-          {{if eq.OsType "linux" }}
+          {{if eq .OsType "linux" }}
           emptyDir: {}
           {{else}}
           hostPath:
