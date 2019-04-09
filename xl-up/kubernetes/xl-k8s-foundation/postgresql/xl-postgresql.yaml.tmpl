@@ -127,7 +127,7 @@ spec:
             defaultMode: 0777
         {{if eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
         - name: data
-          {{if eq.osType "linux" }}
+          {{if eq.OsType "linux" }}
           emptyDir: {}
           {{else}}
           hostPath:
