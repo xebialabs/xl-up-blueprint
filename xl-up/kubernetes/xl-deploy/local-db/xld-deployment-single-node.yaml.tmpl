@@ -132,15 +132,14 @@ spec:
               mountPath: /opt/xebialabs/xl-deploy-server/work
       {{if eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
       volumes:
-        # Use hostPath to persist your data on your local machine
+        # Use hostPath to persist your data on your local machine or emptyDir for minikube
         - name: work
+          {{if eq.osType "linux" }}
+          emptyDir: {}
+          {{else}}
           hostPath:
             path: {{$XLD_WORK_HOSTPATH}}
-        #Use emptyDir for ephemeral xld and xlr. When pod dies the data is gone
-        #- name: repository
-        #  emptyDir: {}
-        #- name: work
-        #  emptyDir: {}
+          {{end}}
       {{end}}
   {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
   volumeClaimTemplates:

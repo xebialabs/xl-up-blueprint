@@ -30,6 +30,13 @@ parameters:
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
     saveInXlVals: true
 
+  - name: osType
+    type: Input
+    description: "The type of OS where the xl command is running"
+    value: !fn os._operatingsystem()
+    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows'"
+    saveInXlVals: true
+
   - name: localApiServerURL
     type: Input
     description: "Enter the ApiServerURL of your K8s installation:"
