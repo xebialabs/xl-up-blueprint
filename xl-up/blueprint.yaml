@@ -30,6 +30,13 @@ parameters:
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
     saveInXlVals: true
 
+  - name: OsType
+    type: Input
+    description: "The type of OS where the xl command is running"
+    value: !fn os._operatingsystem()
+    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows'"
+    saveInXlVals: true
+
   - name: localApiServerURL
     type: Input
     description: "Enter the ApiServerURL of your K8s installation:"
@@ -189,7 +196,7 @@ parameters:
     type: Input
     saveInXlVals: true
     description: "Enter the local directory path that will be used as a work directory for XL Deploy:"
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows' && InstallXLD"
+    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows' && InstallXLD && OsType != 'linux' "
 
   - name: xlrAdminPass
     type: Input
@@ -293,7 +300,7 @@ parameters:
     type: Input
     saveInXlVals: true
     description: "Enter the local directory path where  Postgresql will store its data:"
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows' && OsType != 'linux'"
 
   - name: postgresMaxConn
     type: Input

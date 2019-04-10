@@ -49,16 +49,15 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: Local K8s from Docker for Mac/Windows
   useKubeconfig: false
+  localApiServerURL: https://localk8s.com:8443
   InstallXLD: true
   InstallXLR: true
   xldDbName: xl-deploy
   xldDbUser: xl-deploy
-  xldWorkHostpath: /tmp/xld-work
   xlrDbName: xl-release
   xlrDbUser: xl-release
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
-  PostgresqlWorkHostpath: /tmp/xld-work
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

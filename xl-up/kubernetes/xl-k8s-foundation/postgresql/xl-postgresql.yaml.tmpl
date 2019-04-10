@@ -127,8 +127,12 @@ spec:
             defaultMode: 0777
         {{if eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
         - name: data
+          {{if eq .OsType "linux" }}
+          emptyDir: {}
+          {{else}}
           hostPath:
             path: {{$POSTGRESQL_HOSTPATH}}
+          {{end}}
         {{end}}
   {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
   volumeClaimTemplates:

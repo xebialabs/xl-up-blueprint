@@ -1,5 +1,6 @@
 K8sSetup: Local K8s from Docker for Mac/Windows
 useKubeconfig: false
+localApiServerURL: https://localk8s.com:8443
 K8sClientCertFile: ../xl-up/__test__/files/test-file
 K8sClientCertKeyFile: ../xl-up/__test__/files/test-file
 InstallXLD: true
@@ -20,4 +21,3 @@ xlrReportDbUser: xl-release-report
 xlrReportDbPass: xl-release-report
 xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
-PostgresqlWorkHostpath: /tmp/xld-work
