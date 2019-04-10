@@ -139,6 +139,7 @@ parameters:
     description: "Enter XL Deploy admin user password you want to use:"
     dependsOnTrue: !expression "InstallXLD"
     default: !expression "randPassword()"
+    ShowValueOnSummary: true
 
   - name: xldLic
     type: File
@@ -167,6 +168,7 @@ parameters:
     description: "Enter your XLD Database password:"
     dependsOnTrue: InstallXLD
     default: !expression "randPassword()"
+    ShowValueOnSummary: true
 
   - name: efsId
     type: Input
@@ -205,6 +207,7 @@ parameters:
     description: "Enter XL Release admin user password you want to use:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
+    ShowValueOnSummary: true
 
   - name: xlrLic
     type: File
@@ -233,6 +236,7 @@ parameters:
     description: "Enter your XLR Database password:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
+    ShowValueOnSummary: true
 
   - name: xlrReportDbName
     type: Input
@@ -255,6 +259,7 @@ parameters:
     description: "Enter your XLR Report Database password:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
+    ShowValueOnSummary: true
 
   - name: xlKeyStore
     type: File
@@ -295,6 +300,7 @@ parameters:
     description: "What is the password for monitoring user?"
     default: !expression "randPassword()"
     dependsOnTrue: !expression "InstallMonitoring"
+    ShowValueOnSummary: true
 
   - name: PostgresqlWorkHostpath
     type: Input
