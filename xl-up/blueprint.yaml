@@ -385,24 +385,44 @@ files:
   - path: kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
     dependsOnTrue: !expression "InstallXLR && K8sSetup == 'Local K8s from Docker for Mac/Windows'"
   #efk
-  - path: kubernetes/efk-stack/elasticsearch-logging.yaml.tmpl
+  - path: kubernetes/efk-stack/elasticsearch/rbac.yaml
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/es-curator-cronjob.yaml
+  - path: kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/es-curator-configmap.yaml.tmpl
+  - path: kubernetes/efk-stack/es-curator/cronjob.yaml
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd-config.yaml
+  - path: kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd-esconfig.yaml
+  - path: kubernetes/efk-stack/fluentd/rbac.yaml
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/kibana.yaml.tmpl
+  - path: kubernetes/efk-stack/fluentd/configmap.yaml
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/fluentd/daemonset.yaml
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/kibana/deployment.yaml
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/kibana/ingress.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/kibana/dashboard-job.yaml
     dependsOnTrue: InstallMonitoring
   #pg-stack
-  - path: kubernetes/pg-stack/prometheus.yaml.tmpl
+  - path: kubernetes/pg-stack/prometheus/rbac.yaml
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana.yaml.tmpl
+  - path: kubernetes/pg-stack/prometheus/configmap.yaml
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana-configmap.yaml.tmpl
+  - path: kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/configmap.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/secret.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/pvc.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/deployment.yaml
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/ingress.yaml
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/importer-job.yaml
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
     dependsOnTrue: InstallMonitoring
