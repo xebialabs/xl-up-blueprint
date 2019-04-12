@@ -108,7 +108,7 @@ parameters:
     type: Input
     saveInXlVals: true
     description: "Enter the name of the k8s namespace where XL DevOps platform will be installed"
-    value: malaka
+    value: xebialabs
 
   - name: InstallXLD
     type: Confirm
