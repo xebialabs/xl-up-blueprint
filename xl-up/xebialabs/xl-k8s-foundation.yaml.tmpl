@@ -139,7 +139,7 @@ spec:
                 deployables:
                   - name: xebialabs
                     type: k8s.NamespaceSpec
-                    namespaceName: xebialabs
+                    namespaceName: {{ .Namespace }}
           - name: K8s-Ingress-Controller
             type: udm.Application
             lastVersion: 1.0.0

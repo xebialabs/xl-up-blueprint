@@ -1,0 +1,11 @@
+{{$EFS_ID := "{{EFS_ID}}"}}
+{{$EFS_REGION := "{{EFS_REGION}}"}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: efs-provisioner
+  namespace: {{ .Namespace }}
+data:
+  file.system.id: {{$EFS_ID}}
+  aws.region: {{$EFS_REGION}}
+  provisioner.name: xebialabs.com/aws-efs

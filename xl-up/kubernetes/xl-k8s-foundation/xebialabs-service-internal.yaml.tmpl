@@ -3,7 +3,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: xebialabs-internal
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: haproxy-ingress

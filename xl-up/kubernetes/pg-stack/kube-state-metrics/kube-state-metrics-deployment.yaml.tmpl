@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kube-state-metrics
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 spec:
   selector:
     matchLabels:
