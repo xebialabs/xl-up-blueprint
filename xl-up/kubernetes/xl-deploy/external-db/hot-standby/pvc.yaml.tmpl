@@ -2,7 +2,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: xld-claim
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
   annotations:

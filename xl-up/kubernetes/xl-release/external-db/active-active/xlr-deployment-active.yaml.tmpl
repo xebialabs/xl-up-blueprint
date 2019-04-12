@@ -13,8 +13,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: xl-release-cluster
-  namespace: xebialabs
+  name: xl-release
+  namespace: {{ .Namespace }}
   labels:
     app: xl-release
 spec:
@@ -31,7 +31,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: xl-release
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: xl-release
   annotations:
@@ -49,14 +49,14 @@ spec:
         paths:
           - path: /xl-release/
             backend:
-              serviceName: xl-release-cluster
+              serviceName: xl-release
               servicePort: 5516
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: xl-release
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 spec:
   replicas: 2
   selector:

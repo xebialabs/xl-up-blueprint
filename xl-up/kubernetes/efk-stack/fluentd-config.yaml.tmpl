@@ -2,7 +2,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: fluentd-es-config-v0.12
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
 data:
@@ -155,7 +155,7 @@ data:
       @type elasticsearch
       @log_level info
       include_tag_key true
-      host elasticsearch-logging.xebialabs.svc
+      host elasticsearch-logging.{{ .Namespace }}.svc
       port 9200
       logstash_format true
       <buffer>

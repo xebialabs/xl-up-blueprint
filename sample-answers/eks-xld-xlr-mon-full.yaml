@@ -8,7 +8,7 @@ xldLic: /path/to/deployit-license.lic
 xldDbName: xl-deploy
 xldDbUser: xl-deploy
 xldDbPass: xl-deploy
-efsId: test1234561
+efsId: fs-7ab7fcb2
 efsRegion: eu-west-1
 xlrAdminPass: password
 xlrLic: /path/to/xl-release-license.lic

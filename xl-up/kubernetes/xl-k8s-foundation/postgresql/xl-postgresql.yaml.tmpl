@@ -19,7 +19,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: postgresql-init-sql
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 data:
   init-sql.sh: |-
     #!/bin/bash
@@ -46,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgresql
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: postgresql
 spec:
@@ -59,7 +59,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgresql
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: postgresql
 spec:

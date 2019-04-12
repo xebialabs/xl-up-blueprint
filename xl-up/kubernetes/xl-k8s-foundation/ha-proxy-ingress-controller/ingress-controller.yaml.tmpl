@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: haproxy-ingress-serviceaccount
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -60,7 +60,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: ingress-controller
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 rules:
   - apiGroups:
       - ""
@@ -104,7 +104,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: haproxy-ingress-serviceaccount
-    namespace: xebialabs
+    namespace: {{ .Namespace }}
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: haproxy-ingress-serviceaccount
@@ -113,7 +113,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: ingress-controller
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -121,7 +121,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: haproxy-ingress-serviceaccount
-    namespace: xebialabs
+    namespace: {{ .Namespace }}
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: haproxy-ingress-serviceaccount
@@ -130,7 +130,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: haproxy-ingress
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 data:
   dynamic-scaling: "true"
   backend-server-slots-increment: "4"
@@ -142,7 +142,7 @@ metadata:
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: haproxy-ingress
   name: haproxy-ingress
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 spec:
   selector:
     matchLabels:

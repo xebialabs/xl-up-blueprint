@@ -7,7 +7,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-import-dashboards
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 data:
   set-default.json: |
     {
@@ -186,7 +186,7 @@ data:
           "steppedLine": true,
           "targets": [
             {
-              "expr": "container_memory_working_set_bytes{namespace=~\"xebialabs\", container_name=\"xl-deploy\"}",
+              "expr": "container_memory_working_set_bytes{namespace=~\"{{ .Namespace }}\", container_name=\"xl-deploy\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -198,7 +198,7 @@ data:
               "step": 10
             },
             {
-              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"xebialabs\",container=\"xl-deploy\"}",
+              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"{{ .Namespace }}\",container=\"xl-deploy\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -500,7 +500,7 @@ data:
           "steppedLine": true,
           "targets": [
             {
-              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"xebialabs\", container_name=\"xl-deploy\"}[2m])) by (pod_name)",
+              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"{{ .Namespace }}\", container_name=\"xl-deploy\"}[2m])) by (pod_name)",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -512,7 +512,7 @@ data:
               "step": 10
             },
             {
-              "expr": "sum(container_spec_cpu_shares{namespace=~\"xebialabs\", container_name=\"xl-deploy\"}) by (pod_name) / 1000",
+              "expr": "sum(container_spec_cpu_shares{namespace=~\"{{ .Namespace }}\", container_name=\"xl-deploy\"}) by (pod_name) / 1000",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -835,7 +835,7 @@ data:
           "steppedLine": true,
           "targets": [
             {
-              "expr": "container_memory_working_set_bytes{namespace=~\"xebialabs\", container_name=\"xl-release\"}",
+              "expr": "container_memory_working_set_bytes{namespace=~\"{{ .Namespace }}\", container_name=\"xl-release\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -847,7 +847,7 @@ data:
               "step": 10
             },
             {
-              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"xebialabs\",container=\"xl-release\"}",
+              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"{{ .Namespace }}\",container=\"xl-release\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1148,7 +1148,7 @@ data:
           "steppedLine": true,
           "targets": [
             {
-              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"xebialabs\", container_name=\"xl-release\"}[2m])) by (pod_name)",
+              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"{{ .Namespace }}\", container_name=\"xl-release\"}[2m])) by (pod_name)",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1160,7 +1160,7 @@ data:
               "step": 10
             },
             {
-              "expr": "sum(container_spec_cpu_shares{namespace=~\"xebialabs\", container_name=\"xl-release\"}) by (pod_name) / 1000",
+              "expr": "sum(container_spec_cpu_shares{namespace=~\"{{ .Namespace }}\", container_name=\"xl-release\"}) by (pod_name) / 1000",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1475,7 +1475,7 @@ data:
           "steppedLine": true,
           "targets": [
             {
-              "expr": "container_memory_working_set_bytes{namespace=~\"xebialabs\", container_name=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}",
+              "expr": "container_memory_working_set_bytes{namespace=~\"{{ .Namespace }}\", container_name=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1487,7 +1487,7 @@ data:
               "step": 10
             },
             {
-              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"xebialabs\",container=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}",
+              "expr": "kube_pod_container_resource_requests_memory_bytes{namespace=~\"{{ .Namespace }}\",container=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1601,7 +1601,7 @@ data:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum (kube_pod_container_status_restarts_total{app=\"kube-state-metrics\",namespace=\"xebialabs\",container=~\"elasticsearch-logging|kibana-logging|postgresql|grafana|fluentd-es|haproxy-ingress|ingress-default-backend|kube-state-metrics|addon-resizer\"})",
+              "expr": "sum (kube_pod_container_status_restarts_total{app=\"kube-state-metrics\",namespace=\"{{ .Namespace }}\",container=~\"elasticsearch-logging|kibana-logging|postgresql|grafana|fluentd-es|haproxy-ingress|ingress-default-backend|kube-state-metrics|addon-resizer\"})",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1671,7 +1671,7 @@ data:
           "steppedLine": true,
           "targets": [
             {
-              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"xebialabs\", container_name=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}[2m])) by (pod_name)",
+              "expr": "sum (rate (container_cpu_usage_seconds_total{namespace=~\"{{ .Namespace }}\", container_name=~\"elasticsearch-logging|kibana-logging|postgresql|grafana\"}[2m])) by (pod_name)",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1683,7 +1683,7 @@ data:
               "step": 10
             },
             {
-              "expr": "sum(container_spec_cpu_shares{namespace=~\"xebialabs\", pod_name=~\"elasticsearch-logging.*|kibana-logging.*|postgresql.*|grafana.*\"}) by (pod_name) / 1000",
+              "expr": "sum(container_spec_cpu_shares{namespace=~\"{{ .Namespace }}\", pod_name=~\"elasticsearch-logging.*|kibana-logging.*|postgresql.*|grafana.*\"}) by (pod_name) / 1000",
               "format": "time_series",
               "hide": false,
               "instant": false,

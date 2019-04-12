@@ -1,8 +1,10 @@
+{{$EFS_ID := "{{EFS_ID}}"}}
+{{$EFS_REGION := "{{EFS_REGION}}"}}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: efs-provisioner
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
 spec:
   replicas: 1
   selector:
@@ -41,5 +43,5 @@ spec:
       volumes:
         - name: pv-volume
           nfs:
-            server: {{ EFS_ID }}.efs.{{ EFS_REGION }}.amazonaws.com
+            server: {{$EFS_ID}}.efs.{{$EFS_REGION}}.amazonaws.com
             path: /
