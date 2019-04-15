@@ -1,0 +1,3 @@
+answers-file: local-kube.yaml
+expected-files:
+  - cm_answer_file_auto.yaml
