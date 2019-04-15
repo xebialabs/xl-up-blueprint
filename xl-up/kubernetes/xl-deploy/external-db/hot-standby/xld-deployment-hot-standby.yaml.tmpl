@@ -149,11 +149,11 @@ spec:
               value: {{$XLD_KEYSTORE}}
           resources:
             requests:
-              memory: "1.6Gi"
-              cpu: "0.7"
+              memory: "{{ .XlRAMRequest }}"
+              cpu: "{{ .XlCPURequest }}"
             limits:
-              memory: "3Gi"
-              cpu: "2"
+              memory: "6Gi"
+              cpu: "3"
           ports:
             - name: http
               containerPort: 4516
