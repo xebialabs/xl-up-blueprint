@@ -13,7 +13,7 @@ spec:
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
 {{end}}
-{{if eq .K8sSetup "Local K8s from Docker for Mac/Windows"}}
+{{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:

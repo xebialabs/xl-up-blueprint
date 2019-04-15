@@ -35,7 +35,7 @@ spec:
               {{end}}
             undeployDependencies: "true"
 {{end}}
-  {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+  {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
     - directory: LOCAL-DB
       children:
       - name: XL-Release-Sinlge-Node
