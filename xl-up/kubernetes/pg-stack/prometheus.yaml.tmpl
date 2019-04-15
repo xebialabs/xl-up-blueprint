@@ -180,38 +180,58 @@ data:
         target_label: __metrics_path__
         replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
 
-    - job_name: 'kubernetes-service-endpoints'
-      kubernetes_sd_configs:
-      - role: endpoints
-      relabel_configs:
-      - action: labelmap
-        regex: __meta_kubernetes_service_label_(.+)
-      - source_labels: [__meta_kubernetes_namespace]
-        action: replace
-        target_label: kubernetes_namespace
-      - source_labels: [__meta_kubernetes_service_name]
-        action: replace
-        target_label: kubernetes_name
+    # We do not need this for now
+    # job_name: 'kubernetes-service-endpoints'
+    # kubernetes_sd_configs:
+    # - role: endpoints
+    # relabel_configs:
+    # - action: labelmap
+    #   regex: __meta_kubernetes_service_label_(.+)
+    # - source_labels: [__meta_kubernetes_namespace]
+    #   action: replace
+    #   target_label: kubernetes_namespace
+    # - source_labels: [__meta_kubernetes_service_name]
+    #   action: replace
+    #   target_label: kubernetes_name
 
-    - job_name: 'kubernetes-services'
-      metrics_path: /probe
-      params:
-        module: [http_2xx]
+    # job_name: 'kubernetes-services'
+    # metrics_path: /probe
+    # params:
+    #   module: [http_2xx]
+    # kubernetes_sd_configs:
+    # - role: service
+    # relabel_configs:
+    # - source_labels: [__address__]
+    #   target_label: __param_target
+    # - source_labels: [__param_target]
+    #   target_label: instance
+    # - action: labelmap
+    #   regex: __meta_kubernetes_service_label_(.+)
+    # - source_labels: [__meta_kubernetes_namespace]
+    #   target_label: kubernetes_namespace
+    # - source_labels: [__meta_kubernetes_service_name]
+    #   target_label: kubernetes_name
+
+    - job_name: 'kubernetes-pods'
       kubernetes_sd_configs:
-      - role: service
+      - role: pod
       relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - target_label: __address__
-        replacement: blackbox-exporter.example.com:9115
-      - source_labels: [__param_target]
-        target_label: instance
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
       - action: labelmap
-        regex: __meta_kubernetes_service_label_(.+)
+        regex: __meta_kubernetes_pod_label_(.+)
       - source_labels: [__meta_kubernetes_namespace]
+        action: replace
         target_label: kubernetes_namespace
-      - source_labels: [__meta_kubernetes_service_name]
-        target_label: kubernetes_name
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
 
     - job_name: 'kubernetes-pods'
       kubernetes_sd_configs:
