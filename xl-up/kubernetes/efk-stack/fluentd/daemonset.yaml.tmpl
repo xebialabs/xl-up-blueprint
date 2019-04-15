@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-es-v2.12.5
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: fluentd-es
     version: v2.12.5

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: prometheus
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: prometheus
     purpose: metrics-collector
@@ -72,7 +72,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: prometheus-ui
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: prometheus
 spec:

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-logging
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: kibana-logging
     kubernetes.io/cluster-service: "true"
@@ -24,7 +24,7 @@ spec:
         - 'sh'
         - '-c'
         - >
-          until [ "$(wget -O /dev/null -q --spider -T2 http://elasticsearch-logging.xebialabs.svc:9200; echo $?)" == "0" ]; do
+          until [ "$(wget -O /dev/null -q --spider -T2 http://elasticsearch-logging.{{- .Namespace }}.svc:9200; echo $?)" == "0" ]; do
             echo "ElasticSearch is not ready yet";
             sleep 2;
           done
@@ -40,7 +40,7 @@ spec:
             memory: 1Gi
         env:
           - name: ELASTICSEARCH_URL
-            value: http://elasticsearch-logging.xebialabs.svc:9200
+            value: http://elasticsearch-logging.{{- .Namespace }}.svc:9200
           - name: SERVER_BASEPATH
             value: /kibana
           - name: KIBANA_DEFAULTAPPID
@@ -54,7 +54,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kibana-logging
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: kibana-logging
     kubernetes.io/cluster-service: "true"

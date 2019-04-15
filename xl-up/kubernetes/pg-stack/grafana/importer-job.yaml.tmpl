@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: grafana-import-dashboards
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: grafana
     component: import-dashboards
@@ -22,7 +22,7 @@ spec:
         - -c
         - >
           set -x;
-          while [ $(curl -L --max-time 3 -sw '%{http_code}' "http://grafana.xebialabs.svc:3000/api/health" -o /dev/null) -ne 200 ]; do
+          while [ $(curl -L --max-time 3 -sw '%{http_code}' "http://grafana.{{- .Namespace }}.svc:3000/api/health" -o /dev/null) -ne 200 ]; do
             echo '.'
             sleep 2;
           done

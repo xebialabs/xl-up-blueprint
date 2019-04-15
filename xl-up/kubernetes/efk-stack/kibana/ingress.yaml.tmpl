@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: kibana
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: kibana
   annotations:

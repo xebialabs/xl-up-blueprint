@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
-  namespace: xebialabs
+  namespace: {{ .Namespace }}
   labels:
     app: prometheus
 data:
