@@ -55,10 +55,10 @@ spec:
             port: http
         resources:
           limits:
-            cpu: 500m
+            cpu: 0.5
             memory: 1Gi
           requests:
-            cpu: 100m
+            cpu: 0.1
             memory: 0.2Gi
         volumeMounts:
         - mountPath: /var/lib/grafana

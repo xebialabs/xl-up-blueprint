@@ -132,7 +132,7 @@ spec:
           volumeMounts:
             - name: work
               mountPath: /opt/xebialabs/xl-deploy-server/work
-      {{if eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
       volumes:
         # Use hostPath to persist your data on your local machine or emptyDir for minikube
         - name: work

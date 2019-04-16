@@ -3,7 +3,7 @@ kind: Deployment
 spec:
   package: Applications/XEBIALABS/XL-K8S-FOUNDATION/K8s-NameSpace/1.0.0
   environment: Environments/XEBIALABS/K8S
-  {{if eq .K8sSetup "Local K8s from Docker for Mac/Windows"}}
+  {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
   {{if (and (.InstallXLD) (not .InstallXLR))}}
 ---
 apiVersion: xl-deploy/v1

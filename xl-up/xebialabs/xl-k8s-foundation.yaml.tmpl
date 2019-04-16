@@ -13,7 +13,7 @@ spec:
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
 {{end}}
-{{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+{{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -60,7 +60,7 @@ spec:
         entries:
           XL_VERSION: !value xlVersion
           DOCKER_REPO: !value dockerRepo
-        {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+        {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
         {{end}}
         {{if  .InstallXLR }}
@@ -70,7 +70,7 @@ spec:
           XLR_DB_USER: !value xlrDbUser
         {{end}}
         {{if  .InstallXLD }}
-          {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           XLD_WORK_HOSTPATH: !value xldWorkHostpath
           {{end}}
           XLD_DB_NAME: !value xldDbName
@@ -115,7 +115,7 @@ spec:
           {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
           - Infrastructure/XEBIALABS/K8s-MASTER
           {{end}}
-          {{if  eq .K8sSetup "Local K8s from Docker for Mac/Windows" }}
+          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL
           {{end}}
         dictionaries:
@@ -164,7 +164,7 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file ../kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
-                  {{if not ( eq .K8sSetup "Local K8s from Docker for Mac/Windows" )}}
+                  {{if not ( eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" )}}
                   PostgreSQL: "1.0.0"
                   {{end}}
                 undeployDependencies: "true"
