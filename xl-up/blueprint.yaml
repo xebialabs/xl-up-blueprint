@@ -130,6 +130,18 @@ parameters:
       - 8.6.1
     value: 8.6.1
 
+  - name: XlRAMRequest
+    type: Input
+    description: "How many RAM resources will be requested for XebiaLabs POD? Ex: 4Gi"
+    saveInXlVals: false
+    value: "1.6Gi"
+
+  - name: XlCPURequest
+    type: Input
+    description: "How many CPU resources will be requested for XebiaLabs POD? Ex: 2"
+    saveInXlVals: false
+    value: "0.7"
+
   - name: dockerRepo
     type: Select
     saveInXlVals: true
