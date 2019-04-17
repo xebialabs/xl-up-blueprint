@@ -127,7 +127,7 @@ parameters:
     saveInXlVals: true
     description: "Choose version of Xebialabs DevOps Platform:"
     options:
-      - 8.6.1
+      - !fn version._showapplicableversions()
     # value: 8.6.1 # removed this for update workflow
 
   - name: XlRAMRequest
