@@ -1,4 +1,4 @@
-K8sSetup : Local K8s from Docker for Mac/Windows
+K8sSetup : Local K8s from Docker Desktop for Mac/Windows
 useKubeconfig: false
 apiServerURL: https://localk8s.com:8443
 OsType: linux
