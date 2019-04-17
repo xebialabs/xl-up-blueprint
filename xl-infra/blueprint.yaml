@@ -27,21 +27,21 @@ parameters:
     type: Input
     description: "Enter the ApiServerURL of your K8s installation:"
     default: !fn k8s.config().ClusterServer
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: OsType
     type: Input
     description: "The type of OS where the xl command is running"
     value: !fn os._operatingsystem()
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: localApiServerURL
     type: Input
     description: "Enter the ApiServerURL of your K8s installation:"
     value: !fn os._defaultapiserverurl()
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker for Mac/Windows'"
+    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: K8sClientCertFile
