@@ -6,6 +6,44 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: grafana-importer
+  namespace: {{ .Namespace }}
+data:
+  dashboard-importer.sh: |
+      for file in *-datasource.json ; do
+        if [ -e "$file" ] ; then
+          echo "importing $file" &&
+          curl --silent --fail --show-error \
+            --request POST http://${GF_ADMIN_USER}:${GF_ADMIN_PASSWORD}@grafana.{{- .Namespace }}.svc:3000/api/datasources \
+            --header "Content-Type: application/json" \
+            --data-binary "@$file" ;
+          echo "" ;
+        fi
+      done ;
+      for file in *-dashboard.json ; do
+        if [ -e "$file" ] ; then
+          echo "importing $file" &&
+          ( echo '{"dashboard":'; \
+            cat "$file"; \
+            echo ',"overwrite":true,"inputs":[{"name":"DS_PROMETHEUS","type":"datasource","pluginId":"prometheus","value":"prometheus"},{"name": "VAR_JOB","type": "constant","label": "job","value": "kubernetes-pods","description": ""}]}' ) \
+          | jq -c '.' \
+          | curl --silent --fail --show-error \
+            --request POST http://${GF_ADMIN_USER}:${GF_ADMIN_PASSWORD}@grafana.{{- .Namespace }}.svc:3000/api/dashboards/import \
+            --header "Content-Type: application/json" \
+            --data-binary "@-" ;
+          echo "" ;
+        fi
+      done ;
+      curl --silent --fail --show-error \
+       --request POST http://${GF_ADMIN_USER}:${GF_ADMIN_PASSWORD}@grafana.{{- .Namespace }}.svc:3000/api/user/stars/dashboard/1 ;
+      curl --silent --fail --show-error \
+       --request PUT http://${GF_ADMIN_USER}:${GF_ADMIN_PASSWORD}@grafana.{{- .Namespace }}.svc:3000/api/user/preferences \
+       --header "Content-Type: application/json" \
+       --data-binary "@set-default.json" ;
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: grafana-import-dashboards
   namespace: {{ .Namespace }}
 data:

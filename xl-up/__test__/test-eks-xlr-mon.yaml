@@ -14,16 +14,26 @@ expected-files:
   #xl-deploy xl-release
   - kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   #efk
-  - kubernetes/efk-stack/elasticsearch-logging.yaml
-  - kubernetes/efk-stack/fluentd-config.yaml
-  - kubernetes/efk-stack/fluentd-esconfig.yaml
-  - kubernetes/efk-stack/kibana.yaml
-  - kubernetes/efk-stack/es-curator-cronjob.yaml
-  - kubernetes/efk-stack/es-curator-configmap.yaml
+  - kubernetes/efk-stack/elasticsearch/rbac.yaml
+  - kubernetes/efk-stack/elasticsearch/deployment.yaml
+  - kubernetes/efk-stack/fluentd/configmap.yaml
+  - kubernetes/efk-stack/fluentd/daemonset.yaml
+  - kubernetes/efk-stack/fluentd/rbac.yaml
+  - kubernetes/efk-stack/kibana/deployment.yaml
+  - kubernetes/efk-stack/kibana/ingress.yaml
+  - kubernetes/efk-stack/kibana/dashboard-job.yaml
+  - kubernetes/efk-stack/es-curator/cronjob.yaml
+  - kubernetes/efk-stack/es-curator/configmap.yaml
   #pg
-  - kubernetes/pg-stack/prometheus.yaml
-  - kubernetes/pg-stack/grafana.yaml
-  - kubernetes/pg-stack/grafana-configmap.yaml
+  - kubernetes/pg-stack/prometheus/rbac.yaml
+  - kubernetes/pg-stack/prometheus/configmap.yaml
+  - kubernetes/pg-stack/prometheus/deployment.yaml
+  - kubernetes/pg-stack/grafana/configmap.yaml
+  - kubernetes/pg-stack/grafana/secret.yaml
+  - kubernetes/pg-stack/grafana/deployment.yaml
+  - kubernetes/pg-stack/grafana/importer-job.yaml
+  - kubernetes/pg-stack/grafana/ingress.yaml
+  - kubernetes/pg-stack/grafana/pvc.yaml
   - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
   - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
   - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml

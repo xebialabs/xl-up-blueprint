@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kibana
+  namespace: {{ .Namespace }}
+  labels:
+    app: kibana
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/auth-type: "basic"
+    ingress.kubernetes.io/auth-realm: "Kibana Authentication"
+    ingress.kubernetes.io/auth-secret: "kibana-secret"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /kibana/
+            backend:
+              serviceName: kibana-logging
+              servicePort: 5601
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kibana-secret
+data:
+  auth: {{ cat .monitoringUser "::" .monitoringUserPass | b64enc }}
