@@ -128,7 +128,7 @@ parameters:
     description: "Choose version of Xebialabs DevOps Platform:"
     options:
       - 8.6.1
-    value: 8.6.1
+    # value: 8.6.1 # removed this for update workflow
 
   - name: XlRAMRequest
     type: Input
@@ -163,7 +163,7 @@ parameters:
     type: File
     saveInXlVals: true
     description: "Enter the path of the XL Deploy license:"
-    dependsOnTrue: !expression "InstallXLD"   
+    dependsOnTrue: !expression "InstallXLD"
 
   - name: xldDbName
     type: Input
