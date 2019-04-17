@@ -11,7 +11,7 @@ parameters:
     type: Select
     description: "Select the Kubernetes setup where XL Devops Platform will be installed"
     options:
-      - Local K8s from Docker for Mac/Windows
+      - Local K8s from Docker Desktop for Mac/Windows
       - AWS EKS
       - Plain multinode K8s cluster
     saveInXlVals: true

@@ -163,7 +163,7 @@ parameters:
     type: File
     saveInXlVals: true
     description: "Enter the path of the XL Deploy license:"
-    dependsOnTrue: !expression "InstallXLD"
+    dependsOnTrue: !expression "InstallXLD"   
 
   - name: xldDbName
     type: Input
@@ -460,3 +460,4 @@ files:
   - path: xebialabs.yaml.tmpl
   - path: xebialabs/common.yaml.tmpl
   - path: xebialabs/deployments.yaml.tmpl
+  - path: xebialabs/answers.yaml.tmpl
