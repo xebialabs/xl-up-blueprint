@@ -130,6 +130,18 @@ parameters:
       - 8.6.1
     value: 8.6.1
 
+  - name: XlRAMRequest
+    type: Input
+    description: "How many RAM resources will be requested for XebiaLabs POD? Ex: 4Gi"
+    saveInXlVals: false
+    value: "1.6Gi"
+
+  - name: XlCPURequest
+    type: Input
+    description: "How many CPU resources will be requested for XebiaLabs POD? Ex: 2"
+    saveInXlVals: false
+    value: "0.7"
+
   - name: dockerRepo
     type: Select
     saveInXlVals: true
@@ -145,7 +157,7 @@ parameters:
     description: "Enter XL Deploy admin user password you want to use:"
     dependsOnTrue: !expression "InstallXLD"
     default: !expression "randPassword()"
-    ShowValueOnSummary: true
+    showValueOnSummary: true
 
   - name: xldLic
     type: File
@@ -174,7 +186,7 @@ parameters:
     description: "Enter your XLD database password:"
     dependsOnTrue: InstallXLD
     default: !expression "randPassword()"
-    ShowValueOnSummary: true
+    showValueOnSummary: true
 
   - name: efsId
     type: Input
@@ -213,7 +225,7 @@ parameters:
     description: "Enter XL Release admin user password you want to use:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
-    ShowValueOnSummary: true
+    showValueOnSummary: true
 
   - name: xlrLic
     type: File
@@ -242,7 +254,7 @@ parameters:
     description: "Enter your XLR database password:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
-    ShowValueOnSummary: true
+    showValueOnSummary: true
 
   - name: xlrReportDbName
     type: Input
@@ -265,7 +277,7 @@ parameters:
     description: "Enter your XLR report database password:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
-    ShowValueOnSummary: true
+    showValueOnSummary: true
 
   - name: xlKeyStore
     type: File
@@ -306,7 +318,7 @@ parameters:
     description: "What is the password for the monitoring user?"
     default: !expression "randPassword()"
     dependsOnTrue: !expression "InstallMonitoring"
-    ShowValueOnSummary: true
+    showValueOnSummary: true
 
   - name: PostgresqlWorkHostpath
     type: Input
@@ -391,24 +403,44 @@ files:
   - path: kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
     dependsOnTrue: !expression "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
   #efk
-  - path: kubernetes/efk-stack/elasticsearch-logging.yaml.tmpl
+  - path: kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/es-curator-cronjob.yaml.tmpl
+  - path: kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/es-curator-configmap.yaml.tmpl
+  - path: kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd-config.yaml.tmpl
+  - path: kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd-esconfig.yaml.tmpl
+  - path: kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/kibana.yaml.tmpl
+  - path: kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/kibana/deployment.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/kibana/ingress.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   #pg-stack
-  - path: kubernetes/pg-stack/prometheus.yaml.tmpl
+  - path: kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana.yaml.tmpl
+  - path: kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana-configmap.yaml.tmpl
+  - path: kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/configmap.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/secret.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/pvc.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/deployment.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/ingress.yaml.tmpl
+    dependsOnTrue: InstallMonitoring
+  - path: kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
     dependsOnTrue: InstallMonitoring
