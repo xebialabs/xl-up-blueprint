@@ -27,10 +27,10 @@ spec:
               {{end}}
               {{if  not .InstallXLD}}
                 {{if  not .InstallMonitoring}}
-              K8s-Ingress-Controller: "1.0.0"
+              K8s-Ingress-Controller: !value xlVersion
                 {{else}}
-              Grafana-Dashboard: "1.0.0"
-              Kibana: "1.0.0"
+              Grafana-Dashboard: !value xlVersion
+              Kibana: !value xlVersion
                 {{end}}
               {{end}}
             undeployDependencies: "true"
@@ -54,8 +54,8 @@ spec:
             XL-Deploy-Single-Node: !value xlVersion
             {{end}}
             {{if  not .InstallXLD}}
-            K8s-Ingress-Controller: "1.0.0"
-            PostgreSQL: "1.0.0"
+            K8s-Ingress-Controller: !value xlVersion
+            PostgreSQL: !value xlVersion
             {{end}}
           undeployDependencies: "true"
   {{end}}
