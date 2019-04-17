@@ -12,3 +12,4 @@ xldDbUser: xl-deploy
 xldDbPass: xl-deploy
 xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
+xlVersion:

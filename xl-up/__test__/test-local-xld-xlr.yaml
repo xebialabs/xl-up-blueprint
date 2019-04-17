@@ -67,6 +67,7 @@ expected-xl-values:
   xldDbUser: xl-deploy
   xlrDbName: xl-release
   xlrDbUser: xl-release
+  xlVersion:
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
 expected-xl-secrets:

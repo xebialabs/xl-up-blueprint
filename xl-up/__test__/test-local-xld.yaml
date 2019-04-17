@@ -64,6 +64,7 @@ expected-xl-values:
   InstallXLR: false
   xldDbName: xl-deploy
   xldDbUser: xl-deploy
+  xlVersion:
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

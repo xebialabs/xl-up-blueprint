@@ -16,6 +16,7 @@ efsId: test1234561
 efsRegion: eu-west-1
 xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
+xlVersion:
 InstallMonitoring: true
 monitoringUser: mon-user
 monitoringUserPass: mon-pass

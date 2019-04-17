@@ -14,6 +14,7 @@ nsfServerHost: nfs-test.com
 nsfSharePath: /xebialabs
 xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
+xlVersion:
 InstallMonitoring: true
 monitoringUser: mon-user
 monitoringUserPass: mon-pass

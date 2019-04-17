@@ -66,6 +66,7 @@ expected-xl-values:
   xlrDbUser: xl-release
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
+  xlVersion:
 expected-xl-secrets:
   xlKeyStorePass: test123
   xlrAdminPass: password
