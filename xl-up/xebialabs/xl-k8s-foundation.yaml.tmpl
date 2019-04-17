@@ -143,14 +143,14 @@ spec:
                 applicationDependencies:
                   {{if .InstallXLR}}
                   {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-                  XL-Release-Sinlge-Node: !value xlVersion
+                  XL-Release-Single-Node: !value xlVersion
                   {{else}}
                   XL-Release-Active-Active: !value xlVersion
                   {{end}}
                   {{end}}
                   {{if .InstallXLD}}
                   {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-                  XL-Deploy-Sinlge-Node: !value xlVersion
+                  XL-Deploy-Single-Node: !value xlVersion
                   {{else}}
                   XL-Deploy-Hot-Standby: !value xlVersion
                   {{end}}
