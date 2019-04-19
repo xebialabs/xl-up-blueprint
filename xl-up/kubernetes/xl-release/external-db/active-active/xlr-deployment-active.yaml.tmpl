@@ -59,6 +59,8 @@ metadata:
   namespace: {{ .Namespace }}
 spec:
   replicas: 2
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: xl-release

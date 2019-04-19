@@ -68,8 +68,19 @@ spec:
           XLR_DB_NAME: !value xlrDbName
           XLR_REPORT_DB_USER: !value xlrReportDbUser
           XLR_DB_USER: !value xlrDbUser
+          XLR_KEYSTORE_PASS: !value xlKeyStorePass
+          XLR_KEYSTORE: {{ .xlKeyStore | b64enc }}
+          XLR_LIC: {{ .xlrLic | b64enc }}
+          XLR_REPORT_DB_PASS: !value xlrReportDbPass
+          XLR_DB_PASS: !value xlrDbPass
+          XLR_ADMIN_PASS: !value xlrAdminPass
         {{end}}
         {{if  .InstallXLD }}
+          XLD_KEYSTORE: {{ .xlKeyStore | b64enc }}
+          XLD_KEYSTORE_PASS: !value xlKeyStorePass
+          XLD_LIC: {{ .xldLic | b64enc }}
+          XLD_DB_PASS: !value xldDbPass
+          XLD_ADMIN_PASS: !value xldAdminPass
           {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           XLD_WORK_HOSTPATH: !value xldWorkHostpath
           {{end}}
@@ -90,22 +101,6 @@ spec:
           POSTGRES_SYNC_COMMIT: !value postgresSyncCommit
           POSTGRES_EFFECT_CACHE_SIZE: !value postgresEffectCacheSize
           POSTGRES_MAX_WALL_SIZE: !value postgresMaxWallSize
-        encryptedEntries:
-        {{if  .InstallXLR }}
-          XLR_KEYSTORE_PASS: !value xlKeyStorePass
-          XLR_KEYSTORE: {{ .xlKeyStore | b64enc }}
-          XLR_LIC: {{ .xlrLic | b64enc }}
-          XLR_REPORT_DB_PASS: !value xlrReportDbPass
-          XLR_DB_PASS: !value xlrDbPass
-          XLR_ADMIN_PASS: !value xlrAdminPass
-        {{end}}
-        {{if  .InstallXLD }}
-          XLD_KEYSTORE: {{ .xlKeyStore | b64enc }}
-          XLD_KEYSTORE_PASS: !value xlKeyStorePass
-          XLD_LIC: {{ .xldLic | b64enc }}
-          XLD_DB_PASS: !value xldDbPass
-          XLD_ADMIN_PASS: !value xldAdminPass
-        {{end}}
       - name: K8S
         type: udm.Environment
         members:

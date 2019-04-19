@@ -95,6 +95,7 @@ parameters:
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
     default: !fn aws.credentials().AccessKeyID
+    useRawValue: true
 
   - name: AWSAccessSecret
     type: Input
@@ -103,6 +104,7 @@ parameters:
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
     default: !fn aws.credentials().SecretAccessKey
+    useRawValue: true
 
   - name: Namespace
     type: Input
@@ -128,7 +130,6 @@ parameters:
     description: "Choose version of Xebialabs DevOps Platform:"
     options:
       - !fn version._showapplicableversions()
-    # value: 8.6.1 # removed this for update workflow
 
   - name: XlRAMRequest
     type: Input
@@ -158,6 +159,7 @@ parameters:
     dependsOnTrue: !expression "InstallXLD"
     default: !expression "randPassword()"
     showValueOnSummary: true
+    useRawValue: true
 
   - name: xldLic
     type: File
@@ -187,6 +189,7 @@ parameters:
     dependsOnTrue: InstallXLD
     default: !expression "randPassword()"
     showValueOnSummary: true
+    useRawValue: true
 
   - name: efsId
     type: Input
@@ -226,6 +229,7 @@ parameters:
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
     showValueOnSummary: true
+    useRawValue: true
 
   - name: xlrLic
     type: File
@@ -255,6 +259,7 @@ parameters:
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
     showValueOnSummary: true
+    useRawValue: true
 
   - name: xlrReportDbName
     type: Input
@@ -278,6 +283,7 @@ parameters:
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
     showValueOnSummary: true
+    useRawValue: true
 
   - name: xlKeyStore
     type: File
@@ -289,6 +295,7 @@ parameters:
     secret: true
     saveInXlVals: true
     description: "Enter your XL keystore Password"
+    useRawValue: true
 
   - name: InstallMonitoring
     type: Confirm
