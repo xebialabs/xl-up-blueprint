@@ -1,0 +1,10 @@
+answers-file: eks.yaml
+expected-files:
+  - cm_answer_file_auto.yaml
+expected-xl-values:
+  K8sSetup: AWS EKS
+  useKubeconfig: false
+  apiServerURL: https://aws-eks.com:6443
+expected-xl-secrets:
+  AWSAccessKey: SOMEKEY
+  AWSAccessSecret: SOMEMOREKEY

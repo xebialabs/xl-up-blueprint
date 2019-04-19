@@ -146,7 +146,10 @@ if __name__ == '__main__':
 
     blueprint_to_test_dirs = {}
     for blueprint_dir in blueprint_dirs:
+        print(greentext(f'Identified test directory {blueprint_dir}'))
         blueprint_to_test_dirs[blueprint_dir] = '{}/__test__'.format(blueprint_dir)
+
+    print('')
 
     fail_if_missing_test_dirs(blueprint_to_test_dirs.values())
 
@@ -185,8 +188,8 @@ if __name__ == '__main__':
             result = subprocess.run(command, env=env)
             if not result.returncode == 0:
                 if result.stdout:
-                    print('stdout: {}'.format(result.stdout))
-                errormsg('Test failed on {} with message "{}"'.format(answers_file, result.stderr.decode('utf8').strip()))
+                    print('stdout: {}'.format(result.stdout.decode('utf8')))
+                errormsg('Test failed on {} with message "{}"'.format(answers_file, result.stderr.decode('utf8').strip() if result.stderr else "UNKNOWN"))
                 print(redtext('FAILED'))
                 os.chdir('..')
                 sys.exit(result.returncode)

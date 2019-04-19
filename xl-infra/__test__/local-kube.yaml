@@ -1,15 +1,5 @@
-K8sSetup : Local K8s from Docker Desktop for Mac/Windows
+K8sSetup: Local K8s from Docker Desktop for Mac/Windows
 useKubeconfig: false
-apiServerURL: https://localk8s.com:8443
-OsType: linux
 localApiServerURL: https://localk8s.com:8443
 K8sClientCertFile: ../xl-infra/__test__/files/test-file
-K8sClientCert: 
 K8sClientCertKeyFile: ../xl-infra/__test__/files/test-file
-K8sClientCertKey:
-IsEKS : false
-eksClusterName:
-isAwsCfgAvailable: false
-useAWSconfig: false
-AWSAccessKey: 
-AWSAccessSecret: 
