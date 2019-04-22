@@ -13,7 +13,7 @@ spec:
         - name: XL-Release-Active-Active
           type: udm.Application
           children:
-          - name: !value xlVersion
+          - name: "{{.xlVersion}}"
             orchestrator:
               - sequential-by-dependency
             type: udm.DeploymentPackage
@@ -23,14 +23,14 @@ spec:
               file: !file ../kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
             applicationDependencies:
               {{if  .InstallXLD }}
-              XL-Deploy-Hot-Standby: !value xlVersion
+              XL-Deploy-Hot-Standby: "{{.xlVersion}}"
               {{end}}
               {{if  not .InstallXLD}}
                 {{if  not .InstallMonitoring}}
-              K8s-Ingress-Controller: "1.0.0"
+              K8s-Ingress-Controller: "{{.xlVersion}}"
                 {{else}}
-              Grafana-Dashboard: "1.0.0"
-              Kibana: "1.0.0"
+              Grafana-Dashboard: "{{.xlVersion}}"
+              Kibana: "{{.xlVersion}}"
                 {{end}}
               {{end}}
             undeployDependencies: "true"
@@ -41,7 +41,7 @@ spec:
       - name: XL-Release-Single-Node
         type: udm.Application
         children:
-        - name: !value xlVersion
+        - name: "{{.xlVersion}}"
           orchestrator:
             - sequential-by-dependency
           type: udm.DeploymentPackage
@@ -51,11 +51,11 @@ spec:
             file: !file ../kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
           applicationDependencies:
             {{if  .InstallXLD }}
-            XL-Deploy-Single-Node: !value xlVersion
+            XL-Deploy-Single-Node: "{{.xlVersion}}"
             {{end}}
             {{if  not .InstallXLD}}
-            K8s-Ingress-Controller: "1.0.0"
-            PostgreSQL: "1.0.0"
+            K8s-Ingress-Controller: "{{.xlVersion}}"
+            PostgreSQL: "{{.xlVersion}}"
             {{end}}
           undeployDependencies: "true"
   {{end}}

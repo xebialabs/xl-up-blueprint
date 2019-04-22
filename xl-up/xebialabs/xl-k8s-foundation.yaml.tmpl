@@ -58,7 +58,7 @@ spec:
       - name: DICTIONARY
         type: udm.Dictionary
         entries:
-          XL_VERSION: !value xlVersion
+          XL_VERSION: "{{.xlVersion}}"
           DOCKER_REPO: !value dockerRepo
         {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
@@ -153,9 +153,8 @@ spec:
                 undeployDependencies: "true"
           - name: K8s-NameSpace
             type: udm.Application
-            lastVersion: 1.0.0
             children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -165,9 +164,8 @@ spec:
                     namespaceName: {{ .Namespace }}
           - name: K8s-Ingress-Controller
             type: udm.Application
-            lastVersion: 1.0.0
             children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -188,15 +186,14 @@ spec:
                     file: !file ../kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
                   {{if not ( eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" )}}
-                  PostgreSQL: "1.0.0"
+                  PostgreSQL: "{{.xlVersion}}"
                   {{end}}
                 undeployDependencies: "true"
           {{if  eq .K8sSetup "AWS EKS" }}
           - name: K8s-StorageClass
             type: udm.Application
-            lastVersion: 1.0.0
             children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -208,9 +205,8 @@ spec:
 
           - name: PostgreSQL
             type: udm.Application
-            lastVersion: 1.0.0
             children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -221,9 +217,9 @@ spec:
                 applicationDependencies:
                   {{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
                     {{if  eq .K8sSetup "AWS EKS" }}
-                  K8s-StorageClass: "1.0.0"
+                  K8s-StorageClass: "{{.xlVersion}}"
                     {{else}}
-                  K8s-NFS-Client-Provisioner: "1.0.0"
+                  K8s-NFS-Client-Provisioner: "{{.xlVersion}}"
                     {{end}}
                   {{end}}
                 undeployDependencies: "true"
@@ -231,9 +227,8 @@ spec:
           {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
           - name: K8s-NFS-Client-Provisioner
             type: udm.Application
-            lastVersion: 1.0.0
             children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -253,9 +248,8 @@ spec:
             children:
             - name: Elasticsearch-Logging
               type: udm.Application
-              lastVersion: 1.0.0
               children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -273,13 +267,12 @@ spec:
                    type: k8s.ResourcesFile
                    file: !file "../kubernetes/efk-stack/es-curator/configmap.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "1.0.0"
+                  K8s-Ingress-Controller: "{{.xlVersion}}"
                 undeployDependencies: "true"
             - name: Fluentd
               type: udm.Application
-              lastVersion: 1.0.0
               children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -294,13 +287,12 @@ spec:
                   type: k8s.ResourcesFile
                   file: !file "../kubernetes/efk-stack/fluentd/daemonset.yaml"
                 applicationDependencies:
-                  Elasticsearch-Logging: "1.0.0"
+                  Elasticsearch-Logging: "{{.xlVersion}}"
                 undeployDependencies: "true"
             - name: Kibana
               type: udm.Application
-              lastVersion: 1.0.0
               children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -315,12 +307,12 @@ spec:
                   type: k8s.ResourcesFile
                   file: !file "../kubernetes/efk-stack/kibana/dashboard-job.yaml"
                 applicationDependencies:
-                  Fluentd: "1.0.0"
+                  Fluentd: "{{.xlVersion}}"
                 undeployDependencies: "true"
             - name: Kube-State-Metrics
               type: udm.Application
               children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -347,12 +339,12 @@ spec:
                   type: k8s.ResourcesFile
                   file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "1.0.0"
+                  K8s-Ingress-Controller: "{{.xlVersion}}"
                 undeployDependencies: "true"
             - name: Prometheus
               type: udm.Application
               children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -367,12 +359,12 @@ spec:
                   type: k8s.ResourcesFile
                   file: !file "../kubernetes/pg-stack/prometheus/deployment.yaml"
                 applicationDependencies:
-                  Kube-State-Metrics: "1.0.0"
+                  Kube-State-Metrics: "{{.xlVersion}}"
                 undeployDependencies: "true"
             - name: Grafana-Dashboard
               type: udm.Application
               children:
-              - name: 1.0.0
+              - name: "{{.xlVersion}}"
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -397,6 +389,6 @@ spec:
                   type: k8s.ResourcesFile
                   file: !file "../kubernetes/pg-stack/grafana/importer-job.yaml"
                 applicationDependencies:
-                  Prometheus: "1.0.0"
+                  Prometheus: "{{.xlVersion}}"
                 undeployDependencies: "true"
           {{end}}
