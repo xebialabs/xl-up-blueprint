@@ -21,3 +21,4 @@ xlrReportDbUser: xl-release-report
 xlrReportDbPass: xl-release-report
 xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
+xlVersion: 8.6.1

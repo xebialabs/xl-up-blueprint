@@ -69,6 +69,7 @@ expected-xl-values:
   xlrDbUser: xl-release
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
+  xlVersion: 8.6.1
   InstallMonitoring: true
   monitoringUser: mon-user
   monitoringUserPass: mon-pass

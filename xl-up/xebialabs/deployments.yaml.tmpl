@@ -3,47 +3,11 @@ kind: Deployment
 spec:
   package: Applications/XEBIALABS/XL-K8S-FOUNDATION/K8s-NameSpace/{{.xlVersion}}
   environment: Environments/XEBIALABS/K8S
-  {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
-  {{if (and (.InstallXLD) (not .InstallXLR))}}
 ---
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  package: Applications/XEBIALABS/XL-DEPLOY/LOCAL-DB/XL-Deploy-Single-Node/{{.xlVersion}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/1.0.0
   environment: Environments/XEBIALABS/K8S
   orchestrators:
     - sequential-by-dependency
-  {{end}}
-  {{if .InstallXLR}}
----
-apiVersion: xl-deploy/v1
-kind: Deployment
-spec:
-  package: Applications/XEBIALABS/XL-RELEASE/LOCAL-DB/XL-Release-Sinlge-Node/{{.xlVersion}}
-  environment: Environments/XEBIALABS/K8S
-  orchestrators:
-    - sequential-by-dependency
-  {{end}}
-  {{end}}
-  {{if (or (eq .K8sSetup "AWS EKS") (eq .K8sSetup "Plain multinode K8s cluster"))}}
-  {{if (and (.InstallXLD ) (not .InstallXLR ))}}
----
-apiVersion: xl-deploy/v1
-kind: Deployment
-spec:
-  package: Applications/XEBIALABS/XL-DEPLOY/EXTERNAL-DB/HOT-STANDBY/XL-Deploy-Hot-Standby/{{.xlVersion}}
-  environment: Environments/XEBIALABS/K8S
-  orchestrators:
-    - sequential-by-dependency
-  {{end}}
-  {{if .InstallXLR}}
----
-apiVersion: xl-deploy/v1
-kind: Deployment
-spec:
-  package: Applications/XEBIALABS/XL-RELEASE/EXTERNAL-DB/ACTIVE-ACTIVE/XL-Release-Active-Active/{{.xlVersion}}
-  environment: Environments/XEBIALABS/K8S
-  orchestrators:
-    - sequential-by-dependency
-  {{end}}
-  {{end}}

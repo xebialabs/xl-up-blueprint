@@ -66,6 +66,7 @@ expected-xl-values:
   InstallXLR: true
   xldDbName: xl-deploy
   xldDbUser: xl-deploy
+  xlVersion: 8.6.1
   efsId: test1234561
   efsRegion: eu-west-1
   xlrDbName: xl-release

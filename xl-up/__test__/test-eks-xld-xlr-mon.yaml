@@ -70,6 +70,7 @@ expected-xl-values:
   efsRegion: eu-west-1
   xlrDbName: xl-release
   xlrDbUser: xl-release
+  xlVersion: 8.6.1
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
   InstallMonitoring: true

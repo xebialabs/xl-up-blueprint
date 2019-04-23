@@ -38,7 +38,7 @@ spec:
   {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
     - directory: LOCAL-DB
       children:
-      - name: XL-Release-Sinlge-Node
+      - name: XL-Release-Single-Node
         type: udm.Application
         children:
         - name: "{{.xlVersion}}"

@@ -1,0 +1,56 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: answers-config-map
+  namespace: xebialabs
+data:
+  answers.yaml: |-
+    K8sSetup: {{ .K8sSetup }}
+    useKubeconfig: {{ .useKubeconfig }}
+    apiServerURL: {{ .apiServerURL }}
+    OsType: {{ .OsType }}
+    localApiServerURL: {{ .localApiServerURL }}
+    K8sClientCertFile: {{ .K8sClientCertFile }}
+    K8sClientCert: {{ .K8sClientCert | b64enc }}
+    K8sClientCertKeyFile: {{ .K8sClientCertKeyFile }}
+    K8sClientCertKey: {{ .K8sClientCertKey | b64enc }}
+    IsEKS: {{eq .K8sSetup "AWS EKS"}}
+    eksClusterName: {{ .eksClusterName }}
+    isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
+    useAWSconfig: {{ .useAWSconfig }}
+    AWSAccessKey: {{ .AWSAccessKey }}
+    AWSAccessSecret: {{ .AWSAccessSecret }}
+    Namespace: xebialabs
+    InstallXLD: {{ .InstallXLD }}
+    InstallXLR: {{ .InstallXLR }}
+    xlVersion: {{ .xlVersion }}
+    XlRAMRequest: "1.6Gi"
+    XlCPURequest: "0.7"
+    dockerRepo: xebialabs
+    xldAdminPass: {{ .xldAdminPass }}
+    xldLic: {{ .xldLic | b64enc }}
+    xldDbName: {{ .xldDbName }}
+    xldDbUser: {{ .xldDbUser }}
+    xldDbPass: {{ .xldDbPass }}
+    efsId: {{ .efsId }}
+    efsRegion: {{ .efsRegion }}
+    nsfServerHost: {{ .nsfServerHost }}
+    nsfSharePath: {{ .nsfSharePath }}
+    xldWorkHostpath: {{ .xldWorkHostpath }}
+    xlrAdminPass: {{ .xlrAdminPass }}
+    xlrLic: {{ .xlrLic | b64enc }}
+    xlrDbName: {{ .xlrDbName }}
+    xlrDbUser: {{ .xlrDbUser }}
+    xlrDbPass: {{ .xlrDbPass }}
+    xlrReportDbName: {{ .xlrReportDbName }}
+    xlrReportDbUser: {{ .xlrReportDbUser }}
+    xlrReportDbPass: {{ .xlrReportDbPass }}
+    xlKeyStore: {{ .xlKeyStore | b64enc }}
+    xlKeyStorePass: {{ .xlKeyStorePass }}
+    InstallMonitoring: {{ .InstallMonitoring }}
+    MonitoringDataRetention: {{ .MonitoringDataRetention }}
+    monitoringUser: {{ .monitoringUser }}
+    monitoringUserPass: {{ .monitoringUserPass }}
+    PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
+    postgresMaxConn: {{ .postgresMaxConn }}
+    postgresSharedBuff: {{ .postgresSharedBuff }}

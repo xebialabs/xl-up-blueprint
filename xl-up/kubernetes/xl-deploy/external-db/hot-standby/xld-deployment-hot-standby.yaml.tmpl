@@ -75,6 +75,8 @@ metadata:
 spec:
   serviceName: "xl-deploy"
   replicas: 2
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: xl-deploy
