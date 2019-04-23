@@ -120,6 +120,7 @@ Desktop.ini
 *~
 .merge_file*
 index.json
+venv/
 
 ######################
 # Gradle Wrapper

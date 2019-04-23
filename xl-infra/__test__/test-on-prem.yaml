@@ -5,3 +5,5 @@ expected-xl-values:
   K8sSetup: Plain multinode K8s cluster
   useKubeconfig: false
   apiServerURL: https://localk8s.com:8443
+  K8sClientCertFile: ''
+  K8sClientCertKeyFile: ''
