@@ -14,7 +14,7 @@ spec:
                   - name: XL-Deploy-Hot-Standby
                     type: udm.Application
                     children:
-                      - name: !value xlVersion
+                      - name: "{{.xlVersion}}"
                         type: udm.DeploymentPackage
                         orchestrator:
                           - sequential-by-dependency
@@ -27,14 +27,14 @@ spec:
                             file: !file ../kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
                         applicationDependencies:
                           {{if  eq .K8sSetup "AWS EKS" }}
-                          XL-Deploy-AWS-EFS: "1.0.0"
+                          XL-Deploy-AWS-EFS: "{{.xlVersion}}"
                           {{end}}
                           {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
                             {{if  not .InstallMonitoring}}
-                          K8s-Ingress-Controller: "1.0.0"
+                          K8s-Ingress-Controller: "{{.xlVersion}}"
                             {{else}}
-                          Kibana: "1.0.0"
-                          Grafana-Dashboard: "1.0.0"
+                          Kibana: "{{.xlVersion}}"
+                          Grafana-Dashboard: "{{.xlVersion}}"
                             {{end}}
                           {{end}}
                         undeployDependencies: "true"
@@ -42,9 +42,8 @@ spec:
           {{if  eq .K8sSetup "AWS EKS" }}
                   - name: XL-Deploy-AWS-EFS
                     type: udm.Application
-                    lastVersion: 1.0.0
                     children:
-                      - name: 1.0.0
+                      - name: "{{.xlVersion}}"
                         type: udm.DeploymentPackage
                         orchestrator:
                           - sequential-by-dependency
@@ -63,10 +62,10 @@ spec:
                             file: !file ../kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
                         applicationDependencies:
                           {{if not .InstallMonitoring}}
-                          K8s-Ingress-Controller: "1.0.0"
+                          K8s-Ingress-Controller: "{{.xlVersion}}"
                           {{else}}
-                          Kibana: "1.0.0"
-                          Grafana-Dashboard: "1.0.0"
+                          Kibana: "{{.xlVersion}}"
+                          Grafana-Dashboard: "{{.xlVersion}}"
                           {{end}}
                         undeployDependencies: "true"
           {{end}}
@@ -76,7 +75,7 @@ spec:
               - name: XL-Deploy-Single-Node
                 type: udm.Application
                 children:
-                  - name: !value xlVersion
+                  - name: "{{.xlVersion}}"
                     orchestrator:
                       - sequential-by-dependency
                     type: udm.DeploymentPackage
@@ -85,7 +84,7 @@ spec:
                         type: k8s.ResourcesFile
                         file: !file ../kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
                     applicationDependencies:
-                      K8s-Ingress-Controller: "1.0.0"
-                      PostgreSQL: "1.0.0"
+                      K8s-Ingress-Controller: "{{.xlVersion}}"
+                      PostgreSQL: "{{.xlVersion}}"
                     undeployDependencies: "true"
           {{end}}
