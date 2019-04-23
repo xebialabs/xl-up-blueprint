@@ -1,4 +1,4 @@
-K8sSetup : {{.K8sSetup}}
+K8sSetup: {{.K8sSetup}}
 useKubeconfig: {{.useKubeconfig}}
 apiServerURL: {{.apiServerURL}}
 OsType: {{ .OsType }}
@@ -7,7 +7,7 @@ K8sClientCertFile: {{.K8sClientCertFile}}
 K8sClientCert: {{ .K8sClientCert | b64enc }}
 K8sClientCertKeyFile: {{.K8sClientCertKeyFile}}
 K8sClientCertKey: {{.K8sClientCertKey | b64enc }}
-IsEKS : {{eq .K8sSetup "AWS EKS"}}
+IsEKS: {{eq .K8sSetup "AWS EKS"}}
 eksClusterName: {{ .eksClusterName }}
 isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
 useAWSconfig: {{ .useAWSconfig }}
