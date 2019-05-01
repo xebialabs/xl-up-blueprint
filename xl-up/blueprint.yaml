@@ -3,13 +3,13 @@ kind: Blueprint
 metadata:
   projectName: XL UP
   description: |
-    The blueprint deploys XL Deploy, XL Release and XL-k8s-foundation into an existing K8s cluster (local single node K8s, on-premises multinode K8s cluster or an AWS EKS cluster)
+    This blueprint deploys XL Deploy, XL Release, and XL-k8s-foundation into an existing Kubernetes installation (local single-node Kubernetes, on-premises multi-node Kubernetes cluster, or Amazon EKS cluster).
   author: XebiaLabs
   version: 1.0
 parameters:
   - name: K8sSetup
     type: Select
-    description: "Select the Kubernetes setup where XL Devops Platform will be installed"
+    description: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
     options:
       - Local K8s from Docker Desktop for Mac/Windows
       - AWS EKS
@@ -18,61 +18,61 @@ parameters:
 
   - name: useKubeconfig
     type: Confirm
-    description: "Do you want to use K8s' current-context from ~/.kube/config?"
+    description: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
     dependsOnTrue: !fn k8s.config().IsAvailable
     default: !fn k8s.config().IsAvailable
     saveInXlVals: true
 
   - name: apiServerURL
     type: Input
-    description: "Enter the ApiServerURL of your K8s installation:"
+    description: "Enter the ApiServerURL of your Kubernetes installation:"
     default: !fn k8s.config().ClusterServer
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: OsType
     type: Input
-    description: "The type of OS where the xl command is running"
+    description: "The type of operating system where the xl command is running:"
     value: !fn os._operatingsystem()
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: localApiServerURL
     type: Input
-    description: "Enter the ApiServerURL of your K8s installation:"
+    description: "Enter the ApiServerURL of your Kubernetes installation:"
     value: !fn os._defaultapiserverurl()
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: K8sClientCertFile
     type: File
-    description: "Enter the path of your K8s client certificate:"
+    description: "Enter the full path to your Kubernetes client certificate:"
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
     saveInXlVals: true
 
   - name: K8sClientCertKeyFile
     type: File
-    description: "Enter the path of your K8s client certificate key:"
+    description: "Enter the full path to your Kubernetes client certificate key:"
     saveInXlVals: true
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
 
   - name: K8sClientCert
     type: Editor
-    description: "Using K8s client certificate from your context"
+    description: "Using Kubernetes client certificate from your context"
     dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
     saveInXlVals: true
     value: !fn k8s.config().UserClientCertificateData
 
   - name: K8sClientCertKey
     type: Editor
-    description: "Using K8s client certificate key from your context"
+    description: "Using Kubernetes client certificate key from your context"
     saveInXlVals: true
     dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
     value: !fn k8s.config().UserClientKeyData
 
   - name: eksClusterName
     type: Input
-    description: "What is the AWS EKS cluster name?"
+    description: "What is the Amazon EKS cluster name?"
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup == 'AWS EKS' "
     default: !fn k8s.config().ContextCluster
     saveInXlVals: true
@@ -84,14 +84,14 @@ parameters:
 
   - name: useAWSconfig
     type: Confirm
-    description: "Do you want to use AWS credentials from your ~/.aws/credentials file?"
+    description: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
     dependsOnTrue: !expression "isAwsCfgAvailable"
     saveInXlVals: true
 
   - name: AWSAccessKey
     type: Input
     secret: true
-    description: "What is the AWS Access Key ID?"
+    description: "What is the AWS access key ID?"
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
     default: !fn aws.credentials().AccessKeyID
@@ -100,7 +100,7 @@ parameters:
   - name: AWSAccessSecret
     type: Input
     secret: true
-    description: "What is the AWS Secret Access Key?"
+    description: "What is the AWS secret access key?"
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
     default: !fn aws.credentials().SecretAccessKey
@@ -109,7 +109,7 @@ parameters:
   - name: Namespace
     type: Input
     saveInXlVals: true
-    description: "Enter the name of the k8s namespace where XL DevOps platform will be installed"
+    description: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
     value: xebialabs
 
   - name: InstallXLD
@@ -127,26 +127,26 @@ parameters:
   - name: xlVersion
     type: Select
     saveInXlVals: true
-    description: "Choose version of Xebialabs DevOps Platform:"
+    description: "Choose the version of the XebiaLabs DevOps Platform:"
     options:
       - !fn version._showapplicableversions()
 
   - name: XlRAMRequest
     type: Input
-    description: "How many RAM resources will be requested for XebiaLabs POD? Ex: 4Gi"
+    description: "How many RAM resources will be requested for the XebiaLabs POD? Ex: 4Gi"
     saveInXlVals: false
     value: "1.6Gi"
 
   - name: XlCPURequest
     type: Input
-    description: "How many CPU resources will be requested for XebiaLabs POD? Ex: 2"
+    description: "How many CPU resources will be requested for the XebiaLabs POD? Ex: 2"
     saveInXlVals: false
     value: "0.7"
 
   - name: dockerRepo
     type: Select
     saveInXlVals: true
-    description: "Choose Docker repository:"
+    description: "Choose a Docker repository:"
     options:
       - xebialabs
     value: xebialabs
@@ -155,7 +155,7 @@ parameters:
     type: Input
     secret: true
     saveInXlVals: true
-    description: "Enter XL Deploy admin user password you want to use:"
+    description: "Enter the password that you want to use for the XL Deploy admin user:"
     dependsOnTrue: !expression "InstallXLD"
     default: !expression "randPassword()"
     showValueOnSummary: true
@@ -164,20 +164,20 @@ parameters:
   - name: xldLic
     type: File
     saveInXlVals: true
-    description: "Enter the path of the XL Deploy license:"
+    description: "Enter the full path to the XL Deploy license file:"
     dependsOnTrue: !expression "InstallXLD"
 
   - name: xldDbName
     type: Input
     saveInXlVals: true
-    description: "Enter your XLD database name:"
+    description: "Enter your XL Deploy database name:"
     dependsOnTrue: !expression "InstallXLD"
     default: xl-deploy
 
   - name: xldDbUser
     type: Input
     saveInXlVals: true
-    description: "Enter your XLD database username:"
+    description: "Enter your XL Deploy database username:"
     dependsOnTrue: InstallXLD
     default: sa
 
@@ -185,7 +185,7 @@ parameters:
     type: Input
     secret: true
     saveInXlVals: true
-    description: "Enter your XLD database password:"
+    description: "Enter your XL Deploy database password:"
     dependsOnTrue: InstallXLD
     default: !expression "randPassword()"
     showValueOnSummary: true
@@ -194,13 +194,13 @@ parameters:
   - name: efsId
     type: Input
     saveInXlVals: true
-    description: "Enter your AWS EFS Id:"
+    description: "Enter your Amazon EFS ID:"
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
 
   - name: efsRegion
     type: Input
     saveInXlVals: true
-    description: "Enter your AWS EFS region:"
+    description: "Enter your Amazon EFS region:"
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
 
   - name: nsfServerHost
@@ -218,14 +218,14 @@ parameters:
   - name: xldWorkHostpath
     type: Input
     saveInXlVals: true
-    description: "Enter the local directory path that will be used as a work directory for XL Deploy:"
+    description: "Enter the local directory path that XL Deploy can use as a work directory:"
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && InstallXLD && OsType != 'linux' "
 
   - name: xlrAdminPass
     type: Input
     secret: true
     saveInXlVals: true
-    description: "Enter XL Release admin user password you want to use:"
+    description: "Enter the password that you want to use for the XL Release admin user:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
     showValueOnSummary: true
@@ -234,20 +234,20 @@ parameters:
   - name: xlrLic
     type: File
     saveInXlVals: true
-    description: "Enter the path of XL Release license:"
+    description: "Enter the full path to the XL Release license file:"
     dependsOnTrue: !expression "InstallXLR"
 
   - name: xlrDbName
     type: Input
     saveInXlVals: true
-    description: "Enter your XLR database name:"
+    description: "Enter your XL Release database name:"
     dependsOnTrue: !expression "InstallXLR"
     default: xl-release
 
   - name: xlrDbUser
     type: Input
     saveInXlVals: true
-    description: "Enter your XLR database username:"
+    description: "Enter your XL Release database username:"
     dependsOnTrue: !expression "InstallXLR"
     default: xl-release
 
@@ -255,7 +255,7 @@ parameters:
     type: Input
     secret: true
     saveInXlVals: true
-    description: "Enter your XLR database password:"
+    description: "Enter your XL Release database password:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
     showValueOnSummary: true
@@ -264,14 +264,14 @@ parameters:
   - name: xlrReportDbName
     type: Input
     saveInXlVals: true
-    description: "Enter your XLR report database name:"
+    description: "Enter your XL Release report database name:"
     dependsOnTrue: !expression "InstallXLR"
     default: xl-release-report
 
   - name: xlrReportDbUser
     type: Input
     saveInXlVals: true
-    description: "Enter your XLR report database username:"
+    description: "Enter your XL Release report database username:"
     dependsOnTrue: !expression "InstallXLR"
     default: xl-release-report
 
@@ -279,7 +279,7 @@ parameters:
     type: Input
     secret: true
     saveInXlVals: true
-    description: "Enter your XLR report database password:"
+    description: "Enter your XL Release report database password:"
     dependsOnTrue: !expression "InstallXLR"
     default: !expression "randPassword()"
     showValueOnSummary: true
@@ -288,13 +288,13 @@ parameters:
   - name: xlKeyStore
     type: File
     saveInXlVals: true
-    description: "Enter the path of your XL keystore:"
+    description: "Enter the full path to your XebiaLabs keystore:"
 
   - name: xlKeyStorePass
     type: Input
     secret: true
     saveInXlVals: true
-    description: "Enter your XL keystore Password"
+    description: "Enter your XebiaLabs keystore password:"
     useRawValue: true
 
   - name: InstallMonitoring
@@ -306,7 +306,7 @@ parameters:
 
   - name: MonitoringDataRetention
     type: Input
-    description: "How many days you want to keep the monitoring data?"
+    description: "How many days do you want to keep the monitoring data?"
     value: 7
     dependsOnTrue: !expression "InstallMonitoring"
 
@@ -330,41 +330,41 @@ parameters:
   - name: PostgresqlWorkHostpath
     type: Input
     saveInXlVals: true
-    description: "Enter the local directory path where  PostgreSQL will store its data:"
+    description: "Enter the local directory path where PostgreSQL can store its data:"
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && OsType != 'linux'"
 
   - name: postgresMaxConn
     type: Input
     saveInXlVals: true
-    description: "Specify max_connections parameter for PostgreSQL:"
+    description: "Specify the max_connections parameter for PostgreSQL:"
     default: 512
     dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
   - name: postgresSharedBuff
     type: Input
     saveInXlVals: true
-    description: "Specify shared_buffers parameter for PostgreSQL:"
+    description: "Specify the shared_buffers parameter for PostgreSQL:"
     default: 512MB
     dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
   - name: postgresEffectCacheSize
     type: Input
     saveInXlVals: true
-    description: "Specify effective_cache_size parameter for PostgreSQL:"
+    description: "Specify the effective_cache_size parameter for PostgreSQL:"
     default: 1GB
     dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
   - name: postgresSyncCommit
     type: Input
     saveInXlVals: true
-    description: "Specify synchronous_commit parameter for PostgreSQL:"
+    description: "Specify the synchronous_commit parameter for PostgreSQL:"
     default: "off"
     dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
   - name: postgresMaxWallSize
     type: Input
     saveInXlVals: true
-    description: "Specify max_wal_size parameter for PostgreSQL:"
+    description: "Specify the max_wal_size parameter for PostgreSQL:"
     default: 256MB
     dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
