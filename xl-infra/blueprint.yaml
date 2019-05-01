@@ -3,13 +3,13 @@ kind: Blueprint
 metadata:
   projectName: XL UP
   description: |
-    The blueprint deploys XL Deploy, XL Release and XL-k8s-foundation into a existing K8s (local single node K8s, on premises multinode K8s Cluster or and AWS EKS Cluster)
+    This blueprint deploys XL Deploy, XL Release, and XL-k8s-foundation into an existing Kubernetes installation (local single-node Kubernetes, on-premises multi-node Kubernetes cluster, or Amazon EKS cluster).
   author: XebiaLabs
   version: 1.0
 parameters:
   - name: K8sSetup
     type: Select
-    description: "Select the Kubernetes setup where XL Devops Platform will be installed"
+    description: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
     options:
       - Local K8s from Docker Desktop for Mac/Windows
       - AWS EKS
@@ -18,61 +18,61 @@ parameters:
 
   - name: useKubeconfig
     type: Confirm
-    description: "Do you want to use K8s current-context from ~/.kube/config?"
+    description: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
     dependsOnTrue: !fn k8s.config().IsAvailable
     default: !fn k8s.config().IsAvailable
     saveInXlVals: true
 
   - name: apiServerURL
     type: Input
-    description: "Enter the ApiServerURL of your K8s installation:"
+    description: "Enter the ApiServerURL of your Kubernetes installation:"
     default: !fn k8s.config().ClusterServer
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: OsType
     type: Input
-    description: "The type of OS where the xl command is running"
+    description: "The type of operating system where the xl command is running:"
     value: !fn os._operatingsystem()
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: localApiServerURL
     type: Input
-    description: "Enter the ApiServerURL of your K8s installation:"
+    description: "Enter the ApiServerURL of your Kubernetes installation:"
     value: !fn os._defaultapiserverurl()
     dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     saveInXlVals: true
 
   - name: K8sClientCertFile
     type: File
-    description: "Enter the path of your K8s Client Certificate:"
+    description: "Enter the full path to your Kubernetes client certificate:"
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
     saveInXlVals: true
 
   - name: K8sClientCertKeyFile
     type: File
-    description: "Enter the path of your K8s Client Certificate Key:"
+    description: "Enter the full path to your Kubernetes client certificate key:"
     saveInXlVals: true
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
 
   - name: K8sClientCert
     type: Editor
-    description: "Using K8s Client Certificate from your context"
+    description: "Using Kubernetes client certificate from your context"
     dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
     saveInXlVals: true
     value: !fn k8s.config().UserClientCertificateData
 
   - name: K8sClientCertKey
     type: Editor
-    description: "Using k8s Client Certificate Key from your context"
+    description: "Using Kubernetes client certificate Key from your context"
     saveInXlVals: true
     dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
     value: !fn k8s.config().UserClientKeyData
 
   - name: eksClusterName
     type: Input
-    description: "What is the AWS EKS cluster name?"
+    description: "What is the Amazon EKS cluster name?"
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup == 'AWS EKS' "
     default: !fn k8s.config().ContextCluster
     saveInXlVals: true
@@ -84,14 +84,14 @@ parameters:
 
   - name: useAWSconfig
     type: Confirm
-    description: "Do you want to use AWS credentials from ~/.aws/credentials file?"
+    description: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
     dependsOnTrue: !expression "isAwsCfgAvailable"
     saveInXlVals: true
 
   - name: AWSAccessKey
     type: Input
     secret: true
-    description: "What is the AWS Access Key ID?"
+    description: "What is the AWS access key ID?"
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
     useRawValue: true
@@ -100,7 +100,7 @@ parameters:
   - name: AWSAccessSecret
     type: Input
     secret: true
-    description: "What is the AWS Secret Access Key?"
+    description: "What is the AWS secret access key?"
     dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
     saveInXlVals: true
     useRawValue: true
