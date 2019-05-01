@@ -10,10 +10,20 @@ data:
     apiServerURL: {{ .apiServerURL }}
     OsType: {{ .OsType }}
     localApiServerURL: {{ .localApiServerURL }}
-    K8sClientCertFile: {{ .K8sClientCertFile }}
+    {{if eq .K8sClientCert ""}}
+    K8sClientCertFile: {{ .CertFile }}
+    K8sClientCert: {{ .K8sClientCertFile | b64enc }}
+    {{ end }}
+    {{if eq .K8sClientCertKey ""}}
+    K8sClientCertKeyFile: {{ .KeyFile }}
+    K8sClientCertKey: {{ .K8sClientCertKeyFile | b64enc }}
+    {{ end }}
+    {{if eq .K8sClientCertFile ""}}
     K8sClientCert: {{ .K8sClientCert | b64enc }}
-    K8sClientCertKeyFile: {{ .K8sClientCertKeyFile }}
+    {{ end }}
+    {{if eq .K8sClientCertKeyFile ""}}
     K8sClientCertKey: {{ .K8sClientCertKey | b64enc }}
+    {{ end }}
     IsEKS: {{eq .K8sSetup "AWS EKS"}}
     eksClusterName: {{ .eksClusterName }}
     isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
