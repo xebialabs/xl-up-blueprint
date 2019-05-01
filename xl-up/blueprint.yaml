@@ -56,6 +56,18 @@ parameters:
     saveInXlVals: true
     dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
 
+  - name: CertFile
+    type: Input
+    description: "Enter the path of your K8s Client Certificate:"
+    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
+    value: !fn os.getcertfilelocation()
+
+  - name: KeyFile
+    type: Input
+    description: "Enter the path of your K8s Client Certificate Key:"
+    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
+    value: !fn os.getkeyfilelocation()
+
   - name: K8sClientCert
     type: Editor
     description: "Using K8s client certificate from your context"

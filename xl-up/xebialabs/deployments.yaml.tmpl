@@ -7,7 +7,7 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/1.0.0
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.xlVersion}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
     - sequential-by-dependency

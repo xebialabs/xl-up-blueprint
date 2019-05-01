@@ -125,9 +125,8 @@ spec:
         children:
           - name: Answers-Configmap-Deployment
             type: udm.Application
-            lastVersion: 1.0.0
             children:
-              - name: 1.0.0
+              - name: {{.xlVersion}}
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
