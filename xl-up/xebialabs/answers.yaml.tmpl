@@ -30,13 +30,13 @@ data:
     useAWSconfig: {{ .useAWSconfig }}
     AWSAccessKey: {{ .AWSAccessKey }}
     AWSAccessSecret: {{ .AWSAccessSecret }}
-    Namespace: xebialabs
+    Namespace: {{ .Namespace }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
     xlVersion: {{ .xlVersion }}
-    XlRAMRequest: "1.6Gi"
-    XlCPURequest: "0.7"
-    dockerRepo: xebialabs
+    XlRAMRequest: {{ .XlRAMRequest }}
+    XlCPURequest: {{ .XlCPURequest }}
+    dockerRepo: {{ .dockerRepo }}
     xldAdminPass: {{ .xldAdminPass }}
     xldLic: {{ .xldLic | b64enc }}
     xldDbName: {{ .xldDbName }}
