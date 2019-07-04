@@ -383,97 +383,97 @@ parameters:
 files:
   #xl-k8s-foundation
   - path: xebialabs/xl-k8s-foundation.yaml.tmpl
-  - path: kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
-  - path: kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
     dependsOnTrue: !expression "K8sSetup == 'AWS EKS'"
-  - path: kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
-  - path: kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
-  - path: kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
     dependsOnTrue: !expression "K8sSetup == 'AWS EKS' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
-  - path: kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
     dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
     dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
     dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
   #xl-deploy
   - path: xebialabs/xl-deploy.yaml.tmpl
     dependsOnTrue: InstallXLD
-  - path: kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml.tmpl
     dependsOnTrue:  !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml.tmpl
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml.tmpl
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml.tmpl
     dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml.tmpl
     dependsOnTrue: !expression "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml.tmpl
     dependsOnTrue: !expression "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
   #xl-release
   - path: xebialabs/xl-release.yaml.tmpl
     dependsOnTrue: InstallXLR
-  - path: kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
     dependsOnTrue: !expression "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
+  - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
     dependsOnTrue: !expression "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
   #efk
-  - path: kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/kibana/deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/kibana/ingress.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
+  - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   #pg-stack
-  - path: kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana/configmap.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/grafana/configmap.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana/secret.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/grafana/secret.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana/pvc.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/grafana/pvc.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana/deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana/ingress.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml.tmpl
     dependsOnTrue: InstallMonitoring
-  - path: kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
+  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
     dependsOnTrue: InstallMonitoring
   #xebialabs files
   - path: xebialabs.yaml.tmpl

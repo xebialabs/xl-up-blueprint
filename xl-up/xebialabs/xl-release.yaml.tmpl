@@ -20,7 +20,7 @@ spec:
             deployables:
             - name: xlr-deployment
               type: k8s.ResourcesFile
-              file: !file ../kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+              file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
             applicationDependencies:
               {{if  .InstallXLD }}
               XL-Deploy-Hot-Standby: "{{.xlVersion}}"
@@ -48,7 +48,7 @@ spec:
           deployables:
           - name: xlr-deployment
             type: k8s.ResourcesFile
-            file: !file ../kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+            file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
           applicationDependencies:
             {{if  .InstallXLD }}
             XL-Deploy-Single-Node: "{{.xlVersion}}"
