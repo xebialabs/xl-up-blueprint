@@ -74,15 +74,27 @@ spec:
         app: postgresql
     spec:
       initContainers:
+        - name: fix-the-volume-permission
+          image: busybox
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - chown -R 70:70 /var/lib/postgresql
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
         - name: "remove-lost-found"
           image: "busybox:1.26.2"
           imagePullPolicy: "IfNotPresent"
           command:
             - 'sh'
             - '-c'
-            - 'rm -rf /var/lib/postgresql/data/lost+found'
+            - 'rm -rf /var/lib/postgresql/lost+found'
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgresql
               name: data
       containers:
         - image: postgres:10.5
@@ -116,7 +128,7 @@ spec:
               name: postgresql
           volumeMounts:
             - name: data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql
             - name: postgresql-init-sql
               subPath: init-sql.sh
               mountPath: /docker-entrypoint-initdb.d/init-sql.sh

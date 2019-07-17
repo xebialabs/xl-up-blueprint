@@ -21,10 +21,10 @@ spec:
                         deployables:
                           - name: xld-deployment
                             type: k8s.ResourcesFile
-                            file: !file ../kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
+                            file: !file kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
                           - name: xld-pvc
                             type: k8s.ResourcesFile
-                            file: !file ../kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+                            file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
                         applicationDependencies:
                           {{if  eq .K8sSetup "AWS EKS" }}
                           XL-Deploy-AWS-EFS: "{{.xlVersion}}"
@@ -50,16 +50,16 @@ spec:
                         deployables:
                           - name: aws-efs-conf
                             type: k8s.ResourcesFile
-                            file: !file ../kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
+                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
                           - name: aws-efs-deployment
                             type: k8s.ResourcesFile
-                            file: !file ../kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
+                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
                           - name: aws-efs-rbac
                             type: k8s.ResourcesFile
-                            file: !file ../kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
+                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
                           - name: aws-efs-storageclass
                             type: k8s.ResourcesFile
-                            file: !file ../kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
+                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
                         applicationDependencies:
                           {{if not .InstallMonitoring}}
                           K8s-Ingress-Controller: "{{.xlVersion}}"
@@ -82,7 +82,7 @@ spec:
                     deployables:
                       - name: xld-deployment
                         type: k8s.ResourcesFile
-                        file: !file ../kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+                        file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
                     applicationDependencies:
                       K8s-Ingress-Controller: "{{.xlVersion}}"
                       PostgreSQL: "{{.xlVersion}}"

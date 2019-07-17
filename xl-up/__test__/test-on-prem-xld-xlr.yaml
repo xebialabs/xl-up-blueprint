@@ -6,56 +6,56 @@ expected-files:
   - xebialabs/xl-release.yaml
   - xebialabs/xl-k8s-foundation.yaml
   #xl-k8s-foundation
-  - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-  - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-  - kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
-  - kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
-  - kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-  - kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-  - kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
-  - kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
   #xl-deploy xl-release
-  - kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
-  - kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
 not-expected-files:
   #xl-k8s-foundation
-  - kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-  - kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
-  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
-  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
-  - kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
   #xl-deploy xl-release
-  - kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-  - kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   #efk
-  - kubernetes/efk-stack/elasticsearch/rbac.yaml
-  - kubernetes/efk-stack/elasticsearch/deployment.yaml
-  - kubernetes/efk-stack/fluentd/configmap.yaml
-  - kubernetes/efk-stack/fluentd/daemonset.yaml
-  - kubernetes/efk-stack/fluentd/rbac.yaml
-  - kubernetes/efk-stack/kibana/deployment.yaml
-  - kubernetes/efk-stack/kibana/ingress.yaml
-  - kubernetes/efk-stack/kibana/dashboard-job.yaml
-  - kubernetes/efk-stack/es-curator/cronjob.yaml
-  - kubernetes/efk-stack/es-curator/configmap.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
   #pg
-  - kubernetes/pg-stack/prometheus/rbac.yaml
-  - kubernetes/pg-stack/prometheus/configmap.yaml
-  - kubernetes/pg-stack/prometheus/deployment.yaml
-  - kubernetes/pg-stack/grafana/configmap.yaml
-  - kubernetes/pg-stack/grafana/secret.yaml
-  - kubernetes/pg-stack/grafana/deployment.yaml
-  - kubernetes/pg-stack/grafana/importer-job.yaml
-  - kubernetes/pg-stack/grafana/ingress.yaml
-  - kubernetes/pg-stack/grafana/pvc.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
-  - kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/secret.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
   K8sSetup: Plain multinode K8s cluster
   useKubeconfig: false

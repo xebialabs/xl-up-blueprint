@@ -171,18 +171,18 @@ spec:
                 deployables:
                   - name: haproxy-ingress-controller
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
                   {{if  eq .K8sSetup "AWS EKS" }}
                   - name: service-l7
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
                   {{end}}
                   - name: default-backend
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
                   - name: xebialabs-service-internal
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+                    file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
                   {{if not ( eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" )}}
                   PostgreSQL: "{{.xlVersion}}"
@@ -199,7 +199,7 @@ spec:
                 deployables:
                   - name: gp2
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+                    file: !file kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
           {{end}}
 
           - name: PostgreSQL
@@ -212,7 +212,7 @@ spec:
                 deployables:
                   - name: xl-PostgreSQL
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+                    file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
                   {{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
                     {{if  eq .K8sSetup "AWS EKS" }}
@@ -234,13 +234,13 @@ spec:
                 deployables:
                   - name: rbac
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+                    file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
                   - name: deployment
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+                    file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
                   - name: storageclass
                     type: k8s.ResourcesFile
-                    file: !file ../kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+                    file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{end}}
           {{if  .InstallMonitoring }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
@@ -255,16 +255,16 @@ spec:
                 deployables:
                  - name: Elasticsearch-rbac
                    type: k8s.ResourcesFile
-                   file: !file "../kubernetes/efk-stack/elasticsearch/rbac.yaml"
+                   file: !file "kubernetes/efk-stack/elasticsearch/rbac.yaml"
                  - name: Elasticsearch-logging
                    type: k8s.ResourcesFile
-                   file: !file "../kubernetes/efk-stack/elasticsearch/deployment.yaml"
+                   file: !file "kubernetes/efk-stack/elasticsearch/deployment.yaml"
                  - name: Elasticsearch-curator-cronjob
                    type: k8s.ResourcesFile
-                   file: !file "../kubernetes/efk-stack/es-curator/cronjob.yaml"
+                   file: !file "kubernetes/efk-stack/es-curator/cronjob.yaml"
                  - name: Elasticsearch-curator-configmap
                    type: k8s.ResourcesFile
-                   file: !file "../kubernetes/efk-stack/es-curator/configmap.yaml"
+                   file: !file "kubernetes/efk-stack/es-curator/configmap.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "{{.xlVersion}}"
                 undeployDependencies: "true"
@@ -278,13 +278,13 @@ spec:
                 deployables:
                 - name: Fluentd-rbac
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/efk-stack/fluentd/rbac.yaml"
+                  file: !file "kubernetes/efk-stack/fluentd/rbac.yaml"
                 - name: Fluentd-configmap
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/efk-stack/fluentd/configmap.yaml"
+                  file: !file "kubernetes/efk-stack/fluentd/configmap.yaml"
                 - name: Fluentd-daemonset
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/efk-stack/fluentd/daemonset.yaml"
+                  file: !file "kubernetes/efk-stack/fluentd/daemonset.yaml"
                 applicationDependencies:
                   Elasticsearch-Logging: "{{.xlVersion}}"
                 undeployDependencies: "true"
@@ -298,13 +298,13 @@ spec:
                 deployables:
                 - name: Kibana-deployment
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/efk-stack/kibana/deployment.yaml"
+                  file: !file "kubernetes/efk-stack/kibana/deployment.yaml"
                 - name: Kibana-ingress
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/efk-stack/kibana/ingress.yaml"
+                  file: !file "kubernetes/efk-stack/kibana/ingress.yaml"
                 - name: Kibana-dashboard-job
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/efk-stack/kibana/dashboard-job.yaml"
+                  file: !file "kubernetes/efk-stack/kibana/dashboard-job.yaml"
                 applicationDependencies:
                   Fluentd: "{{.xlVersion}}"
                 undeployDependencies: "true"
@@ -318,25 +318,25 @@ spec:
                 deployables:
                 - name: kube-state-metrics-serviceaccount
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml"
                 - name: kube-state-metrics-clusterrolebinding
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml"
                 - name: kube-state-metrics-service
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml"
                 - name: kube-state-metrics-role
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml"
                 - name: kube-state-metrics-rolebinding
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml"
                 - name: kube-state-metrics-clusterrole
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml"
                 - name: kube-state-metrics-deployment
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml"
+                  file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "{{.xlVersion}}"
                 undeployDependencies: "true"
@@ -350,13 +350,13 @@ spec:
                 deployables:
                 - name: Prometheus-rbac
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/prometheus/rbac.yaml"
+                  file: !file "kubernetes/pg-stack/prometheus/rbac.yaml"
                 - name: Prometheus-configmap
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/prometheus/configmap.yaml"
+                  file: !file "kubernetes/pg-stack/prometheus/configmap.yaml"
                 - name: Prometheus-deployment
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/prometheus/deployment.yaml"
+                  file: !file "kubernetes/pg-stack/prometheus/deployment.yaml"
                 applicationDependencies:
                   Kube-State-Metrics: "{{.xlVersion}}"
                 undeployDependencies: "true"
@@ -371,22 +371,22 @@ spec:
                 - name: Grafana-configmap
                   type: k8s.ResourcesFile
                   delimiters: '## ##'
-                  file: !file "../kubernetes/pg-stack/grafana/configmap.yaml"
+                  file: !file "kubernetes/pg-stack/grafana/configmap.yaml"
                 - name: Grafana-secret
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/grafana/secret.yaml"
+                  file: !file "kubernetes/pg-stack/grafana/secret.yaml"
                 - name: Grafana-pvc
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/grafana/pvc.yaml"
+                  file: !file "kubernetes/pg-stack/grafana/pvc.yaml"
                 - name: Grafana-deployment
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/grafana/deployment.yaml"
+                  file: !file "kubernetes/pg-stack/grafana/deployment.yaml"
                 - name: Grafana-ingress
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/grafana/ingress.yaml"
+                  file: !file "kubernetes/pg-stack/grafana/ingress.yaml"
                 - name: Grafana-importer
                   type: k8s.ResourcesFile
-                  file: !file "../kubernetes/pg-stack/grafana/importer-job.yaml"
+                  file: !file "kubernetes/pg-stack/grafana/importer-job.yaml"
                 applicationDependencies:
                   Prometheus: "{{.xlVersion}}"
                 undeployDependencies: "true"
