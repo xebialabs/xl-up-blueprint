@@ -11,3 +11,23 @@ spec:
   environment: Environments/XEBIALABS/K8S
   orchestrators:
     - sequential-by-dependency
+{{- if .InstallXLD }}
+---
+apiVersion: xl-deploy/v1
+kind: Deployment
+spec:
+  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.xlVersion}}
+  environment: Environments/XEBIALABS/K8S
+  orchestrators:
+    - sequential-by-dependency
+{{- end }}
+{{- if .InstallXLR }}
+---
+apiVersion: xl-deploy/v1
+kind: Deployment
+spec:
+  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.xlVersion}}
+  environment: Environments/XEBIALABS/K8S
+  orchestrators:
+    - sequential-by-dependency
+{{- end }}

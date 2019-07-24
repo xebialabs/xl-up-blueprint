@@ -6,39 +6,22 @@ spec:
   - directory: XL-RELEASE
     children:
 {{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
-    - directory: EXTERNAL-DB
-      children:
-      - directory: ACTIVE-ACTIVE
+      - name: XL-Release-Deployment
+        type: udm.Application
         children:
-        - name: XL-Release-Active-Active
-          type: udm.Application
-          children:
-          - name: "{{.xlVersion}}"
-            orchestrator:
-              - sequential-by-dependency
-            type: udm.DeploymentPackage
-            deployables:
-            - name: xlr-deployment
-              type: k8s.ResourcesFile
-              file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-            applicationDependencies:
-              {{if  .InstallXLD }}
-              XL-Deploy-Hot-Standby: "{{.xlVersion}}"
-              {{end}}
-              {{if  not .InstallXLD}}
-                {{if  not .InstallMonitoring}}
-              K8s-Ingress-Controller: "{{.xlVersion}}"
-                {{else}}
-              Grafana-Dashboard: "{{.xlVersion}}"
-              Kibana: "{{.xlVersion}}"
-                {{end}}
-              {{end}}
-            undeployDependencies: "true"
+        - name: "{{.xlVersion}}"
+          orchestrator:
+            - sequential-by-dependency
+          type: udm.DeploymentPackage
+          deployables:
+          - name: xlr-deployment
+            type: k8s.ResourcesFile
+            file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+          applicationDependencies: null
+          undeployDependencies: "false"
 {{end}}
   {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-    - directory: LOCAL-DB
-      children:
-      - name: XL-Release-Single-Node
+      - name: XL-Release-Deployment
         type: udm.Application
         children:
         - name: "{{.xlVersion}}"
@@ -49,13 +32,6 @@ spec:
           - name: xlr-deployment
             type: k8s.ResourcesFile
             file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-          applicationDependencies:
-            {{if  .InstallXLD }}
-            XL-Deploy-Single-Node: "{{.xlVersion}}"
-            {{end}}
-            {{if  not .InstallXLD}}
-            K8s-Ingress-Controller: "{{.xlVersion}}"
-            PostgreSQL: "{{.xlVersion}}"
-            {{end}}
-          undeployDependencies: "true"
+          applicationDependencies: null
+          undeployDependencies: "false"
   {{end}}
