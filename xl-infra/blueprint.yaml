@@ -42,8 +42,8 @@ spec:
     - name: localApiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
-      value: !expr "os('_defaultapiserverurl')"
-      #promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      default: !expr "os('_defaultapiserverurl')"
+      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
 
     - name: K8sClientCertFile
