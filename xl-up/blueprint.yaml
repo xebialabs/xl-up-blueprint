@@ -1,4 +1,4 @@
-apiVersion: xl/v1
+apiVersion: xl/v2
 kind: Blueprint
 metadata:
   name: XL UP
@@ -36,53 +36,57 @@ spec:
       type: Input
       prompt: "The type of operating system where the xl command is running:"
       value: !expr "os('operatingsystem')"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
 
     - name: localApiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
-      value: !expr "os('_defaultapiserverurl')"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : false"
       saveInXlvals: true
 
     - name: K8sClientCertFile
-      type: SecretFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
       saveInXlvals: true
 
-    - name: K8sClientCertKeyFile
-      type: SecretFile
+    - name: K8sClientKeyFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       saveInXlvals: true
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
 
+      # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
-      type: SecretInput
+      type: Input
       prompt: "Enter your K8s Client Certificate:"
-      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "os('getcertfilelocation')"
+      #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : false"
 
     - name: KeyFile
-      type: SecretInput
+      type: Input
       prompt: "Enter your K8s Client Certificate Key:"
-      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "os('getkeyfilelocation')"
+      #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : false"
+      # END
 
     - name: K8sClientCert
-      type: SecretEditor
+      type: Editor
       prompt: "Using Kubernetes client certificate from your context"
-      promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
       saveInXlvals: true
-      value: !expr "k8sConfig('UserClientCertificateData')"
+      #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
+      #default: !expr "k8sConfig('UserClientCertificateData')"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : false"
 
-    - name: K8sClientCertKey
-      type: SecretEditor
-      prompt: "Using Kubernetes client certificate key from your context"
+    - name: K8sClientKey
+      type: Editor
+      prompt: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
-      promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "k8sConfig('UserClientKeyData')"
+      #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
+      #default: !expr "k8sConfig('UserClientKeyData')"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : false"
 
     - name: K8sToken
       type: SecretEditor
@@ -99,8 +103,8 @@ spec:
 
     - name: isAwsCfgAvailable
       type: Confirm
-      value: !expr "awsCredentials('IsAvailable')"
-      promptIf: !expr "K8sSetup == 'AWS EKS' "
+      value: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('IsAvailable') : false"
+      #promptIf: !expr "K8sSetup == 'AWS EKS' "
 
     - name: useAWSconfig
       type: Confirm
@@ -175,11 +179,12 @@ spec:
       prompt: "Enter the password that you want to use for the XL Deploy admin user:"
       promptIf: !expr "InstallXLD"
       default: !expr "randPassword()"
-      showValueOnSummary: true
+      revealOnSummary: true
       replaceAsIs: true
 
     - name: xldLic
-      type: SecretFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
       prompt: "Enter the full path to the XL Deploy license file:"
       promptIf: !expr "InstallXLD"
@@ -204,7 +209,7 @@ spec:
       prompt: "Enter your XL Deploy database password:"
       promptIf: InstallXLD
       default: !expr "randPassword()"
-      showValueOnSummary: true
+      revealOnSummary: true
       replaceAsIs: true
 
     - name: efsId
@@ -243,11 +248,12 @@ spec:
       prompt: "Enter the password that you want to use for the XL Release admin user:"
       promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
-      showValueOnSummary: true
+      revealOnSummary: true
       replaceAsIs: true
 
     - name: xlrLic
-      type: SecretFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
@@ -272,7 +278,7 @@ spec:
       prompt: "Enter your XL Release database password:"
       promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
-      showValueOnSummary: true
+      revealOnSummary: true
       replaceAsIs: true
 
     - name: xlrReportDbName
@@ -295,11 +301,12 @@ spec:
       prompt: "Enter your XL Release report database password:"
       promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
-      showValueOnSummary: true
+      revealOnSummary: true
       replaceAsIs: true
 
     - name: xlKeyStore
-      type: SecretFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
       prompt: "Enter the full path to your XebiaLabs keystore:"
 
@@ -319,7 +326,7 @@ spec:
     - name: MonitoringDataRetention
       type: Input
       prompt: "How many days do you want to keep the monitoring data?"
-      value: 7
+      default: 7
       promptIf: !expr "InstallMonitoring"
 
     - name: monitoringUser
@@ -336,7 +343,7 @@ spec:
       prompt: "What is the password for the monitoring user?"
       default: !expr "randPassword()"
       promptIf: !expr "InstallMonitoring"
-      showValueOnSummary: true
+      revealOnSummary: true
 
     - name: PostgresqlWorkHostpath
       type: Input
@@ -419,7 +426,7 @@ spec:
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
-      promptIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
       writeIf: InstallMonitoring

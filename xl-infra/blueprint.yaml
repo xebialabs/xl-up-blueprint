@@ -36,24 +36,24 @@ spec:
       type: Input
       prompt: "The type of operating system where the xl command is running:"
       value: !expr "os('_operatingsystem')"
-      #promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
 
     - name: localApiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
-      default: !expr "os('_defaultapiserverurl')"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : false"
       saveInXlvals: true
 
     - name: K8sClientCertFile
       type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
       saveInXlvals: true
 
     - name: K8sClientCertKeyFile
       type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       saveInXlvals: true
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
@@ -63,28 +63,30 @@ spec:
       type: Input
       prompt: "Enter your K8s Client Certificate:"
       #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "os('getcertfilelocation')"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : false"
 
     - name: KeyFile
       type: Input
       prompt: "Enter your K8s Client Certificate Key:"
       #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "os('getkeyfilelocation')"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : false"
       # END
 
     - name: K8sClientCert
       type: Editor
       prompt: "Using Kubernetes client certificate from your context"
-      promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
       saveInXlvals: true
-      default: !expr "k8sConfig('UserClientCertificateData')"
+      #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
+      #default: !expr "k8sConfig('UserClientCertificateData')"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : false"
 
     - name: K8sClientCertKey
       type: Editor
       prompt: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
-      promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
-      default: !expr "k8sConfig('UserClientKeyData')"
+      #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
+      #default: !expr "k8sConfig('UserClientKeyData')"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : false"
 
     - name: K8sToken
       type: Input
@@ -108,7 +110,7 @@ spec:
     - name: useAWSconfig
       type: Confirm
       prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
-      promptIf: !expr "isAwsCfgAvailable"
+      promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AWS EKS'"
       saveInXlvals: true
 
     - name: AWSAccessKey
