@@ -41,7 +41,7 @@ spec:
     - name: localApiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
-      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : false"
+      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : 'none'"
       saveInXlvals: true
 
     - name: K8sClientCertFile
@@ -51,7 +51,7 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
       saveInXlvals: true
 
-    - name: K8sClientCertKeyFile
+    - name: K8sClientKeyFile
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate key:"
@@ -78,15 +78,15 @@ spec:
       saveInXlvals: true
       #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
       #default: !expr "k8sConfig('UserClientCertificateData')"
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : false"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : 'none'"
 
-    - name: K8sClientCertKey
+    - name: K8sClientKey
       type: Editor
       prompt: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
       #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
       #default: !expr "k8sConfig('UserClientKeyData')"
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : false"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : 'none'"
 
     - name: K8sToken
       type: Input
@@ -133,4 +133,4 @@ spec:
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"
     - path: cert.key.tmpl
-      writeIf: !expr "K8sClientCertKeyFile != ''"
+      writeIf: !expr "K8sClientKeyFile != ''"

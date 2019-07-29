@@ -79,6 +79,7 @@ expected-xl-values:
   postgresEffectCacheSize: 2GB
   postgresSyncCommit: "off"
   postgresMaxWallSize: 512MB
+  OsType: linux
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

@@ -8,7 +8,7 @@ expected-xl-values:
   useAWSConfig: false
   eksClusterName: test-eks-master
   K8sClientCertFile: ''
-  K8sClientCertKeyFile: ''
+  K8sClientKeyFile: ''
 expected-xl-secrets:
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY

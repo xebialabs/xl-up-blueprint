@@ -349,7 +349,7 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && OsType != 'linux'"
+      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
 
     - name: postgresMaxConn
       type: Input

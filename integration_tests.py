@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.7
 import configparser
 import glob
 import os
@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import argparse
 
 import yaml
 
@@ -111,7 +112,29 @@ def type_aware_equals(expected, actual):
     """
     Use the type of expected to convert actual before comparing.
     """
-    return str(expected).lower() == str(actual).lower()
+    if type(expected) == int:
+        try:
+            return expected == int(actual)
+        except:
+            return False
+    elif type(expected) == float:
+        try:
+            return expected == float(actual)
+        except:
+            return False
+    elif type(expected) == bool:
+        try:
+            if actual.lower() in ['yes', 'true', 't', 1]:
+                bool_val = True
+            elif actual.lower() in ['no', 'false', 'f', 0]:
+                bool_val = False
+            else:
+                return False
+            return expected == bool_val
+        except:
+            return False
+    else:
+        return '{}'.format(expected) == '{}'.format(actual)
 
 
 def identify_missing_xlvals(expected_xl_values, configfile):
@@ -142,14 +165,29 @@ def identify_missing_xlvals(expected_xl_values, configfile):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--blueprints', nargs='+', help="Run one or more specific blueprint instead of all of them")
+    args = parser.parse_args()
+
     blueprint_dirs = find_blueprint_file_directories_recursively()
+
+    if args.blueprints and len(args.blueprints) > 0:
+        blueprints_filter = [blueprint_dir.strip('/') for blueprint_dir in args.blueprints]
+        blueprint_dirs = [blueprint_dir for blueprint_dir in blueprint_dirs if blueprint_dir in blueprints_filter]
+        if len(blueprint_dirs) != len(blueprints_filter):
+            errormsg("One or more blueprint directories could not be found:")
+            for blueprint_dir in list(set(blueprints_filter) - set(blueprint_dirs)):
+                errormsg('- {}'.format(blueprint_dir))
+            sys.exit(1)
+
+        print(greentext('INFO:'), 'Limiting integration tests to:')
+        for blueprint_dir in blueprints_filter:
+            print(greentext('INFO:'), '- {}'.format(blueprint_dir))
+        print('')
 
     blueprint_to_test_dirs = {}
     for blueprint_dir in blueprint_dirs:
-        print(greentext(f'Identified test directory {blueprint_dir}'))
         blueprint_to_test_dirs[blueprint_dir] = '{}/__test__'.format(blueprint_dir)
-
-    print('')
 
     fail_if_missing_test_dirs(blueprint_to_test_dirs.values())
 
@@ -181,15 +219,13 @@ if __name__ == '__main__':
 
             os.chdir(tempdir.name)
 
-            command = ['xl', 'blueprint', '-b', '../{}'.format(blueprint_dir), '-sa', '../{}'.format(answers_file)]
+            command = ['xl', 'blueprint', '--use-defaults', '--local-repo', '../', '--blueprint', '{}'.format(blueprint_dir), '--strict-answers', '--answers', '../{}'.format(answers_file)]
             print('Executing: {}'.format(' '.join(command)))
-            # does not work on python 3.6
-            #result = subprocess.run(command, capture_output=True, env=env)
-            result = subprocess.run(command, env=env)
+            result = subprocess.run(command, capture_output=True, env=env)
             if not result.returncode == 0:
                 if result.stdout:
-                    print('stdout: {}'.format(result.stdout.decode('utf8')))
-                errormsg('Test failed on {} with message "{}"'.format(answers_file, result.stderr.decode('utf8').strip() if result.stderr else "UNKNOWN"))
+                    print('stdout: {}'.format(result.stdout))
+                errormsg('Test failed on {} with message "{}"'.format(answers_file, result.stderr.decode('utf8').strip()))
                 print(redtext('FAILED'))
                 os.chdir('..')
                 sys.exit(result.returncode)
