@@ -28,7 +28,6 @@ spec:
     - name: apiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
-      #default: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' ? k8sConfig('ClusterServer') : 'none'"
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
