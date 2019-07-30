@@ -2,7 +2,7 @@
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
-  - directory: Infrastructure/XL-PLATFORM
+  - directory: Infrastructure/XEBIALABS
     children:
       - name: EKS-MASTER
         type: k8s.Master
@@ -17,7 +17,7 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
-  - directory: Infrastructure/XL-PLATFORM
+  - directory: Infrastructure/XEBIALABS
     children:
       - name: K8s-MASTER-LOCAL
         type: k8s.Master
@@ -35,7 +35,7 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
-  - directory: Infrastructure/XL-PLATFORM
+  - directory: Infrastructure/XEBIALABS
     children:
       - name: K8s-MASTER
         type: k8s.Master
