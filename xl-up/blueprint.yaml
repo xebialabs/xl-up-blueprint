@@ -130,7 +130,7 @@ spec:
     - name: useCustomRegistry
       type: Confirm
       prompt: "Do you want to use custom Docker Registry?"
-      default: true
+      default: false
       saveInXlvals: true
 
     - name: registryURL
