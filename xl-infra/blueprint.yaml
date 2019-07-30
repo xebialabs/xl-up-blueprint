@@ -21,13 +21,14 @@ spec:
     - name: useKubeconfig
       type: Confirm
       prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
-      promptIf: !expr "k8sConfig('IsAvailable') && K8sSetup != 'Google Kubernetes Engine'"
-      default: !expr "k8sConfig('IsAvailable')"
+      promptIf: !expr "K8sSetup != 'Google Kubernetes Engine'"
+      default: !expr "K8sSetup != 'Google Kubernetes Engine' ? k8sConfig('IsAvailable') : 'none'"
       saveInXlvals: true
 
     - name: apiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
+      #default: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' ? k8sConfig('ClusterServer') : 'none'"
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
@@ -63,13 +64,13 @@ spec:
       type: Input
       prompt: "Enter your K8s Client Certificate:"
       #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : false"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
 
     - name: KeyFile
       type: Input
       prompt: "Enter your K8s Client Certificate Key:"
       #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
-      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : false"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
       # END
 
     - name: K8sClientCert
@@ -99,7 +100,7 @@ spec:
       type: Input
       prompt: "What is the Amazon EKS cluster name?"
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
-      default: !expr "k8sConfig('ContextCluster')"
+      default: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): 'none'"
       saveInXlvals: true
 
     - name: isAwsCfgAvailable
@@ -119,7 +120,7 @@ spec:
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
       # useRawValue: true
-      default: !expr "awsCredentials('AccessKeyID')"
+      default: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
 
     - name: AWSAccessSecret
       type: SecretInput
@@ -127,7 +128,7 @@ spec:
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
       # useRawValue: true
-      default: !expr "awsCredentials('SecretAccessKey')"
+      default: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
   files:
     - path: cm_answer_file_auto.yaml.tmpl
     - path: cert.crt.tmpl
