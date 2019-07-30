@@ -83,17 +83,16 @@ spec:
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : 'none'"
 
     - name: K8sToken
-      type: Input
+      type: SecretInput
       prompt: "Provide authentication token for the existing service account:"
-      promptIf: !expr "!useKubeconfig && K8sSetup == 'Google Kubernetes Engine' "
-      default: ""
+      promptIf: !expr "K8sSetup == 'Google Kubernetes Engine'"
       saveInXlvals: true
 
     - name: eksClusterName
       type: Input
       prompt: "What is the Amazon EKS cluster name?"
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
-      default: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): 'none'"
+      default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): 'none'"
       saveInXlvals: true
 
     - name: isAwsCfgAvailable
@@ -112,7 +111,7 @@ spec:
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
       # useRawValue: true
-      default: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
 
     - name: AWSAccessSecret
       type: SecretInput
@@ -120,7 +119,7 @@ spec:
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
       # useRawValue: true
-      default: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey') : 'none'"
   files:
     - path: cm_answer_file_auto.yaml.tmpl
     - path: cert.crt.tmpl

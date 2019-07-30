@@ -110,7 +110,7 @@ spec:
       prompt: "What is the AWS access key ID?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
-      default: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
       replaceAsIs: true
 
     - name: AWSAccessSecret
@@ -118,7 +118,7 @@ spec:
       prompt: "What is the AWS secret access key?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
-      default: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey') : 'none'"
       replaceAsIs: true
 
     - name: Namespace
