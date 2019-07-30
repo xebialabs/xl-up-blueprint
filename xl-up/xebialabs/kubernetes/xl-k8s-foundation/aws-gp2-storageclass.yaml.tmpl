@@ -1,11 +1,13 @@
-kind: StorageClass
 apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
-  name: gp2-retain
   namespace: {{ .Namespace }}
-provisioner: kubernetes.io/aws-ebs
+  name: gp2-retain
 parameters:
-  type: gp2-retain
+  fsType: ext4
+  type: gp2
+provisioner: kubernetes.io/aws-ebs
 reclaimPolicy: Retain
+volumeBindingMode: Immediate
 mountOptions:
   - debug
