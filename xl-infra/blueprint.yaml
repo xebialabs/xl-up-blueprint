@@ -63,13 +63,11 @@ spec:
     - name: CertFile
       type: Input
       prompt: "Enter your K8s Client Certificate:"
-      #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
       value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
 
     - name: KeyFile
       type: Input
       prompt: "Enter your K8s Client Certificate Key:"
-      #promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
       value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
       # END
 
@@ -77,16 +75,12 @@ spec:
       type: Editor
       prompt: "Using Kubernetes client certificate from your context"
       saveInXlvals: true
-      #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
-      #default: !expr "k8sConfig('UserClientCertificateData')"
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : 'none'"
 
     - name: K8sClientKey
       type: Editor
       prompt: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
-      #promptIf: !expr "useKubeconfig && K8sSetup != 'AWS EKS' "
-      #default: !expr "k8sConfig('UserClientKeyData')"
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : 'none'"
 
     - name: K8sToken
@@ -106,7 +100,6 @@ spec:
     - name: isAwsCfgAvailable
       type: Confirm
       value: !expr "awsCredentials('IsAvailable')"
-      #promptIf: !expr "K8sSetup == 'AWS EKS' "
 
     - name: useAWSconfig
       type: Confirm
