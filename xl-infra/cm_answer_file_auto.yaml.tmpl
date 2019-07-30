@@ -7,15 +7,15 @@ localApiServerURL: {{ .localApiServerURL }}
 K8sClientCertFile: {{ .CertFile }}
 K8sClientCert: {{ .K8sClientCertFile | b64enc }}
 {{ end }}
-{{if eq .K8sClientCertKey ""}}
-K8sClientCertKeyFile: {{ .KeyFile }}
-K8sClientCertKey: {{ .K8sClientCertKeyFile | b64enc }}
+{{if eq .K8sClientKey ""}}
+K8sClientKeyFile: {{ .KeyFile }}
+K8sClientKey: {{ .K8sClientKeyFile | b64enc }}
 {{ end }}
 {{if eq .K8sClientCertFile ""}}
 K8sClientCert: {{ .K8sClientCert | b64enc }}
 {{ end }}
-{{if eq .K8sClientCertKeyFile ""}}
-K8sClientCertKey: {{ .K8sClientCertKey | b64enc }}
+{{if eq .K8sClientKeyFile ""}}
+K8sClientKey: {{ .K8sClientKey | b64enc }}
 {{ end }}
 IsEKS: {{eq .K8sSetup "AWS EKS"}}
 eksClusterName: {{ .eksClusterName }}

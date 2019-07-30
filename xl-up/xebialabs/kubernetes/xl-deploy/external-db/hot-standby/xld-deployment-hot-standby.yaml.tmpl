@@ -56,6 +56,9 @@ metadata:
     kubernetes.io/ingress.class: haproxy
     ingress.kubernetes.io/rewrite-target: /
     ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/affinity: cookie
+    ingress.kubernetes.io/session-cookie-name: SESSION_XLD
+    ingress.kubernetes.io/session-cookie-strategy: prefix
     ingress.kubernetes.io/config-backend: |
       option httpchk get /deployit/ha/health HTTP/1.0
 spec:

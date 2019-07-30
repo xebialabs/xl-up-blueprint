@@ -1,482 +1,481 @@
-apiVersion: xl/v1
+apiVersion: xl/v2
 kind: Blueprint
 metadata:
-  projectName: XL UP
+  name: XL UP
   description: |
     This blueprint deploys XL Deploy, XL Release, and XL-k8s-foundation into an existing Kubernetes installation (local single-node Kubernetes, on-premises multi-node Kubernetes cluster, or Amazon EKS cluster).
   author: XebiaLabs
   version: 1.0
-parameters:
-  - name: K8sSetup
-    type: Select
-    description: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
-    options:
-      - Local K8s from Docker Desktop for Mac/Windows
-      - AWS EKS
-      - Plain multinode K8s cluster
-    saveInXlVals: true
+spec:
+  parameters:
+    - name: K8sSetup
+      type: Select
+      prompt: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
+      options:
+        - Local K8s from Docker Desktop for Mac/Windows
+        - AWS EKS
+        - Google Kubernetes Engine
+        - Plain multinode K8s cluster
+      saveInXlvals: true
 
-  - name: useKubeconfig
-    type: Confirm
-    description: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
-    dependsOnTrue: !fn k8s.config().IsAvailable
-    default: !fn k8s.config().IsAvailable
-    saveInXlVals: true
+    - name: useKubeconfig
+      type: Confirm
+      prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
+      promptIf: !expr "K8sSetup != 'Google Kubernetes Engine'"
+      default: !expr "K8sSetup != 'Google Kubernetes Engine' ? k8sConfig('IsAvailable') : 'none'"
+      saveInXlvals: true
 
-  - name: apiServerURL
-    type: Input
-    description: "Enter the ApiServerURL of your Kubernetes installation:"
-    default: !fn k8s.config().ClusterServer
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: apiServerURL
+      type: Input
+      prompt: "Enter the ApiServerURL of your Kubernetes installation:"
+      default: !expr "k8sConfig('ClusterServer')"
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      saveInXlvals: true
 
-  - name: OsType
-    type: Input
-    description: "The type of operating system where the xl command is running:"
-    value: !fn os._operatingsystem()
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: OsType
+      type: Input
+      prompt: "The type of operating system where the xl command is running:"
+      value: !expr "os('operatingsystem')"
+      saveInXlvals: true
 
-  - name: localApiServerURL
-    type: Input
-    description: "Enter the ApiServerURL of your Kubernetes installation:"
-    value: !fn os._defaultapiserverurl()
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: localApiServerURL
+      type: Input
+      prompt: "Enter the ApiServerURL of your Kubernetes installation:"
+      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : 'none'"
+      saveInXlvals: true
 
-  - name: K8sClientCertFile
-    type: File
-    description: "Enter the full path to your Kubernetes client certificate:"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    saveInXlVals: true
+    - name: K8sClientCertFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      prompt: "Enter the full path to your Kubernetes client certificate:"
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
+      saveInXlvals: true
 
-  - name: K8sClientCertKeyFile
-    type: File
-    description: "Enter the full path to your Kubernetes client certificate key:"
-    saveInXlVals: true
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
+    - name: K8sClientKeyFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      prompt: "Enter the full path to your Kubernetes client certificate key:"
+      saveInXlvals: true
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
 
-  - name: CertFile
-    type: Input
-    description: "Enter the path of your K8s Client Certificate:"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    value: !fn os.getcertfilelocation()
+      # Client certificates used for Upgrade only and downloaded from the Configmap
+    - name: CertFile
+      type: Input
+      prompt: "Enter your K8s Client Certificate:"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
 
-  - name: KeyFile
-    type: Input
-    description: "Enter the path of your K8s Client Certificate Key:"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    value: !fn os.getkeyfilelocation()
+    - name: KeyFile
+      type: Input
+      prompt: "Enter your K8s Client Certificate Key:"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
+      # END
 
-  - name: K8sClientCert
-    type: Editor
-    description: "Using Kubernetes client certificate from your context"
-    dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
-    saveInXlVals: true
-    value: !fn k8s.config().UserClientCertificateData
+    - name: K8sClientCert
+      type: Editor
+      prompt: "Using Kubernetes client certificate from your context"
+      saveInXlvals: true
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : 'none'"
 
-  - name: K8sClientCertKey
-    type: Editor
-    description: "Using Kubernetes client certificate key from your context"
-    saveInXlVals: true
-    dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
-    value: !fn k8s.config().UserClientKeyData
+    - name: K8sClientKey
+      type: Editor
+      prompt: "Using Kubernetes client certificate Key from your context"
+      saveInXlvals: true
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : 'none'"
 
-  - name: eksClusterName
-    type: Input
-    description: "What is the Amazon EKS cluster name?"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup == 'AWS EKS' "
-    default: !fn k8s.config().ContextCluster
-    saveInXlVals: true
+    - name: K8sToken
+      type: SecretEditor
+      prompt: "Provide authentication token for the existing service account:"
+      promptIf: !expr "!useKubeconfig && K8sSetup == 'Google Kubernetes Engine' "
+      saveInXlvals: true
 
-  - name: isAwsCfgAvailable
-    type: Confirm
-    value: !fn aws.credentials().IsAvailable
-    dependsOnTrue: !expression "K8sSetup == 'AWS EKS' "
+    - name: eksClusterName
+      type: Input
+      prompt: "What is the Amazon EKS cluster name?"
+      promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
+      default: !expr "k8sConfig('ContextCluster')"
+      saveInXlvals: true
 
-  - name: useAWSconfig
-    type: Confirm
-    description: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
-    dependsOnTrue: !expression "isAwsCfgAvailable"
-    saveInXlVals: true
+    - name: isAwsCfgAvailable
+      type: Confirm
+      value: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('IsAvailable') : 'none'"
 
-  - name: AWSAccessKey
-    type: Input
-    secret: true
-    description: "What is the AWS access key ID?"
-    dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
-    saveInXlVals: true
-    default: !fn aws.credentials().AccessKeyID
-    useRawValue: true
+    - name: useAWSconfig
+      type: Confirm
+      prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
+      promptIf: !expr "isAwsCfgAvailable"
+      saveInXlvals: true
 
-  - name: AWSAccessSecret
-    type: Input
-    secret: true
-    description: "What is the AWS secret access key?"
-    dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
-    saveInXlVals: true
-    default: !fn aws.credentials().SecretAccessKey
-    useRawValue: true
+    - name: AWSAccessKey
+      type: SecretInput
+      prompt: "What is the AWS access key ID?"
+      promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
+      saveInXlvals: true
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
+      replaceAsIs: true
 
-  - name: Namespace
-    type: Input
-    saveInXlVals: true
-    description: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
-    value: xebialabs
+    - name: AWSAccessSecret
+      type: SecretInput
+      prompt: "What is the AWS secret access key?"
+      promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
+      saveInXlvals: true
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey') : 'none'"
+      replaceAsIs: true
 
-  - name: InstallXLD
-    type: Confirm
-    description: "Would you like to install XL Deploy?"
-    default: true
-    saveInXlVals: true
+    - name: Namespace
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
+      value: xebialabs
 
-  - name: InstallXLR
-    type: Confirm
-    description: "Would you like to install XL Release?"
-    default: true
-    saveInXlVals: true
+    - name: InstallXLD
+      type: Confirm
+      prompt: "Would you like to install XL Deploy?"
+      default: true
+      saveInXlvals: true
 
-  - name: xlVersion
-    type: Select
-    saveInXlVals: true
-    description: "Choose the version of the XebiaLabs DevOps Platform:"
-    options:
-      - !fn version._showapplicableversions()
+    - name: InstallXLR
+      type: Confirm
+      prompt: "Would you like to install XL Release?"
+      default: true
+      saveInXlvals: true
 
-  - name: XlRAMRequest
-    type: Input
-    description: "How many RAM resources will be requested for the XebiaLabs POD? Ex: 4Gi"
-    saveInXlVals: false
-    value: "1.6Gi"
+    - name: xlVersion
+      type: Select
+      saveInXlvals: true
+      prompt: "Choose the version of the XebiaLabs DevOps Platform:"
+      options:
+        - !expr "version('_showapplicableversions')"
 
-  - name: XlCPURequest
-    type: Input
-    description: "How many CPU resources will be requested for the XebiaLabs POD? Ex: 2"
-    saveInXlVals: false
-    value: "0.7"
+    - name: XlRAMRequest
+      type: Input
+      prompt: "How many RAM resources will be requested for the XebiaLabs POD? Ex: 4Gi"
+      saveInXlvals: false
+      value: "1.6Gi"
 
-  - name: dockerRepo
-    type: Select
-    saveInXlVals: true
-    description: "Choose a Docker repository:"
-    options:
-      - xebialabs
-    value: xebialabs
+    - name: XlCPURequest
+      type: Input
+      prompt: "How many CPU resources will be requested for the XebiaLabs POD? Ex: 2"
+      saveInXlvals: false
+      value: "0.7"
 
-  - name: xldAdminPass
-    type: Input
-    secret: true
-    saveInXlVals: true
-    description: "Enter the password that you want to use for the XL Deploy admin user:"
-    dependsOnTrue: !expression "InstallXLD"
-    default: !expression "randPassword()"
-    showValueOnSummary: true
-    useRawValue: true
+    - name: dockerRepo
+      type: Select
+      saveInXlvals: true
+      prompt: "Choose a Docker repository:"
+      options:
+        - xebialabs
+      value: xebialabs
 
-  - name: xldLic
-    type: File
-    saveInXlVals: true
-    description: "Enter the full path to the XL Deploy license file:"
-    dependsOnTrue: !expression "InstallXLD"
+    - name: xldAdminPass
+      type: SecretInput
+      saveInXlvals: true
+      prompt: "Enter the password that you want to use for the XL Deploy admin user:"
+      promptIf: !expr "InstallXLD"
+      default: !expr "randPassword()"
+      revealOnSummary: true
+      replaceAsIs: true
 
-  - name: xldDbName
-    type: Input
-    saveInXlVals: true
-    description: "Enter your XL Deploy database name:"
-    dependsOnTrue: !expression "InstallXLD"
-    default: xl-deploy
+    - name: xldLic
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      saveInXlvals: true
+      prompt: "Enter the full path to the XL Deploy license file:"
+      promptIf: !expr "InstallXLD"
 
-  - name: xldDbUser
-    type: Input
-    saveInXlVals: true
-    description: "Enter your XL Deploy database username:"
-    dependsOnTrue: InstallXLD
-    default: sa
+    - name: xldDbName
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your XL Deploy database name:"
+      promptIf: !expr "InstallXLD"
+      default: xl-deploy
 
-  - name: xldDbPass
-    type: Input
-    secret: true
-    saveInXlVals: true
-    description: "Enter your XL Deploy database password:"
-    dependsOnTrue: InstallXLD
-    default: !expression "randPassword()"
-    showValueOnSummary: true
-    useRawValue: true
+    - name: xldDbUser
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your XL Deploy database username:"
+      promptIf: InstallXLD
+      default: sa
 
-  - name: efsId
-    type: Input
-    saveInXlVals: true
-    description: "Enter your Amazon EFS ID:"
-    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
+    - name: xldDbPass
+      type: SecretInput
+      saveInXlvals: true
+      prompt: "Enter your XL Deploy database password:"
+      promptIf: InstallXLD
+      default: !expr "randPassword()"
+      revealOnSummary: true
+      replaceAsIs: true
 
-  - name: efsRegion
-    type: Input
-    saveInXlVals: true
-    description: "Enter your Amazon EFS region:"
-    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
+    - name: efsId
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your Amazon EFS ID:"
+      promptIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
 
-  - name: nsfServerHost
-    type: Input
-    saveInXlVals: true
-    description: "Enter your NFS server name or IP address:"
-    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster'"
+    - name: efsRegion
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your Amazon EFS region:"
+      promptIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
 
-  - name: nsfSharePath
-    type: Input
-    saveInXlVals: true
-    description: "Enter your NFS share path:"
-    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster'"
+    - name: nsfServerHost
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your NFS server name or IP address:"
+      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster'"
 
-  - name: xldWorkHostpath
-    type: Input
-    saveInXlVals: true
-    description: "Enter the local directory path that XL Deploy can use as a work directory:"
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && InstallXLD && OsType != 'linux' "
+    - name: nsfSharePath
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your NFS share path:"
+      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster'"
 
-  - name: xlrAdminPass
-    type: Input
-    secret: true
-    saveInXlVals: true
-    description: "Enter the password that you want to use for the XL Release admin user:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: !expression "randPassword()"
-    showValueOnSummary: true
-    useRawValue: true
+    - name: xldWorkHostpath
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the local directory path that XL Deploy can use as a work directory:"
+      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && InstallXLD && OsType != 'linux' "
 
-  - name: xlrLic
-    type: File
-    saveInXlVals: true
-    description: "Enter the full path to the XL Release license file:"
-    dependsOnTrue: !expression "InstallXLR"
+    - name: xlrAdminPass
+      type: SecretInput
+      saveInXlvals: true
+      prompt: "Enter the password that you want to use for the XL Release admin user:"
+      promptIf: !expr "InstallXLR"
+      default: !expr "randPassword()"
+      revealOnSummary: true
+      replaceAsIs: true
 
-  - name: xlrDbName
-    type: Input
-    saveInXlVals: true
-    description: "Enter your XL Release database name:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: xl-release
+    - name: xlrLic
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      saveInXlvals: true
+      prompt: "Enter the full path to the XL Release license file:"
+      promptIf: !expr "InstallXLR"
 
-  - name: xlrDbUser
-    type: Input
-    saveInXlVals: true
-    description: "Enter your XL Release database username:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: xl-release
+    - name: xlrDbName
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your XL Release database name:"
+      promptIf: !expr "InstallXLR"
+      default: xl-release
 
-  - name: xlrDbPass
-    type: Input
-    secret: true
-    saveInXlVals: true
-    description: "Enter your XL Release database password:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: !expression "randPassword()"
-    showValueOnSummary: true
-    useRawValue: true
+    - name: xlrDbUser
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your XL Release database username:"
+      promptIf: !expr "InstallXLR"
+      default: xl-release
 
-  - name: xlrReportDbName
-    type: Input
-    saveInXlVals: true
-    description: "Enter your XL Release report database name:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: xl-release-report
+    - name: xlrDbPass
+      type: SecretInput
+      saveInXlvals: true
+      prompt: "Enter your XL Release database password:"
+      promptIf: !expr "InstallXLR"
+      default: !expr "randPassword()"
+      revealOnSummary: true
+      replaceAsIs: true
 
-  - name: xlrReportDbUser
-    type: Input
-    saveInXlVals: true
-    description: "Enter your XL Release report database username:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: xl-release-report
+    - name: xlrReportDbName
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your XL Release report database name:"
+      promptIf: !expr "InstallXLR"
+      default: xl-release-report
 
-  - name: xlrReportDbPass
-    type: Input
-    secret: true
-    saveInXlVals: true
-    description: "Enter your XL Release report database password:"
-    dependsOnTrue: !expression "InstallXLR"
-    default: !expression "randPassword()"
-    showValueOnSummary: true
-    useRawValue: true
+    - name: xlrReportDbUser
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your XL Release report database username:"
+      promptIf: !expr "InstallXLR"
+      default: xl-release-report
 
-  - name: xlKeyStore
-    type: File
-    saveInXlVals: true
-    description: "Enter the full path to your XebiaLabs keystore:"
+    - name: xlrReportDbPass
+      type: SecretInput
+      saveInXlvals: true
+      prompt: "Enter your XL Release report database password:"
+      promptIf: !expr "InstallXLR"
+      default: !expr "randPassword()"
+      revealOnSummary: true
+      replaceAsIs: true
 
-  - name: xlKeyStorePass
-    type: Input
-    secret: true
-    saveInXlVals: true
-    description: "Enter your XebiaLabs keystore password:"
-    useRawValue: true
+    - name: xlKeyStore
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      saveInXlvals: true
+      prompt: "Enter the full path to your XebiaLabs keystore:"
 
-  - name: InstallMonitoring
-    type: Confirm
-    description: "Do you want to install monitoring?"
-    default: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: xlKeyStorePass
+      type: SecretInput
+      saveInXlvals: true
+      prompt: "Enter your XebiaLabs keystore password:"
+      replaceAsIs: true
 
-  - name: MonitoringDataRetention
-    type: Input
-    description: "How many days do you want to keep the monitoring data?"
-    value: 7
-    dependsOnTrue: !expression "InstallMonitoring"
+    - name: InstallMonitoring
+      type: Confirm
+      prompt: "Do you want to install monitoring?"
+      default: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      saveInXlvals: true
 
-  - name: monitoringUser
-    type: Input
-    saveInXlVals: true
-    description: "What is the username for the monitoring user?"
-    default: admin
-    dependsOnTrue: !expression "InstallMonitoring"
+    - name: MonitoringDataRetention
+      type: Input
+      prompt: "How many days do you want to keep the monitoring data?"
+      default: 7
+      promptIf: !expr "InstallMonitoring"
 
-  - name: monitoringUserPass
-    type: Input
-    # Secret can't be use currently due to the bug: https://xebialabs.atlassian.net/browse/LOVE-662
-    #secret: true
-    saveInXlVals: true
-    description: "What is the password for the monitoring user?"
-    default: !expression "randPassword()"
-    dependsOnTrue: !expression "InstallMonitoring"
-    showValueOnSummary: true
+    - name: monitoringUser
+      type: Input
+      saveInXlvals: true
+      prompt: "What is the username for the monitoring user?"
+      default: admin
+      promptIf: !expr "InstallMonitoring"
 
-  - name: PostgresqlWorkHostpath
-    type: Input
-    saveInXlVals: true
-    description: "Enter the local directory path where PostgreSQL can store its data:"
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && OsType != 'linux'"
+    - name: monitoringUserPass
+      type: SecretInput
+      replaceAsIs: true
+      saveInXlvals: true
+      prompt: "What is the password for the monitoring user?"
+      default: !expr "randPassword()"
+      promptIf: !expr "InstallMonitoring"
+      revealOnSummary: true
 
-  - name: postgresMaxConn
-    type: Input
-    saveInXlVals: true
-    description: "Specify the max_connections parameter for PostgreSQL:"
-    default: 512
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - name: PostgresqlWorkHostpath
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the local directory path where PostgreSQL can store its data:"
+      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
 
-  - name: postgresSharedBuff
-    type: Input
-    saveInXlVals: true
-    description: "Specify the shared_buffers parameter for PostgreSQL:"
-    default: 512MB
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - name: postgresMaxConn
+      type: Input
+      saveInXlvals: true
+      prompt: "Specify the max_connections parameter for PostgreSQL:"
+      default: 512
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
-  - name: postgresEffectCacheSize
-    type: Input
-    saveInXlVals: true
-    description: "Specify the effective_cache_size parameter for PostgreSQL:"
-    default: 1GB
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - name: postgresSharedBuff
+      type: Input
+      saveInXlvals: true
+      prompt: "Specify the shared_buffers parameter for PostgreSQL:"
+      default: 512MB
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
-  - name: postgresSyncCommit
-    type: Input
-    saveInXlVals: true
-    description: "Specify the synchronous_commit parameter for PostgreSQL:"
-    default: "off"
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - name: postgresEffectCacheSize
+      type: Input
+      saveInXlvals: true
+      prompt: "Specify the effective_cache_size parameter for PostgreSQL:"
+      default: 1GB
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
-  - name: postgresMaxWallSize
-    type: Input
-    saveInXlVals: true
-    description: "Specify the max_wal_size parameter for PostgreSQL:"
-    default: 256MB
-    dependsOnTrue: !expression "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - name: postgresSyncCommit
+      type: Input
+      saveInXlvals: true
+      prompt: "Specify the synchronous_commit parameter for PostgreSQL:"
+      default: "off"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
 
-files:
-  #xl-k8s-foundation
-  - path: xebialabs/xl-k8s-foundation.yaml.tmpl
-  - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
-  - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-    dependsOnTrue: !expression "K8sSetup == 'AWS EKS'"
-  - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
-  - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
-  - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
-    dependsOnTrue: !expression "K8sSetup == 'AWS EKS' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
-  - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
-    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
-    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
-    dependsOnTrue: !expression "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  #xl-deploy
-  - path: xebialabs/xl-deploy.yaml.tmpl
-    dependsOnTrue: InstallXLD
-  - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml.tmpl
-    dependsOnTrue:  !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLD && K8sSetup == 'AWS EKS'"
-  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  #xl-release
-  - path: xebialabs/xl-release.yaml.tmpl
-    dependsOnTrue: InstallXLR
-  - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-  - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
-    dependsOnTrue: !expression "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-  #efk
-  - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  #pg-stack
-  - path: xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/grafana/configmap.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/grafana/secret.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/grafana/pvc.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
-    dependsOnTrue: InstallMonitoring
-  #xebialabs files
-  - path: xebialabs.yaml.tmpl
-  - path: xebialabs/common.yaml.tmpl
-  - path: xebialabs/deployments.yaml.tmpl
-  - path: xebialabs/answers.yaml.tmpl
+    - name: postgresMaxWallSize
+      type: Input
+      saveInXlvals: true
+      prompt: "Specify the max_wal_size parameter for PostgreSQL:"
+      default: 256MB
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+
+  files:
+    #xl-k8s-foundation
+    - path: xebialabs/xl-k8s-foundation.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AWS EKS' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    #xl-deploy
+    - path: xebialabs/xl-deploy.yaml.tmpl
+      writeIf: InstallXLD
+    - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml.tmpl
+      writeIf:  !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    #xl-release
+    - path: xebialabs/xl-release.yaml.tmpl
+      writeIf: InstallXLR
+    - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
+      writeIf: !expr "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
+      writeIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+    #efk
+    - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
+      writeIf: InstallMonitoring
+    #pg-stack
+    - path: xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/grafana/configmap.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/grafana/secret.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/grafana/pvc.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml.tmpl
+      writeIf: InstallMonitoring
+    - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
+      writeIf: InstallMonitoring
+    #xebialabs files
+    - path: xebialabs.yaml.tmpl
+    - path: xebialabs/common.yaml.tmpl
+    - path: xebialabs/deployments.yaml.tmpl
+    - path: xebialabs/answers.yaml.tmpl

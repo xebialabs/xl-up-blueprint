@@ -25,10 +25,10 @@ spec:
         skipTLS: true
         {{if .useKubeconfig }}
         tlsCert: !value K8sClientCert
-        tlsPrivateKey: !value K8sClientCertKey
+        tlsPrivateKey: !value K8sClientKey
         {{else}}
         tlsCert: !value K8sClientCertFile
-        tlsPrivateKey: !value K8sClientCertKeyFile
+        tlsPrivateKey: !value K8sClientKeyFile
         {{end}}
 {{end}}
 {{if eq .K8sSetup "Plain multinode K8s cluster"}}
@@ -43,9 +43,9 @@ spec:
         skipTLS: true
         {{if .useKubeconfig }}
         tlsCert: !value K8sClientCert
-        tlsPrivateKey: !value K8sClientCertKey
+        tlsPrivateKey: !value K8sClientKey
         {{else}}
         tlsCert: !value K8sClientCertFile
-        tlsPrivateKey: !value K8sClientCertKeyFile
+        tlsPrivateKey: !value K8sClientKeyFile
         {{end}}
 {{end}}

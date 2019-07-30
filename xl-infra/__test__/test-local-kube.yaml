@@ -5,5 +5,5 @@ expected-xl-values:
   K8sSetup: Local K8s from Docker Desktop for Mac/Windows
   useKubeconfig: false
   localApiServerURL: https://localk8s.com:8443
-  K8sClientCert: ''
-  K8sClientCertKey: ''
+  K8sClientCert: none
+  K8sClientKey: none
