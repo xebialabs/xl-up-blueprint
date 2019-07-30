@@ -152,7 +152,7 @@ spec:
       spec:
         accessModes: [ "ReadWriteOnce" ]
         {{if eq .K8sSetup "AWS EKS" }}
-        storageClassName: gp2
+        storageClassName: gp2-retain
         {{end}}
         {{if eq .K8sSetup "Plain multinode K8s cluster" }}
         storageClassName: managed-nfs-storage
@@ -166,7 +166,7 @@ spec:
         accessModes:
           - ReadWriteOnce
         {{if eq .K8sSetup "AWS EKS" }}
-        storageClassName: gp2
+        storageClassName: gp2-retain
         {{end}}
         {{if eq .K8sSetup "Plain multinode K8s cluster" }}
         storageClassName: managed-nfs-storage
