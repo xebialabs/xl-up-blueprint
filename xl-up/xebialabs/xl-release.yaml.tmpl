@@ -13,7 +13,11 @@ spec:
         - name: XL-Release-Active-Active
           type: udm.Application
           children:
+          {{if  .useCustomRegistry }}
+          - name: "{{.xlrTag}}"
+          {{ else }}
           - name: "{{.xlVersion}}"
+          {{ end }}
             orchestrator:
               - sequential-by-dependency
             type: udm.DeploymentPackage
@@ -23,14 +27,18 @@ spec:
               file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
             applicationDependencies:
               {{if  .InstallXLD }}
+              {{if  .useCustomRegistry }}
+              XL-Deploy-Hot-Standby: "{{.xldTag}}"
+              {{ else }}
               XL-Deploy-Hot-Standby: "{{.xlVersion}}"
+              {{ end }}
               {{end}}
               {{if  not .InstallXLD}}
                 {{if  not .InstallMonitoring}}
-              K8s-Ingress-Controller: "{{.xlVersion}}"
+              K8s-Ingress-Controller: "v0.6"
                 {{else}}
-              Grafana-Dashboard: "{{.xlVersion}}"
-              Kibana: "{{.xlVersion}}"
+              Grafana-Dashboard: "5.4.4"
+              Kibana: "6.5.0"
                 {{end}}
               {{end}}
             undeployDependencies: "true"
@@ -41,7 +49,11 @@ spec:
       - name: XL-Release-Single-Node
         type: udm.Application
         children:
+        {{if  .useCustomRegistry }}
+        - name: "{{.xlrTag}}"
+        {{ else }}
         - name: "{{.xlVersion}}"
+        {{ end }}
           orchestrator:
             - sequential-by-dependency
           type: udm.DeploymentPackage
@@ -51,11 +63,15 @@ spec:
             file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
           applicationDependencies:
             {{if  .InstallXLD }}
+            {{if  .useCustomRegistry }}
+            XL-Deploy-Single-Node: "{{.xldTag}}"
+            {{else}}
             XL-Deploy-Single-Node: "{{.xlVersion}}"
             {{end}}
+            {{end}}
             {{if  not .InstallXLD}}
-            K8s-Ingress-Controller: "{{.xlVersion}}"
-            PostgreSQL: "{{.xlVersion}}"
+            K8s-Ingress-Controller: "v0.6"
+            PostgreSQL: "10.5"
             {{end}}
           undeployDependencies: "true"
   {{end}}

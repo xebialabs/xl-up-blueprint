@@ -33,7 +33,17 @@ data:
     Namespace: {{ .Namespace }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
+    {{ if .useCustomRegistry }}
+    xlrVersion: {{ .xlrVersion }}
+    xldVersion: {{ .xldVersion }}
+    xlrTag: {{ .xlrTag }}
+    xldTag: {{ .xldTag }}
+    dockerUser: {{ .dockerUser }}
+    dockerPass: {{ .dockerPass }}
+    registryURL: {{ .registryURL }}
+    {{ else }}
     xlVersion: {{ .xlVersion }}
+    {{ end }}
     XlRAMRequest: {{ .XlRAMRequest }}
     XlCPURequest: {{ .XlCPURequest }}
     dockerRepo: {{ .dockerRepo }}

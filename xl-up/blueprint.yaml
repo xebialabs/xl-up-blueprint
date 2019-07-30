@@ -127,22 +127,80 @@ spec:
       prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
       value: xebialabs
 
+    - name: useCustomRegistry
+      type: Confirm
+      prompt: "Do you want to use custom Docker Registry?"
+      default: true
+      saveInXlvals: true
+
+    - name: registryURL
+      type: Input
+      prompt: "Enter your Docker registry URL and organization:"
+      promptIf: !expr "useCustomRegistry"
+      default: "docker.io/xebialabs"
+      saveInXlvals: true
+
+    - name: dockerUser
+      type: Input
+      prompt: "Enter your Docker Registry username:"
+      promptIf: !expr "useCustomRegistry"
+      default: "dockerUser"
+      saveInXlvals: true
+      
+    - name: dockerPass
+      type: SecretInput
+      prompt: "Enter your Docker Registry password:"
+      promptIf: !expr "useCustomRegistry"
+      saveInXlvals: true
+      replaceAsIs: true
+
     - name: InstallXLD
       type: Confirm
       prompt: "Would you like to install XL Deploy?"
       default: true
       saveInXlvals: true
+    
+    - name: xldVersion
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your custom XL Deploy image and tag:"
+      default: "xl-deploy:8.5.3"
+      promptIf: !expr "useCustomRegistry && InstallXLD"
+      validate: !expr "version('checkversion', 'xld', xldVersion)"
+
+      # This question will not be asked but used to extract the tag information which will be used as version
+    - name: xldTag
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the XLD custom image:"
+      value: !expr "(useCustomRegistry && InstallXLD) ? version('getversionfromtag', xldVersion) : 'None'"
 
     - name: InstallXLR
       type: Confirm
       prompt: "Would you like to install XL Release?"
       default: true
       saveInXlvals: true
+    
+    - name: xlrVersion
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter your custom XL Release image and tag:"
+      default: "xl-release:8.5.3"
+      promptIf: !expr "useCustomRegistry && InstallXLR"
+      validate: !expr "version('checkversion', 'xlr', xlrVersion)"
+    
+      # This question will not be asked but used to extract the tag information which will be used as version
+    - name: xlrTag
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the XLR custom image:"
+      value: !expr "(useCustomRegistry && InstallXLR) ? version('getversionfromtag', xlrVersion) : 'None'"
 
     - name: xlVersion
       type: Select
       saveInXlvals: true
       prompt: "Choose the version of the XebiaLabs DevOps Platform:"
+      promptIf: !expr "!useCustomRegistry"
       options:
         - !expr "version('_showapplicableversions')"
 
@@ -389,6 +447,8 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
       writeIf: !expr "K8sSetup == 'AWS EKS' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/dockercred.yaml.tmpl
+      writeIf: !expr "useCustomRegistry"
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
       writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
