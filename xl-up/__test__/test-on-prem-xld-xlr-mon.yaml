@@ -73,13 +73,14 @@ expected-xl-values:
   xlrReportDbUser: xl-release-report
   InstallMonitoring: true
   monitoringUser: mon-user
-  monitoringUserPass: mon-pass
   postgresMaxConn: 400
   postgresSharedBuff: 612MB
   postgresEffectCacheSize: 2GB
   postgresSyncCommit: "off"
   postgresMaxWallSize: 512MB
+  OsType: linux
 expected-xl-secrets:
+  monitoringUserPass: mon-pass
   xlKeyStorePass: test123
   xldAdminPass: password
   xldDbPass: xl-deploy

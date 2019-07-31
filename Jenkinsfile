@@ -23,7 +23,7 @@ pipeline {
                     try {
                         githubNotify context: "Testing blueprint", status: "PENDING"
                         checkout scm
-                        sh "python3.6 integration_tests.py"
+                        sh "python3.7 integration_tests.py"
                         githubNotify context: "Testing blueprint", status: "SUCCESS"
                         notifySlack("Testing blueprint succeeded", "good")
                     } catch (err) {

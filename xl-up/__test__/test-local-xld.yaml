@@ -65,6 +65,8 @@ expected-xl-values:
   xldDbName: xl-deploy
   xldDbUser: xl-deploy
   xlVersion: 8.6.1
+  OsType: linux
+  PostgresqlWorkHostpath: /psql
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

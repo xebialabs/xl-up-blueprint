@@ -70,6 +70,8 @@ expected-xl-values:
   xlVersion: 8.6.1
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
+  OsType: linux
+  PostgresqlWorkHostpath: /psql
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

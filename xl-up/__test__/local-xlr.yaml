@@ -2,7 +2,7 @@ K8sSetup: Local K8s from Docker Desktop for Mac/Windows
 useKubeconfig: false
 localApiServerURL: https://localk8s.com:8443
 K8sClientCertFile: ../xl-up/__test__/files/test-file
-K8sClientCertKeyFile: ../xl-up/__test__/files/test-file
+K8sClientKeyFile: ../xl-up/__test__/files/test-file
 InstallXLD: false
 InstallXLR: true
 xlrAdminPass: password
@@ -16,3 +16,5 @@ xlrReportDbPass: xl-release-report
 xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
 xlVersion: 8.6.1
+OsType: linux
+PostgresqlWorkHostpath: /psql

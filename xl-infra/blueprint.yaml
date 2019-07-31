@@ -1,125 +1,128 @@
-apiVersion: xl/v1
+apiVersion: xl/v2
 kind: Blueprint
 metadata:
-  projectName: XL UP
+  name: XL UP
   description: |
     This blueprint deploys XL Deploy, XL Release, and XL-k8s-foundation into an existing Kubernetes installation (local single-node Kubernetes, on-premises multi-node Kubernetes cluster, or Amazon EKS cluster).
   author: XebiaLabs
   version: 1.0
-parameters:
-  - name: K8sSetup
-    type: Select
-    description: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
-    options:
-      - Local K8s from Docker Desktop for Mac/Windows
-      - AWS EKS
-      - Plain multinode K8s cluster
-    saveInXlVals: true
+spec:
+  parameters:
+    - name: K8sSetup
+      type: Select
+      prompt: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
+      options:
+        - Local K8s from Docker Desktop for Mac/Windows
+        - AWS EKS
+        - Google Kubernetes Engine
+        - Plain multinode K8s cluster
+      saveInXlvals: true
 
-  - name: useKubeconfig
-    type: Confirm
-    description: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
-    dependsOnTrue: !fn k8s.config().IsAvailable
-    default: !fn k8s.config().IsAvailable
-    saveInXlVals: true
+    - name: useKubeconfig
+      type: Confirm
+      prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
+      promptIf: !expr "K8sSetup != 'Google Kubernetes Engine'"
+      default: !expr "K8sSetup != 'Google Kubernetes Engine' ? k8sConfig('IsAvailable') : 'none'"
+      saveInXlvals: true
 
-  - name: apiServerURL
-    type: Input
-    description: "Enter the ApiServerURL of your Kubernetes installation:"
-    default: !fn k8s.config().ClusterServer
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: apiServerURL
+      type: Input
+      prompt: "Enter the ApiServerURL of your Kubernetes installation:"
+      default: !expr "k8sConfig('ClusterServer')"
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      saveInXlvals: true
 
-  - name: OsType
-    type: Input
-    description: "The type of operating system where the xl command is running:"
-    value: !fn os._operatingsystem()
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: OsType
+      type: Input
+      prompt: "The type of operating system where the xl command is running:"
+      value: !expr "os('_operatingsystem')"
+      saveInXlvals: true
 
-  - name: localApiServerURL
-    type: Input
-    description: "Enter the ApiServerURL of your Kubernetes installation:"
-    value: !fn os._defaultapiserverurl()
-    dependsOnTrue: !expression "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-    saveInXlVals: true
+    - name: localApiServerURL
+      type: Input
+      prompt: "Enter the ApiServerURL of your Kubernetes installation:"
+      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : 'none'"
+      saveInXlvals: true
 
-  - name: K8sClientCertFile
-    type: File
-    description: "Enter the full path to your Kubernetes client certificate:"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    saveInXlVals: true
+    - name: K8sClientCertFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      prompt: "Enter the full path to your Kubernetes client certificate:"
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
+      saveInXlvals: true
 
-  - name: K8sClientCertKeyFile
-    type: File
-    description: "Enter the full path to your Kubernetes client certificate key:"
-    saveInXlVals: true
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-  
-  - name: CertFile
-    type: Input
-    description: "Enter the path of your K8s Client Certificate:"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    value: !fn os.getcertfilelocation()
+    - name: K8sClientKeyFile
+      type: File
+      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      prompt: "Enter the full path to your Kubernetes client certificate key:"
+      saveInXlvals: true
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' "
 
-  - name: KeyFile
-    type: Input
-    description: "Enter the path of your K8s Client Certificate Key:"    
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup != 'AWS EKS' "
-    value: !fn os.getkeyfilelocation()
+      # Client certificates used for Upgrade only and downloaded from the Configmap
+    - name: CertFile
+      type: Input
+      prompt: "Enter your K8s Client Certificate:"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
 
-  - name: K8sClientCert
-    type: Editor
-    description: "Using Kubernetes client certificate from your context"
-    dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
-    saveInXlVals: true
-    value: !fn k8s.config().UserClientCertificateData
+    - name: KeyFile
+      type: Input
+      prompt: "Enter your K8s Client Certificate Key:"
+      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
+      # END
 
-  - name: K8sClientCertKey
-    type: Editor
-    description: "Using Kubernetes client certificate Key from your context"
-    saveInXlVals: true
-    dependsOnTrue: !expression "useKubeconfig && K8sSetup != 'AWS EKS' "
-    value: !fn k8s.config().UserClientKeyData
+    - name: K8sClientCert
+      type: Editor
+      prompt: "Using Kubernetes client certificate from your context"
+      saveInXlvals: true
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientCertificateData') : 'none'"
 
-  - name: eksClusterName
-    type: Input
-    description: "What is the Amazon EKS cluster name?"
-    dependsOnTrue: !expression "!useKubeconfig && K8sSetup == 'AWS EKS' "
-    default: !fn k8s.config().ContextCluster
-    saveInXlVals: true
+    - name: K8sClientKey
+      type: Editor
+      prompt: "Using Kubernetes client certificate Key from your context"
+      saveInXlvals: true
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' ? k8sConfig('UserClientKeyData') : 'none'"
 
-  - name: isAwsCfgAvailable
-    type: Confirm
-    value: !fn aws.credentials().IsAvailable
-    dependsOnTrue: !expression "K8sSetup == 'AWS EKS' "
+    - name: K8sToken
+      type: SecretInput
+      prompt: "Provide authentication token for the existing service account:"
+      promptIf: !expr "K8sSetup == 'Google Kubernetes Engine'"
+      saveInXlvals: true
 
-  - name: useAWSconfig
-    type: Confirm
-    description: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
-    dependsOnTrue: !expression "isAwsCfgAvailable"
-    saveInXlVals: true
+    - name: eksClusterName
+      type: Input
+      prompt: "What is the Amazon EKS cluster name?"
+      promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
+      default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): 'none'"
+      saveInXlvals: true
 
-  - name: AWSAccessKey
-    type: Input
-    secret: true
-    description: "What is the AWS access key ID?"
-    dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
-    saveInXlVals: true
-    useRawValue: true
-    default: !fn aws.credentials().AccessKeyID
+    - name: isAwsCfgAvailable
+      type: Confirm
+      value: !expr "awsCredentials('IsAvailable')"
 
-  - name: AWSAccessSecret
-    type: Input
-    secret: true
-    description: "What is the AWS secret access key?"
-    dependsOnTrue: !expression "!useAWSconfig && K8sSetup == 'AWS EKS' "
-    saveInXlVals: true
-    useRawValue: true
-    default: !fn aws.credentials().SecretAccessKey
-files:
-  - path: cm_answer_file_auto.yaml.tmpl
-  - path: cert.crt.tmpl
-    dependsOnTrue: !expression "K8sClientCertFile != ''"
-  - path: cert.key.tmpl
-    dependsOnTrue: !expression "K8sClientCertKeyFile != ''"
+    - name: useAWSconfig
+      type: Confirm
+      prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
+      promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AWS EKS'"
+      saveInXlvals: true
+
+    - name: AWSAccessKey
+      type: SecretInput
+      prompt: "What is the AWS access key ID?"
+      promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
+      saveInXlvals: true
+      # useRawValue: true
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : 'none'"
+
+    - name: AWSAccessSecret
+      type: SecretInput
+      prompt: "What is the AWS secret access key?"
+      promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
+      saveInXlvals: true
+      # useRawValue: true
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey') : 'none'"
+  files:
+    - path: cm_answer_file_auto.yaml.tmpl
+    - path: cert.crt.tmpl
+      writeIf: !expr "K8sClientCertFile != ''"
+    - path: cert.key.tmpl
+      writeIf: !expr "K8sClientKeyFile != ''"

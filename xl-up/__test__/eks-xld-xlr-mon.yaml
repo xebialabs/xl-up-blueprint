@@ -33,3 +33,4 @@ postgresSharedBuff: 612MB
 postgresEffectCacheSize: 2GB
 postgresSyncCommit: "off"
 postgresMaxWallSize: 512MB
+OsType: linux
