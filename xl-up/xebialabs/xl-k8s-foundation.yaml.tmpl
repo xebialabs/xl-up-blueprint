@@ -132,9 +132,9 @@ spec:
             type: udm.Application
             children:
               {{if .useCustomRegistry}}
-              - name: for-{{.xlrTag}}-{{.xldTag}}
+              - name: for-XLRelease-{{.xlrTag}}-XLDeploy{{.xldTag}}
               {{else}}
-              - name: "1.0"
+              - name: {{.xlVersion}}
               {{end}}
                 type: udm.DeploymentPackage
                 orchestrator:
