@@ -1,18 +1,3 @@
-{{if eq .K8sSetup "AWS EKS"}}
-apiVersion: xl-deploy/v1
-kind: Infrastructure
-spec:
-  - directory: Infrastructure/XL-PLATFORM
-    children:
-      - name: EKS-MASTER
-        type: k8s.Master
-        apiServerURL: !value apiServerURL
-        skipTLS: true
-        isEKS: true
-        clusterName: !value eksClusterName
-        accessKey: !value AWSAccessKey
-        accessSecret: !value AWSAccessSecret
-{{end}}
 {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
@@ -30,8 +15,21 @@ spec:
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
         {{end}}
-{{end}}
-{{if eq .K8sSetup "Plain multinode K8s cluster"}}
+{{else if eq .K8sSetup "AWS EKS"}}
+apiVersion: xl-deploy/v1
+kind: Infrastructure
+spec:
+  - directory: Infrastructure/XL-PLATFORM
+    children:
+      - name: EKS-MASTER
+        type: k8s.Master
+        apiServerURL: !value apiServerURL
+        skipTLS: true
+        isEKS: true
+        clusterName: !value eksClusterName
+        accessKey: !value AWSAccessKey
+        accessSecret: !value AWSAccessSecret
+{{else}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -47,5 +45,8 @@ spec:
         {{else}}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
+        {{end}}
+        {{if .K8sToken}}
+        token: !value K8sToken
         {{end}}
 {{end}}

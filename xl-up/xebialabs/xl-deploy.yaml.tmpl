@@ -5,7 +5,25 @@ spec:
     children:
       - directory: XL-DEPLOY
         children:
-          {{if (or (eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+          - directory: LOCAL-DB
+            children:
+              - name: XL-Deploy-Single-Node
+                type: udm.Application
+                children:
+                  - name: "{{.xlVersion}}"
+                    orchestrator:
+                      - sequential-by-dependency
+                    type: udm.DeploymentPackage
+                    deployables:
+                      - name: xld-deployment
+                        type: k8s.ResourcesFile
+                        file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+                    applicationDependencies:
+                      K8s-Ingress-Controller: "{{.xlVersion}}"
+                      PostgreSQL: "{{.xlVersion}}"
+                    undeployDependencies: "true"
+          {{else}}
           - directory: EXTERNAL-DB
             children:
               - directory: HOT-STANDBY
@@ -28,8 +46,7 @@ spec:
                         applicationDependencies:
                           {{if  eq .K8sSetup "AWS EKS" }}
                           XL-Deploy-AWS-EFS: "{{.xlVersion}}"
-                          {{end}}
-                          {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+                          {{else}}
                             {{if  not .InstallMonitoring}}
                           K8s-Ingress-Controller: "{{.xlVersion}}"
                             {{else}}
@@ -68,23 +85,4 @@ spec:
                           Grafana-Dashboard: "{{.xlVersion}}"
                           {{end}}
                         undeployDependencies: "true"
-          {{end}}
-          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-          - directory: LOCAL-DB
-            children:
-              - name: XL-Deploy-Single-Node
-                type: udm.Application
-                children:
-                  - name: "{{.xlVersion}}"
-                    orchestrator:
-                      - sequential-by-dependency
-                    type: udm.DeploymentPackage
-                    deployables:
-                      - name: xld-deployment
-                        type: k8s.ResourcesFile
-                        file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-                    applicationDependencies:
-                      K8s-Ingress-Controller: "{{.xlVersion}}"
-                      PostgreSQL: "{{.xlVersion}}"
-                    undeployDependencies: "true"
           {{end}}

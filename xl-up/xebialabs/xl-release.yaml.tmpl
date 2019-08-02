@@ -5,7 +5,30 @@ spec:
   children:
   - directory: XL-RELEASE
     children:
-{{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+  {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+  - directory: LOCAL-DB
+    children:
+      - name: XL-Release-Single-Node
+        type: udm.Application
+        children:
+          - name: "{{.xlVersion}}"
+            orchestrator:
+              - sequential-by-dependency
+            type: udm.DeploymentPackage
+            deployables:
+              - name: xlr-deployment
+                type: k8s.ResourcesFile
+                file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+            applicationDependencies:
+              {{if  .InstallXLD }}
+              XL-Deploy-Single-Node: "{{.xlVersion}}"
+              {{end}}
+              {{if  not .InstallXLD}}
+              K8s-Ingress-Controller: "{{.xlVersion}}"
+              PostgreSQL: "{{.xlVersion}}"
+              {{end}}
+            undeployDependencies: "true"
+  {{else}}
     - directory: EXTERNAL-DB
       children:
       - directory: ACTIVE-ACTIVE
@@ -35,27 +58,3 @@ spec:
               {{end}}
             undeployDependencies: "true"
 {{end}}
-  {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-    - directory: LOCAL-DB
-      children:
-      - name: XL-Release-Single-Node
-        type: udm.Application
-        children:
-        - name: "{{.xlVersion}}"
-          orchestrator:
-            - sequential-by-dependency
-          type: udm.DeploymentPackage
-          deployables:
-          - name: xlr-deployment
-            type: k8s.ResourcesFile
-            file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-          applicationDependencies:
-            {{if  .InstallXLD }}
-            XL-Deploy-Single-Node: "{{.xlVersion}}"
-            {{end}}
-            {{if  not .InstallXLD}}
-            K8s-Ingress-Controller: "{{.xlVersion}}"
-            PostgreSQL: "{{.xlVersion}}"
-            {{end}}
-          undeployDependencies: "true"
-  {{end}}

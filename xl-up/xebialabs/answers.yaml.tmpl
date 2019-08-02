@@ -9,27 +9,38 @@ data:
     useKubeconfig: {{ .useKubeconfig }}
     apiServerURL: {{ .apiServerURL }}
     OsType: {{ .OsType }}
+    K8sAuthentication: {{ .K8sAuthentication }}
+    {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
     localApiServerURL: {{ .localApiServerURL }}
-    {{if eq .K8sClientCert ""}}
+    {{end}}
+    {{if and (or (eq .K8sToken "none") (eq .K8sToken "")) (ne .K8sSetup "AWS EKS)")}}
+      {{if eq .K8sClientCert ""}}
     K8sClientCertFile: {{ .CertFile }}
     K8sClientCert: {{ .K8sClientCertFile | b64enc }}
-    {{ end }}
-    {{if eq .K8sClientKey ""}}
+      {{end}}
+      {{if eq .K8sClientKey ""}}
     K8sClientKeyFile: {{ .KeyFile }}
     K8sClientKey: {{ .K8sClientKeyFile | b64enc }}
-    {{ end }}
-    {{if eq .K8sClientCertFile ""}}
+      {{end}}
+      {{if eq .K8sClientCertFile ""}}
     K8sClientCert: {{ .K8sClientCert | b64enc }}
-    {{ end }}
-    {{if eq .K8sClientKeyFile ""}}
+      {{end}}
+      {{if eq .K8sClientKeyFile ""}}
     K8sClientKey: {{ .K8sClientKey | b64enc }}
-    {{ end }}
+      {{ end }}
+    {{end}}
+    {{if eq .K8sSetup "Google Kubernetes Engine"}}
+    IsGKE: {{eq .K8sSetup "Google Kubernetes Engine"}}
+    K8sToken: {{ .K8sToken}}
+    {{end}}
+    {{if eq .K8sSetup "AWS EKS" }}
     IsEKS: {{eq .K8sSetup "AWS EKS"}}
     eksClusterName: {{ .eksClusterName }}
     isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
     useAWSconfig: {{ .useAWSconfig }}
     AWSAccessKey: {{ .AWSAccessKey }}
     AWSAccessSecret: {{ .AWSAccessSecret }}
+    {{end}}
     Namespace: {{ .Namespace }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
