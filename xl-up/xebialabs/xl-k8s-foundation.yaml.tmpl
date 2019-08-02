@@ -194,6 +194,11 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
+                  {{if .useCustomRegistry}}
+                  - name: dockercreds
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/dockercred.yaml
+                  {{end}}
                   - name: haproxy-ingress-controller
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
