@@ -131,7 +131,11 @@ spec:
           - name: Answers-Configmap-Deployment
             type: udm.Application
             children:
+              {{if .useCustomRegistry}}
+              - name: for-{{.xlrTag}}-{{.xldTag}}
+              {{else}}
               - name: "1.0"
+              {{end}}
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
