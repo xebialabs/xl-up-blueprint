@@ -51,6 +51,7 @@ spec:
         - Client key/certificate [Path to files]
         - Client key/certificate [User Input]
         - Token
+      saveInXlvals: true
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS'"
 
     - name: K8sToken

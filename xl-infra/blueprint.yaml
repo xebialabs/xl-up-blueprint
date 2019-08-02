@@ -52,6 +52,7 @@ spec:
         - Client key/certificate [User Input]
         - Token
       promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS'"
+      saveInXlvals: true
 
     - name: K8sToken
       type: SecretInput
