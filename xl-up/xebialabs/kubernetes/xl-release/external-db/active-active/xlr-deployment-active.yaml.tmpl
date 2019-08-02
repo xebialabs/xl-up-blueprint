@@ -102,7 +102,11 @@ spec:
              value: "5432"
       containers:
         - name: xl-release
+          {{if .useCustomRegistry }}
+          image: {{.registryURL}}/{{.xlrVersion}}
+          {{ else }}
           image: {{$DOCKER_REPO}}/xl-release:{{$XL_VERSION}}
+          {{ end }}
           imagePullPolicy: Always
           env:
             - name: ADMIN_PASSWORD
@@ -152,3 +156,7 @@ spec:
             initialDelaySeconds: 20
             periodSeconds: 15
             failureThreshold: 6
+      {{if .useCustomRegistry }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
