@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dockercred
+  namespace: {{ .Namespace }}
+data:
+  {{ $userPass := printf "%s:%s" .dockerUser .dockerPass }}
+  {{ $auth := printf "\"auth\":\"%s\"" ($userPass | b64enc) }}
+  {{ $registryURL := .registryURL }}
+  {{ $auths := printf "\"%s\": { %s }" $registryURL $auth}}
+  .dockerconfigjson: {{ cat "{\"auths\": {" $auths "}}"  | b64enc }}
+type: kubernetes.io/dockerconfigjson
