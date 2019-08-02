@@ -2,20 +2,23 @@ K8sSetup: {{.K8sSetup}}
 useKubeconfig: {{.useKubeconfig}}
 apiServerURL: {{.apiServerURL}}
 OsType: {{ .OsType }}
+ {{if ne .K8sAuthentication ""}}
 K8sAuthentication: {{ .K8sAuthentication }}
+{{end}}
 {{ if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
 localApiServerURL: {{ .localApiServerURL }}
 {{ end }}
-{{if and (or (eq .K8sToken "none") (eq .K8sToken "")) (ne .K8sSetup "AWS EKS)")}}
-  {{if eq (and .K8sClientCert .K8sClientKey) "none"}}
+{{ if eq .K8sToken ""}}
+  {{ if eq .K8sClientCert "none" }}
 K8sClientCertFile: {{ .CertFile }}
 K8sClientKeyFile: {{ .KeyFile }}
-  {{else if eq (and .K8sClientCertFile .K8sClientKeyFile) "none"}}
-K8sClientCert: {{ .K8sClientCert }}
-K8sClientKey: {{ .K8sClientKey }}
-  {{ end }}
-{{ end }}
+  {{else}}
+K8sClientCert: {{ .K8sClientCert | b64enc }}
+K8sClientKey: {{ .K8sClientKey | b64enc }}
+  {{end}}
+{{else}}
 K8sToken: {{ .K8sToken}}
+{{end}}
 {{ if eq .K8sSetup "Google Kubernetes Engine" }}
 IsGKE: {{eq .K8sSetup "Google Kubernetes Engine"}}
 {{ end }}
