@@ -7,5 +7,5 @@ expected-xl-values:
   localApiServerURL: none
   apiServerURL: https://localk8s.com:8443
   K8sAuthentication: Client key/certificate [Path to files]
-  K8sClientCert: none
-  K8sClientKey: none
+  K8sClientCertFile: ""
+  K8sClientKeyFile: ""
