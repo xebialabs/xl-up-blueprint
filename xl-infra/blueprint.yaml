@@ -89,16 +89,18 @@ spec:
       # END
 
     - name: K8sClientCert
-      type: Editor
+      type: SecretEditor
       prompt: "Using Kubernetes client certificate from your context"
       saveInXlvals: true
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' || K8sAuthentication == 'Client key/certificate [User Input]' ? k8sConfig('UserClientCertificateData') : 'none'"
+      replaceAsIs: true
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : 'none'"
 
     - name: K8sClientKey
-      type: Editor
+      type: SecretEditor
       prompt: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' || K8sAuthentication == 'Client key/certificate [User Input]' ? k8sConfig('UserClientKeyData') : 'none'"
+      replaceAsIs: true
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : 'none'"
 
     - name: eksClusterName
       type: Input
