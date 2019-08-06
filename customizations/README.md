@@ -32,5 +32,14 @@ When `xl up` comand is launched in `Advanced` mode there will be a question if y
 If you select yes them more questions will follow about the docker registry, credentials and image:
 
 ```$xslt
-
+? Do you want to use custom Docker Registry? Yes
+? Enter your Docker registry URL and organization: xl-docker.xebialabs.com
+? Enter your Docker Registry username: userx
+? Enter your Docker Registry password: ******
+? Would you like to install XL Deploy? Yes
+? Enter your custom XL Deploy image and tag: (xl-deploy:8.5.3) xl-deploy:9.0.1
 ```
+
+The docker registry url depends on your docker registry setup. In case of Dockerhub the you need domain and organization, for example `docker.io/xebialabs`. In case of an internal docker registry where organization is not required it  will be `xl-docker.xebialabs.com`
+Docker credentials are needed if you need to authenticate to the docker registry in order to pull an image
+The custom docker image that you want to use should use a tag that follows [semver](https://semver.org/) . An image with a random tag like `xl-deploy:test123` will not work
