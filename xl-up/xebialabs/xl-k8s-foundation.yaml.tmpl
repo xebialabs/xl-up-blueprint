@@ -155,11 +155,11 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file "answers.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "{{.xlVersion}}"
-                  PostgreSQL: "{{.xlVersion}}"
+                  K8s-Ingress-Controller: "v0.6"
+                  PostgreSQL: "10.5"
                 {{ if .InstallMonitoring }}
-                  Grafana-Dashboard: "{{.xlVersion}}"
-                  Kibana: "{{.xlVersion}}"
+                  Grafana-Dashboard: "5.4.4"
+                  Kibana: "6.5.0"
                 {{ end }}
                 undeployDependencies: "true"
           - name: K8s-Ingress-Controller
