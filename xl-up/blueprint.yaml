@@ -456,7 +456,7 @@ spec:
     - path: xebialabs/xl-k8s-foundation.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS'"
+      writeIf: !expr "K8sSetup == 'AWS EKS' || K8sSetup == 'Google Kubernetes Engine'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
