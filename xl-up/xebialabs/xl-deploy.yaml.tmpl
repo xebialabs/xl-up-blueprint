@@ -5,7 +5,29 @@ spec:
     children:
       - directory: XL-DEPLOY
         children:
-          {{if (or (eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+        {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+          - directory: LOCAL-DB
+            children:
+              - name: XL-Deploy-Single-Node
+                type: udm.Application
+                children:
+                  {{if  .useCustomRegistry }}
+                  - name: "{{.xldTag}}"
+                  {{ else }}
+                  - name: "{{.xlVersion}}"
+                  {{ end }}
+                  orchestrator:
+                    - sequential-by-dependency
+                  type: udm.DeploymentPackage
+                  deployables:
+                    - name: xld-deployment
+                      type: k8s.ResourcesFile
+                      file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+                  applicationDependencies:
+                    K8s-Ingress-Controller: "v0.6"
+                    PostgreSQL: "10.5"
+                  undeployDependencies: "true"
+        {{else}}
           - directory: EXTERNAL-DB
             children:
               - directory: HOT-STANDBY
@@ -18,7 +40,7 @@ spec:
                       - name: "{{.xldTag}}"
                       {{ else }}
                       - name: "{{.xlVersion}}"
-                      {{ end }} 
+                      {{ end }}
                         type: udm.DeploymentPackage
                         orchestrator:
                           - sequential-by-dependency
@@ -31,13 +53,12 @@ spec:
                             file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
                         applicationDependencies:
                           {{if  eq .K8sSetup "AWS EKS" }}
-                          {{if  .useCustomRegistry }}
+                            {{if  .useCustomRegistry }}
                           XL-Deploy-AWS-EFS: "{{.xldTag}}"
-                          {{ else }}
+                            {{ else }}
                           XL-Deploy-AWS-EFS: "{{.xlVersion}}"
-                          {{ end }}
-                          {{end}}
-                          {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+                            {{ end }}
+                          {{else}}
                             {{if  not .InstallMonitoring}}
                           K8s-Ingress-Controller: "v0.6"
                             {{else}}
@@ -46,8 +67,8 @@ spec:
                             {{end}}
                           {{end}}
                         undeployDependencies: "true"
-          {{end}}
-          {{if  eq .K8sSetup "AWS EKS" }}
+        {{end}}
+        {{if  eq .K8sSetup "AWS EKS" }}
                   - name: XL-Deploy-AWS-EFS
                     type: udm.Application
                     children:
@@ -80,27 +101,4 @@ spec:
                           Kibana: "6.5.0"
                           {{end}}
                         undeployDependencies: "true"
-          {{end}}
-          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-          - directory: LOCAL-DB
-            children:
-              - name: XL-Deploy-Single-Node
-                type: udm.Application
-                children:
-                  {{if  .useCustomRegistry }}
-                  - name: "{{.xldTag}}"
-                  {{ else }}
-                  - name: "{{.xlVersion}}"
-                  {{ end }}
-                    orchestrator:
-                      - sequential-by-dependency
-                    type: udm.DeploymentPackage
-                    deployables:
-                      - name: xld-deployment
-                        type: k8s.ResourcesFile
-                        file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-                    applicationDependencies:
-                      K8s-Ingress-Controller: "v0.6"
-                      PostgreSQL: "10.5"
-                    undeployDependencies: "true"
-          {{end}}
+        {{end}}

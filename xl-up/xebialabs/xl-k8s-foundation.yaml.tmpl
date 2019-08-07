@@ -12,8 +12,7 @@ spec:
         clusterName: !value eksClusterName
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
-{{end}}
-{{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+{{else if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -30,8 +29,7 @@ spec:
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
         {{end}}
-{{end}}
-{{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+{{else}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -47,6 +45,9 @@ spec:
         {{else}}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
+        {{end}}
+        {{if .K8sToken}}
+        token: !value K8sToken
         {{end}}
 {{end}}
 ---
@@ -111,12 +112,10 @@ spec:
         members:
           {{if  eq .K8sSetup "AWS EKS" }}
           - Infrastructure/XEBIALABS/EKS-MASTER
-          {{end}}
-          {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
-          - Infrastructure/XEBIALABS/K8s-MASTER
-          {{end}}
-          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+          {{else if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL
+          {{else}}
+          - Infrastructure/XEBIALABS/K8s-MASTER
           {{end}}
         dictionaries:
           - Environments/XEBIALABS/DICTIONARY
@@ -227,7 +226,7 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  - name: gp2-retain
+                  - name: gp2
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
           {{end}}

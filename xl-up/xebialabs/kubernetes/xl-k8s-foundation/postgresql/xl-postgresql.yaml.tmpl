@@ -137,7 +137,7 @@ spec:
           configMap:
             name: postgresql-init-sql
             defaultMode: 0777
-        {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+  {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
         - name: data
           {{if eq .OsType "linux" }}
           emptyDir: {}
@@ -145,8 +145,7 @@ spec:
           hostPath:
             path: {{$POSTGRESQL_HOSTPATH}}
           {{end}}
-        {{end}}
-  {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+  {{else}}
   volumeClaimTemplates:
     - metadata:
         name: data

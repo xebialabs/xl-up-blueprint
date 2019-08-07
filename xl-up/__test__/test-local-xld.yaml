@@ -67,6 +67,7 @@ expected-xl-values:
   xlVersion: 8.6.1
   OsType: linux
   PostgresqlWorkHostpath: /psql
+  K8sAuthentication: Client key/certificate [Path to files]
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password
