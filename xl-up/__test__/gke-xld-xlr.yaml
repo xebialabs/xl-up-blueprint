@@ -1,4 +1,5 @@
 K8sSetup: Google Kubernetes Engine
+useKubeconfig: false
 apiServerURL: https://k8s.com:6443
 InstallXLD: true
 InstallXLR: true
