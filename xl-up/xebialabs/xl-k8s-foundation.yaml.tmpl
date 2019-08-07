@@ -97,7 +97,7 @@ spec:
           EFS_REGION: !value efsRegion
           {{end}}
         {{end}}
-        {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+        {{if or (eq .K8sSetup "Plain multinode K8s cluster") (eq .K8sSetup "Google Kubernetes Engine")}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
           NFS_SERVER: !value nsfServerHost
           NFS_PATH: !value nsfSharePath
@@ -249,9 +249,8 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
                   {{if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
-                    {{if  eq .K8sSetup "AWS EKS" }}
                   K8s-StorageClass: "1.0"
-                    {{else}}
+                    {{if ne .K8sSetup "AWS EKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                     {{end}}
                   {{end}}

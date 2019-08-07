@@ -59,7 +59,7 @@ spec:
                           XL-Deploy-AWS-EFS: "{{.xlVersion}}"
                             {{ end }}
                           {{else}}
-                            {{if not .InstallMonitoring}}
+                            {{if and (not .InstallMonitoring) (eq .K8sSetup "Plain multinode K8s cluster")}}
                           K8s-Ingress-Controller: "v0.6"
                             {{else}}
                           Kibana: "6.5.0"
