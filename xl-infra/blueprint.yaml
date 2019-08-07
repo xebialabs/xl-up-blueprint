@@ -21,8 +21,8 @@ spec:
     - name: useKubeconfig
       type: Confirm
       prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
-      promptIf: !expr "K8sSetup != 'Google Kubernetes Engine'"
-      default: !expr "K8sSetup != 'Google Kubernetes Engine' ? k8sConfig('IsAvailable') : false"
+      promptIf: !expr "k8sConfig('IsAvailable')"
+      default: true
       saveInXlvals: true
 
     - name: apiServerURL
@@ -51,7 +51,7 @@ spec:
         - Client key/certificate [Path to files]
         - Client key/certificate [User Input]
         - Token
-      promptIf: !expr "!useKubeconfig && K8sSetup != 'AWS EKS'"
+      promptIf: !expr "(!useKubeconfig && K8sSetup != 'AWS EKS') || K8sSetup == 'Google Kubernetes Engine' "
       saveInXlvals: true
 
     - name: K8sToken
