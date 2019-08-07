@@ -21,7 +21,7 @@ spec:
     - name: useKubeconfig
       type: Confirm
       prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
-      promptIf: !expr "k8sConfig('IsAvailable')"
+      promptIf: !expr "k8sConfig('IsConfigAvailable')"
       default: true
       saveInXlvals: true
 
