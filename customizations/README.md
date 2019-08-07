@@ -1,11 +1,11 @@
 ## Custom xebialabs docker images
 
-`xl up` commands helps you to install the Xebialabs DevOps in Kubernetes. While by default you can install the default Xebialabs docker images it sis common 
-that you may have customization (custom plugins, custom synthetic xml and scripts). The default Xebialabs docker images include only the bundled plugins.
+`xl up` commands helps you to install the Xebialabs DevOps in Kubernetes. While by default you can install the default Xebialabs docker images it is common 
+that you may have customizations (custom plugins, custom synthetic xml and scripts). The default Xebialabs docker images include only the bundled plugins.
 
 ### Adding custom plugins
 
-If you want to add a custom plugin that you have been developing manually or you have saved somewhere it can can be reached by a url you may use this [Dockerfile](plugins/Dockerfile):
+If you want to add a custom plugin that you have been developing manually or you have saved somewhere it can can be reached by a URL you may use this [Dockerfile](plugins/Dockerfile):
 
 ```dockerfile
 FROM xebialabs/xl-deploy:8.6.1
@@ -40,6 +40,6 @@ If you select yes them more questions will follow about the docker registry, cre
 ? Enter your custom XL Deploy image and tag: (xl-deploy:8.5.3) xl-deploy:9.0.1
 ```
 
-The docker registry url depends on your docker registry setup. In case of Dockerhub the you need domain and organization, for example `docker.io/xebialabs`. In case of an internal docker registry where organization is not required it  will be `xl-docker.xebialabs.com`
+The docker registry URL depends on your docker registry setup. In case of Dockerhub the you need domain and organization, for example `docker.io/xebialabs`. In case of an internal docker registry where organization is not required it  will be `xl-docker.xebialabs.com`
 Docker credentials are needed if you need to authenticate to the docker registry in order to pull an image
-The custom docker image that you want to use should use a tag that follows [semver](https://semver.org/) . An image with a random tag like `xl-deploy:test123` will not work
+The custom docker image that you want to use should use a tag that follows [semver](https://semver.org/). An image with a random tag like `xl-deploy:test123` will not work
