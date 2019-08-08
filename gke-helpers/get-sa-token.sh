@@ -3,11 +3,11 @@
 sa_name=xebialabs-admin
 
 getClientCrt () {
-    gcloud container clusters describe evgen-test --format="json" --zone europe-west4-a | jq -r .masterAuth.clientCertificate | base64 -d
+    gcloud container clusters describe TEST_CLUSTER --format="json" --zone europe-west4-a | jq -r .masterAuth.clientCertificate | base64 -d
 }
 
 getClientKey () {
-    gcloud container clusters describe evgen-test --format="json" --zone europe-west4-a | jq -r .masterAuth.clientKey | base64 -d
+    gcloud container clusters describe TEST_CLUSTER --format="json" --zone europe-west4-a | jq -r .masterAuth.clientKey | base64 -d
 }
 
 getToken () {
