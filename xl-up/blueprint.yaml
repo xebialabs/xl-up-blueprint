@@ -498,58 +498,58 @@ spec:
       writeIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     #pg-stack
     - path: xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/grafana/configmap.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/grafana/secret.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/grafana/pvc.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
-      writeIf: InstallMonitoring
+      writeIf: !expr "InstallMonitoring"
     #xebialabs files
     - path: xebialabs.yaml.tmpl
     - path: xebialabs/common.yaml.tmpl

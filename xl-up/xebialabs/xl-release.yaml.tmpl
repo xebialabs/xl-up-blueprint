@@ -16,26 +16,26 @@ spec:
           {{ else }}
           - name: "{{.xlVersion}}"
           {{ end }}
-          orchestrator:
-            - sequential-by-dependency
-          type: udm.DeploymentPackage
-          deployables:
-            - name: xlr-deployment
-              type: k8s.ResourcesFile
-              file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-          applicationDependencies:
-            {{if  .InstallXLD }}
-            {{if  .useCustomRegistry }}
-            XL-Deploy-Single-Node: "{{.xldTag}}"
-            {{else}}
-            XL-Deploy-Single-Node: "{{.xlVersion}}"
-            {{end}}
-            {{end}}
-            {{if  not .InstallXLD}}
-            K8s-Ingress-Controller: "v0.6"
-            PostgreSQL: "10.5"
-            {{end}}
-          undeployDependencies: "true"
+            orchestrator:
+              - sequential-by-dependency
+            type: udm.DeploymentPackage
+            deployables:
+              - name: xlr-deployment
+                type: k8s.ResourcesFile
+                file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+            applicationDependencies:
+              {{if  .InstallXLD }}
+              {{if  .useCustomRegistry }}
+              XL-Deploy-Single-Node: "{{.xldTag}}"
+              {{else}}
+              XL-Deploy-Single-Node: "{{.xlVersion}}"
+              {{end}}
+              {{end}}
+              {{if  not .InstallXLD}}
+              K8s-Ingress-Controller: "v0.6"
+              PostgreSQL: "10.5"
+              {{end}}
+            undeployDependencies: "true"
   {{else}}
     - directory: EXTERNAL-DB
       children:

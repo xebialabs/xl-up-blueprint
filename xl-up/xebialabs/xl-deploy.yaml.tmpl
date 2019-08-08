@@ -16,17 +16,17 @@ spec:
                   {{ else }}
                   - name: "{{.xlVersion}}"
                   {{ end }}
-                  orchestrator:
-                    - sequential-by-dependency
-                  type: udm.DeploymentPackage
-                  deployables:
-                    - name: xld-deployment
-                      type: k8s.ResourcesFile
-                      file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-                  applicationDependencies:
-                    K8s-Ingress-Controller: "v0.6"
-                    PostgreSQL: "10.5"
-                  undeployDependencies: "true"
+                    orchestrator:
+                      - sequential-by-dependency
+                    type: udm.DeploymentPackage
+                    deployables:
+                      - name: xld-deployment
+                        type: k8s.ResourcesFile
+                        file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+                    applicationDependencies:
+                      K8s-Ingress-Controller: "v0.6"
+                      PostgreSQL: "10.5"
+                    undeployDependencies: "true"
         {{else}}
           - directory: EXTERNAL-DB
             children:
