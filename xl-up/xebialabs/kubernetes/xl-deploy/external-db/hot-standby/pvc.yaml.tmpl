@@ -6,10 +6,10 @@ metadata:
   labels:
     app: xl-deploy
   annotations:
-    {{if eq .K8sSetup "Plain multinode K8s cluster" }}
-    volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
-    {{else}}
+    {{if eq .K8sSetup "AWS EKS" }}
     volume.beta.kubernetes.io/storage-class: "aws-efs"
+    {{else}}
+    volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
     {{end}}
 spec:
   accessModes:

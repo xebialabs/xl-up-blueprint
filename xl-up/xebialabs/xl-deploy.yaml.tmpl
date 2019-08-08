@@ -52,14 +52,14 @@ spec:
                             type: k8s.ResourcesFile
                             file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
                         applicationDependencies:
-                          {{if  eq .K8sSetup "AWS EKS" }}
-                            {{if  .useCustomRegistry }}
+                          {{if eq .K8sSetup "AWS EKS" }}
+                            {{if .useCustomRegistry }}
                           XL-Deploy-AWS-EFS: "{{.xldTag}}"
                             {{ else }}
                           XL-Deploy-AWS-EFS: "{{.xlVersion}}"
                             {{ end }}
                           {{else}}
-                            {{if  not .InstallMonitoring}}
+                            {{if and (not .InstallMonitoring) (eq .K8sSetup "Plain multinode K8s cluster")}}
                           K8s-Ingress-Controller: "v0.6"
                             {{else}}
                           Kibana: "6.5.0"
@@ -68,7 +68,7 @@ spec:
                           {{end}}
                         undeployDependencies: "true"
         {{end}}
-        {{if  eq .K8sSetup "AWS EKS" }}
+        {{if eq .K8sSetup "AWS EKS" }}
                   - name: XL-Deploy-AWS-EFS
                     type: udm.Application
                     children:

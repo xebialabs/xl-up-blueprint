@@ -35,7 +35,7 @@ spec:
     - name: OsType
       type: Input
       prompt: "The type of operating system where the xl command is running:"
-      value: !expr "os('operatingsystem')"
+      value: !expr "os('_operatingsystem')"
       saveInXlvals: true
 
     - name: localApiServerURL
@@ -293,13 +293,13 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter your NFS server name or IP address:"
-      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster'"
+      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
 
     - name: nsfSharePath
       type: Input
       saveInXlvals: true
       prompt: "Enter your NFS share path:"
-      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster'"
+      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
 
     - name: xldWorkHostpath
       type: Input
@@ -456,20 +456,22 @@ spec:
     - path: xebialabs/xl-k8s-foundation.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS'"
+      writeIf: !expr "K8sSetup == 'AWS EKS' || K8sSetup == 'Google Kubernetes Engine'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'Google Kubernetes Engine'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/dockercred.yaml.tmpl
       writeIf: !expr "useCustomRegistry"
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
     #xl-deploy
     - path: xebialabs/xl-deploy.yaml.tmpl
       writeIf: InstallXLD

@@ -8,6 +8,11 @@ expected-files:
   #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
@@ -44,7 +49,6 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 not-expected-files:
   #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
@@ -75,6 +79,8 @@ expected-xl-values:
   postgresMaxWallSize: 512MB
   OsType: linux
   K8sAuthentication: Token
+  nsfServerHost: nfs-test.com
+  nsfSharePath: /xebialabs
 expected-xl-secrets:
   monitoringUserPass: mon-pass
   xlKeyStorePass: test123
