@@ -37,4 +37,3 @@ if [[ ( -n getClientCrt ) && ( -n getClientKey  ) ]] ; then
 else
 	echo "Client certificate and key were not found."
 fi
-

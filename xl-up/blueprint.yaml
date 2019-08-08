@@ -35,7 +35,7 @@ spec:
     - name: OsType
       type: Input
       prompt: "The type of operating system where the xl command is running:"
-      value: !expr "os('operatingsystem')"
+      value: !expr "os('_operatingsystem')"
       saveInXlvals: true
 
     - name: localApiServerURL
