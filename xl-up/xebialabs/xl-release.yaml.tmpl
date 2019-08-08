@@ -5,7 +5,25 @@ spec:
   children:
   - directory: XL-RELEASE
     children:
-{{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+{{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+      - name: XL-Release-Deployment
+        type: udm.Application
+        children:
+        {{if  .useCustomRegistry }}
+        - name: "{{.xlrTag}}"
+        {{ else }}
+        - name: "{{.xlVersion}}"
+        {{ end }}
+          orchestrator:
+            - sequential-by-dependency
+          type: udm.DeploymentPackage
+          deployables:
+          - name: xlr-deployment
+            type: k8s.ResourcesFile
+            file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+          applicationDependencies: null
+          undeployDependencies: "false"
+{{else}}
       - name: XL-Release-Deployment
         type: udm.Application
         children:
@@ -24,22 +42,3 @@ spec:
           applicationDependencies: null
           undeployDependencies: "false"
 {{end}}
-  {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-      - name: XL-Release-Deployment
-        type: udm.Application
-        children:
-        {{if  .useCustomRegistry }}
-        - name: "{{.xlrTag}}"
-        {{ else }}
-        - name: "{{.xlVersion}}"
-        {{ end }}
-          orchestrator:
-            - sequential-by-dependency
-          type: udm.DeploymentPackage
-          deployables:
-          - name: xlr-deployment
-            type: k8s.ResourcesFile
-            file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-          applicationDependencies: null
-          undeployDependencies: "false"
-  {{end}}

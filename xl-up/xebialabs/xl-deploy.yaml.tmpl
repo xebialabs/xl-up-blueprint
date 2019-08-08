@@ -5,7 +5,25 @@ spec:
     children:
       - directory: XL-DEPLOY
         children:
-          {{if (or (eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
+          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+          - name: XL-Deploy-Deployment
+            type: udm.Application
+            children:
+              {{if  .useCustomRegistry }}
+              - name: "{{.xldTag}}"
+              {{ else }}
+              - name: "{{.xlVersion}}"
+              {{ end }}
+                orchestrator:
+                  - sequential-by-dependency
+                type: udm.DeploymentPackage
+                deployables:
+                  - name: xld-deployment
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+                applicationDependencies: null
+                undeployDependencies: "true"
+          {{else}}
           - name: XL-Deploy-Deployment
             type: udm.Application
             children:
@@ -35,25 +53,6 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
                   {{ end }}
-                applicationDependencies: null
-                undeployDependencies: "true"
-          {{end}}
-          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-          - name: XL-Deploy-Deployment
-            type: udm.Application
-            children:
-              {{if  .useCustomRegistry }}
-              - name: "{{.xldTag}}"
-              {{ else }}
-              - name: "{{.xlVersion}}"
-              {{ end }}
-                orchestrator:
-                  - sequential-by-dependency
-                type: udm.DeploymentPackage
-                deployables:
-                  - name: xld-deployment
-                    type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
                 applicationDependencies: null
                 undeployDependencies: "true"
           {{end}}
