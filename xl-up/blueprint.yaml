@@ -80,12 +80,12 @@ spec:
     - name: CertFile
       type: Input
       prompt: "Enter your K8s Client Certificate:"
-      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
 
     - name: KeyFile
       type: Input
       prompt: "Enter your K8s Client Certificate Key:"
-      value: !expr "!useKubeconfig && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
       # END
 
     - name: K8sClientCert

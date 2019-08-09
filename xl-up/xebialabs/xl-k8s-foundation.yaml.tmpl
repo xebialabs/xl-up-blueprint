@@ -42,7 +42,7 @@ spec:
         {{if .K8sToken}}
         token: !value K8sToken
         {{else}}
-        {{if .useKubeconfig }}
+          {{if eq .K8sClientCertFile ""}}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
           {{else}}
