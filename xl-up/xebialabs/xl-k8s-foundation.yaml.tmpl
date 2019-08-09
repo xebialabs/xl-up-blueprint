@@ -39,15 +39,16 @@ spec:
         type: k8s.Master
         apiServerURL: !value apiServerURL
         skipTLS: true
+        {{if .K8sToken}}
+        token: !value K8sToken
+        {{else}}
         {{if .useKubeconfig }}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
-        {{else}}
+          {{else}}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
-        {{end}}
-        {{if .K8sToken}}
-        token: !value K8sToken
+          {{end}}
         {{end}}
 {{end}}
 ---
@@ -97,7 +98,7 @@ spec:
           EFS_REGION: !value efsRegion
           {{end}}
         {{end}}
-        {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+        {{if or (eq .K8sSetup "Plain multinode K8s cluster") (eq .K8sSetup "Google Kubernetes Engine")}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
           NFS_SERVER: !value nsfServerHost
           NFS_PATH: !value nsfSharePath
@@ -177,7 +178,7 @@ spec:
                   - name: haproxy-ingress-controller
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-                  {{if  eq .K8sSetup "AWS EKS" }}
+                  {{if or (eq .K8sSetup "AWS EKS") (eq .K8sSetup "Google Kubernetes Engine")}}
                   - name: service-l7
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
@@ -193,7 +194,7 @@ spec:
                   PostgreSQL: "10.5"
                   {{end}}
                 undeployDependencies: "true"
-          {{if  eq .K8sSetup "AWS EKS" }}
+          {{if or (eq .K8sSetup "AWS EKS") (eq .K8sSetup "Google Kubernetes Engine") }}
           - name: K8s-StorageClass
             type: udm.Application
             children:
@@ -202,14 +203,19 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
+                  {{if eq .K8sSetup "AWS EKS" }}
                   - name: gp2
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
                   - name: aws-efs-storageclass
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
+                  {{else if eq .K8sSetup "Google Kubernetes Engine" }}
+                  - name: pd-retain
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
+                  {{ end }}
           {{end}}
-
           - name: PostgreSQL
             type: udm.Application
             children:
@@ -222,16 +228,15 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
-                  {{if (or ( eq .K8sSetup "AWS EKS" ) ( eq .K8sSetup "Plain multinode K8s cluster" ))}}
-                    {{if  eq .K8sSetup "AWS EKS" }}
+                  {{if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
                   K8s-StorageClass: "1.0"
-                    {{else}}
+                    {{if ne .K8sSetup "AWS EKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                     {{end}}
                   {{end}}
                 undeployDependencies: "true"
 
-          {{if  eq .K8sSetup "Plain multinode K8s cluster" }}
+          {{if or (eq .K8sSetup "Plain multinode K8s cluster") (eq .K8sSetup "Google Kubernetes Engine")}}
           - name: K8s-NFS-Client-Provisioner
             type: udm.Application
             children:

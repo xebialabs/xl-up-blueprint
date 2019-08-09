@@ -39,14 +39,15 @@ spec:
         type: k8s.Master
         apiServerURL: !value apiServerURL
         skipTLS: true
-        {{if .useKubeconfig }}
-        tlsCert: !value K8sClientCert
-        tlsPrivateKey: !value K8sClientKey
-        {{else}}
-        tlsCert: !value K8sClientCertFile
-        tlsPrivateKey: !value K8sClientKeyFile
-        {{end}}
         {{if .K8sToken}}
         token: !value K8sToken
+        {{else}}
+          {{if .useKubeconfig }}
+        tlsCert: !value K8sClientCert
+        tlsPrivateKey: !value K8sClientKey
+          {{else}}
+        tlsCert: !value K8sClientCertFile
+        tlsPrivateKey: !value K8sClientKeyFile
+          {{end}}
         {{end}}
 {{end}}
