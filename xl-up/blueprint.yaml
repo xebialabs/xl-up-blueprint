@@ -496,6 +496,8 @@ spec:
       writeIf: !expr "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+    - path: xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml.tmpl
+      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
       writeIf: !expr "InstallMonitoring"

@@ -28,7 +28,6 @@ fi
 
 ### CERTIFICATE AUTH ###
 
-
 client_key=$()
 client_crt=$()
 if [[ ( -n getClientCrt ) && ( -n getClientKey  ) ]] ; then
