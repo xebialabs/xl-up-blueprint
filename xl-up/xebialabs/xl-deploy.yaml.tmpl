@@ -5,100 +5,54 @@ spec:
     children:
       - directory: XL-DEPLOY
         children:
-        {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-          - directory: LOCAL-DB
+          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+          - name: XL-Deploy-Deployment
+            type: udm.Application
             children:
-              - name: XL-Deploy-Single-Node
-                type: udm.Application
-                children:
-                  {{if  .useCustomRegistry }}
-                  - name: "{{.xldTag}}"
-                  {{ else }}
-                  - name: "{{.xlVersion}}"
+              {{if  .useCustomRegistry }}
+              - name: "{{.xldTag}}"
+              {{ else }}
+              - name: "{{.xlVersion}}"
+              {{ end }}
+                orchestrator:
+                  - sequential-by-dependency
+                type: udm.DeploymentPackage
+                deployables:
+                  - name: xld-deployment
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+                applicationDependencies: null
+                undeployDependencies: "true"
+          {{else}}
+          - name: XL-Deploy-Deployment
+            type: udm.Application
+            children:
+              {{if  .useCustomRegistry }}
+              - name: "{{.xldTag}}"
+              {{ else }}
+              - name: "{{.xlVersion}}"
+              {{ end }}
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: xld-deployment
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
+                  - name: xld-pvc
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+                  {{- if eq .K8sSetup "AWS EKS" }}
+                  - name: aws-efs-conf
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
+                  - name: aws-efs-deployment
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
+                  - name: aws-efs-rbac
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
                   {{ end }}
-                    orchestrator:
-                      - sequential-by-dependency
-                    type: udm.DeploymentPackage
-                    deployables:
-                      - name: xld-deployment
-                        type: k8s.ResourcesFile
-                        file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-                    applicationDependencies:
-                      K8s-Ingress-Controller: "v0.6"
-                      PostgreSQL: "10.5"
-                    undeployDependencies: "true"
-        {{else}}
-          - directory: EXTERNAL-DB
-            children:
-              - directory: HOT-STANDBY
-                children:
-
-                  - name: XL-Deploy-Hot-Standby
-                    type: udm.Application
-                    children:
-                      {{if  .useCustomRegistry }}
-                      - name: "{{.xldTag}}"
-                      {{ else }}
-                      - name: "{{.xlVersion}}"
-                      {{ end }}
-                        type: udm.DeploymentPackage
-                        orchestrator:
-                          - sequential-by-dependency
-                        deployables:
-                          - name: xld-deployment
-                            type: k8s.ResourcesFile
-                            file: !file kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
-                          - name: xld-pvc
-                            type: k8s.ResourcesFile
-                            file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
-                        applicationDependencies:
-                          {{if eq .K8sSetup "AWS EKS" }}
-                            {{if .useCustomRegistry }}
-                          XL-Deploy-AWS-EFS: "{{.xldTag}}"
-                            {{ else }}
-                          XL-Deploy-AWS-EFS: "{{.xlVersion}}"
-                            {{ end }}
-                          {{else}}
-                            {{if and (not .InstallMonitoring) (eq .K8sSetup "Plain multinode K8s cluster")}}
-                          K8s-Ingress-Controller: "v0.6"
-                            {{else}}
-                          Kibana: "6.5.0"
-                          Grafana-Dashboard: "5.4.4"
-                            {{end}}
-                          {{end}}
-                        undeployDependencies: "true"
-        {{end}}
-        {{if eq .K8sSetup "AWS EKS" }}
-                  - name: XL-Deploy-AWS-EFS
-                    type: udm.Application
-                    children:
-                      {{if  .useCustomRegistry }}
-                      - name: "{{.xldTag}}"
-                      {{ else }}
-                      - name: "{{.xlVersion}}"
-                      {{ end }}
-                        type: udm.DeploymentPackage
-                        orchestrator:
-                          - sequential-by-dependency
-                        deployables:
-                          - name: aws-efs-conf
-                            type: k8s.ResourcesFile
-                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
-                          - name: aws-efs-deployment
-                            type: k8s.ResourcesFile
-                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
-                          - name: aws-efs-rbac
-                            type: k8s.ResourcesFile
-                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
-                          - name: aws-efs-storageclass
-                            type: k8s.ResourcesFile
-                            file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
-                        applicationDependencies:
-                          {{if not .InstallMonitoring}}
-                          K8s-Ingress-Controller: "v0.6"
-                          {{else}}
-                          Grafana-Dashboard: "5.4.4"
-                          Kibana: "6.5.0"
-                          {{end}}
-                        undeployDependencies: "true"
-        {{end}}
+                applicationDependencies: null
+                undeployDependencies: "true"
+          {{end}}

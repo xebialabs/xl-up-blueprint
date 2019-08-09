@@ -5,72 +5,24 @@ spec:
   children:
   - directory: XL-RELEASE
     children:
-  {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-    - directory: LOCAL-DB
-      children:
-        - name: XL-Release-Single-Node
-          type: udm.Application
-          children:
-          {{if  .useCustomRegistry }}
-          - name: "{{.xlrTag}}"
-          {{ else }}
-          - name: "{{.xlVersion}}"
-          {{ end }}
-            orchestrator:
-              - sequential-by-dependency
-            type: udm.DeploymentPackage
-            deployables:
-              - name: xlr-deployment
-                type: k8s.ResourcesFile
-                file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-            applicationDependencies:
-              {{if  .InstallXLD }}
-              {{if  .useCustomRegistry }}
-              XL-Deploy-Single-Node: "{{.xldTag}}"
-              {{else}}
-              XL-Deploy-Single-Node: "{{.xlVersion}}"
-              {{end}}
-              {{end}}
-              {{if  not .InstallXLD}}
-              K8s-Ingress-Controller: "v0.6"
-              PostgreSQL: "10.5"
-              {{end}}
-            undeployDependencies: "true"
-  {{else}}
-    - directory: EXTERNAL-DB
-      children:
-      - directory: ACTIVE-ACTIVE
+      - name: XL-Release-Deployment
+        type: udm.Application
         children:
-        - name: XL-Release-Active-Active
-          type: udm.Application
-          children:
-          {{if  .useCustomRegistry }}
-          - name: "{{.xlrTag}}"
-          {{ else }}
-          - name: "{{.xlVersion}}"
-          {{ end }}
-            orchestrator:
-              - sequential-by-dependency
-            type: udm.DeploymentPackage
-            deployables:
-            - name: xlr-deployment
-              type: k8s.ResourcesFile
-              file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-            applicationDependencies:
-              {{if  .InstallXLD }}
-              {{if  .useCustomRegistry }}
-              XL-Deploy-Hot-Standby: "{{.xldTag}}"
-              {{ else }}
-              XL-Deploy-Hot-Standby: "{{.xlVersion}}"
-              {{ end }}
-              {{end}}
-              {{if  not .InstallXLD}}
-                {{if  not .InstallMonitoring}}
-              K8s-Ingress-Controller: "v0.6"
-                {{else}}
-              Grafana-Dashboard: "5.4.4"
-              Kibana: "6.5.0"
-                {{end}}
-              {{end}}
-            undeployDependencies: "true"
-  {{end}}
+        {{if  .useCustomRegistry }}
+        - name: "{{.xlrTag}}"
+        {{ else }}
+        - name: "{{.xlVersion}}"
+        {{ end }}
+          orchestrator:
+            - sequential-by-dependency
+          type: udm.DeploymentPackage
+          deployables:
+          - name: xlr-deployment
+            type: k8s.ResourcesFile
+{{- if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+            file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+{{- else}}
+            file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+{{- end}}
+          applicationDependencies: null
+          undeployDependencies: "false"
