@@ -19,10 +19,10 @@ spec:
           deployables:
           - name: xlr-deployment
             type: k8s.ResourcesFile
-{{-if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+{{- if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
             file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-{{-else}}
+{{- else}}
             file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-{{-end}}
+{{- end}}
           applicationDependencies: null
           undeployDependencies: "false"
