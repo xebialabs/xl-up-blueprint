@@ -158,7 +158,7 @@ spec:
       type: Input
       prompt: "Enter your Docker Registry username:"
       promptIf: !expr "useCustomRegistry"
-      default: ""
+      default: " "
       saveInXlvals: true
       
     - name: dockerPass
