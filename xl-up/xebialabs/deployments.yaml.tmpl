@@ -8,7 +8,7 @@ apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
   {{if .useCustomRegistry}}
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/for-XLRelease-{{.xlrTag}}-XLDeploy-{{.xldTag}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.xlrTag}}-{{.xldTag}}
   {{else}}
   package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.xlVersion}}
   {{end}}

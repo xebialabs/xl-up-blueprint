@@ -143,7 +143,7 @@ spec:
             type: udm.Application
             children:
               {{if .useCustomRegistry}}
-              - name: for-XLRelease-{{.xlrTag}}-XLDeploy-{{.xldTag}}
+              - name: {{.xlrTag}}-{{.xldTag}}
               {{else}}
               - name: {{.xlVersion}}
               {{end}}
