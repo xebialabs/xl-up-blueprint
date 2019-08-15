@@ -15,7 +15,7 @@ do
     case "${option}"
     in
         n) cluster_name=${OPTARG};;
-        z) zone=${OPTARG:};;
+        z) zone=${OPTARG};;
         a) auth_type=${OPTARG};;
         *) echo -e "$1 is not a valid argument\n\nAvailable options:\n------------------\n-n: GKE Cluster name\n-z: GKE Zone\n-a: Authentication type. Only 'token' or 'cert' options are valid!"; exit 1 ;;
     esac
@@ -45,16 +45,16 @@ generateKubeconf () {
 }
 
 getClientCrt () {
-    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientCertificate | base64 -d
+    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientCertificate | base64 -D
 }
 
 getClientKey () {
-    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientKey | base64 -d
+    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientKey | base64 -D
 }
 
 getToken () {
     local secret_name=${1}
-    kubectl get secrets --field-selector metadata.name=${secret_name} -n kube-system -o=jsonpath='{.items[].data.token}' | base64 -d
+    kubectl get secrets --field-selector metadata.name=${secret_name} -n kube-system -o=jsonpath='{.items[].data.token}' | base64 -D
 }
 
 saveTokenToFile () {
