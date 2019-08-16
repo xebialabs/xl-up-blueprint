@@ -21,6 +21,21 @@ ADD --chown=10001:0 https://dist.xebialabs.com/public/community/xl-deploy/comman
 In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
 Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
 
+### Adding extensions
+
+If you want to add files into the *XLD_HOME/ext* or *XLR_HOME/ext* folder as part of your extensions or modifications you can use this  [Dockerfile](extensions/Dockerfile):
+
+```dockerfile
+FROM xebialabs/xl-release:9.0.2
+
+# Add plugin from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/ext /opt/xebialabs/xl-release-server/ext/
+``` 
+
+In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
+Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
+
+
 ### Use custom XL Deploy or XL Release images in `xl up` 
 
 When `xl up` comand is launched in `Advanced` mode there will be a question if you want to use a custom docker registry:

@@ -1,4 +1,4 @@
-FROM xebialabs/xl-deploy:8.6.1
+FROM xebialabs/xl-deploy:9.0.3
 
 # Add plugin from local path. user 10001 is the xebialabs user
 COPY --chown=10001:0 files/xld-liquibase-plugin-5.0.1.xldp /opt/xebialabs/xl-deploy-server/default-plugins/
