@@ -257,13 +257,13 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{end}}
-          {{if  .InstallMonitoring }}
+          {{ if .InstallMonitoring }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
             children:
             - name: Elasticsearch-Logging
               type: udm.Application
               children:
-              - name: "v6.5.0"
+              - name: v6.5.0
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency

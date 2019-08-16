@@ -1,0 +1,19 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: xlr-reports-claim
+  namespace: {{ .Namespace }}
+  labels:
+    app: xl-release
+  annotations:
+    {{if eq .K8sSetup "AWS EKS" }}
+    volume.beta.kubernetes.io/storage-class: "aws-efs"
+    {{else}}
+    volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
+    {{end}}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

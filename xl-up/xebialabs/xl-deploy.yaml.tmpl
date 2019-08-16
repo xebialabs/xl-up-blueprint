@@ -5,7 +5,6 @@ spec:
     children:
       - directory: XL-DEPLOY
         children:
-          {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
           - name: XL-Deploy-Deployment
             type: udm.Application
             children:
@@ -14,34 +13,20 @@ spec:
               {{ else }}
               - name: "{{.xlVersion}}"
               {{ end }}
+                type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
-                type: udm.DeploymentPackage
                 deployables:
                   - name: xld-deployment
                     type: k8s.ResourcesFile
+                  {{- if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
                     file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-                applicationDependencies: null
-                undeployDependencies: "true"
-          {{else}}
-          - name: XL-Deploy-Deployment
-            type: udm.Application
-            children:
-              {{if  .useCustomRegistry }}
-              - name: "{{.xldTag}}"
-              {{ else }}
-              - name: "{{.xlVersion}}"
-              {{ end }}
-                type: udm.DeploymentPackage
-                orchestrator:
-                  - sequential-by-dependency
-                deployables:
-                  - name: xld-deployment
-                    type: k8s.ResourcesFile
+                  {{- else }}
                     file: !file kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
                   - name: xld-pvc
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+                  {{- end}}
                   {{- if eq .K8sSetup "AWS EKS" }}
                   - name: aws-efs-conf
                     type: k8s.ResourcesFile
@@ -55,4 +40,3 @@ spec:
                   {{ end }}
                 applicationDependencies: null
                 undeployDependencies: "true"
-          {{end}}
