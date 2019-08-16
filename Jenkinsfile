@@ -35,6 +35,60 @@ pipeline {
 
             }
         }
+        stage('Run XL UP Master') {
+            agent {
+                node {
+                    label 'xld|xlr|xli'
+                }
+            }
+
+            when {
+                expression {
+                    githubLabelsPresent(this, ['run-xl-up-master'])
+                }
+            }
+
+            steps {
+                script {
+                    dir('${env.WORKSPACE}') {
+                        sh "git clone git@github.com:xebialabs/xl-cli.git"
+                    }
+                    dir('${env.WORKSPACE}/xl-cli') {
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
+                    }
+                    dir('${env.WORKSPACE}') {
+                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/local-kube.yaml -b xl-infra -l xl-up-blueprint"
+                    }
+                }
+            }
+        }
+        stage('Run XL UP Branch') {
+            agent {
+                node {
+                    label 'xld|xlr|xli'
+                }
+            }
+
+            when {
+                expression {
+                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                }
+            }
+
+            steps {
+                script {
+                    dir('${env.WORKSPACE}') {
+                        sh "git clone git@github.com:xebialabs/xl-cli.git"
+                    }
+                    dir('${env.WORKSPACE}/xl-cli') {
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
+                    }
+                    dir('${env.WORKSPACE}') {
+                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/local-kube.yaml -b xl-infra -l xl-up-blueprint"
+                    }
+                }
+            }
+        }
     }
 }
 
