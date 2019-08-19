@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<synthetic xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd" xmlns="http://www.xebialabs.com/deployit/synthetic" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <type-modification type="jenkins.Build">
+        <property name="jobEnvVarName" category="input" required="false" description="Build environment variable name to extract"/>
+        <property name="jobEnvVarValue" category="output" required="false" description="Build environment variable value"/>
+    </type-modification>
+
+</synthetic>
+
