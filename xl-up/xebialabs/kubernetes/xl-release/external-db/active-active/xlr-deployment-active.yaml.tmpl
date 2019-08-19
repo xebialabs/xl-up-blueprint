@@ -114,7 +114,11 @@ spec:
             - name: XL_CLUSTER_MODE
               value: full
             - name: XL_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xlrDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLR_DB_NAME}}
+              {{end}}
             - name: XL_DB_USERNAME
               value: {{$XLR_DB_USER}}
             - name: XL_DB_PASSWORD
@@ -126,7 +130,11 @@ spec:
             - name: SERVER_URL
               value: "http://localhost:5516"
             - name: XL_REPORT_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xlrReportDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLR_REPORT_DB_NAME}}
+              {{end}}
             - name: XL_REPORT_DB_USERNAME
               value: {{$XLR_REPORT_DB_USER}}
             - name: XL_REPORT_DB_PASSWORD

@@ -143,7 +143,11 @@ spec:
             - name: XL_CLUSTER_MODE
               value: hot-standby
             - name: XL_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xldDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
+              {{end}}
             - name: XL_DB_USERNAME
               value: {{$XLD_DB_USER}}
             - name: XL_DB_PASSWORD

@@ -68,7 +68,9 @@ spec:
           {{ end }}
           DOCKER_REPO: !value dockerRepo
         {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+        {{if .externalDatabase}}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
+        {{end}}
         {{end}}
         {{if  .InstallXLR }}
           XLR_REPORT_DB_NAME: !value xlrReportDbName
@@ -103,11 +105,13 @@ spec:
           NFS_SERVER: !value nsfServerHost
           NFS_PATH: !value nsfSharePath
         {{end}}
+        {{if .externalDatabase}}
           POSTGRES_MAX_CONN: !value postgresMaxConn
           POSTGRES_SHARED_BUFF: !value postgresSharedBuff
           POSTGRES_SYNC_COMMIT: !value postgresSyncCommit
           POSTGRES_EFFECT_CACHE_SIZE: !value postgresEffectCacheSize
           POSTGRES_MAX_WALL_SIZE: !value postgresMaxWallSize
+        {{end}}
       - name: K8S
         type: udm.Environment
         members:
@@ -156,7 +160,9 @@ spec:
                     file: !file "answers.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "v0.6"
+                {{if .externalDatabase}}
                   PostgreSQL: "10.5"
+                {{end}}
                 {{ if .InstallMonitoring }}
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
@@ -191,7 +197,9 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
                   {{if not ( eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" )}}
+                    {{if .externalDatabase}}
                   PostgreSQL: "10.5"
+                    {{end}}
                   {{end}}
                 undeployDependencies: "true"
           {{if or (eq .K8sSetup "AWS EKS") (eq .K8sSetup "Google Kubernetes Engine") }}
@@ -216,6 +224,7 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
                   {{ end }}
           {{end}}
+          {{if .externalDatabase}}
           - name: PostgreSQL
             type: udm.Application
             children:
@@ -237,7 +246,7 @@ spec:
                     {{end}}
                   {{end}}
                 undeployDependencies: "true"
-
+          {{end}}
           {{if or (eq .K8sSetup "Plain multinode K8s cluster") (eq .K8sSetup "Google Kubernetes Engine")}}
           - name: K8s-NFS-Client-Provisioner
             type: udm.Application
