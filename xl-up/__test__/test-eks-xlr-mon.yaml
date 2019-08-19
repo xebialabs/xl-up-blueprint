@@ -44,13 +44,13 @@ expected-files:
 not-expected-files:
   - xebialabs/xl-deploy.yaml
   #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-hot-standby.yaml
   #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/pvc.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml

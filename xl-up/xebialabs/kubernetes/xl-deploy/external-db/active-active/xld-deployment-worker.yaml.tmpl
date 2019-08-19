@@ -1,0 +1,160 @@
+{{$XLD_ADMIN_PASS := "{{XLD_ADMIN_PASS}}"}}
+{{$XLD_DB_NAME := "{{XLD_DB_NAME}}"}}
+{{$XLD_DB_USER := "{{XLD_DB_USER}}"}}
+{{$XLD_DB_PASS := "{{XLD_DB_PASS}}"}}
+{{$XLD_LIC := "{{XLD_LIC}}"}}
+{{$XLD_KEYSTORE_PASS := "{{XLD_KEYSTORE_PASS}}"}}
+{{$XLD_KEYSTORE := "{{XLD_KEYSTORE}}"}}
+{{$XL_VERSION := "{{XL_VERSION}}"}}
+{{$DOCKER_REPO := "{{DOCKER_REPO}}"}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: xl-deploy-worker-akka
+  namespace: {{ .Namespace }}
+  labels:
+    app: xl-deploy
+    component: worker
+spec:
+  selector:
+    app: xl-deploy
+    component: worker
+  clusterIP: None
+  ports:
+    - name: akka
+      port: 8180
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: xl-deploy-worker
+  namespace: {{ .Namespace }}
+spec:
+  serviceName: "xl-deploy-worker"
+  replicas: 2
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: xl-deploy
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: xl-deploy
+        component: worker
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9100'
+    spec:
+      {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - xl-deploy
+              topologyKey: "kubernetes.io/hostname"
+      {{end}}
+      initContainers:
+        - name: fix-the-volume-permission
+          image: busybox
+          command:
+            - sh
+            - -c
+            - chown -R 10001 /opt/xebialabs/xl-deploy-server/work
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: work-dir
+              mountPath: /opt/xebialabs/xl-deploy-server/work
+        - name: wait-for-postgresql
+          image: alpine:3.6
+          command:
+            - sh
+            - -c
+            - >
+              until nc -z -w 2 $POSTGRES_SVC $POSTGRES_PORT && echo database ok; do
+              sleep 2;
+              done;
+          env:
+            - name: POSTGRES_SVC
+              value: postgresql
+            - name: POSTGRES_PORT
+              value: "5432"
+      containers:
+        - name: xl-deploy
+          {{if .useCustomRegistry }}
+          image: {{.registryURL}}/{{.xldVersion}}
+          {{ else }}
+          image: {{$DOCKER_REPO}}/xl-deploy:{{$XL_VERSION}}
+          {{ end }}
+          imagePullPolicy: Always
+          env:
+            - name: ADMIN_PASSWORD
+              value: {{$XLD_ADMIN_PASS}}
+            - name: XL_CLUSTER_MODE
+              value: default
+            - name: XL_DB_URL
+              value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
+            - name: XL_DB_USERNAME
+              value: {{$XLD_DB_USER}}
+            - name: XL_DB_PASSWORD
+              value: "{{$XLD_DB_PASS}}"
+            - name: XL_METRICS_ENABLED
+              value: "false"
+            - name: XL_LICENSE
+              value: {{$XLD_LIC}}
+            - name: REPOSITORY_KEYSTORE_PASSPHRASE
+              value: {{$XLD_KEYSTORE_PASS}}
+            - name: REPOSITORY_KEYSTORE
+              value: {{$XLD_KEYSTORE}}
+            - name: FORCE_UPGRADE
+              value: "true"
+            - name: XLD_IN_PROCESS
+              value: "false"
+            - name: HOSTNAME_SUFFIX
+              value: ".xl-deploy"
+#            - name: ENTRYPOINT
+#              value: "worker -master xl-deploy-master-akka.xebialabs.svc.cluster.local:8180 -api http://xl-deploy-master.xebialabs.svc.cluster.local:4516/"
+          args:
+            - "worker"
+            - "-master"
+            - "xl-deploy-master-akka.{{ .Namespace }}.svc.cluster.local:8180"
+            - "-api"
+            - "http://xl-deploy-master.{{ .Namespace }}.svc.cluster.local:4516/"
+          resources:
+            requests:
+              memory: "{{ .XlRAMRequest }}"
+              cpu: "{{ .XlCPURequest }}"
+            limits:
+              memory: "6Gi"
+              cpu: "3"
+          ports:
+            - name: akka
+              containerPort: 8180
+            - name: jmx-exporter
+              containerPort: 9100
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 6
+          volumeMounts:
+            - name: work-dir
+              mountPath: /opt/xebialabs/xl-deploy-server/work
+      {{if .useCustomRegistry }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
+      volumes:
+        - name: work-dir
+          persistentVolumeClaim:
+            claimName: xld-work-claim
