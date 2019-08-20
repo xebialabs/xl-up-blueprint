@@ -28,7 +28,7 @@ If you want to add files into the *XLD_HOME/ext* or *XLR_HOME/ext* folder as par
 ```dockerfile
 FROM xebialabs/xl-release:9.0.2
 
-# Add plugin from local path. user 10001 is the xebialabs user
+# Add extensions from local path. user 10001 is the xebialabs user
 ADD --chown=10001:0 files/ext /opt/xebialabs/xl-release-server/ext/
 ``` 
 
