@@ -68,7 +68,7 @@ spec:
           {{ end }}
           DOCKER_REPO: !value dockerRepo
         {{if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-        {{if .externalDatabase}}
+        {{if not .externalDatabase}}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
         {{end}}
         {{end}}
@@ -105,7 +105,7 @@ spec:
           NFS_SERVER: !value nsfServerHost
           NFS_PATH: !value nsfSharePath
         {{end}}
-        {{if .externalDatabase}}
+        {{if not .externalDatabase}}
           POSTGRES_MAX_CONN: !value postgresMaxConn
           POSTGRES_SHARED_BUFF: !value postgresSharedBuff
           POSTGRES_SYNC_COMMIT: !value postgresSyncCommit
@@ -160,7 +160,7 @@ spec:
                     file: !file "answers.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "v0.6"
-                {{if .externalDatabase}}
+                {{if not .externalDatabase}}
                   PostgreSQL: "10.5"
                 {{end}}
                 {{ if .InstallMonitoring }}
@@ -197,7 +197,7 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
                   {{if not ( eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" )}}
-                    {{if .externalDatabase}}
+                    {{if not .externalDatabase}}
                   PostgreSQL: "10.5"
                     {{end}}
                   {{end}}
@@ -224,7 +224,7 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
                   {{ end }}
           {{end}}
-          {{if .externalDatabase}}
+          {{ if not .externalDatabase }}
           - name: PostgreSQL
             type: udm.Application
             children:

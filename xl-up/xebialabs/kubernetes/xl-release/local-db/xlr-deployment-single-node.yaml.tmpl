@@ -69,20 +69,22 @@ spec:
         app: xl-release
     spec:
       initContainers:
-        - name: wait-for-postgresql
+        {{if not .externalDatabase}}
+        - name: wait-for-db
           image: alpine:3.6
           command:
             - sh
             - -c
             - >
               until nc -z -w 2 $POSTGRES_SVC $POSTGRES_PORT && echo database ok; do
-              sleep 2;
+                sleep 2;
               done;
           env:
             - name: POSTGRES_SVC
               value: postgresql
             - name: POSTGRES_PORT
               value: "5432"
+        {{end}}
       containers:
         - name: xl-release
           {{if .useCustomRegistry }}

@@ -115,6 +115,7 @@ spec:
           volumeMounts:
             - name: work-dir
               mountPath: /opt/xebialabs/xl-deploy-server/work
+        {{if not .externalDatabase}}
         - name: wait-for-postgresql
           image: alpine:3.6
           command:
@@ -129,6 +130,7 @@ spec:
               value: postgresql
             - name: POSTGRES_PORT
               value: "5432"
+          {{end}}
       containers:
         - name: xl-deploy
           {{if .useCustomRegistry }}

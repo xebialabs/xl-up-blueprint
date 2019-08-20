@@ -86,6 +86,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       {{end}}
       initContainers:
+        {{if not .externalDatabase}}
         - name: wait-for-db
           image: alpine:3.6
           command:
@@ -100,6 +101,7 @@ spec:
              value: postgresql
            - name: POSTGRES_PORT
              value: "5432"
+        {{end}}
       containers:
         - name: xl-release
           {{if .useCustomRegistry }}
