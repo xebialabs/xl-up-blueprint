@@ -238,13 +238,11 @@ spec:
         - xebialabs
       value: xebialabs
 
-##########################################################
     - name: externalDatabase
       type: Confirm
       saveInXlvals: true
       prompt: "Would you like to use an external database:"
       default: false
-##########################################################
 
     - name: xldAdminPass
       type: SecretInput
