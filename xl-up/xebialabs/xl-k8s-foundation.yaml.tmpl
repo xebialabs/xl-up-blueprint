@@ -162,6 +162,15 @@ spec:
                   K8s-Ingress-Controller: "v0.6"
                 {{if not .externalDatabase}}
                   PostgreSQL: "10.5"
+                {{else}}
+                  {{if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+                    {{if ne .K8sSetup "Plain multinode K8s cluster"}}
+                  K8s-StorageClass: "1.0"
+                    {{end}}
+                    {{if ne .K8sSetup "AWS EKS"}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                    {{end}}
+                  {{end}}
                 {{end}}
                 {{ if .InstallMonitoring }}
                   Grafana-Dashboard: "5.4.4"
@@ -199,6 +208,15 @@ spec:
                   {{if not ( eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" )}}
                     {{if not .externalDatabase}}
                   PostgreSQL: "10.5"
+                    {{else}}
+                      {{if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+                        {{if ne .K8sSetup "Plain multinode K8s cluster"}}
+                  K8s-StorageClass: "1.0"
+                        {{end}}
+                        {{if ne .K8sSetup "AWS EKS"}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                       {{end}}
+                     {{end}}
                     {{end}}
                   {{end}}
                 undeployDependencies: "true"
