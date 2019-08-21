@@ -10,7 +10,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: xl-deploy-master
+  name: xl-deploy-lb
   namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
@@ -29,15 +29,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: xl-deploy-master-akka
+  name: xl-deploy-master
   namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
-    component: worker
+    component: master
 spec:
   selector:
     app: xl-deploy
+    component: master
   clusterIP: None
+  publishNotReadyAddresses: true
   ports:
     - name: akka
       port: 8180
@@ -86,7 +88,7 @@ spec:
         paths:
           - path: /xl-deploy/
             backend:
-              serviceName: xl-deploy-master
+              serviceName: xl-deploy-lb
               servicePort: 4516
 ---
 apiVersion: apps/v1
@@ -184,7 +186,7 @@ spec:
             - name: XLD_IN_PROCESS
               value: "false"
             - name: HOSTNAME_SUFFIX
-              value: ".xl-deploy.{{ .Namespace }}.svc.cluster.local"
+              value: ".xl-deploy-master.{{ .Namespace }}.svc.cluster.local"
           resources:
             requests:
               memory: "{{ .XlRAMRequest }}"
