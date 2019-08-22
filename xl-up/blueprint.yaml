@@ -238,6 +238,12 @@ spec:
         - xebialabs
       value: xebialabs
 
+    - name: externalDatabase
+      type: Confirm
+      saveInXlvals: true
+      prompt: "Would you like to use an external database:"
+      default: false
+
     - name: xldAdminPass
       type: SecretInput
       saveInXlvals: true
@@ -254,25 +260,32 @@ spec:
       prompt: "Enter the full path to the XL Deploy license file:"
       promptIf: !expr "InstallXLD"
 
+    - name: xldDbUrl
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the JDBC url of the database where XL Deploy will save its repository data:"
+      promptIf: !expr "externalDatabase && InstallXLD"
+      default: jdbc:postgresql://postgresql:5432/xl-deploy
+
     - name: xldDbName
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Deploy database name:"
-      promptIf: !expr "InstallXLD"
+      promptIf: !expr "!externalDatabase && InstallXLD"
       default: xl-deploy
 
     - name: xldDbUser
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Deploy database username:"
-      promptIf: InstallXLD
+      promptIf: !expr "InstallXLD"
       default: sa
 
     - name: xldDbPass
       type: SecretInput
       saveInXlvals: true
       prompt: "Enter your XL Deploy database password:"
-      promptIf: InstallXLD
+      promptIf: !expr "InstallXLD"
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
@@ -323,11 +336,18 @@ spec:
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
 
+    - name: xlrDbUrl
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the JDBC url of the database where XL Release will save its repository data:"
+      promptIf: !expr "externalDatabase && InstallXLR"
+      default: jdbc:postgresql://postgresql:5432/xl-release
+
     - name: xlrDbName
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Release database name:"
-      promptIf: !expr "InstallXLR"
+      promptIf: !expr "!externalDatabase && InstallXLR"
       default: xl-release
 
     - name: xlrDbUser
@@ -346,11 +366,18 @@ spec:
       revealOnSummary: true
       replaceAsIs: true
 
+    - name: xlrReportDbUrl
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the JDBC url of the database where XL Release will save its reporting data:"
+      promptIf: !expr "externalDatabase && InstallXLR"
+      default: jdbc:postgresql://postgresql:5432/xl-release-report
+
     - name: xlrReportDbName
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Release report database name:"
-      promptIf: !expr "InstallXLR"
+      promptIf: !expr "!externalDatabase && InstallXLR"
       default: xl-release-report
 
     - name: xlrReportDbUser
@@ -414,42 +441,42 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
 
     - name: postgresMaxConn
       type: Input
       saveInXlvals: true
       prompt: "Specify the max_connections parameter for PostgreSQL:"
       default: 512
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
 
     - name: postgresSharedBuff
       type: Input
       saveInXlvals: true
       prompt: "Specify the shared_buffers parameter for PostgreSQL:"
       default: 512MB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
 
     - name: postgresEffectCacheSize
       type: Input
       saveInXlvals: true
       prompt: "Specify the effective_cache_size parameter for PostgreSQL:"
       default: 1GB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
 
     - name: postgresSyncCommit
       type: Input
       saveInXlvals: true
       prompt: "Specify the synchronous_commit parameter for PostgreSQL:"
       default: "off"
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
 
     - name: postgresMaxWallSize
       type: Input
       saveInXlvals: true
       prompt: "Specify the max_wal_size parameter for PostgreSQL:"
       default: 256MB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
 
   files:
     #xl-k8s-foundation
@@ -466,6 +493,7 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/dockercred.yaml.tmpl
       writeIf: !expr "useCustomRegistry"
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
+      writeIf: !expr "!externalDatabase"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
       writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
