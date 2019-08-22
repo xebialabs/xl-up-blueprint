@@ -136,6 +136,7 @@ spec:
           volumeMounts:
             - name: export-dir
               mountPath: /opt/xebialabs/xl-deploy-server/export
+        {{if not .externalDatabase}}
         - name: wait-for-postgresql
           image: alpine:3.6
           command:
@@ -150,6 +151,7 @@ spec:
               value: postgresql
             - name: POSTGRES_PORT
               value: "5432"
+          {{end}}
       containers:
         - name: xl-deploy
           {{if .useCustomRegistry }}
@@ -164,7 +166,11 @@ spec:
             - name: XL_CLUSTER_MODE
               value: default
             - name: XL_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xldDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
+              {{end}}
             - name: XL_DB_USERNAME
               value: {{$XLD_DB_USER}}
             - name: XL_DB_PASSWORD
