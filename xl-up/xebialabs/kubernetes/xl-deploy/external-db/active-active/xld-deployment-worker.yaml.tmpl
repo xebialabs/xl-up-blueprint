@@ -56,10 +56,8 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - xl-deploy
+                  - {key: app, operator: In, values: [xl-deploy]}
+                  - {key: component, operator: In, values: [worker]}
               topologyKey: "kubernetes.io/hostname"
       {{end}}
       initContainers:
