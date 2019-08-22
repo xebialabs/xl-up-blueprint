@@ -1,10 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: xld-claim
+  name: xld-work-claim
   namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
+    component: worker
   annotations:
     {{if eq .K8sSetup "AWS EKS" }}
     volume.beta.kubernetes.io/storage-class: "aws-efs"

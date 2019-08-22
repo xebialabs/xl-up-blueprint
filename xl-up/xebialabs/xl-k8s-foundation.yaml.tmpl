@@ -235,7 +235,7 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
                   - name: aws-efs-storageclass
                     type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-storageclass.yaml
+                    file: !file kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml
                   {{else if eq .K8sSetup "Google Kubernetes Engine" }}
                   - name: pd-retain
                     type: k8s.ResourcesFile

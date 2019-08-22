@@ -10,19 +10,28 @@ cluster_name="TEST_CLUSTER"
 zone="europe-west4-a"
 auth_type="none"
 
-while getopts n:z:a: option
+while getopts n:z:a:h option
 do
     case "${option}"
     in
+        h) echo -e "Example command: \n./get-sa-token.sh -n test-cluster -z us-central1-a -a token \n------------------\nAvailable options:\n------------------\n-n: GKE Cluster name\n-z: GKE Zone\n-a: Authentication type. Only 'token' or 'cert' options are valid!"; exit 0;;
         n) cluster_name=${OPTARG};;
         z) zone=${OPTARG};;
         a) auth_type=${OPTARG};;
-        *) echo -e "$1 is not a valid argument\n\nAvailable options:\n------------------\n-n: GKE Cluster name\n-z: GKE Zone\n-a: Authentication type. Only 'token' or 'cert' options are valid!"; exit 1 ;;
+        *) echo -e "\nExample command: \n./get-sa-token.sh -n test-cluster -z us-central1-a -a token \n------------------\nAvailable options:\n------------------\n-n: GKE Cluster name\n-z: GKE Zone\n-a: Authentication type. Only 'token' or 'cert' options are valid!"; exit 1;;
     esac
 done
 
 applyCertificateRBAC () {
     kubectl apply -f xebialabs-rbac-certificate.yaml
+}
+
+base64decode () {
+    case "$OSTYPE" in
+      darwin*)  base64 -D ;;
+      linux*)   base64 -d ;;
+      *)        echo "unknown: $OSTYPE" ;;
+    esac
 }
 
 createToken () {
@@ -45,16 +54,16 @@ generateKubeconf () {
 }
 
 getClientCrt () {
-    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientCertificate | base64 -D
+    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientCertificate | base64decode
 }
 
 getClientKey () {
-    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientKey | base64 -D
+    gcloud container clusters describe ${cluster_name} --format="json" --zone ${zone} | jq -r .masterAuth.clientKey | base64decode
 }
 
 getToken () {
     local secret_name=${1}
-    kubectl get secrets --field-selector metadata.name=${secret_name} -n kube-system -o=jsonpath='{.items[].data.token}' | base64 -D
+    kubectl get secrets --field-selector metadata.name=${secret_name} -n kube-system -o=jsonpath='{.items[].data.token}' | base64decode
 }
 
 saveTokenToFile () {
