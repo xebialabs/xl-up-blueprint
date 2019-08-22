@@ -17,7 +17,8 @@ expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/pvc.yaml
   #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-hot-standby.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
 not-expected-files:
   #xl-k8s-foundation

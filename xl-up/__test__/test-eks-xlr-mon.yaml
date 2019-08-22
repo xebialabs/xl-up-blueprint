@@ -44,7 +44,8 @@ expected-files:
 not-expected-files:
   - xebialabs/xl-deploy.yaml
   #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-hot-standby.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   #xl-k8s-foundation
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-rbac.yaml

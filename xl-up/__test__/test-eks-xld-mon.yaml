@@ -17,7 +17,8 @@ expected-files:
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-conf.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/pvc.yaml
   #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-hot-standby.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml

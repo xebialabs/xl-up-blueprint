@@ -15,7 +15,8 @@ expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/pvc.yaml
   #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-hot-standby.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
