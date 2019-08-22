@@ -278,14 +278,14 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Deploy database username:"
-      promptIf: !expr "externalDatabase && InstallXLD"
+      promptIf: !expr "InstallXLD"
       default: sa
 
     - name: xldDbPass
       type: SecretInput
       saveInXlvals: true
       prompt: "Enter your XL Deploy database password:"
-      promptIf: !expr "externalDatabase && InstallXLD"
+      promptIf: !expr "InstallXLD"
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
@@ -354,14 +354,14 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Release database username:"
-      promptIf: !expr "externalDatabase && InstallXLR"
+      promptIf: !expr "InstallXLR"
       default: xl-release
 
     - name: xlrDbPass
       type: SecretInput
       saveInXlvals: true
       prompt: "Enter your XL Release database password:"
-      promptIf: !expr "externalDatabase && InstallXLR"
+      promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
@@ -384,14 +384,14 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter your XL Release report database username:"
-      promptIf: !expr "externalDatabase && InstallXLR"
+      promptIf: !expr "InstallXLR"
       default: xl-release-report
 
     - name: xlrReportDbPass
       type: SecretInput
       saveInXlvals: true
       prompt: "Enter your XL Release report database password:"
-      promptIf: !expr "externalDatabase && InstallXLR"
+      promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
