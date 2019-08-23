@@ -247,14 +247,14 @@ spec:
       prompt: "How many RAM resources will be requested for the XebiaLabs POD? Ex: 4Gi"
       saveInXlvals: false
       value: "1.6Gi"
-      description: "The amount of RAM to allocate for each pod in the XebiaLabs Devops Platform"
+      description: "The amount of RAM to allocate for each XL Deploy and XL Release pod "
 
     - name: XlCPURequest
       type: Input
       prompt: "How many CPU resources will be requested for the XebiaLabs POD? Ex: 2"
       saveInXlvals: false
       value: "0.7"
-      description: "The amount of CPU to allocate for each pod in the XebiaLabs Devops Platform"
+      description: "The amount of CPU to allocate for each XL Deploy and XL Release pod"
 
     - name: dockerRepo
       type: Select
@@ -269,6 +269,7 @@ spec:
       saveInXlvals: true
       prompt: "Would you like to use an external database:"
       default: false
+      description: "xl up will deploy by default a Postgresql instance within your Kubernetes installation save the data of XL Deploy or XL Release. If you want to use your own existing Database then type yes in this question. Make sure that your Database is reachable within the Kubernetes cluster"
 
     - name: xldAdminPass
       type: SecretInput
@@ -294,6 +295,7 @@ spec:
       prompt: "Enter the JDBC url of the database where XL Deploy will save its repository data:"
       promptIf: !expr "externalDatabase && InstallXLD"
       default: jdbc:postgresql://postgresql:5432/xl-deploy
+      description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Deploy. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_DEPLOY_DB_NAME"
 
     - name: xldDbName
       type: Input
@@ -301,7 +303,7 @@ spec:
       prompt: "Enter your XL Deploy database name:"
       promptIf: !expr "!externalDatabase && InstallXLD"
       default: xl-deploy
-      description: "The database for XL Deploy to create when not using an external database"
+      description: "This will be the XL Deploy database name that xl up will create in the  Postgresql instance that will be provisioned in your Kubernetes cluster"
 
     - name: xldDbUser
       type: Input
@@ -309,7 +311,7 @@ spec:
       prompt: "Enter your XL Deploy database username:"
       promptIf: !expr "InstallXLD"
       default: sa
-      description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Deploy"
+      description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
     - name: xldDbPass
       type: SecretInput
@@ -319,42 +321,42 @@ spec:
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
-      description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Deploy"
+      description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
     - name: efsId
       type: Input
       saveInXlvals: true
       prompt: "Enter your Amazon EFS ID:"
       promptIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
-      description: "The ID of the EFS instance which will be used as the shared work directory for XL Deploy"
+      description: "The ID of the AWS EFS instance which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your AWS EFS instance can be mounted in the nodes of your AWS EKS cluster"
 
     - name: efsRegion
       type: Input
       saveInXlvals: true
       prompt: "Enter your Amazon EFS region:"
       promptIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
-      description: "The region the previous EFS instance is in, for example 'eu-west-1'"
+      description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
 
     - name: nsfServerHost
       type: Input
       saveInXlvals: true
       prompt: "Enter your NFS server name or IP address:"
       promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
-      description: "The IP address of the NFS share which will be used as the shared work directory for XL Deploy"
+      description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
 
     - name: nsfSharePath
       type: Input
       saveInXlvals: true
       prompt: "Enter your NFS share path:"
       promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
-      description: "The share path on the NFS share which will be used as the shared work directory for XL Deploy"
+      description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
 
     - name: xldWorkHostpath
       type: Input
       saveInXlvals: true
       prompt: "Enter the local directory path that XL Deploy can use as a work directory:"
       promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && InstallXLD && OsType != 'linux' "
-      description: "Local path that XL Deploy will use as a work directory"
+      description: "Local path to a folder in your machine that will be used as a Kubernetes volume where XL Deploy will persist the data from the work directory. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
 
     - name: xlrAdminPass
       type: SecretInput
@@ -364,7 +366,7 @@ spec:
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
-      description: "The password for the XL Release admin user"
+      description: "The password that you would like to use for the  XL Release admin user"
 
     - name: xlrLic
       type: File
@@ -372,6 +374,7 @@ spec:
       saveInXlvals: true
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
+      description: "The local path to an XL Release license file"
 
     - name: xlrDbUrl
       type: Input
@@ -379,6 +382,8 @@ spec:
       prompt: "Enter the JDBC url of the database where XL Release will save its repository data:"
       promptIf: !expr "externalDatabase && InstallXLR"
       default: jdbc:postgresql://postgresql:5432/xl-release
+      description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release repository. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_DB_NAME"
+
 
     - name: xlrDbName
       type: Input
@@ -386,7 +391,7 @@ spec:
       prompt: "Enter your XL Release database name:"
       promptIf: !expr "!externalDatabase && InstallXLR"
       default: xl-release
-      description: "The local path to an XL Release license file"
+      description: "This will be the XL Release repository database name that xl up will create in the  Postgresql instance that will be provisioned in your Kubernetes cluster"
 
     - name: xlrDbUser
       type: Input
@@ -412,6 +417,7 @@ spec:
       prompt: "Enter the JDBC url of the database where XL Release will save its reporting data:"
       promptIf: !expr "externalDatabase && InstallXLR"
       default: jdbc:postgresql://postgresql:5432/xl-release-report
+      description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release reporting . For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_REPORTING_DB_NAME"
 
     - name: xlrReportDbName
       type: Input
@@ -419,7 +425,7 @@ spec:
       prompt: "Enter your XL Release report database name:"
       promptIf: !expr "!externalDatabase && InstallXLR"
       default: xl-release-report
-      description: "The database for XL Release's Reporting Database to create when not using an external database"
+      description: "This will be the XL Release reporting database name that xl up will create in the  Postgresql instance that will be provisioned in your Kubernetes cluster"
 
     - name: xlrReportDbUser
       type: Input
@@ -444,7 +450,7 @@ spec:
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
       prompt: "Enter the full path to your XebiaLabs keystore:"
-      description: "The local path to a JCEKS keystore to use in the XebiaLabs Devops Platform. This facilitates encryption"
+      description: "The local path to a JCEKS keystore to use in the XebiaLabs Devops Platform. This facilitates encryption of passwords and secrets in XL Deploy or XL Release. You can use keytool to generate a keystore, for example: keytool -genseckey -alias deployit-passsword-key -keyalg aes -keysize 128 -keypass deployit -keystore /tmp/repository-keystore.jceks -storetype jceks -storepass test123"
 
     - name: xlKeyStorePass
       type: SecretInput
@@ -459,7 +465,7 @@ spec:
       default: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
-      description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD and Prometheus) in your cluster"
+      description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
 
     - name: MonitoringDataRetention
       type: Input
@@ -474,7 +480,7 @@ spec:
       prompt: "What is the username for the monitoring user?"
       default: admin
       promptIf: !expr "InstallMonitoring"
-      description: "The username to use for accessing Grafana"
+      description: "The username to use for accessing Grafana and Kibana"
 
     - name: monitoringUserPass
       type: SecretInput
@@ -484,24 +490,25 @@ spec:
       default: !expr "randPassword()"
       promptIf: !expr "InstallMonitoring"
       revealOnSummary: true
-      description: "The password to use for accessing Grafana"
+      description: "The password to use for accessing Grafana and Kibana"
 
     - name: PostgresqlWorkHostpath
       type: Input
       saveInXlvals: true
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-      description: "The local path to use for persisting PostgreSQL data"
       promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      description: "The local path to use for persisting PostgreSQL data"
+      description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
+
 
     - name: postgresMaxConn
       type: Input
       saveInXlvals: true
       prompt: "Specify the max_connections parameter for PostgreSQL:"
       default: 512
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-      description: "The maximum number of connections to allow on the installed PostgreSQL instance. This should always be above 50"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      description: "The maximum number of connections to allow on the installed PostgreSQL instance. This should always be above 50"
+
 
     - name: postgresSharedBuff
       type: Input
@@ -509,7 +516,6 @@ spec:
       prompt: "Specify the shared_buffers parameter for PostgreSQL:"
       default: 512MB
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       description: "The amount of system buffer space to allocate to the PostgreSQL instance"
 
     - name: postgresEffectCacheSize
@@ -517,9 +523,9 @@ spec:
       saveInXlvals: true
       prompt: "Specify the effective_cache_size parameter for PostgreSQL:"
       default: 1GB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-      description: "The amount of cache space to allocate to the PostgreSQL instance"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      description: "The amount of cache space to allocate to the PostgreSQL instance"
+
 
     - name: postgresSyncCommit
       type: Input
@@ -527,7 +533,6 @@ spec:
       prompt: "Specify the synchronous_commit parameter for PostgreSQL:"
       default: "off"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       description: "Turn on if you want synchronous commits in PostgreSQL"
 
     - name: postgresMaxWallSize
@@ -535,9 +540,8 @@ spec:
       saveInXlvals: true
       prompt: "Specify the max_wal_size parameter for PostgreSQL:"
       default: 256MB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-      description: "The maximum size the WAL can reach before being flushed"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      description: "The maximum size the WAL can reach before being flushed"
 
   files:
     #xl-k8s-foundation
