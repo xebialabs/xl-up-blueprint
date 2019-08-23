@@ -10,18 +10,39 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: xl-deploy
+  name: xl-deploy-lb
   namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
+    component: master
 spec:
   selector:
     app: xl-deploy
+    component: master
   type: ClusterIP
   ports:
     - name: http
       port: 4516
       targetPort: 4516
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: xl-deploy-master
+  namespace: {{ .Namespace }}
+  labels:
+    app: xl-deploy
+    component: master
+spec:
+  selector:
+    app: xl-deploy
+    component: master
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: akka
+      port: 8180
       protocol: TCP
 ---
 # Using nginx ingress controller
@@ -67,26 +88,28 @@ spec:
         paths:
           - path: /xl-deploy/
             backend:
-              serviceName: xl-deploy
+              serviceName: xl-deploy-lb
               servicePort: 4516
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: xl-deploy
+  name: xl-deploy-master
   namespace: {{ .Namespace }}
 spec:
-  serviceName: "xl-deploy"
+  serviceName: "xl-deploy-master"
   replicas: 2
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
       app: xl-deploy
+      component: master
   template:
     metadata:
       labels:
         app: xl-deploy
+        component: master
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
@@ -97,10 +120,8 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - xl-deploy
+                  - {key: app, operator: In, values: [xl-deploy]}
+                  - {key: component, operator: In, values: [master]}
               topologyKey: "kubernetes.io/hostname"
       {{end}}
       initContainers:
@@ -109,12 +130,13 @@ spec:
           command:
             - sh
             - -c
-            - chown -R 10001 /opt/xebialabs/xl-deploy-server/work
+            - chown -R 10001 /opt/xebialabs/xl-deploy-server/export
           securityContext:
             privileged: true
           volumeMounts:
-            - name: work-dir
-              mountPath: /opt/xebialabs/xl-deploy-server/work
+            - name: export-dir
+              mountPath: /opt/xebialabs/xl-deploy-server/export
+        {{if not .externalDatabase}}
         - name: wait-for-postgresql
           image: alpine:3.6
           command:
@@ -129,6 +151,7 @@ spec:
               value: postgresql
             - name: POSTGRES_PORT
               value: "5432"
+          {{end}}
       containers:
         - name: xl-deploy
           {{if .useCustomRegistry }}
@@ -141,9 +164,13 @@ spec:
             - name: ADMIN_PASSWORD
               value: {{$XLD_ADMIN_PASS}}
             - name: XL_CLUSTER_MODE
-              value: hot-standby
+              value: default
             - name: XL_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xldDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
+              {{end}}
             - name: XL_DB_USERNAME
               value: {{$XLD_DB_USER}}
             - name: XL_DB_PASSWORD
@@ -158,6 +185,12 @@ spec:
               value: {{$XLD_KEYSTORE}}
             - name: FORCE_UPGRADE
               value: "true"
+            - name: XLD_IN_PROCESS
+              value: "false"
+            - name: XLD_IN_PROCESS
+              value: "false"
+            - name: HOSTNAME_SUFFIX
+              value: ".xl-deploy-master.{{ .Namespace }}.svc.cluster.local"
           resources:
             requests:
               memory: "{{ .XlRAMRequest }}"
@@ -170,6 +203,8 @@ spec:
               containerPort: 4516
             - name: jmx-exporter
               containerPort: 9100
+            - name: akka
+              containerPort: 8180
           readinessProbe:
             httpGet:
               path: /
@@ -178,13 +213,13 @@ spec:
             periodSeconds: 15
             failureThreshold: 6
           volumeMounts:
-            - name: work-dir
-              mountPath: /opt/xebialabs/xl-deploy-server/work
+            - name: export-dir
+              mountPath: /opt/xebialabs/xl-deploy-server/export
       {{if .useCustomRegistry }}
       imagePullSecrets:
       - name: dockercred
       {{ end }}
       volumes:
-        - name: work-dir
+        - name: export-dir
           persistentVolumeClaim:
-            claimName: xld-claim
+            claimName: xld-export-claim

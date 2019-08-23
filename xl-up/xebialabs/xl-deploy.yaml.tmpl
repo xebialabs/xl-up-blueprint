@@ -17,26 +17,34 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
+                {{- if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
                   - name: xld-deployment
                     type: k8s.ResourcesFile
-                  {{- if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
                     file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
                   {{- else }}
-                    file: !file kubernetes/xl-deploy/external-db/hot-standby/xld-deployment-hot-standby.yaml
-                  - name: xld-pvc
+                  - name: xld-deployment-master
                     type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/external-db/hot-standby/pvc.yaml
+                    file: !file kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+                  - name: xld-deployment-worker
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+                  - name: xld-work-pvc
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
+                  - name: xld-export-pvc
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
                   {{- end}}
                   {{- if eq .K8sSetup "AWS EKS" }}
                   - name: aws-efs-conf
                     type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-conf.yaml
+                    file: !file kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-conf.yaml
                   - name: aws-efs-deployment
                     type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-deployment.yaml
+                    file: !file kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-deployment.yaml
                   - name: aws-efs-rbac
                     type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/external-db/hot-standby/aws-efs/aws-efs-rbac.yaml
+                    file: !file kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-rbac.yaml
                   {{ end }}
                 applicationDependencies: null
                 undeployDependencies: "true"

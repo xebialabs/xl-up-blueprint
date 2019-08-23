@@ -69,20 +69,22 @@ spec:
         app: xl-release
     spec:
       initContainers:
-        - name: wait-for-postgresql
+        {{if not .externalDatabase}}
+        - name: wait-for-db
           image: alpine:3.6
           command:
             - sh
             - -c
             - >
               until nc -z -w 2 $POSTGRES_SVC $POSTGRES_PORT && echo database ok; do
-              sleep 2;
+                sleep 2;
               done;
           env:
             - name: POSTGRES_SVC
               value: postgresql
             - name: POSTGRES_PORT
               value: "5432"
+        {{end}}
       containers:
         - name: xl-release
           {{if .useCustomRegistry }}
@@ -97,7 +99,11 @@ spec:
             - name: XL_CLUSTER_MODE
               value: default
             - name: XL_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xlrDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLR_DB_NAME}}
+              {{end}}
             - name: XL_DB_USERNAME
               value: {{$XLR_DB_USER}}
             - name: XL_DB_PASSWORD
@@ -109,7 +115,11 @@ spec:
             - name: SERVER_URL
               value: "http://localhost:5516"
             - name: XL_REPORT_DB_URL
+              {{if .externalDatabase}}
+              value: {{.xlrReportDbUrl}}
+              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLR_REPORT_DB_NAME}}
+              {{end}}
             - name: XL_REPORT_DB_USERNAME
               value: {{$XLR_REPORT_DB_USER}}
             - name: XL_REPORT_DB_PASSWORD

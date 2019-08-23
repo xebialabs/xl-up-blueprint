@@ -5,64 +5,61 @@
 {{$XLD_LIC := "{{XLD_LIC}}"}}
 {{$XLD_KEYSTORE_PASS := "{{XLD_KEYSTORE_PASS}}"}}
 {{$XLD_KEYSTORE := "{{XLD_KEYSTORE}}"}}
-{{$XLD_WORK_HOSTPATH := "{{XLD_WORK_HOSTPATH}}"}}
 {{$XL_VERSION := "{{XL_VERSION}}"}}
 {{$DOCKER_REPO := "{{DOCKER_REPO}}"}}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: xl-deploy
+  name: xl-deploy-worker
   namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
+    component: worker
 spec:
   selector:
     app: xl-deploy
-  type: ClusterIP
+    component: worker
+  clusterIP: None
+  publishNotReadyAddresses: true
   ports:
-    - name: http
-      port: 4516
-      targetPort: 4516
+    - name: akka
+      port: 8180
       protocol: TCP
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: xl-deploy
-  namespace: {{ .Namespace }}
-  labels:
-    app: xl-deploy
-  annotations:
-    kubernetes.io/ingress.class: haproxy
-    ingress.kubernetes.io/rewrite-target: /
-    ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /xl-deploy/
-            backend:
-              serviceName: xl-deploy
-              servicePort: 4516
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: xl-deploy
+  name: xl-deploy-worker
   namespace: {{ .Namespace }}
 spec:
-  replicas: 1
+  serviceName: "xl-deploy-worker"
+  replicas: 2
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
       app: xl-deploy
-  serviceName: xl-deploy
+      component: worker
   template:
     metadata:
       labels:
         app: xl-deploy
+        component: worker
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9100'
     spec:
+      {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - {key: app, operator: In, values: [xl-deploy]}
+                  - {key: component, operator: In, values: [worker]}
+              topologyKey: "kubernetes.io/hostname"
+      {{end}}
       initContainers:
         - name: fix-the-volume-permission
           image: busybox
@@ -73,9 +70,8 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - name: work
+            - name: work-dir
               mountPath: /opt/xebialabs/xl-deploy-server/work
-        {{if not .externalDatabase}}
         - name: wait-for-postgresql
           image: alpine:3.6
           command:
@@ -90,10 +86,9 @@ spec:
               value: postgresql
             - name: POSTGRES_PORT
               value: "5432"
-          {{end}}
       containers:
         - name: xl-deploy
-          {{if .useCustomRegistry }}                    
+          {{if .useCustomRegistry }}
           image: {{.registryURL}}/{{.xldVersion}}
           {{ else }}
           image: {{$DOCKER_REPO}}/xl-deploy:{{$XL_VERSION}}
@@ -105,12 +100,7 @@ spec:
             - name: XL_CLUSTER_MODE
               value: default
             - name: XL_DB_URL
-            - name: XL_DB_URL
-              {{if .externalDatabase}}
-              value: {{.xldDbUrl}}
-              {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
-              {{end}}
             - name: XL_DB_USERNAME
               value: {{$XLD_DB_USER}}
             - name: XL_DB_PASSWORD
@@ -124,69 +114,43 @@ spec:
             - name: REPOSITORY_KEYSTORE
               value: {{$XLD_KEYSTORE}}
             - name: FORCE_UPGRADE
-              value: "true"
+              value: "false"
+            - name: XLD_IN_PROCESS
+              value: "false"
+            - name: HOSTNAME_SUFFIX
+              value: ".xl-deploy"
+          args:
+            - "worker"
+            - "-master"
+            - "xl-deploy-master.{{ .Namespace }}.svc.cluster.local:8180"
+            - "-api"
+            - "http://xl-deploy-lb.{{ .Namespace }}.svc.cluster.local:4516/"
           resources:
             requests:
-              memory: 2Gi
-              cpu: "1"
+              memory: "{{ .XlRAMRequest }}"
+              cpu: "{{ .XlCPURequest }}"
             limits:
-              memory: "3Gi"
-              cpu: "1.5"
+              memory: "6Gi"
+              cpu: "3"
           ports:
-            - name: http
-              containerPort: 4516
+            - name: akka
+              containerPort: 8180
+            - name: jmx-exporter
+              containerPort: 9100
           readinessProbe:
-            httpGet:
-              path: /deployit/ha/health
-              port: http
+            tcpSocket:
+              port: 8180
             initialDelaySeconds: 20
             periodSeconds: 15
             failureThreshold: 6
           volumeMounts:
-            - name: work
+            - name: work-dir
               mountPath: /opt/xebialabs/xl-deploy-server/work
       {{if .useCustomRegistry }}
       imagePullSecrets:
       - name: dockercred
       {{ end }}
-      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
       volumes:
-        # Use hostPath to persist your data on your local machine or emptyDir for minikube
-        - name: work
-          {{if eq .OsType "linux" }}
-          emptyDir: {}
-          {{else}}
-          hostPath:
-            path: {{$XLD_WORK_HOSTPATH}}
-          {{end}}
-      {{end}}
-  {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
-  volumeClaimTemplates:
-    - metadata:
-        name: repository
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        {{if eq .K8sSetup "AWS EKS" }}
-        storageClassName: gp2-retain
-        {{end}}
-        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
-        storageClassName: managed-nfs-storage
-        {{end}}
-        resources:
-          requests:
-            storage: 5Gi
-    - metadata:
-        name: work
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{if eq .K8sSetup "AWS EKS" }}
-        storageClassName: gp2-retain
-        {{end}}
-        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
-        storageClassName: managed-nfs-storage
-        {{end}}
-        resources:
-          requests:
-            storage: 2Gi
-  {{end}}
+        - name: work-dir
+          persistentVolumeClaim:
+            claimName: xld-work-claim

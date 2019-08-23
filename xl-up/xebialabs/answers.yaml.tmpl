@@ -56,8 +56,10 @@ data:
     XlRAMRequest: {{ .XlRAMRequest }}
     XlCPURequest: {{ .XlCPURequest }}
     dockerRepo: {{ .dockerRepo }}
+    externalDatabase: {{ .externalDatabase }}
     xldAdminPass: {{ .xldAdminPass }}
     xldLic: {{ .xldLic | b64enc }}
+    xldDbUrl: {{ .xldDbUrl }}
     xldDbName: {{ .xldDbName }}
     xldDbUser: {{ .xldDbUser }}
     xldDbPass: {{ .xldDbPass }}
@@ -68,9 +70,11 @@ data:
     xldWorkHostpath: {{ .xldWorkHostpath }}
     xlrAdminPass: {{ .xlrAdminPass }}
     xlrLic: {{ .xlrLic | b64enc }}
+    xlrDbUrl: {{ .xlrDbUrl }}
     xlrDbName: {{ .xlrDbName }}
     xlrDbUser: {{ .xlrDbUser }}
     xlrDbPass: {{ .xlrDbPass }}
+    xlrReportDbUrl: {{ .xlrReportDbUrl }}
     xlrReportDbName: {{ .xlrReportDbName }}
     xlrReportDbUser: {{ .xlrReportDbUser }}
     xlrReportDbPass: {{ .xlrReportDbPass }}
