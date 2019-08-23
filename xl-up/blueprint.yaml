@@ -294,13 +294,13 @@ spec:
       type: Input
       saveInXlvals: true
       prompt: "Enter your Amazon EFS ID:"
-      promptIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+      promptIf: !expr "K8sSetup == 'AWS EKS'"
 
     - name: efsRegion
       type: Input
       saveInXlvals: true
       prompt: "Enter your Amazon EFS region:"
-      promptIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+      promptIf: !expr "K8sSetup == 'AWS EKS'"
 
     - name: nsfServerHost
       type: Input
@@ -505,14 +505,14 @@ spec:
       writeIf: InstallXLD
     - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
-    - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml.tmpl
-      writeIf:  !expr "InstallXLD && K8sSetup == 'AWS EKS'"
-    - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-rbac.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
-    - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-deployment.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
-    - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-conf.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml.tmpl
+      writeIf:  !expr "K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AWS EKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AWS EKS'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml.tmpl
@@ -529,7 +529,7 @@ spec:
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
       writeIf: !expr "InstallMonitoring"

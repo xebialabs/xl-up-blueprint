@@ -52,10 +52,10 @@ expected-files:
 not-expected-files:
   #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml

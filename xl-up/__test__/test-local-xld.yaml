@@ -20,10 +20,10 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
   #xl-deploy xl-release
