@@ -3,7 +3,7 @@ kind: Blueprint
 metadata:
   name: XL UP
   description: |
-    This blueprint deploys XL Deploy, XL Release, and XL-k8s-foundation into an existing Kubernetes installation (local single-node Kubernetes, on-premises multi-node Kubernetes cluster, or Amazon EKS cluster).
+    This blueprint deploys XL Deploy, XL Release, and XL-k8s-foundation into an existing Kubernetes installation (local single-node Kubernetes, on-premises multi-node Kubernetes cluster, Google Kubernetes Engine cluster, or Amazon EKS cluster).
   author: XebiaLabs
   version: 1.0
 spec:
@@ -17,11 +17,11 @@ spec:
         - Google Kubernetes Engine
         - Plain multinode K8s cluster
       saveInXlvals: true
-      description: "The flavour of Kubernetes to deploy the XebiaLabs Devops Platform to"
+      description: "The flavor of Kubernetes which the XebiaLabs Devops Platform should be deployed to"
 
     - name: useKubeconfig
       type: Confirm
-      prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
+      prompt: "Do you want to use the Kubernetes current-context from ~/.kube/config?"
       promptIf: !expr "k8sConfig('IsConfigAvailable')"
       default: true
       saveInXlvals: true
@@ -50,14 +50,14 @@ spec:
 
     - name: K8sAuthentication
       type: Select
-      prompt: "Choose kubernetes authentication type:"
+      prompt: "Choose the Kubernetes authentication type:"
       options:
         - Client key/certificate [Path to files]
         - Client key/certificate [User Input]
         - Token
       promptIf: !expr "(!useKubeconfig && K8sSetup != 'AWS EKS') || K8sSetup == 'Google Kubernetes Engine' "
       saveInXlvals: true
-      description: "How xl up will authenticate with your Kubernetes cluster"
+      description: "Define how xl up will be authenticated with your Kubernetes cluster"
 
     - name: K8sToken
       type: SecretInput
@@ -74,7 +74,7 @@ spec:
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
-      description: "Provide the location of your client certificate that is used to connect to Kubernetes"
+      description: "Provide the location of the client certificate that you use to connect to Kubernetes"
 
     - name: K8sClientKeyFile
       type: File
@@ -82,32 +82,32 @@ spec:
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
-      description: "Provide the location of your client key that is used to connect to Kubernetes"
+      description: "Provide the location of the client key that you use to connect to Kubernetes"
 
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
       prompt: "Enter your K8s Client Certificate:"
       value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
-      description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
+      description: "Enter the base64-encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
       prompt: "Enter your K8s Client Certificate Key:"
       value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
-      description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
+      description: "Enter the base64-encoded value of the client key that is used to connect to Kubernetes"
       # END
 
     - name: K8sClientCert
       type: SecretEditor
-      prompt: "Using Kubernetes client certificate from your context"
+      prompt: "Using the Kubernetes client certificate from your context"
       saveInXlvals: true
       replaceAsIs: true
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : 'none'"
 
     - name: K8sClientKey
       type: SecretEditor
-      prompt: "Using Kubernetes client certificate Key from your context"
+      prompt: "Using the Kubernetes client certificate key from your context"
       saveInXlvals: true
       replaceAsIs: true
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : 'none'"
@@ -118,7 +118,7 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
       default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): 'none'"
       saveInXlvals: true
-      description: "The cluster name of your Kubernetes installation. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster"
+      description: "Enter the cluster name of your Kubernetes installation. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster"
 
     - name: isAwsCfgAvailable
       type: Confirm
@@ -138,7 +138,7 @@ spec:
       saveInXlvals: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID')"
-      description: "Your AWS access key ID"
+      description: "Provide your AWS access key ID"
 
     - name: AWSAccessSecret
       type: SecretInput
@@ -147,7 +147,7 @@ spec:
       saveInXlvals: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey')"
-      description: "Your AWS secret access key"
+      description: "Provide your AWS secret access key"
   files:
     - path: cm_answer_file_auto.yaml.tmpl
     - path: cert.crt.tmpl
