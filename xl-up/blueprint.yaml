@@ -17,7 +17,7 @@ spec:
         - Google Kubernetes Engine
         - Plain multinode K8s cluster
       saveInXlvals: true
-      description: "The flavour of Kubernetes to deploy the XebiaLabs Devops Platform to"
+      description: "The flavour of Kubernetes to deploy the XebiaLabs Devops Platform to. Other flavors like Minikube are not supported, only the listed options are supported"
 
     - name: useKubeconfig
       type: Confirm
@@ -25,7 +25,7 @@ spec:
       promptIf: !expr "k8sConfig('IsConfigAvailable')"
       default: true
       saveInXlvals: true
-      description: "Attempt to read and process the current context from your $HOME/.kube/config file"
+      description: "xl up will try to read and process the current context from your $HOME/.kube/config file and get information like Kubernetes api url, client certificate, client key and token in order to connect to the Kubernetes cluster."
 
     - name: apiServerURL
       type: Input
@@ -66,7 +66,7 @@ spec:
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Token'"
       saveInXlvals: true
       replaceAsIs: true
-      description: "Provide an authentication token that you have previously configured in your cluster"
+      description: "Provide an authentication token for a service account that you have previously configured in your cluster. The service account for which the token is provided should be able to create/modify resources in the Kubernetes cluster"
 
     - name: K8sClientCertFile
       type: File
@@ -118,7 +118,7 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
       default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster') : 'none'"
       saveInXlvals: true
-      description: "The cluster name of your Kubernetes installation. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster"
+      description: "The cluster name of your AWS EKS resource. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster in AWS console"
 
     - name: isAwsCfgAvailable
       type: Confirm
@@ -129,7 +129,7 @@ spec:
       prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
       promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AWS EKS'"
       saveInXlvals: true
-      description: "Use the currently configured profile and associated credentials from your $HOME/.aws/credentials file"
+      description: "Use the currently configured profile and associated credentials from your $HOME/.aws/credentials file. From this file xl up will get the credentials from the [default] section. These credentials are required for xl up in order to connect to your AWS EKS cluster"
 
     - name: AWSAccessKey
       type: SecretInput
@@ -138,7 +138,7 @@ spec:
       saveInXlvals: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID')"
-      description: "Your AWS access key ID"
+      description: "Your AWS access key ID. AWS access key ID is required for xl up in order to connect to your AWS EKS cluster"
 
     - name: AWSAccessSecret
       type: SecretInput
@@ -147,7 +147,7 @@ spec:
       saveInXlvals: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey')"
-      description: "Your AWS secret access key"
+      description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
 
     - name: Namespace
       type: Input
@@ -161,7 +161,7 @@ spec:
       prompt: "Do you want to use custom Docker Registry?"
       default: false
       saveInXlvals: true
-      description: "When running in a segregated network setup, it might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
+      description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
 
     - name: registryURL
       type: Input
@@ -169,7 +169,7 @@ spec:
       promptIf: !expr "useCustomRegistry"
       default: "docker.io/xebialabs"
       saveInXlvals: true
-      description: "When using a custom Docker registry, enter the URL of that registry here."
+      description: "When using a custom Docker registry, enter the URL of that registry here. If the the docker registry you are using is Dockerhub then your registry url will look like: docker.io/MY_COMPANY. If you have an internal docker registry then it may look like: xl-docker.xebialabs.com "
 
     - name: dockerUser
       type: Input
@@ -201,7 +201,7 @@ spec:
       default: "xl-deploy:8.5.3"
       promptIf: !expr "useCustomRegistry && InstallXLD"
       validate: !expr "version('checkversion', 'xld', xldVersion)"
-      description: "The version of XL Deploy you would like to install"
+      description: "This will be the XL Deploy docker image and tag that lives in your private docker registry. For example xl-deploy:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
       # This question will not be asked but used to extract the tag information which will be used as version
     - name: xldTag
@@ -224,7 +224,7 @@ spec:
       default: "xl-release:8.5.3"
       promptIf: !expr "useCustomRegistry && InstallXLR"
       validate: !expr "version('checkversion', 'xlr', xlrVersion)"
-      description: "The version of XL Release you would like to install"
+      description: "This will be the XL Release docker image and tag that lives in your private docker registry. For example xl-release:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
     
       # This question will not be asked but used to extract the tag information which will be used as version
     - name: xlrTag
@@ -272,7 +272,7 @@ spec:
       default: !expr "randPassword()"
       revealOnSummary: true
       replaceAsIs: true
-      description: "The password for the XL Deploy admin user"
+      description: "The password that you would like to use for the XL Deploy admin user"
 
     - name: xldLic
       type: File
