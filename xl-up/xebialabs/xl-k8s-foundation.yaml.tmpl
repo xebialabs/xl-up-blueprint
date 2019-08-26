@@ -95,12 +95,11 @@ spec:
           {{end}}
           XLD_DB_NAME: !value xldDbName
           XLD_DB_USER: !value xldDbUser
-          {{if  eq .K8sSetup "AWS EKS" }}
+        {{end}}
+        {{if eq .K8sSetup "AWS EKS"}}
           EFS_ID: !value efsId
           EFS_REGION: !value efsRegion
-          {{end}}
-        {{end}}
-        {{if or (eq .K8sSetup "Plain multinode K8s cluster") (eq .K8sSetup "Google Kubernetes Engine")}}
+        {{else if or (eq .K8sSetup "Plain multinode K8s cluster") (eq .K8sSetup "Google Kubernetes Engine")}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
           NFS_SERVER: !value nsfServerHost
           NFS_PATH: !value nsfSharePath
@@ -169,6 +168,8 @@ spec:
                     {{end}}
                     {{if ne .K8sSetup "AWS EKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                    {{else}}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
                     {{end}}
                   {{end}}
                 {{end}}
@@ -215,8 +216,10 @@ spec:
                         {{end}}
                         {{if ne .K8sSetup "AWS EKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                       {{end}}
-                     {{end}}
+                        {{else}}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                        {{end}}
+                      {{end}}
                     {{end}}
                   {{end}}
                 undeployDependencies: "true"
@@ -235,13 +238,32 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
                   - name: aws-efs-storageclass
                     type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-deploy/external-db/active-active/aws-efs/aws-efs-storageclass.yaml
+                    file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
                   {{else if eq .K8sSetup "Google Kubernetes Engine" }}
                   - name: pd-retain
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
                   {{ end }}
           {{end}}
+          {{- if eq .K8sSetup "AWS EKS" }}
+          - name: K8S-EFS-Provisioner
+            type: udm.Application
+            children:
+              - name: "v1.0.0-k8s1.10"
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: aws-efs-conf
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
+                  - name: aws-efs-deployment
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+                  - name: aws-efs-rbac
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+          {{ end }}
           {{ if not .externalDatabase }}
           - name: PostgreSQL
             type: udm.Application
@@ -261,6 +283,8 @@ spec:
                     {{end}}
                     {{if ne .K8sSetup "AWS EKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                    {{else}}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
                     {{end}}
                   {{end}}
                 undeployDependencies: "true"
