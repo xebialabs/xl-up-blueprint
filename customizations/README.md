@@ -18,7 +18,7 @@ ADD --chown=10001:0 https://dist.xebialabs.com/public/community/xl-deploy/comman
 
 ``` 
 
-In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
+In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container). In case of XL Release docker image the plugins folder has 2 subfolder ``__local__`` and ``xlr-official``, custom plugins should be copied into the ``__local__`` subfolder and official plugins into ``xlr-official`` subfolder.  
 Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
 
 ### Adding extensions
@@ -33,6 +33,26 @@ ADD --chown=10001:0 files/ext /opt/xebialabs/xl-release-server/ext/
 ``` 
 
 In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
+Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
+
+### Adding hotfixes and external libraries 
+
+If you want to add hotfixes for plugins, libraries or external libraries like jdbc drivers to connect to external databases  [Dockerfile](lib-hotfix/Dockerfile):
+
+```dockerfile
+FROM xebialabs/xl-deploy:9.0.3
+
+# Add jdbc lib from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/ojdbc6.jar /opt/xebialabs/xl-deploy-server/lib/
+
+# Add hotfix for lib from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/lib-hotfix.jar /opt/xebialabs/xl-deploy-server/hotfix/lib/
+
+# Add hotfix for plugin from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/plugin-hotfix.jar /opt/xebialabs/xl-deploy-server/hotfix/plugins/
+``` 
+
+In the example above we are adding a oracle jdbc driver to save the XL Deploy repository in an Oracle database, a hotfix for a library and a hotfix for a plugins. Hotfixes are something that Xebialabs provides you when there is a need to patch a bug is not something you create yourself. `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
 Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
 
 
