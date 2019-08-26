@@ -30,6 +30,7 @@ not-expected-files:
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
   #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
