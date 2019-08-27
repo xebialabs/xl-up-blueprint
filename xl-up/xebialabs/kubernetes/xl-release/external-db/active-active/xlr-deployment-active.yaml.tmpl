@@ -73,7 +73,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
     spec:
-      {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -84,7 +83,6 @@ spec:
                     values:
                       - xl-release
               topologyKey: "kubernetes.io/hostname"
-      {{end}}
       initContainers:
         {{if not .externalDatabase}}
         - name: wait-for-db
