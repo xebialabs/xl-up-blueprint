@@ -8,7 +8,7 @@ that you may have customizations (custom plugins, custom synthetic xml and scrip
 If you want to add a custom plugin that you have been developing manually or you have saved somewhere it can can be reached by a URL you may use this [Dockerfile](plugins/Dockerfile):
 
 ```dockerfile
-FROM xebialabs/xl-deploy:8.6.1
+FROM xebialabs/xl-deploy:9.0.3
 
 # Add plugin from local path. user 10001 is the xebialabs user
 COPY --chown=10001:0 files/xld-liquibase-plugin-5.0.1.xldp /opt/xebialabs/xl-deploy-server/default-plugins/
@@ -18,8 +18,8 @@ ADD --chown=10001:0 https://dist.xebialabs.com/public/community/xl-deploy/comman
 
 ``` 
 
-In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
-Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
+In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container). In case of XL Release docker image the plugins folder has 2 subfolder ``__local__`` and ``xlr-official``, custom plugins should be copied into the ``__local__`` subfolder and official plugins into ``xlr-official`` subfolder.  
+Next step is to build the docker image (`docker build . -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
 
 ### Adding extensions
 
@@ -33,7 +33,27 @@ ADD --chown=10001:0 files/ext /opt/xebialabs/xl-release-server/ext/
 ``` 
 
 In the example above we are extending the  official XL Deploy docker image and adding 2 plugins (one from local path and one from url). `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
-Next step is to build the docker image (`docker build Dockerfile -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
+Next step is to build the docker image (`docker build . -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
+
+### Adding hotfixes and external libraries 
+
+If you want to add hotfixes for plugins, libraries or external libraries like jdbc drivers to connect to external databases  [Dockerfile](lib-hotfix/Dockerfile):
+
+```dockerfile
+FROM xebialabs/xl-deploy:9.0.3
+
+# Add jdbc lib from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/ojdbc6.jar /opt/xebialabs/xl-deploy-server/lib/
+
+# Add hotfix for lib from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/lib-hotfix.jar /opt/xebialabs/xl-deploy-server/hotfix/lib/
+
+# Add hotfix for plugin from local path. user 10001 is the xebialabs user
+ADD --chown=10001:0 files/plugin-hotfix.jar /opt/xebialabs/xl-deploy-server/hotfix/plugins/
+``` 
+
+In the example above we are adding a oracle jdbc driver to save the XL Deploy repository in an Oracle database, a hotfix for a library and a hotfix for a plugins. Hotfixes are something that Xebialabs provides you when there is a need to patch a bug is not something you create yourself. `Note` that the `--chown` flag is mandatory so we  use the correct user and group (10001 is the xebialabs user in the base container)
+Next step is to build the docker image (`docker build . -t YOUR_TAG`) and then push your docker image to your docker image registry(`docker push YOUR_TAG`)
 
 
 ### Use custom XL Deploy or XL Release images in `xl up` 
@@ -52,7 +72,7 @@ If you select yes them more questions will follow about the docker registry, cre
 ? Enter your Docker Registry username: userx
 ? Enter your Docker Registry password: ******
 ? Would you like to install XL Deploy? Yes
-? Enter your custom XL Deploy image and tag: (xl-deploy:8.5.3) xl-deploy:9.0.1
+? Enter your custom XL Deploy image and tag: (xl-deploy:8.5.3) xl-deploy:9.0.3
 ```
 
 The docker registry URL depends on your docker registry setup. In case of Dockerhub the you need domain and organization, for example `docker.io/xebialabs`. In case of an internal docker registry where organization is not required it  will be `xl-docker.xebialabs.com`
