@@ -23,7 +23,7 @@ spec:
             file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 {{- else}}
             file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-          - name: xlr-pvc
+          - name: xlr-1pvc
             type: k8s.ResourcesFile
             file: !file kubernetes/xl-release/external-db/active-active/pvc.yaml
 {{- end}}
