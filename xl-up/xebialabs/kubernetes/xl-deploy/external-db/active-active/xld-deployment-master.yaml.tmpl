@@ -114,7 +114,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
     spec:
-      {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -123,7 +122,6 @@ spec:
                   - {key: app, operator: In, values: [xl-deploy]}
                   - {key: component, operator: In, values: [master]}
               topologyKey: "kubernetes.io/hostname"
-      {{end}}
       initContainers:
         - name: fix-the-volume-permission
           image: busybox
