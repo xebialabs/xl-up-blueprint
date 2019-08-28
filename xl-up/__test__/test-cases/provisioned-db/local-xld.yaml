@@ -1,0 +1,18 @@
+K8sSetup: Local K8s from Docker Desktop for Mac/Windows
+useKubeconfig: false
+localApiServerURL: https://localk8s.com:8443
+K8sClientCertFile: ../xl-up/__test__/files/test-file
+K8sClientKeyFile: ../xl-up/__test__/files/test-file
+InstallXLD: true
+InstallXLR: false
+xldAdminPass: password
+xldLic: ../xl-up/__test__/files/test-file
+xldDbName: xl-deploy
+xldDbUser: xl-deploy
+xldDbPass: xl-deploy
+xlKeyStore: ../xl-up/__test__/files/test-file
+xlKeyStorePass: test123
+xlVersion: 8.6.1
+OsType: linux
+PostgresqlWorkHostpath: /psql
+K8sAuthentication: Client key/certificate [Path to files]

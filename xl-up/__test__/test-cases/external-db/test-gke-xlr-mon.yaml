@@ -1,0 +1,87 @@
+answers-file: gke-xlr-mon.yaml
+expected-files:
+  - xebialabs/common.yaml
+  - xebialabs/deployments.yaml
+  - xebialabs/xl-release.yaml
+  - xebialabs/xl-k8s-foundation.yaml
+  #xl-k8s-foundation
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+  #xl-deploy xl-release
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
+  #efk
+  - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
+  #pg
+  - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/secret.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+not-expected-files:
+  - xebialabs/xl-deploy.yaml
+  #xl-deploy xl-release
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  #xl-k8s-foundation
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
+expected-xl-values:
+  K8sSetup: Google Kubernetes Engine
+  useKubeconfig: false
+  apiServerURL: https://k8s.com:6443
+  InstallXLD: false
+  InstallXLR: true
+  xlrDbName: xl-release
+  xlrDbUser: xl-release
+  xlrReportDbName: xl-release-report
+  xlrReportDbUser: xl-release-report
+  xlVersion: 8.6.1
+  InstallMonitoring: true
+  monitoringUser: mon-user
+  OsType: linux
+  K8sAuthentication: Token
+  nsfServerHost: nfs-test.com
+  nsfSharePath: /xebialabs
+  externalDatabase: true
+  xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+expected-xl-secrets:
+  xlKeyStorePass: test123
+  xlrAdminPass: password
+  xlrDbPass: xl-release
+  xlrReportDbPass: xl-release-report
+  monitoringUserPass: mon-pass
+  K8sToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJ4ZWJpYWxhYnMtYWRtaW4tdG9rZW4tZmpsNWgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoieGViaWFsYWJzLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMDMyMGViYjItYTg5OS0xMWU5LTljZTgtNDIwMTBhODQwMWQ3Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOnhlYmlhbGFicy1hZG1pbiJ9.AVK402uvVe-TUdSIb7f_gYtcSm7rei66Inm4TlVxMfeU6G3-gDOEtPRQ-NHUHBQyt6juHaRX2xfT7cLRoBWZl38pVnJJf3oMAJBdnkcpycjAGOaI_rU_xUs0RasPs8yUAFTD3RZ9DdnOhw4MBWWWDcMMqsEWhJPLGrpEnEu5_Mgeta-BkTqioqzJBr2LnkGpiv-ha-6hgO7L2_v8bSGrRVA_xc2SQXY4wtkjkK3a1CzQ_xxBz396OwDVpMwI5lRm4xRCkiUrk46xuxWMGM483V49Hep4yFIkShhNqaKI6L6uw4sUX9Dp7mftXRYotTbGd_hhJlmQTWjjIb_qPqt-Iw
