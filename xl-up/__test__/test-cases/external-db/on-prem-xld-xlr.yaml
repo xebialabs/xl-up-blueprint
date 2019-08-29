@@ -28,3 +28,5 @@ OsType: linux
 K8sAuthentication: Client key/certificate [Path to files]
 externalDatabase: true
 xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report

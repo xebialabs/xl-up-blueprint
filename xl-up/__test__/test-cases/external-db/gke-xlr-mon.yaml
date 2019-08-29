@@ -23,4 +23,5 @@ K8sToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY
 nsfServerHost: nfs-test.com
 nsfSharePath: /xebialabs
 externalDatabase: true
-xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report

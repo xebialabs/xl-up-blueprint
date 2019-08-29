@@ -77,7 +77,8 @@ expected-xl-values:
   nsfServerHost: nfs-test.com
   nsfSharePath: /xebialabs
   externalDatabase: true
-  xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
 expected-xl-secrets:
   xlKeyStorePass: test123
   xlrAdminPass: password

@@ -79,6 +79,8 @@ expected-xl-values:
   OsType: linux
   externalDatabase: true
   xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password
