@@ -28,10 +28,10 @@ spec:
                   - name: xld-deployment-worker
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-                  - name: xld-work-pvc
+                  - name: xld-1work-pvc
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
-                  - name: xld-export-pvc
+                  - name: xld-1export-pvc
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
                   {{- end}}
