@@ -649,6 +649,7 @@ spec:
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
       writeIf: !expr "InstallMonitoring"
     #xebialabs files
+    - path: generated_answers.yaml.tmpl
     - path: xebialabs.yaml.tmpl
     - path: xebialabs/common.yaml.tmpl
     - path: xebialabs/deployments.yaml.tmpl
