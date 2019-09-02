@@ -221,7 +221,11 @@ if __name__ == '__main__':
 
             command = ['xl', 'blueprint', '--use-defaults', '--local-repo', '../', '--blueprint', '{}'.format(blueprint_dir), '--strict-answers', '--answers', '../{}'.format(answers_file)]
             print('Executing: {}'.format(' '.join(command)))
-            result = subprocess.run(command, capture_output=True, env=env)
+            try:
+                result = subprocess.run(command, capture_output=True, env=env)
+            except Exception as err:
+                errormsg('Tests failed with {0}'.format(err))
+                sys.exit(1)
             if not result.returncode == 0:
                 if result.stdout:
                     print('stdout: {}'.format(result.stdout))
