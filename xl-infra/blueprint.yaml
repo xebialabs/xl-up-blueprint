@@ -17,6 +17,7 @@ spec:
         - Google Kubernetes Engine
         - Plain multinode K8s cluster
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The flavor of Kubernetes which the XebiaLabs Devops Platform should be deployed to"
 
     - name: useKubeconfig
@@ -34,6 +35,7 @@ spec:
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: OsType
