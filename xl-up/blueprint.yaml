@@ -47,8 +47,7 @@ spec:
 
     - name: localApiServerURL
       type: Input
-      prompt: "Enter the ApiServerURL of your Kubernetes installation:"
-      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : 'none'"
+      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
@@ -96,14 +95,14 @@ spec:
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
-      prompt: "Enter your K8s Client Certificate:"
-      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : 'none'"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : ''"
+      ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
-      prompt: "Enter your K8s Client Certificate Key:"
-      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : 'none'"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : ''"
+      ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
       # END
 
@@ -113,7 +112,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : 'none'"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : ''"
 
     - name: K8sClientKey
       type: SecretEditor
@@ -121,20 +120,21 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : 'none'"
+      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : ''"
 
     - name: eksClusterName
       type: Input
       prompt: "What is the Amazon EKS cluster name?"
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
-      default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster') : 'none'"
+      default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The cluster name of your AWS EKS resource. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster in AWS console"
 
     - name: isAwsCfgAvailable
       type: Confirm
-      value: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('IsAvailable') : 'none'"
+      ignoreIfSkipped: true
+      value: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('IsAvailable') : ''"
 
     - name: useAWSconfig
       type: Confirm
@@ -231,7 +231,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the XLD custom image:"
-      value: !expr "(useCustomRegistry && InstallXLD) ? version('getversionfromtag', xldVersion) : 'none'"
+      value: !expr "(useCustomRegistry && InstallXLD) ? version('getversionfromtag', xldVersion) : ''"
 
     - name: InstallXLR
       type: Confirm
@@ -257,7 +257,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the XLR custom image:"
-      value: !expr "(useCustomRegistry && InstallXLR) ? version('getversionfromtag', xlrVersion) : 'none'"
+      value: !expr "(useCustomRegistry && InstallXLR) ? version('getversionfromtag', xlrVersion) : ''"
 
     - name: xlVersion
       type: Select

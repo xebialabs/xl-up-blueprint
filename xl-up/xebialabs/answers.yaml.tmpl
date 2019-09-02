@@ -15,7 +15,7 @@ data:
     {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
     localApiServerURL: {{ .localApiServerURL }}
     {{end}}
-    {{if or (eq .K8sToken "none") (eq .K8sToken "")}}
+    {{if eq .K8sToken ""}}
      {{if ne .K8sSetup "AWS EKS"}}
       {{if eq .K8sClientCert ""}}
     K8sClientCertFile: {{ .CertFile }}

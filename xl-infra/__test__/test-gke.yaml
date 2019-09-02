@@ -4,7 +4,6 @@ expected-files:
 expected-xl-values:
   K8sSetup: Google Kubernetes Engine
   useKubeconfig: false
-  localApiServerURL: none
   K8sAuthentication: Token
   apiServerURL: https://1.2.3.4:6443
 expected-xl-secrets:

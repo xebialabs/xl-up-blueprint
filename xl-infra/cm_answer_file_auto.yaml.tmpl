@@ -9,7 +9,7 @@ K8sAuthentication: {{ .K8sAuthentication }}
 localApiServerURL: {{ .localApiServerURL }}
 {{ end }}
 {{ if eq .K8sToken ""}}
-  {{ if eq .K8sClientCert "none" }}
+  {{ if eq .K8sClientCert "" }}
 K8sClientCertFile: {{ .CertFile }}
 K8sClientKeyFile: {{ .KeyFile }}
   {{else}}
