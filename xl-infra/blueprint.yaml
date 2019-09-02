@@ -17,6 +17,7 @@ spec:
         - Google Kubernetes Engine
         - Plain multinode K8s cluster
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The flavor of Kubernetes which the XebiaLabs Devops Platform should be deployed to"
 
     - name: useKubeconfig
@@ -25,6 +26,7 @@ spec:
       promptIf: !expr "k8sConfig('IsConfigAvailable')"
       default: true
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Attempt to read and process the current context from your $HOME/.kube/config file"
 
     - name: apiServerURL
@@ -33,6 +35,7 @@ spec:
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: OsType
@@ -40,12 +43,14 @@ spec:
       prompt: "The type of operating system where the xl command is running:"
       value: !expr "os('_operatingsystem')"
       saveInXlvals: true
+      ignoreIfSkipped: true
 
     - name: localApiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
       value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : 'none'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: K8sAuthentication
@@ -57,6 +62,7 @@ spec:
         - Token
       promptIf: !expr "(!useKubeconfig && K8sSetup != 'AWS EKS') || K8sSetup == 'Google Kubernetes Engine' "
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Define how xl up will be authenticated with your Kubernetes cluster"
 
     - name: K8sToken
@@ -65,6 +71,7 @@ spec:
       prompt: "Provide authentication token for the existing service account:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Token'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       description: "Provide an authentication token that you have previously configured in your cluster"
 
@@ -74,6 +81,7 @@ spec:
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Provide the location of the client certificate that you use to connect to Kubernetes"
 
     - name: K8sClientKeyFile
@@ -82,6 +90,7 @@ spec:
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Provide the location of the client key that you use to connect to Kubernetes"
 
       # Client certificates used for Upgrade only and downloaded from the Configmap
@@ -102,6 +111,7 @@ spec:
       type: SecretEditor
       prompt: "Using the Kubernetes client certificate from your context"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : 'none'"
 
@@ -109,6 +119,7 @@ spec:
       type: SecretEditor
       prompt: "Using the Kubernetes client certificate key from your context"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : 'none'"
 
@@ -118,6 +129,7 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
       default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): 'none'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Enter the cluster name of your Kubernetes installation. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster"
 
     - name: isAwsCfgAvailable
@@ -129,6 +141,7 @@ spec:
       prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
       promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AWS EKS'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Use the currently configured profile and associated credentials from your $HOME/.aws/credentials file"
 
     - name: AWSAccessKey
@@ -136,6 +149,7 @@ spec:
       prompt: "What is the AWS access key ID?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID')"
       description: "Provide your AWS access key ID"
@@ -145,6 +159,7 @@ spec:
       prompt: "What is the AWS secret access key?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey')"
       description: "Provide your AWS secret access key"

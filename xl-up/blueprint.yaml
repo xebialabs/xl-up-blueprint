@@ -17,6 +17,7 @@ spec:
         - Google Kubernetes Engine
         - Plain multinode K8s cluster
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The flavour of Kubernetes to deploy the XebiaLabs Devops Platform to. Other flavors like Minikube are not supported, only the listed options are supported"
 
     - name: useKubeconfig
@@ -25,6 +26,7 @@ spec:
       promptIf: !expr "k8sConfig('IsConfigAvailable')"
       default: true
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "xl up will try to read and process the current context from your $HOME/.kube/config file and get information like Kubernetes api url, client certificate, client key and token in order to connect to the Kubernetes cluster."
 
     - name: apiServerURL
@@ -33,6 +35,7 @@ spec:
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: OsType
@@ -40,12 +43,14 @@ spec:
       prompt: "The type of operating system where the xl command is running:"
       value: !expr "os('_operatingsystem')"
       saveInXlvals: true
+      ignoreIfSkipped: true
 
     - name: localApiServerURL
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
       value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : 'none'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: K8sAuthentication
@@ -57,6 +62,7 @@ spec:
         - Token
       promptIf: !expr "(!useKubeconfig && K8sSetup != 'AWS EKS') || K8sSetup == 'Google Kubernetes Engine' "
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "How xl up will authenticate with your Kubernetes cluster"
 
     - name: K8sToken
@@ -65,6 +71,7 @@ spec:
       prompt: "Provide authentication token for the existing service account:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Token'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       description: "Provide an authentication token for a service account that you have previously configured in your cluster. The service account for which the token is provided should be able to create/modify resources in the Kubernetes cluster"
 
@@ -74,6 +81,7 @@ spec:
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
 
     - name: K8sClientKeyFile
@@ -82,6 +90,7 @@ spec:
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Provide the location of your client key that is used to connect to Kubernetes"
 
       # Client certificates used for Upgrade only and downloaded from the Configmap
@@ -102,6 +111,7 @@ spec:
       type: SecretEditor
       prompt: "Using Kubernetes client certificate from your context"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : 'none'"
 
@@ -109,6 +119,7 @@ spec:
       type: SecretEditor
       prompt: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : 'none'"
 
@@ -118,6 +129,7 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
       default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster') : 'none'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "The cluster name of your AWS EKS resource. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster in AWS console"
 
     - name: isAwsCfgAvailable
@@ -129,6 +141,7 @@ spec:
       prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
       promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AWS EKS'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Use the currently configured profile and associated credentials from your $HOME/.aws/credentials file. From this file xl up will get the credentials from the [default] section. These credentials are required for xl up in order to connect to your AWS EKS cluster"
 
     - name: AWSAccessKey
@@ -136,6 +149,7 @@ spec:
       prompt: "What is the AWS access key ID?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID')"
       description: "Your AWS access key ID. AWS access key ID is required for xl up in order to connect to your AWS EKS cluster"
@@ -145,6 +159,7 @@ spec:
       prompt: "What is the AWS secret access key?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey')"
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
@@ -152,6 +167,7 @@ spec:
     - name: Namespace
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
       value: xebialabs
       description: "The namespace to install the XebiaLabs Devops Platform into"
@@ -161,6 +177,7 @@ spec:
       prompt: "Do you want to use custom Docker Registry?"
       default: false
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
 
     - name: registryURL
@@ -169,6 +186,7 @@ spec:
       promptIf: !expr "useCustomRegistry"
       default: "docker.io/xebialabs"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "When using a custom Docker registry, enter the URL of that registry here. If the the docker registry you are using is Dockerhub then your registry url will look like: docker.io/MY_COMPANY. If you have an internal docker registry then it may look like: xl-docker.xebialabs.com "
 
     - name: dockerUser
@@ -177,6 +195,7 @@ spec:
       promptIf: !expr "useCustomRegistry"
       default: " "
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "When using a custom Docker registry that requires authentication, pass that username in here"
 
     - name: dockerPass
@@ -184,6 +203,7 @@ spec:
       prompt: "Enter your Docker Registry password:"
       promptIf: !expr "useCustomRegistry"
       saveInXlvals: true
+      ignoreIfSkipped: true
       replaceAsIs: true
       description: "When using a custom Docker registry that requires authentication, pass that password in here"
 
@@ -192,11 +212,13 @@ spec:
       prompt: "Would you like to install XL Deploy?"
       default: true
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Deploy"
 
     - name: xldVersion
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your custom XL Deploy image and tag:"
       default: "xl-deploy:8.5.3"
       promptIf: !expr "useCustomRegistry && InstallXLD"
@@ -207,6 +229,7 @@ spec:
     - name: xldTag
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the XLD custom image:"
       value: !expr "(useCustomRegistry && InstallXLD) ? version('getversionfromtag', xldVersion) : 'none'"
 
@@ -215,11 +238,13 @@ spec:
       prompt: "Would you like to install XL Release?"
       default: true
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Release"
 
     - name: xlrVersion
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your custom XL Release image and tag:"
       default: "xl-release:8.5.3"
       promptIf: !expr "useCustomRegistry && InstallXLR"
@@ -230,12 +255,14 @@ spec:
     - name: xlrTag
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the XLR custom image:"
       value: !expr "(useCustomRegistry && InstallXLR) ? version('getversionfromtag', xlrVersion) : 'none'"
 
     - name: xlVersion
       type: Select
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Choose the version of the XebiaLabs DevOps Platform:"
       promptIf: !expr "!useCustomRegistry"
       options:
@@ -259,6 +286,7 @@ spec:
     - name: dockerRepo
       type: Select
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Choose a Docker repository:"
       options:
         - xebialabs
@@ -267,6 +295,7 @@ spec:
     - name: externalDatabase
       type: Confirm
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Would you like to use an external database:"
       default: false
       description: "xl up will deploy by default a Postgresql instance within your Kubernetes installation save the data of XL Deploy or XL Release. If you want to use your own existing Database then type yes in this question. Make sure that your Database is reachable within the Kubernetes cluster"
@@ -274,6 +303,7 @@ spec:
     - name: xldAdminPass
       type: SecretInput
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the password that you want to use for the XL Deploy admin user:"
       promptIf: !expr "InstallXLD"
       default: !expr "randPassword()"
@@ -285,6 +315,7 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the full path to the XL Deploy license file:"
       promptIf: !expr "InstallXLD"
       description: "The local path to an XL Deploy license file"
@@ -292,6 +323,7 @@ spec:
     - name: xldDbUrl
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the JDBC url of the database where XL Deploy will save its repository data:"
       promptIf: !expr "externalDatabase && InstallXLD"
       default: jdbc:postgresql://postgresql:5432/xl-deploy
@@ -300,6 +332,7 @@ spec:
     - name: xldDbName
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Deploy database name:"
       promptIf: !expr "!externalDatabase && InstallXLD"
       default: xl-deploy
@@ -308,6 +341,7 @@ spec:
     - name: xldDbUser
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Deploy database username:"
       promptIf: !expr "InstallXLD"
       default: sa
@@ -316,6 +350,7 @@ spec:
     - name: xldDbPass
       type: SecretInput
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Deploy database password:"
       promptIf: !expr "InstallXLD"
       default: !expr "randPassword()"
@@ -326,6 +361,7 @@ spec:
     - name: efsId
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your Amazon EFS ID:"
       description: "The ID of the AWS EFS instance which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your AWS EFS instance can be mounted in the nodes of your AWS EKS cluster"
       promptIf: !expr "K8sSetup == 'AWS EKS'"
@@ -333,6 +369,7 @@ spec:
     - name: efsRegion
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your Amazon EFS region:"
       promptIf: !expr "K8sSetup == 'AWS EKS'"
       description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
@@ -340,6 +377,7 @@ spec:
     - name: nsfServerHost
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your NFS server name or IP address:"
       promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
@@ -347,6 +385,7 @@ spec:
     - name: nsfSharePath
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your NFS share path:"
       promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
       description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
@@ -354,6 +393,7 @@ spec:
     - name: xldWorkHostpath
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the local directory path that XL Deploy can use as a work directory:"
       promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && InstallXLD && OsType != 'linux' "
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where XL Deploy will persist the data from the work directory. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
@@ -361,6 +401,7 @@ spec:
     - name: xlrAdminPass
       type: SecretInput
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the password that you want to use for the XL Release admin user:"
       promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
@@ -372,6 +413,7 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
       description: "The local path to an XL Release license file"
@@ -379,6 +421,7 @@ spec:
     - name: xlrDbUrl
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the JDBC url of the database where XL Release will save its repository data:"
       promptIf: !expr "externalDatabase && InstallXLR"
       default: jdbc:postgresql://postgresql:5432/xl-release
@@ -388,6 +431,7 @@ spec:
     - name: xlrDbName
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Release database name:"
       promptIf: !expr "!externalDatabase && InstallXLR"
       default: xl-release
@@ -396,6 +440,7 @@ spec:
     - name: xlrDbUser
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Release database username:"
       promptIf: !expr "InstallXLR"
       default: xl-release
@@ -404,6 +449,7 @@ spec:
     - name: xlrDbPass
       type: SecretInput
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Release database password:"
       promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
@@ -414,6 +460,7 @@ spec:
     - name: xlrReportDbUrl
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the JDBC url of the database where XL Release will save its reporting data:"
       promptIf: !expr "externalDatabase && InstallXLR"
       default: jdbc:postgresql://postgresql:5432/xl-release-report
@@ -422,6 +469,7 @@ spec:
     - name: xlrReportDbName
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Release report database name:"
       promptIf: !expr "!externalDatabase && InstallXLR"
       default: xl-release-report
@@ -430,6 +478,7 @@ spec:
     - name: xlrReportDbUser
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Release report database username:"
       promptIf: !expr "InstallXLR"
       default: xl-release-report
@@ -438,6 +487,7 @@ spec:
     - name: xlrReportDbPass
       type: SecretInput
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XL Release report database password:"
       promptIf: !expr "InstallXLR"
       default: !expr "randPassword()"
@@ -449,12 +499,14 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the full path to your XebiaLabs keystore:"
       description: "The local path to a JCEKS keystore to use in the XebiaLabs Devops Platform. This facilitates encryption of passwords and secrets in XL Deploy or XL Release. You can use keytool to generate a keystore, for example: keytool -genseckey -alias deployit-passsword-key -keyalg aes -keysize 128 -keypass deployit -keystore /tmp/repository-keystore.jceks -storetype jceks -storepass test123"
 
     - name: xlKeyStorePass
       type: SecretInput
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter your XebiaLabs keystore password:"
       replaceAsIs: true
       description: "The password of the provided keystore"
@@ -465,6 +517,7 @@ spec:
       default: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
 
     - name: MonitoringDataRetention
@@ -477,6 +530,7 @@ spec:
     - name: monitoringUser
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "What is the username for the monitoring user?"
       default: admin
       promptIf: !expr "InstallMonitoring"
@@ -486,6 +540,7 @@ spec:
       type: SecretInput
       replaceAsIs: true
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "What is the password for the monitoring user?"
       default: !expr "randPassword()"
       promptIf: !expr "InstallMonitoring"
@@ -495,6 +550,7 @@ spec:
     - name: PostgresqlWorkHostpath
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
       promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
@@ -503,6 +559,7 @@ spec:
     - name: postgresMaxConn
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Specify the max_connections parameter for PostgreSQL:"
       default: 512
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
@@ -512,6 +569,7 @@ spec:
     - name: postgresSharedBuff
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Specify the shared_buffers parameter for PostgreSQL:"
       default: 512MB
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
@@ -520,6 +578,7 @@ spec:
     - name: postgresEffectCacheSize
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Specify the effective_cache_size parameter for PostgreSQL:"
       default: 1GB
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
@@ -529,6 +588,7 @@ spec:
     - name: postgresSyncCommit
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Specify the synchronous_commit parameter for PostgreSQL:"
       default: "off"
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
@@ -537,6 +597,7 @@ spec:
     - name: postgresMaxWallSize
       type: Input
       saveInXlvals: true
+      ignoreIfSkipped: true
       prompt: "Specify the max_wal_size parameter for PostgreSQL:"
       default: 256MB
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
