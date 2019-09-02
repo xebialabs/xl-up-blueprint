@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python
 import configparser
 import glob
 import os
@@ -124,12 +124,12 @@ def type_aware_equals(expected, actual):
             return False
     elif type(expected) == bool:
         try:
-            if actual.lower() in ['yes', 'true', 't', 1]:
+            if actual.lower() in ['yes', 'true', 't', '1']:
                 bool_val = True
-            elif actual.lower() in ['no', 'false', 'f', 0]:
+            elif actual.lower() in ['no', 'false', 'f', '0']:
                 bool_val = False
             else:
-                return False
+                raise Exception('Expected one of: [yes, no, true, false, t, f, 1, 0]. Got %s instead' % actual)
             return expected == bool_val
         except:
             return False
@@ -192,7 +192,7 @@ if __name__ == '__main__':
     fail_if_missing_test_dirs(blueprint_to_test_dirs.values())
 
     for blueprint_dir, test_dir in blueprint_to_test_dirs.items():
-        test_files = [filename for filename in glob.iglob('{}/test*.yaml'.format(test_dir))]
+        test_files = [filename for filename in glob.iglob('{}/**/test*.yaml'.format(test_dir), recursive=True)]
         if not test_files:
             errormsg('Missing test files under {}'.format(test_dir))
             sys.exit(1)
@@ -206,9 +206,9 @@ if __name__ == '__main__':
             testdef = load_testdef_from_yaml_file(test_file)
             validate_testdef(testdef)
 
-            answers_file = '{}/{}'.format(test_dir, testdef['answers-file'])
+            answers_file = '{}/{}'.format(os.path.dirname(test_file), testdef['answers-file'])
             if not os.path.exists(answers_file):
-                errormsg('Missing answers file {} for {}'.format(answers_file, test_dir))
+                errormsg('Missing answers file {}'.format(answers_file))
                 sys.exit(1)
 
             try:
@@ -221,7 +221,11 @@ if __name__ == '__main__':
 
             command = ['xl', 'blueprint', '--use-defaults', '--local-repo', '../', '--blueprint', '{}'.format(blueprint_dir), '--strict-answers', '--answers', '../{}'.format(answers_file)]
             print('Executing: {}'.format(' '.join(command)))
-            result = subprocess.run(command, capture_output=True, env=env)
+            try:
+                result = subprocess.run(command, capture_output=True, env=env)
+            except Exception as err:
+                errormsg('Tests failed with {0}'.format(err))
+                sys.exit(1)
             if not result.returncode == 0:
                 if result.stdout:
                     print('stdout: {}'.format(result.stdout))

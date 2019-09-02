@@ -40,5 +40,5 @@ pipeline {
 
 def notifySlack(String message, String notificationColor) {
     slackSend(color: "${notificationColor}", message: "$message (<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>)",
-            channel: "#team-kube-love", tokenCredentialId: "slack-token")
+            channel: "#kubicorns", tokenCredentialId: "slack-token")
 }
