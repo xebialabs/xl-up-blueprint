@@ -384,7 +384,6 @@ spec:
       default: jdbc:postgresql://postgresql:5432/xl-release
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release repository. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_DB_NAME"
 
-
     - name: xlrDbName
       type: Input
       saveInXlvals: true
@@ -499,7 +498,6 @@ spec:
       promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
 
-
     - name: postgresMaxConn
       type: Input
       saveInXlvals: true
@@ -507,7 +505,6 @@ spec:
       default: 512
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
       description: "The maximum number of connections to allow on the installed PostgreSQL instance. This should always be above 50"
-
 
     - name: postgresSharedBuff
       type: Input
@@ -524,7 +521,6 @@ spec:
       default: 1GB
       promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
       description: "The amount of cache space to allocate to the PostgreSQL instance"
-
 
     - name: postgresSyncCommit
       type: Input

@@ -1,0 +1,28 @@
+K8sSetup: Plain multinode K8s cluster
+useKubeconfig: false
+apiServerURL: https://k8s.com:6443
+K8sClientCertFile: ../xl-up/__test__/files/test-file
+K8sClientKeyFile: ../xl-up/__test__/files/test-file
+InstallXLD: false
+InstallXLR: true
+nsfServerHost: nfs-test.com
+nsfSharePath: /xebialabs
+xlrAdminPass: password
+xlrLic: ../xl-up/__test__/files/test-file
+xlrDbName: xl-release
+xlrDbUser: xl-release
+xlrDbPass: xl-release
+xlrReportDbName: xl-release-report
+xlrReportDbUser: xl-release-report
+xlrReportDbPass: xl-release-report
+xlKeyStore: ../xl-up/__test__/files/test-file
+xlKeyStorePass: test123
+xlVersion: 8.6.1
+InstallMonitoring: true
+monitoringUser: mon-user
+monitoringUserPass: mon-pass
+OsType: linux
+K8sAuthentication: Client key/certificate [Path to files]
+externalDatabase: true
+xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
