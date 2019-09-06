@@ -57,36 +57,56 @@ data:
     XlCPURequest: {{ .XlCPURequest }}
     dockerRepo: {{ .dockerRepo }}
     externalDatabase: {{ .externalDatabase }}
+    {{if .InstallXLD}}
     xldAdminPass: {{ .xldAdminPass }}
     xldLic: {{ .xldLic | b64enc }}
+      {{if .externalDatabase}}
     xldDbUrl: {{ .xldDbUrl }}
+      {{else}}
     xldDbName: {{ .xldDbName }}
+      {{end}}
     xldDbUser: {{ .xldDbUser }}
     xldDbPass: {{ .xldDbPass }}
+      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+    xldWorkHostpath: {{ .xldWorkHostpath }}
+      {{end}}
+    {{end}}
+    {{if eq .K8sSetup "AWS EKS" }}
     efsId: {{ .efsId }}
     efsRegion: {{ .efsRegion }}
+    {{end}}
+    {{if (or (eq .K8sSetup "Google Kubernetes Engine" ) (eq .K8sSetup "Plain multinode K8s cluster"))}}
     nsfServerHost: {{ .nsfServerHost }}
     nsfSharePath: {{ .nsfSharePath }}
-    xldWorkHostpath: {{ .xldWorkHostpath }}
+    {{end}}
+    {{if .InstallXLR}}
     xlrAdminPass: {{ .xlrAdminPass }}
     xlrLic: {{ .xlrLic | b64enc }}
+      {{if .externalDatabase}}
     xlrDbUrl: {{ .xlrDbUrl }}
+    xlrReportDbUrl: {{ .xlrReportDbUrl }}
+      {{else}}
     xlrDbName: {{ .xlrDbName }}
+    xlrReportDbName: {{ .xlrReportDbName }}
+      {{end}}
     xlrDbUser: {{ .xlrDbUser }}
     xlrDbPass: {{ .xlrDbPass }}
-    xlrReportDbUrl: {{ .xlrReportDbUrl }}
-    xlrReportDbName: {{ .xlrReportDbName }}
     xlrReportDbUser: {{ .xlrReportDbUser }}
     xlrReportDbPass: {{ .xlrReportDbPass }}
+    {{end}}
     xlKeyStore: {{ .xlKeyStore | b64enc }}
     xlKeyStorePass: {{ .xlKeyStorePass }}
     InstallMonitoring: {{ .InstallMonitoring }}
+    {{if .InstallMonitoring}}
     MonitoringDataRetention: {{ .MonitoringDataRetention }}
     monitoringUser: {{ .monitoringUser }}
     monitoringUserPass: {{ .monitoringUserPass }}
+    {{end}}
+    {{if not .externalDatabase}}
     PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
     postgresMaxConn: {{ .postgresMaxConn }}
     postgresSharedBuff: {{ .postgresSharedBuff }}
     postgresEffectCacheSize: {{ .postgresEffectCacheSize }}
     postgresSyncCommit: {{ .postgresSyncCommit }}
     postgresMaxWallSize: {{ .postgresMaxWallSize }}
+    {{end}}
