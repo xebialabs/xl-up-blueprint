@@ -126,8 +126,8 @@ pipeline {
                     unstash name: "xl-up"
                     awsAccessKey = getAwsAccessKey()
                     eksEndpoint = getEksEndpoint()
-                    //efsFileSystem = getEfsFileSystem()
-                    def tests = [:]
+                    efsFileSystem = getEfsFileSystem()
+                    tests = [:]
                     testCases.each {
                         tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
                     }
@@ -144,25 +144,25 @@ def notifySlack(String message, String notificationColor) {
 }
 
 def getAwsAccessKey() {
-    return awsAccessKey = sh (
+    return sh (
             script: 'aws sts get-caller-identity --query \'UserId\' --output text',
             returnStdout: true
     ).trim()
 }
 
 def getEksEndpoint() {
-    return eksEndpoint = sh (
+    return sh (
             script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text',
             returnStdout: true
     ).trim()
 }
 
-/*def getEfsFileSystem() {
-    return efsFileSystem = sh (
+def getEfsFileSystem() {
+    return sh (
             script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text',
             returnStdout: true
     ).trim()
-}*/
+}
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
     sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
