@@ -124,6 +124,7 @@ pipeline {
                         stash name: "xl-up", includes: "build/darwin-amd64/xl"
                     }
                     unstash name: "xl-up"*/
+                    awsAccessKey =
                     awsAccessKey = getAwsAccessKey()
                     echo awsAccessKey
                     eksEndpoint = getEksEndpoint()
@@ -149,21 +150,21 @@ def notifySlack(String message, String notificationColor) {
 def getAwsAccessKey() {
     return sh (
             script: 'aws sts get-caller-identity --query \'UserId\'',
-            returnStdout: true
+            returnStatus: true
     ).trim()
 }
 
 def getEksEndpoint() {
     return sh (
             script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'',
-            returnStdout: true
+            returnStatus: true
     ).trim()
 }
 
 def getEfsFileSystem() {
     return sh (
             script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'',
-            returnStdout: true
+            returnStatus: true
     ).trim()
 }
 
