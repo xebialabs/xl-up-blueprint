@@ -127,7 +127,9 @@ pipeline {
                     awsAccessKey = getAwsAccessKey()
                     echo awsAccessKey
                     eksEndpoint = getEksEndpoint()
+                    echo eksEndpoint
                     efsFileSystem = getEfsFileSystem()
+                    echo efsFileSystem
                     tests = [:]
                     testCases.each {
                         tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
