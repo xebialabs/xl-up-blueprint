@@ -94,7 +94,7 @@ pipeline {
                         sh "git clone git@github.com:xebialabs/xl-cli.git"
                     }
                     dir('${env.WORKSPACE}/xl-cli') {
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x goTest -x updateLicenses -PincludeXlUp"
+                        sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
                     }
                     awsAccessKey = getAwsAccessKey()
                     eksEndpoint = getEksEndpoint()
@@ -120,7 +120,7 @@ pipeline {
                 script{
                     sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                     dir('${env.WORKSPACE}/xl-cli') {
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x goTest -x updateLicenses -PincludeXlUp"
+                        sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
                     }
                 }
             }
