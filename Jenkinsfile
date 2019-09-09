@@ -1,4 +1,6 @@
 #!groovy
+@Library('jenkins-pipeline-libs@master')
+
 import groovy.transform.Field
 
 @Field def testCases = ["eks-xld-xlr-mon"]
