@@ -119,6 +119,9 @@ pipeline {
             steps {
                 script{
                     sh "git clone git@github.com:xebialabs/xl-cli.git"
+                    dir('${env.WORKSPACE}/xl-cli') {
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x goTest -x updateLicenses -PincludeXlUp"
+                    }
                 }
             }
         }
