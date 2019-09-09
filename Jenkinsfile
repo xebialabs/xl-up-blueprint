@@ -127,8 +127,8 @@ pipeline {
                     awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\'', returnStatus: true)
                     eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'', returnStatus: true)
                     efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStatus: true)
-                    /*tests = [:]
-                    testCases.each {
+                    tests = [:]
+                    /*testCases.each {
                         tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
                     }
                     parallel tests*/
