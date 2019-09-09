@@ -43,7 +43,7 @@ pipeline {
 
             }
         }
-        stage('Run XL UP Master') {
+        /*stage('Run XL UP Master') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -74,7 +74,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('Run XL UP Branch') {
             agent {
                 node {
