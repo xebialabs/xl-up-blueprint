@@ -152,14 +152,14 @@ def getAwsAccessKey() {
 
 def getEksEndpoint() {
     return eksEndpoint = sh (
-            script: 'aws eks describe-cluster --name xld-perf-master --query \'cluster.endpoint\' --output text',
+            script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text',
             returnStdout: true
     ).trim()
 }
 
 def getEfsFileSystem() {
     return efsFileSystem = sh (
-            script: 'aws efs describe-file-systems --query \'FileSystems[0].FileSystemId\' --output text',
+            script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text',
             returnStdout: true
     ).trim()
 }
