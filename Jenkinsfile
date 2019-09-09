@@ -118,19 +118,15 @@ pipeline {
             }
             steps {
                 script{
-                    /*sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                    sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                     dir('xl-cli') {
                         sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
                         stash name: "xl-up", includes: "build/darwin-amd64/xl"
                     }
-                    unstash name: "xl-up"*/
-                    awsAccessKey =
+                    unstash name: "xl-up"
                     awsAccessKey = getAwsAccessKey()
-                    echo awsAccessKey
                     eksEndpoint = getEksEndpoint()
-                    echo eksEndpoint
                     efsFileSystem = getEfsFileSystem()
-                    echo efsFileSystem
                     tests = [:]
                     testCases.each {
                         tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
