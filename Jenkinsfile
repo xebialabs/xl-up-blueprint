@@ -41,7 +41,7 @@ pipeline {
         stage('Run XL UP Master') {
             agent {
                 node {
-                    label 'xld|xlr|xli'
+                    label 'xld||xlr||xli'
                 }
             }
 
@@ -65,6 +65,7 @@ pipeline {
                             tests.put(runXlUpTest(${it}))
                         }
                         parallel tests
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
                     }
                 }
             }
@@ -72,7 +73,7 @@ pipeline {
         stage('Run XL UP Branch') {
             agent {
                 node {
-                    label 'xld|xlr|xli'
+                    label 'xld||xlr||xli'
                 }
             }
 
@@ -99,6 +100,7 @@ pipeline {
                             tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
                         }
                         parallel tests
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
                     }
                 }
             }
