@@ -119,7 +119,7 @@ pipeline {
             steps {
                 script{
                     sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                    dir('${env.WORKSPACE}/xl-cli') {
+                    dir('xl-cli') {
                         sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
                     }
                 }
