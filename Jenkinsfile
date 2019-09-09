@@ -145,21 +145,21 @@ def notifySlack(String message, String notificationColor) {
 
 def getAwsAccessKey() {
     return sh (
-            script: 'aws sts get-caller-identity --query \'UserId\' --output text',
+            script: 'aws sts get-caller-identity --query \'UserId\'',
             returnStdout: true
     ).trim()
 }
 
 def getEksEndpoint() {
     return sh (
-            script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text',
+            script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'',
             returnStdout: true
     ).trim()
 }
 
 def getEfsFileSystem() {
     return sh (
-            script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text',
+            script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'',
             returnStdout: true
     ).trim()
 }
