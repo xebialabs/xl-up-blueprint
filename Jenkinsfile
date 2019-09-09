@@ -126,7 +126,7 @@ pipeline {
                     unstash name: "xl-up"
                     awsAccessKey = getAwsAccessKey()
                     eksEndpoint = getEksEndpoint()
-                    efsFileSystem = getEfsFileSystem()
+                    //efsFileSystem = getEfsFileSystem()
                     def tests = [:]
                     testCases.each {
                         tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
@@ -157,12 +157,12 @@ def getEksEndpoint() {
     ).trim()
 }
 
-def getEfsFileSystem() {
+/*def getEfsFileSystem() {
     return efsFileSystem = sh (
             script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text',
             returnStdout: true
     ).trim()
-}
+}*/
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
     sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
