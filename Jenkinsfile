@@ -1,4 +1,7 @@
 #!groovy
+import groovy.transform.Field
+
+@Field def testCases = ["eks-xld-xlr-mon"]
 
 pipeline {
     agent none
@@ -54,10 +57,14 @@ pipeline {
                         sh "git clone git@github.com:xebialabs/xl-cli.git"
                     }
                     dir('${env.WORKSPACE}/xl-cli') {
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x goTest -x updateLicenses -PincludeXlUp"
                     }
                     dir('${env.WORKSPACE}') {
-                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/local-kube.yaml -b xl-infra -l xl-up-blueprint"
+                        def tests = [:]
+                        testCases.each {
+                            tests.put(runXlUpTest(${it}))
+                        }
+                        parallel tests
                     }
                 }
             }
@@ -81,10 +88,17 @@ pipeline {
                         sh "git clone git@github.com:xebialabs/xl-cli.git"
                     }
                     dir('${env.WORKSPACE}/xl-cli') {
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
+                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x goTest -x updateLicenses -PincludeXlUp"
                     }
+                    awsAccessKey = getAwsAccessKey()
+                    eksEndpoint = getEksEndpoint()
+                    efsFileSystem = getEfsFileSystem()
                     dir('${env.WORKSPACE}') {
-                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/local-kube.yaml -b xl-infra -l xl-up-blueprint"
+                        def tests = [:]
+                        testCases.each {
+                            tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
+                        }
+                        parallel tests
                     }
                 }
             }
@@ -95,4 +109,31 @@ pipeline {
 def notifySlack(String message, String notificationColor) {
     slackSend(color: "${notificationColor}", message: "$message (<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>)",
             channel: "#kubicorns", tokenCredentialId: "slack-token")
+}
+
+def getAwsAccessKey() {
+    return awsAccessKey = sh (
+            script: 'aws sts get-caller-identity --query \'UserId\' --output text',
+            returnStdout: true
+    ).trim()
+}
+
+def getEksEndpoint() {
+    return eksEndpoint = sh (
+            script: 'aws eks describe-cluster --name xld-perf-master --query \'cluster.endpoint\' --output text',
+            returnStdout: true
+    ).trim()
+}
+
+def getEfsFileSystem() {
+    return efsFileSystem = sh (
+            script: 'aws efs describe-file-systems --query \'FileSystems[0].FileSystemId\' --output text',
+            returnStdout: true
+    ).trim()
+}
+
+def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
+    sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
+    sh "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
+    sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint"
 }
