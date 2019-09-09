@@ -1,5 +1,8 @@
 #!groovy
 @Library('jenkins-pipeline-libs@master')
+import com.xebialabs.pipeline.utils.Branches
+import com.xebialabs.pipeline.globals.Globals
+import com.xebialabs.pipeline.utils.Touch
 
 import groovy.transform.Field
 
