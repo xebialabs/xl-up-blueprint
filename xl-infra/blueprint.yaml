@@ -17,7 +17,6 @@ spec:
         - Google Kubernetes Engine
         - Plain multinode K8s cluster
       saveInXlvals: true
-      ignoreIfSkipped: true
       description: "The flavor of Kubernetes which the XebiaLabs Devops Platform should be deployed to"
 
     - name: useKubeconfig
