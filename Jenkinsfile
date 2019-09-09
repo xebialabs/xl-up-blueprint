@@ -151,21 +151,21 @@ def getAwsAccessKey() {
     return sh (
             script: 'aws sts get-caller-identity --query \'UserId\'',
             returnStatus: true
-    ).trim()
+    )
 }
 
 def getEksEndpoint() {
     return sh (
             script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'',
             returnStatus: true
-    ).trim()
+    )
 }
 
 def getEfsFileSystem() {
     return sh (
             script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'',
             returnStatus: true
-    ).trim()
+    )
 }
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
