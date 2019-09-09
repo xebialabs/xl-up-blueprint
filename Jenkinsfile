@@ -74,7 +74,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
         stage('Run XL UP Branch') {
             agent {
                 node {
@@ -107,6 +107,18 @@ pipeline {
                         parallel tests
                         sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
                     }
+                }
+            }
+        }*/
+        stage('Clone deneme') {
+            agent {
+                node {
+                    label 'xld||xlr||xli'
+                }
+            }
+            steps {
+                script{
+                    sh "git clone git@github.com:xebialabs/xl-cli.git"
                 }
             }
         }
