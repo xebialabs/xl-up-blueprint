@@ -33,10 +33,10 @@ pipeline {
                         checkout scm
                         sh "python3.7 integration_tests.py"
                         githubNotify context: "Testing blueprint", status: "SUCCESS"
-                        notifySlack("Testing blueprint succeeded", "good")
+                        //notifySlack("Testing blueprint succeeded", "good")
                     } catch (err) {
                         githubNotify context: "Testing blueprint", status: "FAILURE"
-                        notifySlack("Testing blueprint failed", "danger")
+                        //notifySlack("Testing blueprint failed", "danger")
                         throw err
                     }
                 }
@@ -134,10 +134,10 @@ pipeline {
     }
 }
 
-/*def notifySlack(String message, String notificationColor) {
+def notifySlack(String message, String notificationColor) {
     slackSend(color: "${notificationColor}", message: "$message (<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>)",
             channel: "#kubicorns", tokenCredentialId: "slack-token")
-}*/
+}
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
     sh (script: "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml", returnStdout: true)
