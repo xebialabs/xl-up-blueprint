@@ -117,7 +117,7 @@ pipeline {
                 }
             }
             steps {
-                script{
+                script {
                     /*sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                     dir('xl-cli') {
                         sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
@@ -127,7 +127,11 @@ pipeline {
                     awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\'', returnStatus: true)
                     eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'', returnStatus: true)
                     efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStatus: true)
-                    runXlUpTest("eks-xld-xlr-mon", awsAccessKey, eksEndpoint)
+                    testCases.each {
+                        sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$it.yaml"
+                        sh "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
+                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint"
+                    }
                 }
             }
         }
@@ -140,7 +144,7 @@ def notifySlack(String message, String notificationColor) {
 }
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
-    sh (script: "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml", returnStdout: true)
-    sh (script: "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml", returnStdout: true)
-    sh (script: "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint", returnStdout: true)
+    sh (script: "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml")
+    sh (script: "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml")
+    sh (script: "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint")
 }
