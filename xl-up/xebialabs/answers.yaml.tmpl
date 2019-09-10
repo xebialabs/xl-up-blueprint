@@ -9,11 +9,14 @@ data:
     useKubeconfig: {{ .useKubeconfig }}
     apiServerURL: {{ .apiServerURL }}
     OsType: {{ .OsType }}
+    {{if or (and (not .useKubeconfig) (ne .K8sSetup "AWS EKS")) (eq .K8sSetup "Google Kubernetes Engine)")}}
     K8sAuthentication: {{ .K8sAuthentication }}
+    {{end}}
     {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
     localApiServerURL: {{ .localApiServerURL }}
     {{end}}
-    {{if and (or (eq .K8sToken "none") (eq .K8sToken "")) (ne .K8sSetup "AWS EKS)")}}
+    {{if or (eq .K8sToken "none") (eq .K8sToken "")}}
+     {{if ne .K8sSetup "AWS EKS"}}
       {{if eq .K8sClientCert ""}}
     K8sClientCertFile: {{ .CertFile }}
     K8sClientCert: {{ .K8sClientCertFile | b64enc }}
@@ -28,6 +31,7 @@ data:
       {{if eq .K8sClientKeyFile ""}}
     K8sClientKey: {{ .K8sClientKey | b64enc }}
       {{ end }}
+     {{end}}
     {{end}}
     {{if eq .K8sSetup "Google Kubernetes Engine"}}
     IsGKE: {{eq .K8sSetup "Google Kubernetes Engine"}}
@@ -103,7 +107,9 @@ data:
     monitoringUserPass: {{ .monitoringUserPass }}
     {{end}}
     {{if not .externalDatabase}}
+      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
     PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
+      {{end}}
     postgresMaxConn: {{ .postgresMaxConn }}
     postgresSharedBuff: {{ .postgresSharedBuff }}
     postgresEffectCacheSize: {{ .postgresEffectCacheSize }}
