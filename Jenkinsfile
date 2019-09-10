@@ -19,7 +19,7 @@ pipeline {
     }
 
     stages {
-        stage('Test xl-up Blueprint') {
+        /*stage('Test xl-up Blueprint') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -43,7 +43,7 @@ pipeline {
 
             }
         }
-        /*stage('Run XL UP Master') {
+        stage('Run XL UP Master') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -123,8 +123,8 @@ pipeline {
                         awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\'', returnStdout: true)
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'', returnStdout: true)
                         efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true)
-                        sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-                        sh "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+                        sh "sed -e 's@https:\\/\\/aws-eks.com:6443@$eksEndpoint@g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+                        sh "sed -e 's@SOMEKEY@$awsAccessKey@g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
                         sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
                     } catch (err) {
                         throw err
