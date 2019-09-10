@@ -127,7 +127,6 @@ pipeline {
                     awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\'', returnStatus: true)
                     eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'', returnStatus: true)
                     efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStatus: true)
-                    tests = [:]
                     runXlUpTest("eks-xld-xlr-mon", awsAccessKey, eksEndpoint)
                 }
             }
@@ -135,10 +134,10 @@ pipeline {
     }
 }
 
-def notifySlack(String message, String notificationColor) {
+/*def notifySlack(String message, String notificationColor) {
     slackSend(color: "${notificationColor}", message: "$message (<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>)",
             channel: "#kubicorns", tokenCredentialId: "slack-token")
-}
+}*/
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
     sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
