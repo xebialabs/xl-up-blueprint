@@ -140,7 +140,7 @@ pipeline {
 }*/
 
 def runXlUpTest(String testCase, String awsAccessKey, String eksEndpoint) {
-    sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
-    sh "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
-    sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint"
+    sh (script: "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml", returnStdout: true)
+    sh (script: "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml", returnStdout: true)
+    sh (script: "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint", returnStdout: true)
 }
