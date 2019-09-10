@@ -123,7 +123,9 @@ pipeline {
                         awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true)
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true)
                         efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true)
-                        updateProperty("https://aws-eks.com:6443","${eksEndpoint}","eks-xld-xlr-mon")
+                        property = "https://aws-eks.com:6443"
+                        file = "eks-xld-xlr-mon"
+                        updateProperty(property,eksEndpoint,file)
                         //sh "sed -ie 's@https://aws-eks.com:6443@${eksEndpoint}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
                         //sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
                         //sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
@@ -142,7 +144,7 @@ def notifySlack(String message, String notificationColor) {
             channel: "#kubicorns", tokenCredentialId: "slack-token")
 }
 
-def updateProperty(String property, GString value, String file) {
+def updateProperty(String property, value, String file) {
     escapedProperty = property.replace('[', '\\[').replace(']', '\\]').replace('.', '\\.')
     escapedValue = value.replace('[', '\\[').replace(']', '\\]').replace('.', '\\.')
     sh "sed -i 's|$escapedProperty|$escapedValue|g' xl-up/__test__/test-cases/external-db/$file.yaml"
