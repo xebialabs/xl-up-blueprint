@@ -116,23 +116,21 @@ pipeline {
                     label 'xld||xlr||xli'
                 }
             }
+
             steps {
                 script {
-                    /*sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                    dir('xl-cli') {
-                        sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
-                        stash name: "xl-up", includes: "build/darwin-amd64/xl"
-                    }
-                    unstash name: "xl-up"*/
-                    awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\'', returnStatus: true)
-                    eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'', returnStatus: true)
-                    efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStatus: true)
-                    testCases.each {
-                        sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$it.yaml"
-                        sh "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml"
-                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/$testCase.yaml -b xl-infra -l xl-up-blueprint"
+                    try {
+                        awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\'', returnStdout: true)
+                        eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\'', returnStdout: true)
+                        efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true)
+                        sh "sed -e 's/https:\\/\\/aws-eks.com:6443/$eksEndpoint/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+                        sh "sed -e 's/SOMEKEY/$awsAccessKey/g' xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
+                    } catch (err) {
+                        throw err
                     }
                 }
+
             }
         }
     }
