@@ -122,7 +122,7 @@ pipeline {
                     try {
                         sh "mkdir -p xld"
                         dir('xld') {
-                            sh "git clone git@github.com:xebialabs/xl-cli.git"
+                            sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
                         dir('xld/xl-cli') {
                             sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
