@@ -120,6 +120,14 @@ pipeline {
             steps {
                 script {
                     try {
+                        dir('${env.WORKSPACE}') {
+                            sh "git clone git@github.com:xebialabs/xl-cli.git"
+                        }
+                        dir('${env.WORKSPACE}/xl-cli') {
+                            sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
+                            stash name: "xl-up", inludes: "build/darwin-amd64/xl"
+                        }
+                        unstash name: "xl-up"
                         awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
