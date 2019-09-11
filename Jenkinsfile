@@ -120,16 +120,12 @@ pipeline {
             steps {
                 script {
                     try {
-                        //awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true)
+                        awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
-                        eksEnd = sh "aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text"
-                        //efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true)
-                        property = "https://aws-eks.com:6443"
-                        file = "eks-xld-xlr-mon"
-                        sh "echo xxx${eksEndpoint}xxx"
+                        efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
                         sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-                        //sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-                        //sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
+                        sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
                     } catch (err) {
                         throw err
                     }
@@ -143,10 +139,4 @@ pipeline {
 def notifySlack(String message, String notificationColor) {
     slackSend(color: "${notificationColor}", message: "$message (<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>)",
             channel: "#kubicorns", tokenCredentialId: "slack-token")
-}
-
-def updateProperty(String property, GString value, String file) {
-    escapedProperty = property.replace('[', '\\[').replace(']', '\\]').replace('.', '\\.')
-    escapedValue = value.toString().replace('[', '\\[').replace(']', '\\]').replace('.', '\\.')
-    sh "sed -i 's|$escapedProperty|$escapedValue|g' xl-up/__test__/test-cases/external-db/$file.yaml"
 }
