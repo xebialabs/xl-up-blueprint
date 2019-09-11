@@ -107,7 +107,7 @@ spec:
 
     - name: K8sClientCert
       type: SecretEditor
-      prompt: "Using the Kubernetes client certificate from your context"
+    #   prompt: "Using the Kubernetes client certificate from your context"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -115,7 +115,7 @@ spec:
 
     - name: K8sClientKey
       type: SecretEditor
-      prompt: "Using the Kubernetes client certificate key from your context"
+    #   prompt: "Using the Kubernetes client certificate key from your context"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
