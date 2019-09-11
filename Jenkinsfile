@@ -126,7 +126,7 @@ pipeline {
                         property = "https://aws-eks.com:6443"
                         file = "eks-xld-xlr-mon"
                         sh "echo $eksEndpoint"
-                        sh "sed -ie s@https://aws-eks.com:6443@${eksEndpoint}@g xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+                        sh "sed -ie s|https://aws-eks.com:6443|${eksEndpoint}|g xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
                         //sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
                         //sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
                     } catch (err) {
