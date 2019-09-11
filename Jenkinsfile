@@ -120,10 +120,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        dir('${env.WORKSPACE}') {
+                        sh "mkdir -p xld"
+                        dir('xld') {
                             sh "git clone git@github.com:xebialabs/xl-cli.git"
                         }
-                        dir('${env.WORKSPACE}/xl-cli') {
+                        dir('xld/xl-cli') {
                             sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
@@ -133,7 +134,7 @@ pipeline {
                         efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
                         sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
                         sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-                        sh "./xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
+                        sh "./xld/xl-cli/xl up -a xl-up-blueprint/xl-infra/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
                     } catch (err) {
                         throw err
                     }
