@@ -64,7 +64,6 @@ expected-xl-values:
   apiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: false
-  xldDbName: xl-deploy
   xldDbUser: xl-deploy
   xlVersion: 8.6.1
   nsfServerHost: nfs-test.com
