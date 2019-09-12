@@ -34,7 +34,7 @@ metadata:
   namespace: {{ .Namespace }}
 spec:
   serviceName: "xl-deploy-worker"
-  replicas: 2
+  replicas: {{ .XLDWorkerCount }}
   updateStrategy:
     type: RollingUpdate
   selector:

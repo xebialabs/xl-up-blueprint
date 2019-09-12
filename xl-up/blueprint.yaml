@@ -281,6 +281,22 @@ spec:
       replaceAsIs: true
       description: "The password that you would like to use for the XL Deploy admin user"
 
+    - name: XLDMasterCount
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the number of XL Deploy masters to spin up"
+      promptIf: !expr "InstallXLD"
+      default: 2
+      description: "XL Deploy can be started up in an active-active setup. This means there can be many 'masters' to coordinate tasks across an arbitrary amount of 'workers'. This setting defines the preferred number of masters to spin up"
+
+    - name: XLDWorkerCount
+      type: Input
+      saveInXlvals: true
+      prompt: "Enter the number of XL Deploy workers to spin up"
+      promptIf: !expr "InstallXLD"
+      default: 2
+      description: "XL Deploy can be started up in an active-active setup. This means there can be many 'workers' to execute deployment tasks. This setting defines the preferred number of workers to spin up"
+
     - name: xldLic
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed

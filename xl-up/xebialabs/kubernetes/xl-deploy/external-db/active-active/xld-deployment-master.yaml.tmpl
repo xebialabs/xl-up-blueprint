@@ -98,7 +98,7 @@ metadata:
   namespace: {{ .Namespace }}
 spec:
   serviceName: "xl-deploy-master"
-  replicas: 2
+  replicas: {{ .XLDMasterCount }}
   updateStrategy:
     type: RollingUpdate
   selector:
