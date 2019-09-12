@@ -71,7 +71,7 @@ expected-xl-values:
   xldDbUser: xl-deploy
   OsType: linux
   PostgresqlWorkHostpath: /psql
-  K8sAuthentication: Client key/certificate [Path to files]
+  K8sAuthentication: FilePath
   useCustomRegistry: true
   registryURL: docker.io/xebialabs
   dockerUser: docker-user

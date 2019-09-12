@@ -82,7 +82,7 @@ expected-xl-values:
   postgresSyncCommit: "off"
   postgresMaxWallSize: 512MB
   OsType: linux
-  K8sAuthentication: Client key/certificate [Path to files]
+  K8sAuthentication: FilePath
 expected-xl-secrets:
   monitoringUserPass: mon-pass
   xlKeyStorePass: test123

@@ -23,7 +23,7 @@ xlKeyStore: ../xl-up/__test__/files/test-file
 xlKeyStorePass: test123
 OsType: linux
 PostgresqlWorkHostpath: /psql
-K8sAuthentication: Client key/certificate [Path to files]
+K8sAuthentication: FilePath
 useCustomRegistry: true
 registryURL: docker.io/xebialabs
 dockerUser: docker-user

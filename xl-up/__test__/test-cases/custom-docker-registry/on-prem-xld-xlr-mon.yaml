@@ -31,7 +31,7 @@ postgresEffectCacheSize: 2GB
 postgresSyncCommit: "off"
 postgresMaxWallSize: 512MB
 OsType: linux
-K8sAuthentication: Client key/certificate [Path to files]
+K8sAuthentication: FilePath
 useCustomRegistry: true
 registryURL: docker.io/xebialabs
 dockerUser: docker-user

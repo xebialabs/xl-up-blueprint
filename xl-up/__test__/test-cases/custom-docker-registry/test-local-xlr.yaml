@@ -70,7 +70,7 @@ expected-xl-values:
   xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
   PostgresqlWorkHostpath: /psql
-  K8sAuthentication: Client key/certificate [Path to files]
+  K8sAuthentication: FilePath
   useCustomRegistry: true
   registryURL: docker.io/xebialabs
   dockerUser: docker-user

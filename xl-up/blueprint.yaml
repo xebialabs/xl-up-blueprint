@@ -59,8 +59,10 @@ spec:
       type: Select
       prompt: "Choose kubernetes authentication type:"
       options:
-        - Client key/certificate [Path to files]
-        - Client key/certificate [User Input]
+        - label: Client key/certificate [Path to files]
+          value: FilePath
+        - label: Client key/certificate [User Input]
+          value: UserInput
         - Token
       promptIf: !expr "(!useKubeconfig && K8sSetup != 'AwsEKS') || K8sSetup == 'GoogleGKE' "
       saveInXlvals: true
@@ -81,7 +83,7 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate:"
-      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
+      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
@@ -90,7 +92,7 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate key:"
-      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
+      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Provide the location of your client key that is used to connect to Kubernetes"
@@ -115,7 +117,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      value: !expr "useKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'Client key/certificate [User Input]' ? k8sConfig('UserClientCertificateData') : ''"
+      value: !expr "useKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'UserInput' ? k8sConfig('UserClientCertificateData') : ''"
 
     - name: K8sClientKey
       type: SecretEditor
@@ -123,7 +125,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      value: !expr "useKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'Client key/certificate [User Input]' ? k8sConfig('UserClientKeyData') : ''"
+      value: !expr "useKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'UserInput' ? k8sConfig('UserClientKeyData') : ''"
 
     - name: eksClusterName
       type: Input

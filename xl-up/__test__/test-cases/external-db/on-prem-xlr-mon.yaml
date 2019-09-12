@@ -20,7 +20,7 @@ InstallMonitoring: true
 monitoringUser: mon-user
 monitoringUserPass: mon-pass
 OsType: linux
-K8sAuthentication: Client key/certificate [Path to files]
+K8sAuthentication: FilePath
 externalDatabase: true
 xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
 xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
