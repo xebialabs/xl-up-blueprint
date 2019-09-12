@@ -1,5 +1,5 @@
 #!groovy
-@Library('jenkins-pipeline-libs@beta')
+@Library('jenkins-pipeline-libs')
 import com.xebialabs.pipeline.utils.Branches
 import com.xebialabs.pipeline.globals.Globals
 import com.xebialabs.pipeline.utils.Touch
