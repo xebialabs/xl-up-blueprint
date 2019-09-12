@@ -119,7 +119,8 @@ pipeline {
 
             when {
                 expression {
-                    !Branches.onMasterBranch(env.BRANCH_NAME)
+                    !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                            githubLabelsPresent(this, ['run-xl-up-pr'])
                 }
             }
 
