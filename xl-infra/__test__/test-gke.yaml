@@ -2,7 +2,7 @@ answers-file: gke.yaml
 expected-files:
   - cm_answer_file_auto.yaml
 expected-xl-values:
-  K8sSetup: Google Kubernetes Engine
+  K8sSetup: GoogleGKE
   useKubeconfig: false
   K8sAuthentication: Token
   apiServerURL: https://1.2.3.4:6443

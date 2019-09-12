@@ -1,4 +1,4 @@
-K8sSetup: AWS EKS
+K8sSetup: AwsEKS
 useKubeconfig: true
 useAWSconfig: true
 InstallXLD: true

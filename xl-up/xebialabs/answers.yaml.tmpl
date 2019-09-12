@@ -9,14 +9,14 @@ data:
     useKubeconfig: {{ .useKubeconfig }}
     apiServerURL: {{ .apiServerURL }}
     OsType: {{ .OsType }}
-    {{if or (and (not .useKubeconfig) (ne .K8sSetup "AWS EKS")) (eq .K8sSetup "Google Kubernetes Engine")}}
+    {{if or (and (not .useKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE)")}}
     K8sAuthentication: {{ .K8sAuthentication }}
     {{end}}
-    {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+    {{if eq .K8sSetup "LocalK8S"}}
     localApiServerURL: {{ .localApiServerURL }}
     {{end}}
     {{if eq .K8sToken ""}}
-     {{if ne .K8sSetup "AWS EKS"}}
+     {{if ne .K8sSetup "AwsEKS"}}
       {{if eq .K8sClientCert ""}}
     K8sClientCertFile: {{ .CertFile }}
     K8sClientCert: {{ .K8sClientCertFile | b64enc }}
@@ -33,12 +33,12 @@ data:
       {{ end }}
      {{end}}
     {{end}}
-    {{if eq .K8sSetup "Google Kubernetes Engine"}}
-    IsGKE: {{eq .K8sSetup "Google Kubernetes Engine"}}
+    {{if eq .K8sSetup "GoogleGKE"}}
+    IsGKE: {{eq .K8sSetup "GoogleGKE"}}
     K8sToken: {{ .K8sToken}}
     {{end}}
-    {{if eq .K8sSetup "AWS EKS" }}
-    IsEKS: {{eq .K8sSetup "AWS EKS"}}
+    {{if eq .K8sSetup "AwsEKS" }}
+    IsEKS: {{eq .K8sSetup "AwsEKS"}}
     eksClusterName: {{ .eksClusterName }}
     isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
     useAWSconfig: {{ .useAWSconfig }}
@@ -72,15 +72,15 @@ data:
       {{end}}
     xldDbUser: {{ .xldDbUser }}
     xldDbPass: {{ .xldDbPass }}
-      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+      {{if eq .K8sSetup "LocalK8S"}}
     xldWorkHostpath: {{ .xldWorkHostpath }}
       {{end}}
     {{end}}
-    {{if eq .K8sSetup "AWS EKS" }}
+    {{if eq .K8sSetup "AwsEKS" }}
     efsId: {{ .efsId }}
     efsRegion: {{ .efsRegion }}
     {{end}}
-    {{if (or (eq .K8sSetup "Google Kubernetes Engine" ) (eq .K8sSetup "Plain multinode K8s cluster"))}}
+    {{if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster"))}}
     nsfServerHost: {{ .nsfServerHost }}
     nsfSharePath: {{ .nsfSharePath }}
     {{end}}
@@ -108,7 +108,7 @@ data:
     monitoringUserPass: {{ .monitoringUserPass }}
     {{end}}
     {{if not .externalDatabase}}
-      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+      {{if eq .K8sSetup "LocalK8S"}}
     PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
       {{end}}
     postgresMaxConn: {{ .postgresMaxConn }}

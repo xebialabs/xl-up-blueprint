@@ -61,7 +61,7 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
-  K8sSetup: Local K8s from Docker Desktop for Mac/Windows
+  K8sSetup: LocalK8S
   useKubeconfig: false
   localApiServerURL: https://localk8s.com:8443
   InstallXLD: true

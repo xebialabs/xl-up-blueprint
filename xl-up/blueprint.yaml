@@ -12,10 +12,14 @@ spec:
       type: Select
       prompt: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
       options:
-        - Local K8s from Docker Desktop for Mac/Windows
-        - AWS EKS
-        - Google Kubernetes Engine
-        - Plain multinode K8s cluster
+        - label: Local K8s from Docker Desktop for Mac/Windows
+          value: LocalK8S
+        - label: AWS EKS
+          value: AwsEKS
+        - label: Google Kubernetes Engine
+          value: GoogleGKE
+        - label: Plain multi-node K8s cluster
+          value: PlainK8SCluster
       saveInXlvals: true
       description: "The flavour of Kubernetes to deploy the XebiaLabs Devops Platform to. Other flavors like Minikube are not supported, only the listed options are supported"
 
@@ -32,7 +36,7 @@ spec:
       type: Input
       prompt: "Enter the ApiServerURL of your Kubernetes installation:"
       default: !expr "k8sConfig('ClusterServer')"
-      promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      promptIf: !expr "!useKubeconfig && K8sSetup != 'LocalK8S'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
@@ -46,7 +50,7 @@ spec:
 
     - name: localApiServerURL
       type: Input
-      value: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' ? os('_defaultapiserverurl') : ''"
+      value: !expr "K8sSetup == 'LocalK8S' ? os('_defaultapiserverurl') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
@@ -58,7 +62,7 @@ spec:
         - Client key/certificate [Path to files]
         - Client key/certificate [User Input]
         - Token
-      promptIf: !expr "(!useKubeconfig && K8sSetup != 'AWS EKS') || K8sSetup == 'Google Kubernetes Engine' "
+      promptIf: !expr "(!useKubeconfig && K8sSetup != 'AwsEKS') || K8sSetup == 'GoogleGKE' "
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "How xl up will authenticate with your Kubernetes cluster"
@@ -67,7 +71,7 @@ spec:
       type: SecretInput
       #type: SecretEditor
       prompt: "Provide authentication token for the existing service account:"
-      promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Token'"
+      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'Token'"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -77,7 +81,7 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate:"
-      promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
+      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
@@ -86,7 +90,7 @@ spec:
       type: File
       # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
       prompt: "Enter the full path to your Kubernetes client certificate key:"
-      promptIf: !expr "K8sSetup != 'AWS EKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
+      promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'Client key/certificate [Path to files]'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Provide the location of your client key that is used to connect to Kubernetes"
@@ -94,13 +98,13 @@ spec:
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
-      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getcertfilelocation') : ''"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
-      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AWS EKS' ? os('getkeyfilelocation') : ''"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
       # END
@@ -111,7 +115,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientCertificateData') : ''"
+      value: !expr "useKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'Client key/certificate [User Input]' ? k8sConfig('UserClientCertificateData') : ''"
 
     - name: K8sClientKey
       type: SecretEditor
@@ -119,13 +123,13 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      value: !expr "useKubeconfig && K8sSetup != 'AWS EKS' && K8sAuthentication != 'Client key/certificate [Path to files]' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : ''"
+      value: !expr "useKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'Client key/certificate [User Input]' ? k8sConfig('UserClientKeyData') : ''"
 
     - name: eksClusterName
       type: Input
       prompt: "What is the Amazon EKS cluster name?"
-      promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
-      default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster') : ''"
+      promptIf: !expr "!useKubeconfig && K8sSetup == 'AwsEKS' "
+      default: !expr "K8sSetup == 'AwsEKS' ? k8sConfig('ContextCluster') : ''"
       saveInXlvals: true
       #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
       #ignoreIfSkipped: true
@@ -134,12 +138,12 @@ spec:
     - name: isAwsCfgAvailable
       type: Confirm
       ignoreIfSkipped: true
-      value: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('IsAvailable') : ''"
+      value: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('IsAvailable') : ''"
 
     - name: useAWSconfig
       type: Confirm
       prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
-      promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AWS EKS'"
+      promptIf: !expr "isAwsCfgAvailable && K8sSetup == 'AwsEKS'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Use the currently configured profile and associated credentials from your $HOME/.aws/credentials file. From this file xl up will get the credentials from the [default] section. These credentials are required for xl up in order to connect to your AWS EKS cluster"
@@ -147,23 +151,23 @@ spec:
     - name: AWSAccessKey
       type: SecretInput
       prompt: "What is the AWS access key ID?"
-      promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
+      promptIf: !expr "!useAWSconfig && K8sSetup == 'AwsEKS' "
       saveInXlvals: true
       #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
       #ignoreIfSkipped: true
       replaceAsIs: true
-      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : ''"
+      default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('AccessKeyID') : ''"
       description: "Your AWS access key ID. AWS access key ID is required for xl up in order to connect to your AWS EKS cluster"
 
     - name: AWSAccessSecret
       type: SecretInput
       prompt: "What is the AWS secret access key?"
-      promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
+      promptIf: !expr "!useAWSconfig && K8sSetup == 'AwsEKS' "
       saveInXlvals: true
       #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
       #ignoreIfSkipped: true
       replaceAsIs: true
-      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey') : ''"
+      default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('SecretAccessKey') : ''"
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
 
     - name: Namespace
@@ -366,14 +370,14 @@ spec:
       ignoreIfSkipped: true
       prompt: "Enter your Amazon EFS ID:"
       description: "The ID of the AWS EFS instance which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your AWS EFS instance can be mounted in the nodes of your AWS EKS cluster"
-      promptIf: !expr "K8sSetup == 'AWS EKS'"
+      promptIf: !expr "K8sSetup == 'AwsEKS'"
 
     - name: efsRegion
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter your Amazon EFS region:"
-      promptIf: !expr "K8sSetup == 'AWS EKS'"
+      promptIf: !expr "K8sSetup == 'AwsEKS'"
       description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
 
     - name: nsfServerHost
@@ -381,7 +385,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter your NFS server name or IP address:"
-      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
+      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
 
     - name: nsfSharePath
@@ -389,7 +393,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter your NFS share path:"
-      promptIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
+      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
       description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
 
     - name: xldWorkHostpath
@@ -397,7 +401,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the local directory path that XL Deploy can use as a work directory:"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && InstallXLD && OsType != 'linux' "
+      promptIf: !expr "K8sSetup == 'LocalK8S' && InstallXLD && OsType != 'linux' "
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where XL Deploy will persist the data from the work directory. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
 
     - name: xlrAdminPass
@@ -515,8 +519,8 @@ spec:
     - name: InstallMonitoring
       type: Confirm
       prompt: "Do you want to install monitoring?"
-      default: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      default: !expr "K8sSetup != 'LocalK8S'"
+      promptIf: !expr "K8sSetup != 'LocalK8S'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
@@ -607,53 +611,53 @@ spec:
     - path: xebialabs/xl-k8s-foundation.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS' || K8sSetup == 'Google Kubernetes Engine'"
+      writeIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS'"
+      writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Google Kubernetes Engine'"
+      writeIf: !expr "K8sSetup == 'GoogleGKE'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/dockercred.yaml.tmpl
       writeIf: !expr "useCustomRegistry"
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
       writeIf: !expr "!externalDatabase"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
+      writeIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
+      writeIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'Plain multinode K8s cluster' || K8sSetup == 'Google Kubernetes Engine'"
+      writeIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
     #xl-deploy
     - path: xebialabs/xl-deploy.yaml.tmpl
       writeIf: InstallXLD
     - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLD && K8sSetup == 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml.tmpl
-      writeIf:  !expr "K8sSetup == 'AWS EKS'"
+      writeIf:  !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS'"
+      writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS'"
+      writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AWS EKS'"
+      writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     #xl-release
     - path: xebialabs/xl-release.yaml.tmpl
       writeIf: InstallXLR
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLR && K8sSetup == 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
+      writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
       writeIf: !expr "InstallMonitoring"

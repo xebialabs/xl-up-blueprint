@@ -60,7 +60,7 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
-  K8sSetup: AWS EKS
+  K8sSetup: AwsEKS
   useKubeconfig: false
   apiServerURL: https://aws-eks.com:6443
   useAWSconfig: false

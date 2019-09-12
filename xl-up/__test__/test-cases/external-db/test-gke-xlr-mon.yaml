@@ -60,7 +60,7 @@ not-expected-files:
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
 expected-xl-values:
-  K8sSetup: Google Kubernetes Engine
+  K8sSetup: GoogleGKE
   useKubeconfig: false
   apiServerURL: https://k8s.com:6443
   InstallXLD: false
