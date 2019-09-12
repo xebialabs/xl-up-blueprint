@@ -117,12 +117,6 @@ pipeline {
                 }
             }
 
-            when {
-                expression {
-                    githubLabelsPresent(this, ['run-xl-up-pr'])
-                }
-            }
-
             steps {
                 script {
                     try {
