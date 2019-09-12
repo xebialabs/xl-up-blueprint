@@ -550,7 +550,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      promptIf: !expr "!externalDatabase"
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
 
     - name: postgresMaxConn
@@ -558,8 +558,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Specify the max_connections parameter for PostgreSQL:"
-      default: 512
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      default: !expr "externalDatabase ? '' :  '512'"
+      promptIf: !expr "!externalDatabase"
       description: "The maximum number of connections to allow on the installed PostgreSQL instance. This should always be above 50"
 
     - name: postgresSharedBuff
@@ -567,8 +567,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Specify the shared_buffers parameter for PostgreSQL:"
-      default: 512MB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      default: !expr "externalDatabase ? '' :  '512MB'"
+      promptIf: !expr "!externalDatabase"
       description: "The amount of system buffer space to allocate to the PostgreSQL instance"
 
     - name: postgresEffectCacheSize
@@ -576,8 +576,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Specify the effective_cache_size parameter for PostgreSQL:"
-      default: 1GB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      default: !expr "externalDatabase ? '' :  '1GB'"
+      promptIf: !expr "!externalDatabase"
       description: "The amount of cache space to allocate to the PostgreSQL instance"
 
     - name: postgresSyncCommit
@@ -585,8 +585,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Specify the synchronous_commit parameter for PostgreSQL:"
-      default: "off"
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      default: !expr "externalDatabase ? '' :  'off'"
+      promptIf: !expr "!externalDatabase"
       description: "Turn on if you want synchronous commits in PostgreSQL"
 
     - name: postgresMaxWallSize
@@ -594,8 +594,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Specify the max_wal_size parameter for PostgreSQL:"
-      default: 256MB
-      promptIf: !expr "K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
+      default: !expr "externalDatabase ? '' :  '256MB'"
+      promptIf: !expr "!externalDatabase"
       description: "The maximum size the WAL can reach before being flushed"
 
   files:
