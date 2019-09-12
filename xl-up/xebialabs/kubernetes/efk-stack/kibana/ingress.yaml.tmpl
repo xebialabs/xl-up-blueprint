@@ -26,4 +26,4 @@ kind: Secret
 metadata:
   name: kibana-secret
 data:
-  auth: {{ cat .monitoringUser "::" .monitoringUserPass | b64enc }}
+  auth: {{ cat .MonitoringUser "::" .MonitoringUserPass | b64enc }}

@@ -8,10 +8,10 @@ spec:
           - name: XL-Deploy-Deployment
             type: udm.Application
             children:
-              {{if  .useCustomRegistry }}
-              - name: "{{.xldTag}}"
+              {{if  .UseCustomRegistry }}
+              - name: "{{.XldTag}}"
               {{ else }}
-              - name: "{{.xlVersion}}"
+              - name: "{{.XlVersion}}"
               {{ end }}
                 type: udm.DeploymentPackage
                 orchestrator:

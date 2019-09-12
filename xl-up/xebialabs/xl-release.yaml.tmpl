@@ -8,10 +8,10 @@ spec:
       - name: XL-Release-Deployment
         type: udm.Application
         children:
-        {{if  .useCustomRegistry }}
-        - name: "{{.xlrTag}}"
+        {{if  .UseCustomRegistry }}
+        - name: "{{.XlrTag}}"
         {{ else }}
-        - name: "{{.xlVersion}}"
+        - name: "{{.XlVersion}}"
         {{ end }}
           orchestrator:
             - sequential-by-dependency

@@ -61,30 +61,30 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
 expected-xl-values:
   K8sSetup: PlainK8SCluster
-  useKubeconfig: false
-  apiServerURL: https://k8s.com:6443
+  UseKubeconfig: false
+  ApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: false
-  xldDbName: xl-deploy
-  xldDbUser: xl-deploy
-  nsfServerHost: nfs-test.com
-  nsfSharePath: /xebialabs
+  XldDbName: xl-deploy
+  XldDbUser: xl-deploy
+  NsfServerHost: nfs-test.com
+  NsfSharePath: /xebialabs
   InstallMonitoring: true
-  monitoringUser: mon-user
-  postgresMaxConn: 400
-  postgresSharedBuff: 612MB
-  postgresEffectCacheSize: 2GB
-  postgresSyncCommit: "off"
-  postgresMaxWallSize: 512MB
+  MonitoringUser: mon-user
+  PostgresMaxConn: 400
+  PostgresSharedBuff: 612MB
+  PostgresEffectCacheSize: 2GB
+  PostgresSyncCommit: "off"
+  PostgresMaxWallSize: 512MB
   OsType: linux
   K8sAuthentication: FilePath
-  useCustomRegistry: true
-  registryURL: docker.io/xebialabs
-  dockerUser: docker-user
-  xldVersion: xl-deploy:8.5.3
+  UseCustomRegistry: true
+  RegistryURL: docker.io/xebialabs
+  DockerUser: docker-user
+  XldVersion: xl-deploy:8.5.3
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
-  monitoringUserPass: mon-pass
-  dockerPass: docker-pass
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
+  MonitoringUserPass: mon-pass
+  DockerPass: docker-pass

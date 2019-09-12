@@ -6,9 +6,9 @@ spec:
     children:
       - name: K8s-MASTER-LOCAL
         type: k8s.Master
-        apiServerURL: !value localApiServerURL
+        apiServerURL: !value LocalApiServerURL
         skipTLS: true
-        {{if .useKubeconfig }}
+        {{if .UseKubeconfig }}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
         {{else}}
@@ -23,10 +23,10 @@ spec:
     children:
       - name: EKS-MASTER
         type: k8s.Master
-        apiServerURL: !value apiServerURL
+        apiServerURL: !value ApiServerURL
         skipTLS: true
         isEKS: true
-        clusterName: !value eksClusterName
+        clusterName: !value EksClusterName
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
 {{else}}
@@ -37,7 +37,7 @@ spec:
     children:
       - name: K8s-MASTER
         type: k8s.Master
-        apiServerURL: !value apiServerURL
+        apiServerURL: !value ApiServerURL
         skipTLS: true
         {{if .K8sToken}}
         token: !value K8sToken

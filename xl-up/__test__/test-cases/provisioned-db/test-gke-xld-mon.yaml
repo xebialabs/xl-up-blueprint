@@ -62,26 +62,26 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
 expected-xl-values:
   K8sSetup: GoogleGKE
-  useKubeconfig: false
-  apiServerURL: https://k8s.com:6443
+  UseKubeconfig: false
+  ApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: false
-  xldDbName: xl-deploy
-  xldDbUser: xl-deploy
-  xlVersion: 8.6.1
+  XldDbName: xl-deploy
+  XldDbUser: xl-deploy
+  XlVersion: 8.6.1
   InstallMonitoring: true
-  monitoringUser: mon-user
-  postgresMaxConn: 400
-  postgresSharedBuff: 612MB
-  postgresEffectCacheSize: 2GB
-  postgresSyncCommit: "off"
-  postgresMaxWallSize: 512MB
+  MonitoringUser: mon-user
+  PostgresMaxConn: 400
+  PostgresSharedBuff: 612MB
+  PostgresEffectCacheSize: 2GB
+  PostgresSyncCommit: "off"
+  PostgresMaxWallSize: 512MB
   OsType: linux
   K8sAuthentication: FilePath
-  nsfServerHost: nfs-test.com
-  nsfSharePath: /xebialabs
+  NsfServerHost: nfs-test.com
+  NsfSharePath: /xebialabs
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
-  monitoringUserPass: mon-pass
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
+  MonitoringUserPass: mon-pass
