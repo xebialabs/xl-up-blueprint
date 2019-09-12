@@ -60,28 +60,28 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
 expected-xl-values:
   K8sSetup: AwsEKS
-  useKubeconfig: false
-  apiServerURL: https://aws-eks.com:6443
-  useAWSconfig: false
-  eksClusterName: test-eks-master
+  UseKubeconfig: false
+  ApiServerURL: https://aws-eks.com:6443
+  UseAWSconfig: false
+  EksClusterName: test-eks-master
   InstallXLD: true
   InstallXLR: false
-  xldDbName: xl-deploy
-  xldDbUser: xl-deploy
-  efsId: test1234561
-  efsRegion: eu-west-1
+  XldDbName: xl-deploy
+  XldDbUser: xl-deploy
+  EfsId: test1234561
+  EfsRegion: eu-west-1
   InstallMonitoring: true
-  monitoringUser: mon-user
+  MonitoringUser: mon-user
   OsType: linux
-  useCustomRegistry: true
-  registryURL: docker.io/xebialabs
-  dockerUser: docker-user
-  xldVersion: xl-deploy:8.5.3
+  UseCustomRegistry: true
+  RegistryURL: docker.io/xebialabs
+  DockerUser: docker-user
+  XldVersion: xl-deploy:8.5.3
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY
-  monitoringUserPass: mon-pass
-  dockerPass: docker-pass
+  MonitoringUserPass: mon-pass
+  DockerPass: docker-pass

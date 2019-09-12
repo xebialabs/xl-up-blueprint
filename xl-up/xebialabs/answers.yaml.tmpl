@@ -6,14 +6,14 @@ metadata:
 data:
   answers.yaml: |-
     K8sSetup: {{ .K8sSetup }}
-    useKubeconfig: {{ .useKubeconfig }}
-    apiServerURL: {{ .apiServerURL }}
+    UseKubeconfig: {{ .UseKubeconfig }}
+    ApiServerURL: {{ .ApiServerURL }}
     OsType: {{ .OsType }}
-    {{if or (and (not .useKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE)")}}
+    {{if or (and (not .UseKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE)")}}
     K8sAuthentication: {{ .K8sAuthentication }}
     {{end}}
     {{if eq .K8sSetup "LocalK8S"}}
-    localApiServerURL: {{ .localApiServerURL }}
+    LocalApiServerURL: {{ .LocalApiServerURL }}
     {{end}}
     {{if eq .K8sToken ""}}
      {{if ne .K8sSetup "AwsEKS"}}
@@ -39,80 +39,80 @@ data:
     {{end}}
     {{if eq .K8sSetup "AwsEKS" }}
     IsEKS: {{eq .K8sSetup "AwsEKS"}}
-    eksClusterName: {{ .eksClusterName }}
-    isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
-    useAWSconfig: {{ .useAWSconfig }}
+    EksClusterName: {{ .EksClusterName }}
+    IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
+    UseAWSconfig: {{ .UseAWSconfig }}
     AWSAccessKey: {{ .AWSAccessKey }}
     AWSAccessSecret: {{ .AWSAccessSecret }}
     {{end}}
     Namespace: {{ .Namespace }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
-    {{ if .useCustomRegistry }}
-    xlrVersion: {{ .xlrVersion }}
-    xldVersion: {{ .xldVersion }}
-    dockerUser: {{ .dockerUser }}
-    dockerPass: {{ .dockerPass }}
-    registryURL: {{ .registryURL }}
+    {{ if .UseCustomRegistry }}
+    XlrVersion: {{ .XlrVersion }}
+    XldVersion: {{ .XldVersion }}
+    DockerUser: {{ .DockerUser }}
+    DockerPass: {{ .DockerPass }}
+    RegistryURL: {{ .RegistryURL }}
     {{ else }}
-    xlVersion: {{ .xlVersion }}
+    XlVersion: {{ .XlVersion }}
     {{ end }}
     XlRAMRequest: {{ .XlRAMRequest }}
     XlCPURequest: {{ .XlCPURequest }}
-    dockerRepo: {{ .dockerRepo }}
-    externalDatabase: {{ .externalDatabase }}
+    DockerRepo: {{ .DockerRepo }}
+    ExternalDatabase: {{ .ExternalDatabase }}
     {{if .InstallXLD}}
-    xldAdminPass: {{ .xldAdminPass }}
-    xldLic: {{ .xldLic | b64enc }}
-      {{if .externalDatabase}}
-    xldDbUrl: {{ .xldDbUrl }}
+    XldAdminPass: {{ .XldAdminPass }}
+    XldLic: {{ .XldLic | b64enc }}
+      {{if .ExternalDatabase}}
+    XldDbUrl: {{ .XldDbUrl }}
       {{else}}
-    xldDbName: {{ .xldDbName }}
+    XldDbName: {{ .XldDbName }}
       {{end}}
-    xldDbUser: {{ .xldDbUser }}
-    xldDbPass: {{ .xldDbPass }}
+    XldDbUser: {{ .XldDbUser }}
+    XldDbPass: {{ .XldDbPass }}
       {{if eq .K8sSetup "LocalK8S"}}
-    xldWorkHostpath: {{ .xldWorkHostpath }}
+    XldWorkHostpath: {{ .XldWorkHostpath }}
       {{end}}
     {{end}}
     {{if eq .K8sSetup "AwsEKS" }}
-    efsId: {{ .efsId }}
-    efsRegion: {{ .efsRegion }}
+    EfsId: {{ .EfsId }}
+    EfsRegion: {{ .EfsRegion }}
     {{end}}
     {{if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster"))}}
-    nsfServerHost: {{ .nsfServerHost }}
-    nsfSharePath: {{ .nsfSharePath }}
+    NsfServerHost: {{ .NsfServerHost }}
+    NsfSharePath: {{ .NsfSharePath }}
     {{end}}
     {{if .InstallXLR}}
-    xlrAdminPass: {{ .xlrAdminPass }}
-    xlrLic: {{ .xlrLic | b64enc }}
-      {{if .externalDatabase}}
-    xlrDbUrl: {{ .xlrDbUrl }}
-    xlrReportDbUrl: {{ .xlrReportDbUrl }}
+    XlrAdminPass: {{ .XlrAdminPass }}
+    XlrLic: {{ .XlrLic | b64enc }}
+      {{if .ExternalDatabase}}
+    XlrDbUrl: {{ .XlrDbUrl }}
+    XlrReportDbUrl: {{ .XlrReportDbUrl }}
       {{else}}
-    xlrDbName: {{ .xlrDbName }}
-    xlrReportDbName: {{ .xlrReportDbName }}
+    XlrDbName: {{ .XlrDbName }}
+    XlrReportDbName: {{ .XlrReportDbName }}
       {{end}}
-    xlrDbUser: {{ .xlrDbUser }}
-    xlrDbPass: {{ .xlrDbPass }}
-    xlrReportDbUser: {{ .xlrReportDbUser }}
-    xlrReportDbPass: {{ .xlrReportDbPass }}
+    XlrDbUser: {{ .XlrDbUser }}
+    XlrDbPass: {{ .XlrDbPass }}
+    XlrReportDbUser: {{ .XlrReportDbUser }}
+    XlrReportDbPass: {{ .XlrReportDbPass }}
     {{end}}
-    xlKeyStore: {{ .xlKeyStore | b64enc }}
-    xlKeyStorePass: {{ .xlKeyStorePass }}
+    XlKeyStore: {{ .XlKeyStore | b64enc }}
+    XlKeyStorePass: {{ .XlKeyStorePass }}
     InstallMonitoring: {{ .InstallMonitoring }}
     {{if .InstallMonitoring}}
     MonitoringDataRetention: {{ .MonitoringDataRetention }}
-    monitoringUser: {{ .monitoringUser }}
-    monitoringUserPass: {{ .monitoringUserPass }}
+    MonitoringUser: {{ .MonitoringUser }}
+    MonitoringUserPass: {{ .MonitoringUserPass }}
     {{end}}
-    {{if not .externalDatabase}}
+    {{if not .ExternalDatabase}}
       {{if eq .K8sSetup "LocalK8S"}}
     PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
       {{end}}
-    postgresMaxConn: {{ .postgresMaxConn }}
-    postgresSharedBuff: {{ .postgresSharedBuff }}
-    postgresEffectCacheSize: {{ .postgresEffectCacheSize }}
-    postgresSyncCommit: {{ .postgresSyncCommit }}
-    postgresMaxWallSize: {{ .postgresMaxWallSize }}
+    PostgresMaxConn: {{ .PostgresMaxConn }}
+    PostgresSharedBuff: {{ .PostgresSharedBuff }}
+    PostgresEffectCacheSize: {{ .PostgresEffectCacheSize }}
+    PostgresSyncCommit: {{ .PostgresSyncCommit }}
+    PostgresMaxWallSize: {{ .PostgresMaxWallSize }}
     {{end}}

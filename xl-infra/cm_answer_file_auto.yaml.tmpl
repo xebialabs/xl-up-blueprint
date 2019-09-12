@@ -1,12 +1,12 @@
 K8sSetup: {{.K8sSetup}}
-useKubeconfig: {{.useKubeconfig}}
-apiServerURL: {{.apiServerURL}}
+UseKubeconfig: {{.UseKubeconfig}}
+ApiServerURL: {{.ApiServerURL}}
 OsType: {{ .OsType }}
  {{if ne .K8sAuthentication ""}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{end}}
 {{ if eq .K8sSetup "LocalK8S" }}
-localApiServerURL: {{ .localApiServerURL }}
+LocalApiServerURL: {{ .LocalApiServerURL }}
 {{ end }}
 {{ if eq .K8sToken ""}}
   {{ if eq .K8sClientCert "" }}
@@ -24,9 +24,9 @@ IsGKE: {{eq .K8sSetup "GoogleGKE"}}
 {{ end }}
 {{ if eq .K8sSetup "AwsEKS" }}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
-useAWSconfig: {{ .useAWSconfig }}
-eksClusterName: {{ .eksClusterName }}
-isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
+UseAWSconfig: {{ .UseAWSconfig }}
+EksClusterName: {{ .EksClusterName }}
+IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 {{ end }}

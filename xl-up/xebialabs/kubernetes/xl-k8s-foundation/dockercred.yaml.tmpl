@@ -4,9 +4,9 @@ metadata:
   name: dockercred
   namespace: {{ .Namespace }}
 data:
-  {{ $userPass := printf "%s:%s" .dockerUser .dockerPass }}
+  {{ $userPass := printf "%s:%s" .DockerUser .DockerPass }}
   {{ $auth := printf "\"auth\":\"%s\"" ($userPass | b64enc) }}
-  {{ $registryURL := .registryURL }}
+  {{ $registryURL := .RegistryURL }}
   {{ $auths := printf "\"%s\": { %s }" $registryURL $auth}}
   .dockerconfigjson: {{ cat "{\"auths\": {" $auths "}}"  | b64enc }}
 type: kubernetes.io/dockerconfigjson

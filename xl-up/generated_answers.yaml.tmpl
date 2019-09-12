@@ -1,10 +1,10 @@
 K8sSetup: {{ .K8sSetup }}
-useKubeconfig: {{ .useKubeconfig }}
-apiServerURL: {{ .apiServerURL }}
+UseKubeconfig: {{ .UseKubeconfig }}
+ApiServerURL: {{ .ApiServerURL }}
 OsType: {{ .OsType }}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{if eq .K8sSetup "LocalK8S"}}
-localApiServerURL: {{ .localApiServerURL }}
+LocalApiServerURL: {{ .LocalApiServerURL }}
 {{end}}
 {{if and (or (eq .K8sToken "none") (eq .K8sToken "")) (ne .K8sSetup "AwsEKS)")}}
   {{if eq .K8sClientCert ""}}
@@ -28,58 +28,58 @@ K8sToken: {{ .K8sToken}}
 {{end}}
 {{if eq .K8sSetup "AwsEKS" }}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
-eksClusterName: {{ .eksClusterName }}
-isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
-useAWSconfig: {{ .useAWSconfig }}
+EksClusterName: {{ .EksClusterName }}
+IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
+UseAWSconfig: {{ .UseAWSconfig }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 {{end}}
 Namespace: {{ .Namespace }}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
-{{ if .useCustomRegistry }}
-xlrVersion: {{ .xlrVersion }}
-xldVersion: {{ .xldVersion }}
-dockerUser: {{ .dockerUser }}
-dockerPass: {{ .dockerPass }}
-registryURL: {{ .registryURL }}
+{{ if .UseCustomRegistry }}
+XlrVersion: {{ .XlrVersion }}
+XldVersion: {{ .XldVersion }}
+DockerUser: {{ .DockerUser }}
+DockerPass: {{ .DockerPass }}
+RegistryURL: {{ .RegistryURL }}
 {{ else }}
-xlVersion: {{ .xlVersion }}
+XlVersion: {{ .XlVersion }}
 {{ end }}
 XlRAMRequest: {{ .XlRAMRequest }}
 XlCPURequest: {{ .XlCPURequest }}
-dockerRepo: {{ .dockerRepo }}
-externalDatabase: {{ .externalDatabase }}
-xldAdminPass: {{ .xldAdminPass }}
-xldLic: {{ .xldLic | b64enc }}
-xldDbUrl: {{ .xldDbUrl }}
-xldDbName: {{ .xldDbName }}
-xldDbUser: {{ .xldDbUser }}
-xldDbPass: {{ .xldDbPass }}
-efsId: {{ .efsId }}
-efsRegion: {{ .efsRegion }}
-nsfServerHost: {{ .nsfServerHost }}
-nsfSharePath: {{ .nsfSharePath }}
-xldWorkHostpath: {{ .xldWorkHostpath }}
-xlrAdminPass: {{ .xlrAdminPass }}
-xlrLic: {{ .xlrLic | b64enc }}
-xlrDbUrl: {{ .xlrDbUrl }}
-xlrDbName: {{ .xlrDbName }}
-xlrDbUser: {{ .xlrDbUser }}
-xlrDbPass: {{ .xlrDbPass }}
-xlrReportDbUrl: {{ .xlrReportDbUrl }}
-xlrReportDbName: {{ .xlrReportDbName }}
-xlrReportDbUser: {{ .xlrReportDbUser }}
-xlrReportDbPass: {{ .xlrReportDbPass }}
-xlKeyStore: {{ .xlKeyStore | b64enc }}
-xlKeyStorePass: {{ .xlKeyStorePass }}
+DockerRepo: {{ .DockerRepo }}
+ExternalDatabase: {{ .ExternalDatabase }}
+XldAdminPass: {{ .XldAdminPass }}
+XldLic: {{ .XldLic | b64enc }}
+XldDbUrl: {{ .XldDbUrl }}
+XldDbName: {{ .XldDbName }}
+XldDbUser: {{ .XldDbUser }}
+XldDbPass: {{ .XldDbPass }}
+EfsId: {{ .EfsId }}
+EfsRegion: {{ .EfsRegion }}
+NsfServerHost: {{ .NsfServerHost }}
+NsfSharePath: {{ .NsfSharePath }}
+XldWorkHostpath: {{ .XldWorkHostpath }}
+XlrAdminPass: {{ .XlrAdminPass }}
+XlrLic: {{ .XlrLic | b64enc }}
+XlrDbUrl: {{ .XlrDbUrl }}
+XlrDbName: {{ .XlrDbName }}
+XlrDbUser: {{ .XlrDbUser }}
+XlrDbPass: {{ .XlrDbPass }}
+XlrReportDbUrl: {{ .XlrReportDbUrl }}
+XlrReportDbName: {{ .XlrReportDbName }}
+XlrReportDbUser: {{ .XlrReportDbUser }}
+XlrReportDbPass: {{ .XlrReportDbPass }}
+XlKeyStore: {{ .XlKeyStore | b64enc }}
+XlKeyStorePass: {{ .XlKeyStorePass }}
 InstallMonitoring: {{ .InstallMonitoring }}
 MonitoringDataRetention: {{ .MonitoringDataRetention }}
-monitoringUser: {{ .monitoringUser }}
-monitoringUserPass: {{ .monitoringUserPass }}
+MonitoringUser: {{ .MonitoringUser }}
+MonitoringUserPass: {{ .MonitoringUserPass }}
 PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
-postgresMaxConn: {{ .postgresMaxConn }}
-postgresSharedBuff: {{ .postgresSharedBuff }}
-postgresEffectCacheSize: {{ .postgresEffectCacheSize }}
-postgresSyncCommit: {{ .postgresSyncCommit }}
-postgresMaxWallSize: {{ .postgresMaxWallSize }}
+PostgresMaxConn: {{ .PostgresMaxConn }}
+PostgresSharedBuff: {{ .PostgresSharedBuff }}
+PostgresEffectCacheSize: {{ .PostgresEffectCacheSize }}
+PostgresSyncCommit: {{ .PostgresSyncCommit }}
+PostgresMaxWallSize: {{ .PostgresMaxWallSize }}

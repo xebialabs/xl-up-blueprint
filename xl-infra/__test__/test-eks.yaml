@@ -3,10 +3,10 @@ expected-files:
   - cm_answer_file_auto.yaml
 expected-xl-values:
   K8sSetup: AwsEKS
-  useKubeconfig: false
-  apiServerURL: https://aws-eks.com:6443
+  UseKubeconfig: false
+  ApiServerURL: https://aws-eks.com:6443
   useAWSConfig: false
-  eksClusterName: test-eks-master
+  EksClusterName: test-eks-master
 expected-xl-secrets:
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY
