@@ -1,5 +1,5 @@
 #!groovy
-@Library('jenkins-pipeline-libs@master')
+@Library('jenkins-pipeline-libs@beta')
 import com.xebialabs.pipeline.utils.Branches
 import com.xebialabs.pipeline.globals.Globals
 import com.xebialabs.pipeline.utils.Touch
@@ -114,6 +114,12 @@ pipeline {
             agent {
                 node {
                     label 'xld||xlr||xli'
+                }
+            }
+
+            when {
+                expression {
+                    githubLabelsPresent(this, ['run-xl-up-pr'])
                 }
             }
 
