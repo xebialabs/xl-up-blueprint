@@ -1,5 +1,5 @@
 #!groovy
-@Library('jenkins-pipeline-libs')
+@Library('jenkins-pipeline-libs@master')
 import com.xebialabs.pipeline.utils.Branches
 import com.xebialabs.pipeline.globals.Globals
 import com.xebialabs.pipeline.utils.Touch
@@ -119,7 +119,7 @@ pipeline {
 
             when {
                 expression {
-                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                    !Branches.onMasterBranch(env.BRANCH_NAME)
                 }
             }
 
