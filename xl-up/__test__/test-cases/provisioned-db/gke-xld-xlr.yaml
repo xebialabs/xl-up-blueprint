@@ -26,7 +26,7 @@ postgresEffectCacheSize: 2GB
 postgresSyncCommit: "off"
 postgresMaxWallSize: 512MB
 OsType: linux
-K8sAuthentication: Client key/certificate [Path to files]
+K8sAuthentication: FilePath
 K8sClientCertFile: ../xl-up/__test__/files/test-file
 K8sClientKeyFile: ../xl-up/__test__/files/test-file
 nsfServerHost: nfs-test.com

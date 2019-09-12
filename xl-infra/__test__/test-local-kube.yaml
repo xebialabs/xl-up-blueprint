@@ -5,4 +5,4 @@ expected-xl-values:
   K8sSetup: LocalK8S
   useKubeconfig: false
   localApiServerURL: https://localk8s.com:8443
-  K8sAuthentication: Client key/certificate [Path to files]
+  K8sAuthentication: FilePath

@@ -18,4 +18,4 @@ xlKeyStorePass: test123
 xlVersion: 8.6.1
 OsType: linux
 PostgresqlWorkHostpath: /psql
-K8sAuthentication: Client key/certificate [Path to files]
+K8sAuthentication: FilePath

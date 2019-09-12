@@ -71,7 +71,7 @@ expected-xl-values:
   xlrReportDbUser: xl-release-report
   xlVersion: 8.6.1
   PostgresqlWorkHostpath: /psql
-  K8sAuthentication: Client key/certificate [Path to files]
+  K8sAuthentication: FilePath
 expected-xl-secrets:
   xlKeyStorePass: test123
   xlrAdminPass: password

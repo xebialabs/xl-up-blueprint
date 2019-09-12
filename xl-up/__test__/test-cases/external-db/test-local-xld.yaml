@@ -69,7 +69,7 @@ expected-xl-values:
   xldDbUser: xl-deploy
   xlVersion: 8.6.1
   OsType: linux
-  K8sAuthentication: Client key/certificate [Path to files]
+  K8sAuthentication: FilePath
   externalDatabase: true
   xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
 expected-xl-secrets:
