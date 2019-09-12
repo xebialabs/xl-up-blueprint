@@ -19,7 +19,7 @@ pipeline {
     }
 
     stages {
-        /*stage('Test xl-up Blueprint') {
+        stage('Test xl-up Blueprint') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -52,64 +52,34 @@ pipeline {
 
             when {
                 expression {
-                    githubLabelsPresent(this, ['run-xl-up-master'])
+                    Branches.onMasterBranch(env.BRANCH_NAME) &&
+                            githubLabelsPresent(this, ['run-xl-up-master'])
                 }
             }
 
             steps {
                 script {
-                    dir('${env.WORKSPACE}') {
-                        sh "git clone git@github.com:xebialabs/xl-cli.git"
-                    }
-                    dir('${env.WORKSPACE}/xl-cli') {
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x goTest -x updateLicenses -PincludeXlUp"
-                    }
-                    dir('${env.WORKSPACE}') {
-                        def tests = [:]
-                        testCases.each {
-                            tests.put(runXlUpTest(${it}))
+                    try {
+                        sh "mkdir -p xld"
+                        dir('xld') {
+                            sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
-                        parallel tests
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
+                        dir('xld/xl-cli') {
+                            sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
+                            stash name: "xl-up", inludes: "build/darwin-amd64/xl"
+                        }
+                        unstash name: "xl-up"
+                        awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true).trim()
+                        eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
+                        efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
+                        runXlUp(awsAccessKey, eksEndpoint)
+                    } catch (err) {
+                        throw err
                     }
                 }
+
             }
         }
-        stage('Run XL UP Branch') {
-            agent {
-                node {
-                    label 'xld||xlr||xli'
-                }
-            }
-
-            when {
-                expression {
-                    githubLabelsPresent(this, ['run-xl-up-pr'])
-                }
-            }
-
-            steps {
-                script {
-                    dir('${env.WORKSPACE}') {
-                        sh "git clone git@github.com:xebialabs/xl-cli.git"
-                    }
-                    dir('${env.WORKSPACE}/xl-cli') {
-                        sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
-                    }
-                    awsAccessKey = getAwsAccessKey()
-                    eksEndpoint = getEksEndpoint()
-                    efsFileSystem = getEfsFileSystem()
-                    dir('${env.WORKSPACE}') {
-                        def tests = [:]
-                        testCases.each {
-                            tests.put(runXlUpTest(${it}, awsAccessKey, eksEndpoint))
-                        }
-                        parallel tests
-                        sh "./gradlew goClean goBuild sonarqube -Dsonar.branch.name=${getBranch()} --info -x updateLicenses"
-                    }
-                }
-            }
-        }*/
         stage('Run XL UP Branch') {
             agent {
                 node {
