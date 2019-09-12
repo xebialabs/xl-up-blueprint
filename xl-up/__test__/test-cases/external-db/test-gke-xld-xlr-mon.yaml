@@ -60,7 +60,7 @@ not-expected-files:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 expected-xl-values:
-  K8sSetup: Google Kubernetes Engine
+  K8sSetup: GoogleGKE
   useKubeconfig: false
   apiServerURL: https://k8s.com:6443
   InstallXLD: true

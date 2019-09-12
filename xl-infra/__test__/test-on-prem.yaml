@@ -2,7 +2,7 @@ answers-file: on-prem.yaml
 expected-files:
   - cm_answer_file_auto.yaml
 expected-xl-values:
-  K8sSetup: Plain multinode K8s cluster
+  K8sSetup: PlainK8SCluster
   useKubeconfig: false
   apiServerURL: https://localk8s.com:8443
   K8sAuthentication: Client key/certificate [Path to files]

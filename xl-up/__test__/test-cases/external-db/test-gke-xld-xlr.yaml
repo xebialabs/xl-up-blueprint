@@ -60,7 +60,7 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
-  K8sSetup: Google Kubernetes Engine
+  K8sSetup: GoogleGKE
   useKubeconfig: false
   apiServerURL: https://k8s.com:6443
   InstallXLD: true

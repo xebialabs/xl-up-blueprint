@@ -1,4 +1,4 @@
-K8sSetup: Local K8s from Docker Desktop for Mac/Windows
+K8sSetup: LocalK8S
 useKubeconfig: true
 InstallXLD: true
 InstallXLR: true

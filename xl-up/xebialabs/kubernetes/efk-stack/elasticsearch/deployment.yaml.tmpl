@@ -75,11 +75,11 @@ spec:
         name: data
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        {{if eq .K8sSetup "AWS EKS" }}
+        {{if eq .K8sSetup "AwsEKS" }}
         storageClassName: gp2-retain
-        {{else if eq .K8sSetup "Google Kubernetes Engine"}}
+        {{else if eq .K8sSetup "GoogleGKE"}}
         storageClassName: standard-retain
-        {{else if eq .K8sSetup "Plain multinode K8s cluster" }}
+        {{else if eq .K8sSetup "PlainK8SCluster" }}
         storageClassName: managed-nfs-storage
         {{end}}
         resources:

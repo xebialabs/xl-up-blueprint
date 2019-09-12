@@ -1,4 +1,4 @@
-K8sSetup: Local K8s from Docker Desktop for Mac/Windows
+K8sSetup: LocalK8S
 useKubeconfig: false
 localApiServerURL: https://localk8s.com:8443
 K8sClientCertFile: ../xl-up/__test__/files/test-file

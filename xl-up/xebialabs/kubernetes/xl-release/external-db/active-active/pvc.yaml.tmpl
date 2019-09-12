@@ -6,7 +6,7 @@ metadata:
   labels:
     app: xl-release
   annotations:
-    {{if eq .K8sSetup "AWS EKS" }}
+    {{if eq .K8sSetup "AwsEKS" }}
     volume.beta.kubernetes.io/storage-class: "aws-efs"
     {{else}}
     volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"

@@ -1,4 +1,4 @@
-K8sSetup: Google Kubernetes Engine
+K8sSetup: GoogleGKE
 useKubeconfig: false
 apiServerURL: https://1.2.3.4:6443
 K8sAuthentication: Token

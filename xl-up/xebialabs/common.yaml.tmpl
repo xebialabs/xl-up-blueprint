@@ -1,4 +1,4 @@
-{{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+{{if eq .K8sSetup "LocalK8S"}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -15,7 +15,7 @@ spec:
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
         {{end}}
-{{else if eq .K8sSetup "AWS EKS"}}
+{{else if eq .K8sSetup "AwsEKS"}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
