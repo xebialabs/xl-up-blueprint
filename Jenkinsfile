@@ -99,7 +99,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "mkdir -p xld"
+                        /*sh "mkdir -p xld"
                         dir('xld') {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
@@ -107,8 +107,8 @@ pipeline {
                             sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
-                        unstash name: "xl-up"
-                        awsConfigure = sh (script: 'tail -n 2 /var/libs/jenkins/.aws/credentials', returnStatus: true).trim()
+                        unstash name: "xl-up"*/
+                        awsConfigure = sh (script: 'tail -n 2 /var/lib/jenkins/.aws/credentials', returnStatus: true).trim()
                         awsAccessKey = sh (script: 'echo $awsconfigure', returnStatus: true).trim()
                         awsSecretKey = sh (script: '', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
