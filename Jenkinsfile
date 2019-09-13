@@ -108,9 +108,9 @@ pipeline {
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
                         unstash name: "xl-up"*/
-                        awsConfigure = sh (script: 'tail -n 2 /var/lib/jenkins/.aws/credentials', returnStatus: true).trim()
+                        awsConfigure = sh (script: 'tail -n 2 /var/lib/jenkins/.aws/credentials', returnStatus: true)
                         awsAccessKey = sh (script: 'echo $awsconfigure', returnStatus: true).trim()
-                        awsSecretKey = sh (script: '', returnStdout: true).trim()
+                        //awsSecretKey = sh (script: '', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
                         runXlUp(awsAccessKey, eksEndpoint, efsFileId)
