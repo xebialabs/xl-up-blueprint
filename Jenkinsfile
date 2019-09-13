@@ -110,8 +110,13 @@ pipeline {
                         unstash name: "xl-up"*/
                         //awsConfigure = sh (script: 'cat /var/lib/jenkins/.aws/credentials', returnStdout: true)
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
+                        awsAccessKeyIdLine = awsConfigure.split("\n")[1]
+                        awsSecretKeyIdLine = awsConfigure.split("\n")[2]
+                        awsAccessKeyId = awsAccessKeyIdLine.split(" ")[1]
+                        awsSecretKeyId = awsSecretKeyIdLine.split(" ")[1]
 
-                        echo awsConfigure.split("\n")[0]
+                        echo awsAccessKeyId
+                        echo awsSecretKeyId
 
                         //awsSecretKey = sh (script: '', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
