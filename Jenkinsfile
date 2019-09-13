@@ -112,8 +112,8 @@ pipeline {
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
                         awsAccessKeyIdLine = awsConfigure.split("\n")[1]
                         awsSecretKeyIdLine = awsConfigure.split("\n")[2]
-                        awsAccessKeyId = awsAccessKeyIdLine.split(" ")[1]
-                        awsSecretKeyId = awsSecretKeyIdLine.split(" ")[1]
+                        awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
+                        awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
 
                         echo awsAccessKeyId
                         echo awsSecretKeyId
