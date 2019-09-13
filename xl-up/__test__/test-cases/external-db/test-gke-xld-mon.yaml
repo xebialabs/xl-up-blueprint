@@ -76,6 +76,8 @@ expected-xl-values:
   nsfSharePath: /xebialabs
   externalDatabase: true
   xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  XldWorkerCount: 2
+  XldMasterCount: 2
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

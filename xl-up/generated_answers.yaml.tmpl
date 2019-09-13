@@ -46,8 +46,18 @@ registryURL: {{ .registryURL }}
 {{ else }}
 xlVersion: {{ .xlVersion }}
 {{ end }}
-XlRAMRequest: {{ .XlRAMRequest }}
-XlCPURequest: {{ .XlCPURequest }}
+{{ if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+XldMasterCount: {{ .XldMasterCount }}
+XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
+XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
+XldMasterCPURequest: {{ .XldMasterCPURequest }}
+XldMasterCPULimit: {{ .XldMasterCPULimit }}
+XldWorkerCount: {{ .XldWorkerCount }}
+XldWorkerRAMRequest: {{ .XldWorkerRAMRequest }}
+XldWorkerRAMLimit: {{ .XldWorkerRAMLimit }}
+XldWorkerCPURequest: {{ .XldWorkerCPURequest }}
+XldWorkerCPULimit: {{ .XldWorkerCPULimit }}
+{{ end }}
 dockerRepo: {{ .dockerRepo }}
 externalDatabase: {{ .externalDatabase }}
 xldAdminPass: {{ .xldAdminPass }}
@@ -71,6 +81,12 @@ xlrReportDbUrl: {{ .xlrReportDbUrl }}
 xlrReportDbName: {{ .xlrReportDbName }}
 xlrReportDbUser: {{ .xlrReportDbUser }}
 xlrReportDbPass: {{ .xlrReportDbPass }}
+{{ if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+XlrRAMRequest: {{ .XlrRAMRequest }}
+XlrRAMLimit: {{ .XlrRAMLimit }}
+XlrCPURequest: {{ .XlrCPURequest }}
+XlrCPULimit: {{ .XlrCPULimit }}
+{{ end }}
 xlKeyStore: {{ .xlKeyStore | b64enc }}
 xlKeyStorePass: {{ .xlKeyStorePass }}
 InstallMonitoring: {{ .InstallMonitoring }}

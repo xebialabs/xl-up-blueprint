@@ -81,6 +81,20 @@ expected-xl-values:
   xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  XldWorkerCount: 2
+  XldMasterCount: 2
+  XldMasterRAMRequest: 1.6Gi
+  XldMasterRAMLimit: 6Gi
+  XldMasterCPURequest: 0.7
+  XldMasterCPULimit: 3
+  XldWorkerRAMRequest: 1.6Gi
+  XldWorkerRAMLimit: 6Gi
+  XldWorkerCPURequest: 0.7
+  XldWorkerCPULimit: 3
+  XlrRAMRequest: 1.7Gi
+  XlrRAMLimit: 6Gi
+  XlrCPURequest: 0.7
+  XlrCPULimit: 3
 expected-xl-secrets:
   xlKeyStorePass: test123
   xldAdminPass: password

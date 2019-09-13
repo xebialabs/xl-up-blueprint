@@ -1,0 +1,25 @@
+K8sSetup: AWS EKS
+useKubeconfig: false
+apiServerURL: https://aws-eks.com:6443
+useAWSconfig: false
+eksClusterName: test-eks-master
+AWSAccessKey: SOMEKEY
+AWSAccessSecret: SOMEMOREKEY
+InstallXLD: true
+InstallXLR: false
+xldAdminPass: password
+xldLic: ../xl-up/__test__/files/test-file
+xldDbName: xl-deploy
+xldDbUser: xl-deploy
+xldDbPass: xl-deploy
+efsId: test1234561
+efsRegion: eu-west-1
+xlKeyStore: ../xl-up/__test__/files/test-file
+xlKeyStorePass: test123
+xlVersion: 8.6.1
+InstallMonitoring: false
+OsType: linux
+externalDatabase: true
+xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+XldWorkerCount: 5
+XldMasterCount: 3

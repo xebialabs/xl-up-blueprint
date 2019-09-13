@@ -79,6 +79,10 @@ expected-xl-values:
   externalDatabase: true
   xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  XlrRAMRequest: 1.7Gi
+  XlrRAMLimit: 6Gi
+  XlrCPURequest: 0.7
+  XlrCPULimit: 3
 expected-xl-secrets:
   xlKeyStorePass: test123
   xlrAdminPass: password
