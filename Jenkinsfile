@@ -111,6 +111,8 @@ pipeline {
                         //awsConfigure = sh (script: 'cat /var/lib/jenkins/.aws/credentials', returnStdout: true)
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
 
+                        sh "echo $awsConfigure"
+
                         //awsSecretKey = sh (script: '', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
