@@ -7,7 +7,6 @@ InstallXLD: true
 InstallXLR: false
 xldAdminPass: password
 xldLic: ../xl-up/__test__/files/test-file
-xldDbName: xl-deploy
 xldDbUser: xl-deploy
 xldDbPass: xl-deploy
 nsfServerHost: nfs-test.com

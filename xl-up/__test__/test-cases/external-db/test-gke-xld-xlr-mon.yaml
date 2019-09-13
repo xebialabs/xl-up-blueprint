@@ -65,12 +65,9 @@ expected-xl-values:
   apiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: true
-  xldDbName: xl-deploy
   xldDbUser: xl-deploy
-  xlrDbName: xl-release
   xlrDbUser: xl-release
   xlVersion: 8.6.1
-  xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
   InstallMonitoring: true
   monitoringUser: mon-user

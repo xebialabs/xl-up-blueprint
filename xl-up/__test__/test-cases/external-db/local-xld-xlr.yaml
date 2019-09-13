@@ -7,16 +7,13 @@ InstallXLD: true
 InstallXLR: true
 xldAdminPass: password
 xldLic: ../xl-up/__test__/files/test-file
-xldDbName: xl-deploy
 xldDbUser: xl-deploy
 xldDbPass: xl-deploy
 xldWorkHostpath: /tmp/xld-work
 xlrAdminPass: password
 xlrLic: ../xl-up/__test__/files/test-file
-xlrDbName: xl-release
 xlrDbUser: xl-release
 xlrDbPass: xl-release
-xlrReportDbName: xl-release-report
 xlrReportDbUser: xl-release-report
 xlrReportDbPass: xl-release-report
 xlKeyStore: ../xl-up/__test__/files/test-file

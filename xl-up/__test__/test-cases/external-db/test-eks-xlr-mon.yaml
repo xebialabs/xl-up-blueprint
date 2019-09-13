@@ -62,10 +62,8 @@ expected-xl-values:
   eksClusterName: test-eks-master
   InstallXLD: false
   InstallXLR: true
-  xlrDbName: xl-release
   xlrDbUser: xl-release
   xlVersion: 8.6.1
-  xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
   InstallMonitoring: true
   monitoringUser: mon-user
