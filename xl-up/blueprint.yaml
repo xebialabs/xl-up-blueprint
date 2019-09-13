@@ -113,7 +113,7 @@ spec:
 
     - name: K8sClientCert
       type: SecretEditor
-      prompt: "Using Kubernetes client certificate from your context"
+      description: "Using Kubernetes client certificate from your context"
       value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'UserInput' ? k8sConfig('UserClientCertificateData') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -121,7 +121,7 @@ spec:
 
     - name: K8sClientKey
       type: SecretEditor
-      prompt: "Using Kubernetes client certificate Key from your context"
+      description: "Using Kubernetes client certificate Key from your context"
       value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'UserInput' ? k8sConfig('UserClientKeyData') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -133,7 +133,8 @@ spec:
       promptIf: !expr "!UseKubeconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? k8sConfig('ContextCluster') : ''"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       description: "The cluster name of your AWS EKS resource. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster in AWS console"
 
     - name: IsAwsCfgAvailable
@@ -155,7 +156,8 @@ spec:
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('AccessKeyID')"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
       description: "Your AWS access key ID. AWS access key ID is required for xl up in order to connect to your AWS EKS cluster"
 
@@ -165,7 +167,8 @@ spec:
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('SecretAccessKey')"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
 
@@ -529,6 +532,7 @@ spec:
       prompt: "How many days do you want to keep the monitoring data?"
       promptIf: !expr "InstallMonitoring"
       default: 7
+      ignoreIfSkipped: true
       description: "How long to retain monitoring data for"
 
     - name: MonitoringUser

@@ -46,6 +46,7 @@ data:
     AWSAccessSecret: {{ .AWSAccessSecret }}
     {{end}}
     Namespace: {{ .Namespace }}
+    useCustomRegistry: {{.useCustomRegistry}}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
     {{ if .UseCustomRegistry }}

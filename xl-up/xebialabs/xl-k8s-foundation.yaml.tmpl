@@ -73,8 +73,10 @@ spec:
         {{end}}
         {{end}}
         {{if  .InstallXLR }}
+          {{if not .ExternalDatabase }}
           XLR_REPORT_DB_NAME: !value XlrReportDbName
           XLR_DB_NAME: !value XlrDbName
+         {{end}}
           XLR_REPORT_DB_USER: !value XlrReportDbUser
           XLR_DB_USER: !value XlrDbUser
           XLR_KEYSTORE_PASS: !value XlKeyStorePass
@@ -93,7 +95,9 @@ spec:
           {{if  eq .K8sSetup "LocalK8S" }}
           XLD_WORK_HOSTPATH: !value XldWorkHostpath
           {{end}}
+          {{if not .ExternalDatabase }}
           XLD_DB_NAME: !value XldDbName
+          {{end}}
           XLD_DB_USER: !value XldDbUser
         {{end}}
         {{if eq .K8sSetup "AwsEKS"}}

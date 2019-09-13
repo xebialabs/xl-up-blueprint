@@ -133,7 +133,8 @@ spec:
       promptIf: !expr "!UseKubeconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? k8sConfig('ContextCluster'): ''"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       description: "Enter the cluster name of your Kubernetes installation. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster"
 
     - name: IsAwsCfgAvailable
@@ -154,7 +155,8 @@ spec:
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('AccessKeyID')"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
       description: "Provide your AWS access key ID"
 
@@ -164,10 +166,11 @@ spec:
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('SecretAccessKey')"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
       description: "Provide your AWS secret access key"
-  
+
   files:
     - path: cm_answer_file_auto.yaml.tmpl
     - path: cert.crt.tmpl
