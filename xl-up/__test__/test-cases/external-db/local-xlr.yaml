@@ -7,10 +7,8 @@ InstallXLD: false
 InstallXLR: true
 xlrAdminPass: password
 xlrLic: ../xl-up/__test__/files/test-file
-xlrDbName: xl-release
 xlrDbUser: xl-release
 xlrDbPass: xl-release
-xlrReportDbName: xl-release-report
 xlrReportDbUser: xl-release-report
 xlrReportDbPass: xl-release-report
 xlKeyStore: ../xl-up/__test__/files/test-file

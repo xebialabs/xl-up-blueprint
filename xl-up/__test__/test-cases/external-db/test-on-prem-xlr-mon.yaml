@@ -66,9 +66,7 @@ expected-xl-values:
   InstallXLR: true
   nsfServerHost: nfs-test.com
   nsfSharePath: /xebialabs
-  xlrDbName: xl-release
   xlrDbUser: xl-release
-  xlrReportDbName: xl-release-report
   xlrReportDbUser: xl-release-report
   xlVersion: 8.6.1
   InstallMonitoring: true
