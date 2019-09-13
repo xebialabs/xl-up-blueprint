@@ -34,7 +34,6 @@ spec:
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
-      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: OsType
@@ -107,7 +106,7 @@ spec:
 
     - name: K8sClientCert
       type: SecretEditor
-    #   prompt: "Using the Kubernetes client certificate from your context"
+      description: "Using the Kubernetes client certificate from your context"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -115,7 +114,7 @@ spec:
 
     - name: K8sClientKey
       type: SecretEditor
-    #   prompt: "Using the Kubernetes client certificate key from your context"
+      description: "Using the Kubernetes client certificate key from your context"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -127,7 +126,8 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
       default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster'): ''"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       description: "Enter the cluster name of your Kubernetes installation. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster"
 
     - name: isAwsCfgAvailable
@@ -147,7 +147,8 @@ spec:
       prompt: "What is the AWS access key ID?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID')"
       description: "Provide your AWS access key ID"
@@ -157,7 +158,8 @@ spec:
       prompt: "What is the AWS secret access key?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
       default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey')"
       description: "Provide your AWS secret access key"

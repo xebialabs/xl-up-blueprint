@@ -9,7 +9,7 @@ data:
     useKubeconfig: {{ .useKubeconfig }}
     apiServerURL: {{ .apiServerURL }}
     OsType: {{ .OsType }}
-    {{if or (and (not .useKubeconfig) (ne .K8sSetup "AWS EKS")) (eq .K8sSetup "Google Kubernetes Engine)")}}
+    {{if or (and (not .useKubeconfig) (ne .K8sSetup "AWS EKS")) (eq .K8sSetup "Google Kubernetes Engine")}}
     K8sAuthentication: {{ .K8sAuthentication }}
     {{end}}
     {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
@@ -46,6 +46,7 @@ data:
     AWSAccessSecret: {{ .AWSAccessSecret }}
     {{end}}
     Namespace: {{ .Namespace }}
+    useCustomRegistry: {{.useCustomRegistry}}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
     {{ if .useCustomRegistry }}

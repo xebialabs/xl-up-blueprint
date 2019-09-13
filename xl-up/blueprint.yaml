@@ -34,7 +34,6 @@ spec:
       default: !expr "k8sConfig('ClusterServer')"
       promptIf: !expr "!useKubeconfig && K8sSetup != 'Local K8s from Docker Desktop for Mac/Windows'"
       saveInXlvals: true
-      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: OsType
@@ -107,7 +106,7 @@ spec:
 
     - name: K8sClientCert
       type: SecretEditor
-      prompt: "Using Kubernetes client certificate from your context"
+      description: "Using Kubernetes client certificate from your context"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -115,7 +114,7 @@ spec:
 
     - name: K8sClientKey
       type: SecretEditor
-      prompt: "Using Kubernetes client certificate Key from your context"
+      description: "Using Kubernetes client certificate Key from your context"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -127,7 +126,8 @@ spec:
       promptIf: !expr "!useKubeconfig && K8sSetup == 'AWS EKS' "
       default: !expr "K8sSetup == 'AWS EKS' ? k8sConfig('ContextCluster') : ''"
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       description: "The cluster name of your AWS EKS resource. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster in AWS console"
 
     - name: isAwsCfgAvailable
@@ -148,9 +148,10 @@ spec:
       prompt: "What is the AWS access key ID?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
-      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID')"
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('AccessKeyID') : ''"
       description: "Your AWS access key ID. AWS access key ID is required for xl up in order to connect to your AWS EKS cluster"
 
     - name: AWSAccessSecret
@@ -158,9 +159,10 @@ spec:
       prompt: "What is the AWS secret access key?"
       promptIf: !expr "!useAWSconfig && K8sSetup == 'AWS EKS' "
       saveInXlvals: true
-      ignoreIfSkipped: true
+      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
+      #ignoreIfSkipped: true
       replaceAsIs: true
-      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey')"
+      default: !expr "K8sSetup == 'AWS EKS' ? awsCredentials('SecretAccessKey') : ''"
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
 
     - name: Namespace
@@ -523,6 +525,7 @@ spec:
       prompt: "How many days do you want to keep the monitoring data?"
       default: 7
       promptIf: !expr "InstallMonitoring"
+      ignoreIfSkipped: true
       description: "How long to retain monitoring data for"
 
     - name: monitoringUser
@@ -550,7 +553,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "!externalDatabase"
+      promptIf: !expr "K8sSetup == 'Local K8s from Docker Desktop for Mac/Windows' && !externalDatabase"
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
 
     - name: postgresMaxConn
