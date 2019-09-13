@@ -21,7 +21,7 @@ pipeline {
     }
 
     stages {
-        stage('Test xl-up Blueprint') {
+        /*stage('Test xl-up Blueprint') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -44,7 +44,7 @@ pipeline {
                 }
 
             }
-        }
+        }*/
         stage('Run XL UP Master') {
             agent {
                 node {
@@ -108,10 +108,12 @@ pipeline {
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
                         unstash name: "xl-up"
-                        awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true).trim()
+                        awsConfigure = sh (script: 'tail -n 2 /var/libs/jenkins/.aws/credentials', returnStatus: true).trim()
+                        awsAccessKey = sh (script: 'echo $awsconfigure', returnStatus: true).trim()
+                        awsSecretKey = sh (script: '', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
-                        efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
-                        runXlUp(awsAccessKey, eksEndpoint)
+                        efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
+                        runXlUp(awsAccessKey, eksEndpoint, efsFileId)
                     } catch (err) {
                         throw err
                     }
@@ -127,8 +129,9 @@ def notifySlack(String message, String notificationColor) {
             channel: "#kubicorns", tokenCredentialId: "slack-token")
 }
 
-def runXlUp(String awsAccessKey, String eksEndpoint) {
+def runXlUp(String awsAccessKey, String eksEndpoint, String efsFileId) {
     sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "./xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l xl-up-blueprint"
+    sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "./xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ../xl-up-blueprint"
 }
