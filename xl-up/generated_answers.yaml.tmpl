@@ -2,7 +2,7 @@ K8sSetup: {{ .K8sSetup }}
 UseKubeconfig: {{ .UseKubeconfig }}
 ApiServerURL: {{ .ApiServerURL }}
 OsType: {{ .OsType }}
-{{if or (and (not .useKubeconfig) (ne .K8sSetup "AWS EKS")) (eq .K8sSetup "Google Kubernetes Engine")}}
+{{if or (and (not .UseKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE")}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{end}}
 {{if eq .K8sSetup "LocalK8S"}}
@@ -39,7 +39,7 @@ AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 {{end}}
 Namespace: {{ .Namespace }}
-useCustomRegistry: {{.useCustomRegistry}}
+UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
 {{ if .UseCustomRegistry }}
@@ -65,15 +65,15 @@ XldDbName: {{ .XldDbName }}
   {{end}}
 XldDbUser: {{ .XldDbUser }}
 XldDbPass: {{ .XldDbPass }}
-  {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+  {{if eq .K8sSetup "LocalK8S"}}
 XldWorkHostpath: {{ .XldWorkHostpath }}
   {{end}}
 {{end}}
-{{if eq .K8sSetup "AWS EKS" }}
+{{if eq .K8sSetup "AwsEKS" }}
 EfsId: {{ .EfsId }}
 EfsRegion: {{ .EfsRegion }}
 {{end}}
-{{if (or (eq .K8sSetup "Google Kubernetes Engine" ) (eq .K8sSetup "Plain multinode K8s cluster"))}}
+{{if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster"))}}
 NsfServerHost: {{ .NsfServerHost }}
 NsfSharePath: {{ .NsfSharePath }}
 {{end}}
@@ -101,7 +101,7 @@ MonitoringUser: {{ .MonitoringUser }}
 MonitoringUserPass: {{ .MonitoringUserPass }}
 {{end}}
 {{if not .ExternalDatabase}}
-  {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows"}}
+  {{if eq .K8sSetup "LocalK8S"}}
 PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
   {{end}}
 PostgresMaxConn: {{ .PostgresMaxConn }}
