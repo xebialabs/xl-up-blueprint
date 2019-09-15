@@ -18,6 +18,7 @@ pipeline {
 
     environment {
         REPOSITORY_NAME = 'xl-up-blueprint'
+        DIST_SERVER_CRED = credentials('distserver')
     }
 
     stages {
@@ -108,20 +109,16 @@ pipeline {
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
                         unstash name: "xl-up"*/
-                        //awsConfigure = sh (script: 'cat /var/lib/jenkins/.aws/credentials', returnStdout: true)
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
                         awsAccessKeyIdLine = awsConfigure.split("\n")[1]
                         awsSecretKeyIdLine = awsConfigure.split("\n")[2]
                         awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
                         awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
-
-                        echo awsAccessKeyId
-                        echo awsSecretKeyId
-
-                        //awsSecretKey = sh (script: '', returnStdout: true).trim()
+                        sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                        sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\'', returnStdout: true).trim()
-                        //runXlUp(awsAccessKey, eksEndpoint, efsFileId)
+                        runXlUp(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
                     } catch (err) {
                         throw err
                     }
@@ -137,9 +134,12 @@ def notifySlack(String message, String notificationColor) {
             channel: "#kubicorns", tokenCredentialId: "slack-token")
 }
 
-def runXlUp(String awsAccessKey, String eksEndpoint, String efsFileId) {
+def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, String efsFileId) {
     sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@SOMEKEY@${awsAccessKey}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@xldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic"
+    sh "sed -ie 's@xlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic"
     sh "./xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ../xl-up-blueprint"
 }
