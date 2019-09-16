@@ -113,16 +113,16 @@ spec:
 
     - name: K8sClientCert
       type: SecretEditor
-      description: "Using Kubernetes client certificate from your context"
-      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'UserInput' ? k8sConfig('UserClientCertificateData') : ''"
+      description: "Using the Kubernetes client certificate from your context"
+      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'FilePath' && K8sAuthentication != 'Token'? k8sConfig('UserClientCertificateData') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
 
     - name: K8sClientKey
       type: SecretEditor
-      description: "Using Kubernetes client certificate Key from your context"
-      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == 'UserInput' ? k8sConfig('UserClientKeyData') : ''"
+      description: "Using the Kubernetes client certificate key from your context"
+      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'FilePath' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -558,7 +558,7 @@ spec:
     - name: PostgresqlWorkHostpath
       type: Input
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "!ExternalDatabase"
+      promptIf: !expr "!ExternalDatabase && K8sSetup == 'LocalK8S'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
