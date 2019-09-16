@@ -154,7 +154,7 @@ spec:
       type: SecretInput
       prompt: "What is the AWS access key ID?"
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
-      default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('AccessKeyID')"
+      default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('AccessKeyID') : ''"
       saveInXlvals: true
       #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
       #ignoreIfSkipped: true
@@ -165,7 +165,7 @@ spec:
       type: SecretInput
       prompt: "What is the AWS secret access key?"
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
-      default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('SecretAccessKey')"
+      default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('SecretAccessKey') : ''"
       saveInXlvals: true
       #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
       #ignoreIfSkipped: true
