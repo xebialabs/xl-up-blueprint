@@ -137,7 +137,7 @@ def notifySlack(String message, String notificationColor) {
 def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, String efsFileId) {
     sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@SOMEMOREKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@xldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@xlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
