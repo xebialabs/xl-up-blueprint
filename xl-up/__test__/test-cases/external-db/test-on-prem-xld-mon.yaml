@@ -59,23 +59,23 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
 expected-xl-values:
-  K8sSetup: Plain multinode K8s cluster
-  useKubeconfig: false
-  apiServerURL: https://k8s.com:6443
+  K8sSetup: PlainK8SCluster
+  UseKubeconfig: false
+  ApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: false
-  xldDbUser: xl-deploy
-  xlVersion: 8.6.1
-  nsfServerHost: nfs-test.com
-  nsfSharePath: /xebialabs
+  XldDbUser: xl-deploy
+  XlVersion: 8.6.1
+  NsfServerHost: nfs-test.com
+  NsfSharePath: /xebialabs
   InstallMonitoring: true
-  monitoringUser: mon-user
+  MonitoringUser: mon-user
   OsType: linux
-  K8sAuthentication: Client key/certificate [Path to files]
-  externalDatabase: true
-  xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  K8sAuthentication: FilePath
+  ExternalDatabase: true
+  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
-  monitoringUserPass: mon-pass
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
+  MonitoringUserPass: mon-pass

@@ -60,29 +60,29 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
-  K8sSetup: Google Kubernetes Engine
-  useKubeconfig: false
-  apiServerURL: https://k8s.com:6443
+  K8sSetup: GoogleGKE
+  UseKubeconfig: false
+  ApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: true
-  xldDbUser: xl-deploy
-  xlrDbUser: xl-release
-  xlrReportDbUser: xl-release-report
-  xlVersion: 8.6.1
+  XldDbUser: xl-deploy
+  XlrDbUser: xl-release
+  XlrReportDbUser: xl-release-report
+  XlVersion: 8.6.1
   InstallMonitoring: false
   OsType: linux
   K8sAuthentication: Token
-  nsfServerHost: nfs-test.com
-  nsfSharePath: /xebialabs
-  externalDatabase: true
-  xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
-  xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  NsfServerHost: nfs-test.com
+  NsfSharePath: /xebialabs
+  ExternalDatabase: true
+  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
-  xlrAdminPass: password
-  xlrDbPass: xl-release
-  xlrReportDbPass: xl-release-report
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
+  XlrAdminPass: password
+  XlrDbPass: xl-release
+  XlrReportDbPass: xl-release-report
   K8sToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJ4ZWJpYWxhYnMtYWRtaW4tdG9rZW4tZmpsNWgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoieGViaWFsYWJzLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMDMyMGViYjItYTg5OS0xMWU5LTljZTgtNDIwMTBhODQwMWQ3Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOnhlYmlhbGFicy1hZG1pbiJ9.AVK402uvVe-TUdSIb7f_gYtcSm7rei66Inm4TlVxMfeU6G3-gDOEtPRQ-NHUHBQyt6juHaRX2xfT7cLRoBWZl38pVnJJf3oMAJBdnkcpycjAGOaI_rU_xUs0RasPs8yUAFTD3RZ9DdnOhw4MBWWWDcMMqsEWhJPLGrpEnEu5_Mgeta-BkTqioqzJBr2LnkGpiv-ha-6hgO7L2_v8bSGrRVA_xc2SQXY4wtkjkK3a1CzQ_xxBz396OwDVpMwI5lRm4xRCkiUrk46xuxWMGM483V49Hep4yFIkShhNqaKI6L6uw4sUX9Dp7mftXRYotTbGd_hhJlmQTWjjIb_qPqt-Iw

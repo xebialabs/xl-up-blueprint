@@ -1,21 +1,21 @@
-K8sSetup: Local K8s from Docker Desktop for Mac/Windows
-useKubeconfig: false
-localApiServerURL: https://localk8s.com:8443
+K8sSetup: LocalK8S
+UseKubeconfig: false
+LocalApiServerURL: https://localk8s.com:8443
 K8sClientCertFile: ../xl-up/__test__/files/test-file
 K8sClientKeyFile: ../xl-up/__test__/files/test-file
 InstallXLD: false
 InstallXLR: true
-xlrAdminPass: password
-xlrLic: ../xl-up/__test__/files/test-file
-xlrDbUser: xl-release
-xlrDbPass: xl-release
-xlrReportDbUser: xl-release-report
-xlrReportDbPass: xl-release-report
-xlKeyStore: ../xl-up/__test__/files/test-file
-xlKeyStorePass: test123
-xlVersion: 8.6.1
+XlrAdminPass: password
+XlrLic: ../xl-up/__test__/files/test-file
+XlrDbUser: xl-release
+XlrDbPass: xl-release
+XlrReportDbUser: xl-release-report
+XlrReportDbPass: xl-release-report
+XlKeyStore: ../xl-up/__test__/files/test-file
+XlKeyStorePass: test123
+XlVersion: 8.6.1
 OsType: linux
-K8sAuthentication: Client key/certificate [Path to files]
-externalDatabase: true
-xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+K8sAuthentication: FilePath
+ExternalDatabase: true
+XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report

@@ -1,7 +1,7 @@
-K8sSetup: AWS EKS
-useKubeconfig: false
-apiServerURL: https://aws-eks.com:6443
-useAWSconfig: false
-eksClusterName: test-eks-master
+K8sSetup: AwsEKS
+UseKubeconfig: false
+ApiServerURL: https://aws-eks.com:6443
+UseAWSconfig: false
+EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
 AWSAccessSecret: SOMEMOREKEY

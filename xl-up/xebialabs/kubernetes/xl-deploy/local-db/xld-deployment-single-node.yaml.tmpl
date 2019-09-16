@@ -75,7 +75,7 @@ spec:
           volumeMounts:
             - name: work
               mountPath: /opt/xebialabs/xl-deploy-server/work
-        {{if not .externalDatabase}}
+        {{if not .ExternalDatabase}}
         - name: wait-for-postgresql
           image: alpine:3.6
           command:
@@ -93,8 +93,8 @@ spec:
           {{end}}
       containers:
         - name: xl-deploy
-          {{if .useCustomRegistry }}                    
-          image: {{.registryURL}}/{{.xldVersion}}
+          {{if .UseCustomRegistry }}                    
+          image: {{.RegistryURL}}/{{.XldVersion}}
           {{ else }}
           image: {{$DOCKER_REPO}}/xl-deploy:{{$XL_VERSION}}
           {{ end }}
@@ -106,8 +106,8 @@ spec:
               value: default
             - name: XL_DB_URL
             - name: XL_DB_URL
-              {{if .externalDatabase}}
-              value: {{.xldDbUrl}}
+              {{if .ExternalDatabase}}
+              value: {{.XldDbUrl}}
               {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
               {{end}}
@@ -145,11 +145,11 @@ spec:
           volumeMounts:
             - name: work
               mountPath: /opt/xebialabs/xl-deploy-server/work
-      {{if .useCustomRegistry }}
+      {{if .UseCustomRegistry }}
       imagePullSecrets:
       - name: dockercred
       {{ end }}
-      {{if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+      {{if eq .K8sSetup "LocalK8S" }}
       volumes:
         # Use hostPath to persist your data on your local machine or emptyDir for minikube
         - name: work
@@ -160,16 +160,16 @@ spec:
             path: {{$XLD_WORK_HOSTPATH}}
           {{end}}
       {{end}}
-  {{if (or (eq .K8sSetup "AWS EKS" ) (eq .K8sSetup "Plain multinode K8s cluster" ))}}
+  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster" ))}}
   volumeClaimTemplates:
     - metadata:
         name: repository
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        {{if eq .K8sSetup "AWS EKS" }}
+        {{if eq .K8sSetup "AwsEKS" }}
         storageClassName: gp2-retain
         {{end}}
-        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
+        {{if eq .K8sSetup "PlainK8SCluster" }}
         storageClassName: managed-nfs-storage
         {{end}}
         resources:
@@ -180,10 +180,10 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{if eq .K8sSetup "AWS EKS" }}
+        {{if eq .K8sSetup "AwsEKS" }}
         storageClassName: gp2-retain
         {{end}}
-        {{if eq .K8sSetup "Plain multinode K8s cluster" }}
+        {{if eq .K8sSetup "PlainK8SCluster" }}
         storageClassName: managed-nfs-storage
         {{end}}
         resources:

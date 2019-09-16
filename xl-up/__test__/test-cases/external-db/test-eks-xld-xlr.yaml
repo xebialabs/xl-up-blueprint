@@ -59,31 +59,31 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
-  K8sSetup: AWS EKS
-  useKubeconfig: false
-  apiServerURL: https://aws-eks.com:6443
-  useAWSconfig: false
-  eksClusterName: test-eks-master
+  K8sSetup: AwsEKS
+  UseKubeconfig: false
+  ApiServerURL: https://aws-eks.com:6443
+  UseAWSconfig: false
+  EksClusterName: test-eks-master
   InstallXLD: true
   InstallXLR: true
-  xldDbUser: xl-deploy
-  xlVersion: 8.6.1
-  efsId: test1234561
-  efsRegion: eu-west-1
-  xlrDbUser: xl-release
-  xlrReportDbUser: xl-release-report
+  XldDbUser: xl-deploy
+  XlVersion: 8.6.1
+  EfsId: test1234561
+  EfsRegion: eu-west-1
+  XlrDbUser: xl-release
+  XlrReportDbUser: xl-release-report
   InstallMonitoring: false
   OsType: linux
-  externalDatabase: true
-  xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
-  xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  ExternalDatabase: true
+  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
-  xlrAdminPass: password
-  xlrDbPass: xl-release
-  xlrReportDbPass: xl-release-report
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
+  XlrAdminPass: password
+  XlrDbPass: xl-release
+  XlrReportDbPass: xl-release-report
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY

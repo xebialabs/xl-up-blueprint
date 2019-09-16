@@ -1,12 +1,12 @@
 K8sSetup: {{.K8sSetup}}
-useKubeconfig: {{.useKubeconfig}}
-apiServerURL: {{.apiServerURL}}
+UseKubeconfig: {{.UseKubeconfig}}
+ApiServerURL: {{.ApiServerURL}}
 OsType: {{ .OsType }}
  {{if ne .K8sAuthentication ""}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{end}}
-{{ if eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
-localApiServerURL: {{ .localApiServerURL }}
+{{ if eq .K8sSetup "LocalK8S" }}
+LocalApiServerURL: {{ .LocalApiServerURL }}
 {{ end }}
 {{ if eq .K8sToken ""}}
   {{ if eq .K8sClientCert "" }}
@@ -19,14 +19,14 @@ K8sClientKey: {{ .K8sClientKey | b64enc }}
 {{else}}
 K8sToken: {{ .K8sToken}}
 {{end}}
-{{ if eq .K8sSetup "Google Kubernetes Engine" }}
-IsGKE: {{eq .K8sSetup "Google Kubernetes Engine"}}
+{{ if eq .K8sSetup "GoogleGKE" }}
+IsGKE: {{eq .K8sSetup "GoogleGKE"}}
 {{ end }}
-{{ if eq .K8sSetup "AWS EKS" }}
-IsEKS: {{eq .K8sSetup "AWS EKS"}}
-useAWSconfig: {{ .useAWSconfig }}
-eksClusterName: {{ .eksClusterName }}
-isAwsCfgAvailable: {{ .isAwsCfgAvailable }}
+{{ if eq .K8sSetup "AwsEKS" }}
+IsEKS: {{eq .K8sSetup "AwsEKS"}}
+UseAWSconfig: {{ .UseAWSconfig }}
+EksClusterName: {{ .EksClusterName }}
+IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 {{ end }}
