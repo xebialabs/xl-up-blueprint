@@ -38,7 +38,6 @@ spec:
       promptIf: !expr "!UseKubeconfig && K8sSetup != 'LocalK8S'"
       default: !expr "k8sConfig('ClusterServer')"
       saveInXlvals: true
-      ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
 
     - name: OsType
