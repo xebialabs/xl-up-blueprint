@@ -7,10 +7,10 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  {{if .useCustomRegistry}}
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.xlrTag}}-{{.xldTag}}
+  {{if .UseCustomRegistry}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlrTag}}-{{.XldTag}}
   {{else}}
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.xlVersion}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlVersion}}
   {{end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
@@ -20,10 +20,10 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  {{if .useCustomRegistry}}
-  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.xldTag}}
+  {{if .UseCustomRegistry}}
+  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldTag}}
   {{else}}
-  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.xlVersion}}
+  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XlVersion}}
   {{end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
@@ -34,10 +34,10 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  {{if .useCustomRegistry}}
-  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.xlrTag}}
+  {{if .UseCustomRegistry}}
+  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrTag}}
   {{else}}
-  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.xlVersion}}
+  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlVersion}}
   {{end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:

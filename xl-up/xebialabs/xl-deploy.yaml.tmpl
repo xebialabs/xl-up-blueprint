@@ -8,16 +8,16 @@ spec:
           - name: XL-Deploy-Deployment
             type: udm.Application
             children:
-              {{if  .useCustomRegistry }}
-              - name: "{{.xldTag}}"
+              {{if  .UseCustomRegistry }}
+              - name: "{{.XldTag}}"
               {{ else }}
-              - name: "{{.xlVersion}}"
+              - name: "{{.XlVersion}}"
               {{ end }}
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                {{- if  eq .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+                {{- if  eq .K8sSetup "LocalK8S" }}
                   - name: xld-deployment
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml

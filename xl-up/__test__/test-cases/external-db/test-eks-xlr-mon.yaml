@@ -55,33 +55,31 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
 expected-xl-values:
-  K8sSetup: AWS EKS
-  useKubeconfig: false
-  apiServerURL: https://aws-eks.com:6443
-  useAWSconfig: false
-  eksClusterName: test-eks-master
+  K8sSetup: AwsEKS
+  UseKubeconfig: false
+  ApiServerURL: https://aws-eks.com:6443
+  UseAWSconfig: false
+  EksClusterName: test-eks-master
   InstallXLD: false
   InstallXLR: true
-  xlrDbName: xl-release
-  xlrDbUser: xl-release
-  xlVersion: 8.6.1
-  xlrReportDbName: xl-release-report
-  xlrReportDbUser: xl-release-report
+  XlrDbUser: xl-release
+  XlVersion: 8.6.1
+  XlrReportDbUser: xl-release-report
   InstallMonitoring: true
-  monitoringUser: mon-user
+  MonitoringUser: mon-user
   OsType: linux
-  externalDatabase: true
-  xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
   XlrRAMRequest: 1.7Gi
   XlrRAMLimit: 6Gi
   XlrCPURequest: 0.7
   XlrCPULimit: 3
+  ExternalDatabase: true
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
 expected-xl-secrets:
-  monitoringUserPass: mon-pass
-  xlKeyStorePass: test123
-  xlrAdminPass: password
-  xlrDbPass: xl-release
-  xlrReportDbPass: xl-release-report
+  MonitoringUserPass: mon-pass
+  XlKeyStorePass: test123
+  XlrAdminPass: password
+  XlrDbPass: xl-release
+  XlrReportDbPass: xl-release-report
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY

@@ -59,32 +59,30 @@ not-expected-files:
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
 expected-xl-values:
-  K8sSetup: Plain multinode K8s cluster
-  useKubeconfig: false
-  apiServerURL: https://k8s.com:6443
+  K8sSetup: PlainK8SCluster
+  UseKubeconfig: false
+  ApiServerURL: https://k8s.com:6443
   InstallXLD: false
   InstallXLR: true
-  nsfServerHost: nfs-test.com
-  nsfSharePath: /xebialabs
-  xlrDbName: xl-release
-  xlrDbUser: xl-release
-  xlrReportDbName: xl-release-report
-  xlrReportDbUser: xl-release-report
-  xlVersion: 8.6.1
+  NsfServerHost: nfs-test.com
+  NsfSharePath: /xebialabs
+  XlrDbUser: xl-release
+  XlrReportDbUser: xl-release-report
+  XlVersion: 8.6.1
   InstallMonitoring: true
-  monitoringUser: mon-user
+  MonitoringUser: mon-user
   OsType: linux
-  K8sAuthentication: Client key/certificate [Path to files]
-  externalDatabase: true
-  xlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  xlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
   XlrRAMRequest: 1.7Gi
   XlrRAMLimit: 6Gi
   XlrCPURequest: 0.7
   XlrCPULimit: 3
+  K8sAuthentication: FilePath
+  ExternalDatabase: true
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xlrAdminPass: password
-  xlrDbPass: xl-release
-  xlrReportDbPass: xl-release-report
-  monitoringUserPass: mon-pass
+  XlKeyStorePass: test123
+  XlrAdminPass: password
+  XlrDbPass: xl-release
+  XlrReportDbPass: xl-release-report
+  MonitoringUserPass: mon-pass

@@ -1,6 +1,6 @@
-K8sSetup: Local K8s from Docker Desktop for Mac/Windows
-useKubeconfig: false
-localApiServerURL: https://localk8s.com:8443
-K8sAuthentication: Client key/certificate [Path to files]
+K8sSetup: LocalK8S
+UseKubeconfig: false
+LocalApiServerURL: https://localk8s.com:8443
+K8sAuthentication: FilePath
 K8sClientCertFile: ../xl-infra/__test__/files/test-file
 K8sClientKeyFile: ../xl-infra/__test__/files/test-file

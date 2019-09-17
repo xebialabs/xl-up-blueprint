@@ -61,19 +61,18 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 expected-xl-values:
-  K8sSetup: Local K8s from Docker Desktop for Mac/Windows
-  useKubeconfig: false
-  localApiServerURL: https://localk8s.com:8443
+  K8sSetup: LocalK8S
+  UseKubeconfig: false
+  LocalApiServerURL: https://localk8s.com:8443
   InstallXLD: true
   InstallXLR: false
-  xldDbName: xl-deploy
-  xldDbUser: xl-deploy
-  xlVersion: 8.6.1
+  XldDbUser: xl-deploy
+  XlVersion: 8.6.1
   OsType: linux
-  K8sAuthentication: Client key/certificate [Path to files]
-  externalDatabase: true
-  xldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  K8sAuthentication: FilePath
+  ExternalDatabase: true
+  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
