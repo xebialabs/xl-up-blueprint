@@ -290,15 +290,6 @@ spec:
       saveInXlvals: false
       description: "The amount of CPU to allocate for each XL Deploy and XL Release pod"
 
-    - name: DockerRepo
-      type: Select
-      prompt: "Choose a Docker repository:"
-      options:
-        - xebialabs
-      value: xebialabs
-      saveInXlvals: true
-      ignoreIfSkipped: true
-
     - name: ExternalDatabase
       type: Confirm
       prompt: "Would you like to use an external database:"
