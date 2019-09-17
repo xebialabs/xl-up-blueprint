@@ -58,6 +58,7 @@ data:
     {{ else }}
     XlVersion: {{ .XlVersion }}
     {{ end }}
+    DockerRepo: {{ .DockerRepo }}
     ExternalDatabase: {{ .ExternalDatabase }}
     {{if .InstallXLD}}
     XldAdminPass: {{ .XldAdminPass }}

@@ -276,19 +276,14 @@ spec:
       ignoreIfSkipped: true
       description: "The version of both XL Deploy and XL Release that you would like to install"
 
-    - name: XlRAMRequest
-      type: Input
-      prompt: "How many RAM resources will be requested for the XebiaLabs POD? Ex: 4Gi"
-      value: "1.6Gi"
-      saveInXlvals: false
-      description: "The amount of RAM to allocate for each XL Deploy and XL Release pod "
-
-    - name: XlCPURequest
-      type: Input
-      prompt: "How many CPU resources will be requested for the XebiaLabs POD? Ex: 2"
-      value: "0.7"
-      saveInXlvals: false
-      description: "The amount of CPU to allocate for each XL Deploy and XL Release pod"
+    - name: DockerRepo	
+      type: Select	
+      prompt: "Choose a Docker repository:"	
+      options:	
+        - xebialabs	
+      value: xebialabs	
+      saveInXlvals: true	
+      ignoreIfSkipped: true
 
     - name: ExternalDatabase
       type: Confirm
