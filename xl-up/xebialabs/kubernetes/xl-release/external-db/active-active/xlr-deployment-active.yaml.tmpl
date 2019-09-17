@@ -83,7 +83,7 @@ spec:
                       - xl-release
               topologyKey: "kubernetes.io/hostname"
       initContainers:
-        {{if not .externalDatabase}}
+        {{if not .ExternalDatabase}}
         - name: wait-for-db
           image: alpine:3.6
           command:
@@ -101,8 +101,8 @@ spec:
         {{end}}
       containers:
         - name: xl-release
-          {{if .useCustomRegistry }}
-          image: {{.registryURL}}/{{.xlrVersion}}
+          {{if .UseCustomRegistry }}
+          image: {{.RegistryURL}}/{{.XlrVersion}}
           {{ else }}
           image: xebialabs/xl-release:{{$XL_VERSION}}
           {{ end }}
@@ -113,8 +113,8 @@ spec:
             - name: XL_CLUSTER_MODE
               value: full
             - name: XL_DB_URL
-              {{if .externalDatabase}}
-              value: {{.xlrDbUrl}}
+              {{if .ExternalDatabase}}
+              value: {{.XlrDbUrl}}
               {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLR_DB_NAME}}
               {{end}}
@@ -129,8 +129,8 @@ spec:
             - name: SERVER_URL
               value: "http://localhost:5516"
             - name: XL_REPORT_DB_URL
-              {{if .externalDatabase}}
-              value: {{.xlrReportDbUrl}}
+              {{if .ExternalDatabase}}
+              value: {{.XlrReportDbUrl}}
               {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLR_REPORT_DB_NAME}}
               {{end}}
@@ -166,7 +166,7 @@ spec:
           volumeMounts:
             - name: reports-dir
               mountPath: /opt/xebialabs/xl-release-server/reports
-      {{if .useCustomRegistry }}
+      {{if .UseCustomRegistry }}
       imagePullSecrets:
       - name: dockercred
       {{ end }}

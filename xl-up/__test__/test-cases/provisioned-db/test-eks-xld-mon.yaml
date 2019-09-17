@@ -60,30 +60,30 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
 expected-xl-values:
-  K8sSetup: AWS EKS
-  useKubeconfig: false
-  apiServerURL: https://aws-eks.com:6443
-  useAWSconfig: false
-  eksClusterName: test-eks-master
+  K8sSetup: AwsEKS
+  UseKubeconfig: false
+  ApiServerURL: https://aws-eks.com:6443
+  UseAWSconfig: false
+  EksClusterName: test-eks-master
   InstallXLD: true
   InstallXLR: false
-  xldDbName: xl-deploy
-  xldDbUser: xl-deploy
-  xlVersion: 8.6.1
-  efsId: test1234561
-  efsRegion: eu-west-1
+  XldDbName: xl-deploy
+  XldDbUser: xl-deploy
+  XlVersion: 8.6.1
+  EfsId: test1234561
+  EfsRegion: eu-west-1
   InstallMonitoring: true
-  monitoringUser: mon-user
-  postgresMaxConn: 400
-  postgresSharedBuff: 612MB
-  postgresEffectCacheSize: 2GB
-  postgresSyncCommit: "off"
-  postgresMaxWallSize: 512MB
+  MonitoringUser: mon-user
+  PostgresMaxConn: 400
+  PostgresSharedBuff: 612MB
+  PostgresEffectCacheSize: 2GB
+  PostgresSyncCommit: "off"
+  PostgresMaxWallSize: 512MB
   OsType: linux
 expected-xl-secrets:
-  xlKeyStorePass: test123
-  xldAdminPass: password
-  xldDbPass: xl-deploy
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbPass: xl-deploy
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY
-  monitoringUserPass: mon-pass
+  MonitoringUserPass: mon-pass

@@ -133,7 +133,7 @@ spec:
           volumeMounts:
             - name: export-dir
               mountPath: /opt/xebialabs/xl-deploy-server/export
-        {{if not .externalDatabase}}
+        {{if not .ExternalDatabase}}
         - name: wait-for-postgresql
           image: alpine:3.6
           command:
@@ -151,8 +151,8 @@ spec:
           {{end}}
       containers:
         - name: xl-deploy
-          {{if .useCustomRegistry }}
-          image: {{.registryURL}}/{{.xldVersion}}
+          {{if .UseCustomRegistry }}
+          image: {{.RegistryURL}}/{{.XldVersion}}
           {{ else }}
           image: xebialabs/xl-deploy:{{$XL_VERSION}}
           {{ end }}
@@ -163,8 +163,8 @@ spec:
             - name: XL_CLUSTER_MODE
               value: default
             - name: XL_DB_URL
-              {{if .externalDatabase}}
-              value: {{.xldDbUrl}}
+              {{if .ExternalDatabase}}
+              value: {{.XldDbUrl}}
               {{else}}
               value: jdbc:postgresql://postgresql:5432/{{$XLD_DB_NAME}}
               {{end}}
@@ -212,7 +212,7 @@ spec:
           volumeMounts:
             - name: export-dir
               mountPath: /opt/xebialabs/xl-deploy-server/export
-      {{if .useCustomRegistry }}
+      {{if .UseCustomRegistry }}
       imagePullSecrets:
       - name: dockercred
       {{ end }}
