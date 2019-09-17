@@ -276,15 +276,6 @@ spec:
       ignoreIfSkipped: true
       description: "The version of both XL Deploy and XL Release that you would like to install"
 
-    - name: DockerRepo	
-      type: Select	
-      prompt: "Choose a Docker repository:"	
-      options:	
-        - xebialabs	
-      value: xebialabs	
-      saveInXlvals: true	
-      ignoreIfSkipped: true
-
     - name: ExternalDatabase
       type: Confirm
       prompt: "Would you like to use an external database:"

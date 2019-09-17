@@ -7,7 +7,6 @@
 {{$XLD_KEYSTORE := "{{XLD_KEYSTORE}}"}}
 {{$XLD_WORK_HOSTPATH := "{{XLD_WORK_HOSTPATH}}"}}
 {{$XL_VERSION := "{{XL_VERSION}}"}}
-{{$DOCKER_REPO := "{{DOCKER_REPO}}"}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -96,7 +95,7 @@ spec:
           {{if .UseCustomRegistry }}                    
           image: {{.RegistryURL}}/{{.XldVersion}}
           {{ else }}
-          image: {{$DOCKER_REPO}}/xl-deploy:{{$XL_VERSION}}
+          image: xebialabs/xl-deploy:{{$XL_VERSION}}
           {{ end }}
           imagePullPolicy: Always
           env:

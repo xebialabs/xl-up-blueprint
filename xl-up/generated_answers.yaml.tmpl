@@ -51,7 +51,6 @@ RegistryURL: {{ .RegistryURL }}
 {{ else }}
 XlVersion: {{ .XlVersion }}
 {{ end }}
-DockerRepo: {{ .DockerRepo }}
 ExternalDatabase: {{ .ExternalDatabase }}
 {{if .InstallXLD}}
 {{ if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
