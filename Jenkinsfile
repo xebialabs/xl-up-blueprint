@@ -139,8 +139,8 @@ def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, St
     sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@test-eks-master@xl-up-master@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@xldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@xlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "./xld/xl-cli/build/linux-amd64/xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
 }
 
