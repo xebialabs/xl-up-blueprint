@@ -51,10 +51,20 @@ RegistryURL: {{ .RegistryURL }}
 {{ else }}
 XlVersion: {{ .XlVersion }}
 {{ end }}
-XlRAMRequest: {{ .XlRAMRequest }}
-XlCPURequest: {{ .XlCPURequest }}
 ExternalDatabase: {{ .ExternalDatabase }}
 {{if .InstallXLD}}
+{{ if ne .K8sSetup "LocalK8S" }}
+XldMasterCount: {{ .XldMasterCount }}
+XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
+XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
+XldMasterCPURequest: {{ .XldMasterCPURequest }}
+XldMasterCPULimit: {{ .XldMasterCPULimit }}
+XldWorkerCount: {{ .XldWorkerCount }}
+XldWorkerRAMRequest: {{ .XldWorkerRAMRequest }}
+XldWorkerRAMLimit: {{ .XldWorkerRAMLimit }}
+XldWorkerCPURequest: {{ .XldWorkerCPURequest }}
+XldWorkerCPULimit: {{ .XldWorkerCPULimit }}
+{{ end }}
 XldAdminPass: {{ .XldAdminPass }}
 XldLic: {{ .XldLic | b64enc }}
   {{if .ExternalDatabase}}
@@ -77,6 +87,12 @@ NsfServerHost: {{ .NsfServerHost }}
 NsfSharePath: {{ .NsfSharePath }}
 {{end}}
 {{if .InstallXLR}}
+{{ if ne .K8sSetup "LocalK8S" }}
+XlrRAMRequest: {{ .XlrRAMRequest }}
+XlrRAMLimit: {{ .XlrRAMLimit }}
+XlrCPURequest: {{ .XlrCPURequest }}
+XlrCPULimit: {{ .XlrCPULimit }}
+{{ end }}
 XlrAdminPass: {{ .XlrAdminPass }}
 XlrLic: {{ .XlrLic | b64enc }}
   {{if .ExternalDatabase}}

@@ -276,20 +276,6 @@ spec:
       ignoreIfSkipped: true
       description: "The version of both XL Deploy and XL Release that you would like to install"
 
-    - name: XlRAMRequest
-      type: Input
-      prompt: "How many RAM resources will be requested for the XebiaLabs POD? Ex: 4Gi"
-      value: "1.6Gi"
-      saveInXlvals: false
-      description: "The amount of RAM to allocate for each XL Deploy and XL Release pod "
-
-    - name: XlCPURequest
-      type: Input
-      prompt: "How many CPU resources will be requested for the XebiaLabs POD? Ex: 2"
-      value: "0.7"
-      saveInXlvals: false
-      description: "The amount of CPU to allocate for each XL Deploy and XL Release pod"
-
     - name: ExternalDatabase
       type: Confirm
       prompt: "Would you like to use an external database:"
@@ -308,6 +294,104 @@ spec:
       revealOnSummary: true
       replaceAsIs: true
       description: "The password that you would like to use for the XL Deploy admin user"
+
+    - name: XldMasterCount
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the number of XL Deploy masters to spin up"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: 2
+      description: "XL Deploy can be started up in an active-active setup. This means there can be many 'masters' to coordinate tasks across an arbitrary amount of 'workers'. This setting defines the preferred number of masters to spin up"
+
+    - name: XldMasterRAMRequest
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired RAM requests for the XL Deploy Master pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "1600Mi"
+      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMRequest)"
+      description: "This field sets the amount of RAM you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
+
+    - name: XldMasterRAMLimit
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired RAM limit for the XL Deploy Master pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "6Gi"
+      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMLimit)"
+      description: "This field sets the amount of RAM you would like the XL Deploy Master pods to be limited to in the Kubernetes cluster"
+
+    - name: XldMasterCPURequest
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired CPU requests for the XL Deploy Master pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "0.7"
+      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldMasterCPURequest)"
+      description: "This field sets the amount of CPU you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
+
+    - name: XldMasterCPULimit
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired CPU limit for the XL Deploy Master pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "3"
+      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldMasterCPULimit)"
+      description: "This field sets the amount of CPU you would like the XL Deploy Master pods to be limited to in the Kubernetes cluster"
+
+    - name: XldWorkerCount
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the number of XL Deploy workers to spin up"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: 2
+      description: "XL Deploy can be started up in an active-active setup. This means there can be many 'workers' to execute deployment tasks. This setting defines the preferred number of workers to spin up"
+
+    - name: XldWorkerRAMRequest
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired RAM requests for the XL Deploy Worker pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "1600Mi"
+      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMRequest)"
+      description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
+
+    - name: XldWorkerRAMLimit
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired RAM limit for the XL Deploy Worker pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "6Gi"
+      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMLimit)"
+      description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
+
+    - name: XldWorkerCPURequest
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired CPU requests for the XL Deploy Worker pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "0.7"
+      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPURequest)"
+      description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
+
+    - name: XldWorkerCPULimit
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired CPU limit for the XL Deploy Worker pods"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "3"
+      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPULimit)"
+      description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
 
     - name: XldLic
       type: File
@@ -491,6 +575,46 @@ spec:
       revealOnSummary: true
       replaceAsIs: true
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release's Reporting Database"
+
+    - name: XlrRAMRequest
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired RAM limit for the XL Release pods"
+      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      default: "1700Mi"
+      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMRequest)"
+      description: "This field sets the amount of RAM you would like the XL Release pods to be limited to in the Kubernetes cluster"
+
+    - name: XlrRAMLimit
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired RAM limit for the XL Release pods"
+      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      default: "6Gi"
+      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMLimit)"
+      description: "This field sets the amount of RAM you would like the XL Release pods to be limited to in the Kubernetes cluster"
+
+    - name: XlrCPURequest
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired CPU requests for the XL Release pods"
+      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      default: "0.7"
+      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPURequest)"
+      description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
+
+    - name: XlrCPULimit
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired CPU requests for the XL Release pods"
+      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      default: "3"
+      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPULimit)"
+      description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
 
     - name: XlKeyStore
       type: File

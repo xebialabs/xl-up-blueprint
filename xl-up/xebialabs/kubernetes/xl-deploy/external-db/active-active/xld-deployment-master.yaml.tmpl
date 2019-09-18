@@ -97,7 +97,7 @@ metadata:
   namespace: {{ .Namespace }}
 spec:
   serviceName: "xl-deploy-master"
-  replicas: 2
+  replicas: {{ .XldMasterCount }}
   updateStrategy:
     type: RollingUpdate
   selector:
@@ -190,11 +190,11 @@ spec:
               value: ".xl-deploy-master.{{ .Namespace }}.svc.cluster.local"
           resources:
             requests:
-              memory: "{{ .XlRAMRequest }}"
-              cpu: "{{ .XlCPURequest }}"
+              memory: "{{ .XldMasterRAMRequest }}"
+              cpu: "{{ .XldMasterCPURequest }}"
             limits:
-              memory: "6Gi"
-              cpu: "3"
+              memory: "{{ .XldMasterRAMLimit }}"
+              cpu: "{{ .XldMasterCPULimit }}"
           ports:
             - name: http
               containerPort: 4516

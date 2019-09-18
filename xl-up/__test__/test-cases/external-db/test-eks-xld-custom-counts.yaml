@@ -1,4 +1,4 @@
-answers-file: eks-xld-mon.yaml
+answers-file: eks-xld-custom-counts.yaml
 expected-files:
   - xebialabs/common.yaml
   - xebialabs/deployments.yaml
@@ -15,10 +15,20 @@ expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+not-expected-files:
+  #xl-k8s-foundation
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  #xl-deploy xl-release
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
   #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
@@ -47,17 +57,6 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
-not-expected-files:
-  - xebialabs/xl-release.yaml
-  #xl-deploy xl-release
-  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
-  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-  #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
 expected-xl-values:
   K8sSetup: AwsEKS
   UseKubeconfig: false
@@ -70,13 +69,12 @@ expected-xl-values:
   XlVersion: 8.6.1
   EfsId: test1234561
   EfsRegion: eu-west-1
-  InstallMonitoring: true
-  MonitoringUser: mon-user
+  InstallMonitoring: false
   OsType: linux
   ExternalDatabase: true
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
-  XldWorkerCount: 2
-  XldMasterCount: 2
+  XldWorkerCount: 5
+  XldMasterCount: 3
   XldMasterRAMRequest: 1600Mi
   XldMasterRAMLimit: 6Gi
   XldMasterCPURequest: 0.7
@@ -86,9 +84,8 @@ expected-xl-values:
   XldWorkerCPURequest: 0.7
   XldWorkerCPULimit: 3
 expected-xl-secrets:
-  XlKeyStorePass: test123
-  XldAdminPass: password
-  XldDbPass: xl-deploy
+  xlKeyStorePass: test123
+  xldAdminPass: password
+  xldDbPass: xl-deploy
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY
-  MonitoringUserPass: mon-pass

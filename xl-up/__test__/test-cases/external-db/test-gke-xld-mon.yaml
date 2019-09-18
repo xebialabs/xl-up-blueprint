@@ -71,6 +71,8 @@ expected-xl-values:
   MonitoringUser: mon-user
   OsType: linux
   K8sAuthentication: Token
+  XldWorkerCount: 2
+  XldMasterCount: 2
   NsfServerHost: nfs-test.com
   NsfSharePath: /xebialabs
   ExternalDatabase: true

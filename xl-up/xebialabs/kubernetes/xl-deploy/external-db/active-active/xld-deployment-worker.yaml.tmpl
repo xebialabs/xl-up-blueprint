@@ -33,7 +33,7 @@ metadata:
   namespace: {{ .Namespace }}
 spec:
   serviceName: "xl-deploy-worker"
-  replicas: 2
+  replicas: {{ .XldWorkerCount }}
   updateStrategy:
     type: RollingUpdate
   selector:
@@ -130,11 +130,11 @@ spec:
             - "http://xl-deploy-lb.{{ .Namespace }}.svc.cluster.local:4516/"
           resources:
             requests:
-              memory: "{{ .XlRAMRequest }}"
-              cpu: "{{ .XlCPURequest }}"
+              memory: "{{ .XldWorkerRAMRequest }}"
+              cpu: "{{ .XldWorkerCPURequest }}"
             limits:
-              memory: "6Gi"
-              cpu: "3"
+              memory: "{{ .XldWorkerRAMLimit }}"
+              cpu: "{{ .XldWorkerCPULimit }}"
           ports:
             - name: akka
               containerPort: 8180

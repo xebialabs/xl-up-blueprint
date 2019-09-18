@@ -58,8 +58,6 @@ data:
     {{ else }}
     XlVersion: {{ .XlVersion }}
     {{ end }}
-    XlRAMRequest: {{ .XlRAMRequest }}
-    XlCPURequest: {{ .XlCPURequest }}
     ExternalDatabase: {{ .ExternalDatabase }}
     {{if .InstallXLD}}
     XldAdminPass: {{ .XldAdminPass }}
@@ -74,6 +72,18 @@ data:
       {{if eq .K8sSetup "LocalK8S"}}
     XldWorkHostpath: {{ .XldWorkHostpath }}
       {{end}}
+      {{ if ne .K8sSetup "LocalK8S" }}
+    XldMasterCount: {{ .XldMasterCount }}
+    XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
+    XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
+    XldMasterCPURequest: {{ .XldMasterCPURequest }}
+    XldMasterCPULimit: {{ .XldMasterCPULimit }}
+    XldWorkerCount: {{ .XldWorkerCount }}
+    XldWorkerRAMRequest: {{ .XldWorkerRAMRequest }}
+    XldWorkerRAMLimit: {{ .XldWorkerRAMLimit }}
+    XldWorkerCPURequest: {{ .XldWorkerCPURequest }}
+    XldWorkerCPULimit: {{ .XldWorkerCPULimit }}
+      {{ end }}
     {{end}}
     {{if eq .K8sSetup "AwsEKS" }}
     EfsId: {{ .EfsId }}
@@ -93,6 +103,12 @@ data:
     XlrDbName: {{ .XlrDbName }}
     XlrReportDbName: {{ .XlrReportDbName }}
       {{end}}
+      {{ if ne .K8sSetup "LocalK8S" }}
+    XlrRAMRequest: {{ .XlrRAMRequest }}
+    XlrRAMLimit: {{ .XlrRAMLimit }}
+    XlrCPURequest: {{ .XlrCPURequest }}
+    XlrCPULimit: {{ .XlrCPULimit }}
+      {{ end }}
     XlrDbUser: {{ .XlrDbUser }}
     XlrDbPass: {{ .XlrDbPass }}
     XlrReportDbUser: {{ .XlrReportDbUser }}

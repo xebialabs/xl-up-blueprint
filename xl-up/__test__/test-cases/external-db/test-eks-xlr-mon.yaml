@@ -68,6 +68,10 @@ expected-xl-values:
   InstallMonitoring: true
   MonitoringUser: mon-user
   OsType: linux
+  XlrRAMRequest: 1700Mi
+  XlrRAMLimit: 6Gi
+  XlrCPURequest: 0.7
+  XlrCPULimit: 3
   ExternalDatabase: true
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report

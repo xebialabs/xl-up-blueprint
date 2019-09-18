@@ -72,6 +72,10 @@ expected-xl-values:
   MonitoringUser: mon-user
   OsType: linux
   K8sAuthentication: Token
+  XlrRAMRequest: 1700Mi
+  XlrRAMLimit: 6Gi
+  XlrCPURequest: 0.7
+  XlrCPULimit: 3
   NsfServerHost: nfs-test.com
   NsfSharePath: /xebialabs
   ExternalDatabase: true

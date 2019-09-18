@@ -71,6 +71,16 @@ expected-xl-values:
   InstallMonitoring: true
   MonitoringUser: mon-user
   OsType: linux
+  XldWorkerCount: 2
+  XldMasterCount: 2
+  XldMasterRAMRequest: 1600Mi
+  XldMasterRAMLimit: 6Gi
+  XldMasterCPURequest: 0.7
+  XldMasterCPULimit: 3
+  XldWorkerRAMRequest: 1600Mi
+  XldWorkerRAMLimit: 6Gi
+  XldWorkerCPURequest: 0.7
+  XldWorkerCPULimit: 3
   K8sAuthentication: FilePath
   ExternalDatabase: true
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
