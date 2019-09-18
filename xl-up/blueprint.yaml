@@ -12,7 +12,7 @@ spec:
       type: Select
       prompt: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
       options:
-        - label: LocalK8S
+        - label: Local K8s from Docker Desktop for Mac/Windows
           value: LocalK8S
         - label: AWS EKS
           value: AwsEKS
