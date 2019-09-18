@@ -100,15 +100,13 @@ pipeline {
             steps {
                 script {
                     try {
-                        /*sh "mkdir -p xld"
+                        sh "mkdir -p xld"
                         dir('xld') {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
                         dir('xld/xl-cli') {
                             sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
-                            stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
-                        unstash name: "xl-up"*/
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
                         awsAccessKeyIdLine = awsConfigure.split("\n")[1]
                         awsSecretKeyIdLine = awsConfigure.split("\n")[2]
@@ -140,9 +138,10 @@ def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, St
     sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@test-eks-master@xl-up-master@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@xldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@xlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "./xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
 }
 
 def deprovisionDeployment() {
