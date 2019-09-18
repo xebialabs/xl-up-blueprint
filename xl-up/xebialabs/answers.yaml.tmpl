@@ -72,7 +72,7 @@ data:
       {{if eq .K8sSetup "LocalK8S"}}
     XldWorkHostpath: {{ .XldWorkHostpath }}
       {{end}}
-      {{ if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+      {{ if ne .K8sSetup "LocalK8S" }}
     XldMasterCount: {{ .XldMasterCount }}
     XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
     XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
@@ -103,7 +103,7 @@ data:
     XlrDbName: {{ .XlrDbName }}
     XlrReportDbName: {{ .XlrReportDbName }}
       {{end}}
-      {{ if ne .K8sSetup "Local K8s from Docker Desktop for Mac/Windows" }}
+      {{ if ne .K8sSetup "LocalK8S" }}
     XlrRAMRequest: {{ .XlrRAMRequest }}
     XlrRAMLimit: {{ .XlrRAMLimit }}
     XlrCPURequest: {{ .XlrCPURequest }}
