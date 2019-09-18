@@ -117,7 +117,6 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         runXlUp(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
-                        deprovisionDeployment()
                     } catch (err) {
                         throw err
                     }
@@ -134,20 +133,12 @@ def notifySlack(String message, String notificationColor) {
 }
 
 def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, String efsFileId) {
-    sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@test-eks-master@xl-up-master@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
-}
-
-def deprovisionDeployment() {
-    sh ''' kubectl delete namespace xebialabs ;kubectl delete clusterrolebinding ingress-controller; kubectl delete clusterrole ingress-controller; kubectl delete clusterrolebinding fluentd-es;
-    kubectl delete clusterrole fluentd-es; kubectl delete clusterrolebinding elasticsearch-logging; kubectl delete clusterrole elasticsearch-logging ; kubectl delete clusterrolebinding run-efs-provisioner;
-    kubectl delete clusterrole efs-provisioner; kubectl delete sc aws-efs; kubectl delete sc gp2-retain; kubectl delete sc standard-retain; kubectl delete clusterrolebinding run-nfs-client-provisioner;
-    kubectl delete clusterrole nfs-client-provisioner-runner; kubectl delete sc managed-nfs-storage; kubectl delete clusterrole prometheus kube-state-metrics; kubectl delete clusterrolebinding prometheus kube-state-metrics
-    '''
+    sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@test-eks-master@xl-up-master@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -a xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
 }
