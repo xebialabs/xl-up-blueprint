@@ -68,7 +68,7 @@ pipeline {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
                         dir('xld/xl-cli') {
-                            sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
+                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
                         unstash name: "xl-up"
@@ -119,6 +119,7 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         runXlUp(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        deprovisionDeployment()
                     } catch (err) {
                         throw err
                     }
@@ -142,4 +143,12 @@ def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, St
     sh "sed -ie 's@xldLic: ../xl-up/__test__/files/test-file@xldLic: ./deployit-license.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@xlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml"
     sh "./xl up -a xl-up/__test__/test-cases/external-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
+}
+
+def deprovisionDeployment() {
+    sh ''' kubectl delete namespace xebialabs ;kubectl delete clusterrolebinding ingress-controller; kubectl delete clusterrole ingress-controller; kubectl delete clusterrolebinding fluentd-es;
+    kubectl delete clusterrole fluentd-es; kubectl delete clusterrolebinding elasticsearch-logging; kubectl delete clusterrole elasticsearch-logging ; kubectl delete clusterrolebinding run-efs-provisioner;
+    kubectl delete clusterrole efs-provisioner; kubectl delete sc aws-efs; kubectl delete sc gp2-retain; kubectl delete sc standard-retain; kubectl delete clusterrolebinding run-nfs-client-provisioner;
+    kubectl delete clusterrole nfs-client-provisioner-runner; kubectl delete sc managed-nfs-storage; kubectl delete clusterrole prometheus kube-state-metrics; kubectl delete clusterrolebinding prometheus kube-state-metrics
+    '''
 }
