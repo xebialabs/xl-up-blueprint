@@ -72,7 +72,7 @@ expected-xl-values:
   MonitoringUser: mon-user
   OsType: linux
   K8sAuthentication: Token
-  XlrRAMRequest: 1.7Gi
+  XlrRAMRequest: 1700Mi
   XlrRAMLimit: 6Gi
   XlrCPURequest: 0.7
   XlrCPULimit: 3

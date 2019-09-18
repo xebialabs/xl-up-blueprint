@@ -310,7 +310,7 @@ spec:
       ignoreIfSkipped: true
       prompt: "Enter the desired RAM requests for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
-      default: "1.6Gi"
+      default: "1600Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
 
@@ -359,7 +359,7 @@ spec:
       ignoreIfSkipped: true
       prompt: "Enter the desired RAM requests for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
-      default: "1.6Gi"
+      default: "1600Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
 
@@ -582,7 +582,7 @@ spec:
       ignoreIfSkipped: true
       prompt: "Enter the desired RAM limit for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
-      default: "1.7Gi"
+      default: "1700Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Release pods to be limited to in the Kubernetes cluster"
 

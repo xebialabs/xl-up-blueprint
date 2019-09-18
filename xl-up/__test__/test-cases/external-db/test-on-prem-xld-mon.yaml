@@ -73,11 +73,11 @@ expected-xl-values:
   OsType: linux
   XldWorkerCount: 2
   XldMasterCount: 2
-  XldMasterRAMRequest: 1.6Gi
+  XldMasterRAMRequest: 1600Mi
   XldMasterRAMLimit: 6Gi
   XldMasterCPURequest: 0.7
   XldMasterCPULimit: 3
-  XldWorkerRAMRequest: 1.6Gi
+  XldWorkerRAMRequest: 1600Mi
   XldWorkerRAMLimit: 6Gi
   XldWorkerCPURequest: 0.7
   XldWorkerCPULimit: 3
