@@ -142,7 +142,5 @@ def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, St
     sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@xlrLic: ./xl-release.lic@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@8.6.1@9.0.2@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
-    sh "echo 'UseCustomRegistry: false' >> xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
-    sh "echo 'ExternalDatabase: false' >> xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "./xld/xl-cli/build/linux-amd64/xl up -d -a xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
 }
