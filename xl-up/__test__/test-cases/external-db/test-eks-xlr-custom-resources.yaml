@@ -1,0 +1,83 @@
+answers-file: eks-xlr-custom-resources.yaml
+expected-files:
+  - xebialabs/common.yaml
+  - xebialabs/deployments.yaml
+  - xebialabs/xl-release.yaml
+  - xebialabs/xl-k8s-foundation.yaml
+  #xl-k8s-foundation
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+  #xl-deploy xl-release
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
+not-expected-files:
+  - xebialabs/xl-deploy.yaml
+  #xl-deploy xl-release
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  #xl-k8s-foundation
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  #efk
+  - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
+  #pg
+  - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/secret.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+expected-xl-values:
+  K8sSetup: AwsEKS
+  UseKubeconfig: false
+  ApiServerURL: https://aws-eks.com:6443
+  UseAWSconfig: false
+  EksClusterName: test-eks-master
+  InstallXLD: false
+  InstallXLR: true
+  XlrDbUser: xl-release
+  XlVersion: 8.6.1
+  XlrReportDbUser: xl-release-report
+  InstallMonitoring: false
+  OsType: linux
+  XlrRAMRequest: 1740Mi
+  XlrRAMLimit: 4Gi
+  XlrCPURequest: 0.8
+  XlrCPULimit: 4
+  ExternalDatabase: true
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+expected-xl-secrets:
+  XlKeyStorePass: test123
+  XlrAdminPass: password
+  XlrDbPass: xl-release
+  XlrReportDbPass: xl-release-report
+  AWSAccessKey: SOMEKEY
+  AWSAccessSecret: SOMEMOREKEY
