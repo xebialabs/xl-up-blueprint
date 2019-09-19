@@ -48,3 +48,7 @@ XldWorkerCPULimit: 3
 XldWorkerRAMRequest: 1600Mi
 XldWorkerRAMLimit: 6Gi
 XlrRAMRequest: 1700Mi
+XlrRAMLimit: 6Gi
+XlrCPURequest: 0.7
+XlrCPULimit: 3
+MonitoringDataRetention: 7
