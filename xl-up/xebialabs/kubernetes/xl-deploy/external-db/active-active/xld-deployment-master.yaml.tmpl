@@ -154,7 +154,7 @@ spec:
           {{if .UseCustomRegistry }}
           image: {{.RegistryURL}}/{{.XldVersion}}
           {{ else }}
-          image: xebialabs/xl-deploy:{{$XL_VEXLD_OFFICIAL_VERSION}}
+          image: xebialabs/xl-deploy:{{$XLD_OFFICIAL_VERSION}}
           {{ end }}
           imagePullPolicy: Always
           env:
