@@ -227,7 +227,7 @@ spec:
       prompt: "Choose the version of the XL Deploy:"
       promptIf: !expr "!UseCustomRegistry"
       options:
-        - !expr "version('_showapplicableversions')"
+        - !expr "version('_showapplicableversions', 'xld')"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The version of both XL Deploy you would like to install"
@@ -263,7 +263,7 @@ spec:
       prompt: "Choose the version of the XL Release:"
       promptIf: !expr "!UseCustomRegistry"
       options:
-        - !expr "version('_showapplicableversions')"
+        - !expr "version('_showapplicableversions', 'xlr')"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The version of both XL Release you would like to install"

@@ -65,7 +65,7 @@ spec:
           XLD_VERSION: "{{.XldTag}}"
           {{ else }}
           XLD_OFFICIAL_VERSION: "{{.XldOfficialVersion}}"
-          XLR_OFFICIAL_VERSION: "{{.XlROfficialVersion}}"
+          XLR_OFFICIAL_VERSION: "{{.XlrOfficialVersion}}"
           {{ end }}
         {{if  eq .K8sSetup "LocalK8S" }}
         {{if not .ExternalDatabase}}
