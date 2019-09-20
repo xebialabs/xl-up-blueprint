@@ -67,7 +67,8 @@ expected-xl-values:
   InstallXLR: true
   XldDbUser: xl-deploy
   XlrDbUser: xl-release
-  XlVersion: 8.6.1
+  XlrOfficialVersion: 8.6.1
+  XldOfficialVersion: 8.6.1
   XlrReportDbUser: xl-release-report
   InstallMonitoring: true
   MonitoringUser: mon-user

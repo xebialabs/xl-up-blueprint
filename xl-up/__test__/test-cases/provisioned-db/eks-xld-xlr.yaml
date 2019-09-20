@@ -24,7 +24,8 @@ XlrReportDbUser: xl-release-report
 XlrReportDbPass: xl-release-report
 XlKeyStore: ../xl-up/__test__/files/test-file
 XlKeyStorePass: test123
-XlVersion: 8.6.1
+XlrOfficialVersion: 8.6.1
+XldOfficialVersion: 8.6.1
 InstallMonitoring: false
 PostgresMaxConn: 400
 PostgresSharedBuff: 612MB

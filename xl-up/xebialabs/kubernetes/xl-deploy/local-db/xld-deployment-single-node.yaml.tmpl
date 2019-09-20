@@ -6,7 +6,7 @@
 {{$XLD_KEYSTORE_PASS := "{{XLD_KEYSTORE_PASS}}"}}
 {{$XLD_KEYSTORE := "{{XLD_KEYSTORE}}"}}
 {{$XLD_WORK_HOSTPATH := "{{XLD_WORK_HOSTPATH}}"}}
-{{$XL_VERSION := "{{XL_VERSION}}"}}
+{{$XLD_OFFICIAL_VERSION := "{{XLD_OFFICIAL_VERSION}}"}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -95,7 +95,7 @@ spec:
           {{if .UseCustomRegistry }}                    
           image: {{.RegistryURL}}/{{.XldVersion}}
           {{ else }}
-          image: xebialabs/xl-deploy:{{$XL_VERSION}}
+          image: xebialabs/xl-deploy:{{$XLD_OFFICIAL_VERSION}}
           {{ end }}
           imagePullPolicy: Always
           env:

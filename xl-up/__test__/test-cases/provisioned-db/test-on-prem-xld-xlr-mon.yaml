@@ -71,7 +71,8 @@ expected-xl-values:
   NsfSharePath: /xebialabs
   XlrDbName: xl-release
   XlrDbUser: xl-release
-  XlVersion: 8.6.1
+  XlrOfficialVersion: 8.6.1
+  XldOfficialVersion: 8.6.1
   XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
   InstallMonitoring: true

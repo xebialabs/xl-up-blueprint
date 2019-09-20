@@ -222,6 +222,16 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Deploy"
 
+    - name: XldOfficialVersion
+      type: Select
+      prompt: "Choose the version of the XL Deploy:"
+      promptIf: !expr "!UseCustomRegistry"
+      options:
+        - !expr "version('_showapplicableversions')"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The version of both XL Deploy you would like to install"
+
     - name: XldVersion
       type: Input
       saveInXlvals: true
@@ -248,6 +258,16 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Release"
 
+    - name: XlrOfficialVersion
+      type: Select
+      prompt: "Choose the version of the XL Release:"
+      promptIf: !expr "!UseCustomRegistry"
+      options:
+        - !expr "version('_showapplicableversions')"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The version of both XL Release you would like to install"
+
     - name: XlrVersion
       type: Input
       prompt: "Enter your custom XL Release image and tag:"
@@ -265,16 +285,6 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Enter the XLR custom image:"
-
-    - name: XlVersion
-      type: Select
-      prompt: "Choose the version of the XebiaLabs DevOps Platform:"
-      promptIf: !expr "!UseCustomRegistry"
-      options:
-        - !expr "version('_showapplicableversions')"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The version of both XL Deploy and XL Release that you would like to install"
 
     - name: ExternalDatabase
       type: Confirm

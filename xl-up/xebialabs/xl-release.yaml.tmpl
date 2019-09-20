@@ -11,7 +11,7 @@ spec:
         {{if  .UseCustomRegistry }}
         - name: "{{.XlrTag}}"
         {{ else }}
-        - name: "{{.XlVersion}}"
+        - name: "{{.XlrOfficialVersion}}"
         {{ end }}
           orchestrator:
             - sequential-by-dependency

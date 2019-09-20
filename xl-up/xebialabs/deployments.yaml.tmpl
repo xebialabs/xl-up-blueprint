@@ -10,7 +10,7 @@ spec:
   {{if .UseCustomRegistry}}
   package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlrTag}}-{{.XldTag}}
   {{else}}
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlVersion}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlrOfficialVersion}}-{{.XlfOfficialVersion}}
   {{end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
@@ -23,7 +23,7 @@ spec:
   {{if .UseCustomRegistry}}
   package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldTag}}
   {{else}}
-  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XlVersion}}
+  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldOfficialVersion}}
   {{end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
@@ -37,7 +37,7 @@ spec:
   {{if .UseCustomRegistry}}
   package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrTag}}
   {{else}}
-  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlVersion}}
+  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrOfficialVersion}}
   {{end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:

@@ -64,7 +64,8 @@ spec:
           XLR_VERSION: "{{.XlrTag}}"
           XLD_VERSION: "{{.XldTag}}"
           {{ else }}
-          XL_VERSION: "{{.XlVersion}}"
+          XLD_OFFICIAL_VERSION: "{{.XldOfficialVersion}}"
+          XLR_OFFICIAL_VERSION: "{{.XlROfficialVersion}}"
           {{ end }}
         {{if  eq .K8sSetup "LocalK8S" }}
         {{if not .ExternalDatabase}}
@@ -151,7 +152,7 @@ spec:
               {{if .UseCustomRegistry}}
               - name: {{.XlrTag}}-{{.XldTag}}
               {{else}}
-              - name: {{.XlVersion}}
+              - name: {{.XlrOfficialVersion}}-{{.XldOfficialVersion}}
               {{end}}
                 type: udm.DeploymentPackage
                 orchestrator:

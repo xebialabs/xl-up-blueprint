@@ -56,7 +56,8 @@ data:
     DockerPass: {{ .DockerPass }}
     RegistryURL: {{ .RegistryURL }}
     {{ else }}
-    XlVersion: {{ .XlVersion }}
+    XldOfficialVersion: {{ .XldOfficialVersion }}
+    XlrOfficialVersion: {{ .XlrOfficialVersion }}
     {{ end }}
     ExternalDatabase: {{ .ExternalDatabase }}
     {{if .InstallXLD}}
