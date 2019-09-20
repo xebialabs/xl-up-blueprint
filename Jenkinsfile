@@ -4,7 +4,7 @@ import com.xebialabs.pipeline.utils.Branches
 
 import groovy.transform.Field
 
-@Field def testCases = ["eks-xld-xlr-mon"]
+@Field def testCases = ["eks-xld-xlr-mon", "on-prem-xld-mon", "gke-xld-xlr-mon"]
 
 pipeline {
     agent none
@@ -75,7 +75,7 @@ pipeline {
                         awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true).trim()
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                        runXlUp(awsAccessKey, eksEndpoint)
+                        runXlUpOnEks(awsAccessKey, eksEndpoint)
                     } catch (err) {
                         throw err
                     }
@@ -116,7 +116,7 @@ pipeline {
                         sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                        runXlUp(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
                     } catch (err) {
                         throw err
                     }
@@ -132,8 +132,8 @@ def notifySlack(String message, String notificationColor) {
             channel: "#kubicorns", tokenCredentialId: "slack-token")
 }
 
-def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, String efsFileId) {
-    sh "sed -ie 's%https://aws-eks.com:6443%${eksEndpoint}%g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
+def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, String efsFileId) {
+    sh "sed -ie 's@https://aws-eks.com:6443@${eksEndpoint}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@test1234561@${efsFileId}@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
@@ -143,4 +143,31 @@ def runXlUp(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, St
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "sed -ie 's@8.6.1@9.0.2@g' xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml"
     sh "./xld/xl-cli/build/linux-amd64/xl up -d -a xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
+}
+
+def runXlUpOnPrem(String nsfServerHost, String nsfSharePath) {
+    sh "touch k8sClientCert-onprem.crt"
+    sh "echo ${env.ON_PREM_CERT} >> k8sClientCert-onprem.crt"
+    sh "touch k8sClientCertKey-onprem.key"
+    sh "echo ${env.ON_PREM_KEY} >> k8sClientCert-onprem.key"
+    sh "sed -ie 's@https://k8s.com:6443@${env.ON_PREM_K8S_API_URL}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@8.6.1@9.0.2@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@k8sClientCert-onprem.crt@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@k8sClientCert-onprem.key@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@nfs-test.com@172.16.0.45@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@/xebialabs@/xebialabs-k8s@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldMasterCount: 2' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldMasterCPULimit: 3' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldMasterCPURequest: 0.7' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldMasterRAMLimit: 6Gi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldMasterRAMRequest: 1600Mi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldWorkerCPULimit: 3' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldWorkerCPURequest: 0.7' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldWorkerCount: 2' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldWorkerRAMLimit: 6Gi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XldWorkerRAMRequest: 1600Mi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XlrCPULimit: 3' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XlrCPURequest: 0.7' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XlrRAMLimit: 6Gi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo 'XlrRAMRequest: 1700Mi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
 }
