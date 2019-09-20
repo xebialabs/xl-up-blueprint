@@ -669,13 +669,19 @@ spec:
       revealOnSummary: true
       description: "The password to use for accessing Grafana and Kibana"
 
-    - name: PostgresqlWorkHostpath
+    - name: PostgresqlWorkHostpathPlain
       type: Input
       prompt: "Enter the local directory path where PostgreSQL can store its data:"
       promptIf: !expr "!ExternalDatabase && K8sSetup == 'LocalK8S'"
-      saveInXlvals: true
+      saveInXlvals: false
       ignoreIfSkipped: true
       description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
+
+    - name: PostgresqlWorkHostpath
+      type: Input
+      value: !expr "!ExternalDatabase && K8sSetup == 'LocalK8S' ? normalizePath(PostgresqlWorkHostpathPlain) : ''"
+      saveInXlvals: true
+      ignoreIfSkipped: true
 
     - name: PostgresMaxConn
       type: Input
