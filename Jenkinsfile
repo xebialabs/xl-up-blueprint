@@ -158,7 +158,7 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt"
     sh "rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt"
     sh """ if [[ ! -f "k8sClientCert-onprem.key" ]]; then
-        echo ${ON_PREM_KEY} >> k8sClientCert-onprem.key
+        echo ${ON_PREM_KEY} >> k8sClientCert-onprem-tmp.key
     fi"""
     sh "tr ' ' '\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key"
     sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key"
