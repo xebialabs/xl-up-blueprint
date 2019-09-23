@@ -161,5 +161,5 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@k8sClientCert-onprem.key@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml -b xl-infra -l ."
 }
