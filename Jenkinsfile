@@ -156,13 +156,13 @@ def runXlUpOnPrem(String nsfSharePath) {
     fi"""
     sh "tr ' ' '\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt"
     sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt"
-    sh "rm k8sClientCert-onprem-tmp.crt | k8sClientCert-onprem-tmp2.crt"
+    sh "rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt"
     sh """ if [[ ! -f "k8sClientCert-onprem.key" ]]; then
         echo ${ON_PREM_KEY} >> k8sClientCert-onprem.key
     fi"""
     sh "tr ' ' '\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key"
     sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key"
-    sh "rm k8sClientCert-onprem-tmp.key | k8sClientCert-onprem-tmp2.key"
+    sh "rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key"
     sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@8.6.1@9.0.2@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: ./k8sClientCert-onprem.crt@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
