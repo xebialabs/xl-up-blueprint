@@ -19,6 +19,10 @@ pipeline {
     environment {
         REPOSITORY_NAME = 'xl-up-blueprint'
         DIST_SERVER_CRED = credentials('distserver')
+        ON_PREM_CERT = env.ON_PREM_CERT
+        ON_PREM_KEY = env.ON_PREM_KEY
+        ON_PREM_K8S_API_URL = env.ON_PREM_K8S_API_URL
+        NSF_SERVER_HOST = env.NSF_SERVER_HOST
     }
 
     stages {
@@ -116,7 +120,8 @@ pipeline {
                         sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        nfsSharePath = "xebialabs-k8s"
+                        runXlUpOnPrem(nfsSharePath)
                     } catch (err) {
                         throw err
                     }
@@ -145,29 +150,15 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
     sh "./xld/xl-cli/build/linux-amd64/xl up -d -a xl-up/__test__/test-cases/provisioned-db/eks-xld-xlr-mon.yaml -b xl-infra -l ."
 }
 
-def runXlUpOnPrem(String nsfServerHost, String nsfSharePath) {
+def runXlUpOnPrem(String nsfSharePath) {
     sh "touch k8sClientCert-onprem.crt"
-    sh "echo ${env.ON_PREM_CERT} >> k8sClientCert-onprem.crt"
+    sh "echo ${ON_PREM_CERT} >> k8sClientCert-onprem.crt"
     sh "touch k8sClientCertKey-onprem.key"
-    sh "echo ${env.ON_PREM_KEY} >> k8sClientCert-onprem.key"
-    sh "sed -ie 's@https://k8s.com:6443@${env.ON_PREM_K8S_API_URL}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "echo ${ON_PREM_KEY} >> k8sClientCert-onprem.key"
+    sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@8.6.1@9.0.2@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@k8sClientCert-onprem.crt@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@k8sClientCert-onprem.key@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "sed -ie 's@nfs-test.com@172.16.0.45@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "sed -ie 's@/xebialabs@/xebialabs-k8s@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldMasterCount: 2' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldMasterCPULimit: 3' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldMasterCPURequest: 0.7' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldMasterRAMLimit: 6Gi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldMasterRAMRequest: 1600Mi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldWorkerCPULimit: 3' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldWorkerCPURequest: 0.7' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldWorkerCount: 2' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldWorkerRAMLimit: 6Gi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XldWorkerRAMRequest: 1600Mi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XlrCPULimit: 3' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XlrCPURequest: 0.7' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XlrRAMLimit: 6Gi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "echo 'XlrRAMRequest: 1700Mi' >> xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
+    sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
 }
