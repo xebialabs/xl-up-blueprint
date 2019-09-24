@@ -14,5 +14,5 @@ XlKeyStore: ../xl-up/__test__/files/test-file
 XlKeyStorePass: test123
 XlVersion: 8.6.1
 OsType: linux
-PostgresqlWorkHostpath: /psql
+PostgresqlWorkHostpathPlain: /psql
 K8sAuthentication: FilePath
