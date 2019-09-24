@@ -26,7 +26,7 @@ pipeline {
     }
 
     stages {
-        /*stage('Test xl-up Blueprint') {
+        stage('Test xl-up Blueprint') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -49,7 +49,7 @@ pipeline {
                 }
 
             }
-        }*/
+        }
         stage('Run XL UP Master') {
             agent {
                 node {
@@ -109,7 +109,7 @@ pipeline {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
                         dir('xld/xl-cli') {
-                            sh "./gradlew goClean goBuild --info -x goTest -x updateLicenses -PincludeXlUp"
+                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
                         }
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
                         awsAccessKeyIdLine = awsConfigure.split("\n")[1]
@@ -121,7 +121,7 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         nfsSharePath = "xebialabs-k8s"
-                        runXlUpOnPrem(nfsSharePath)
+                        runXlUpOnEks(awsSecretKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
                     } catch (err) {
                         throw err
                     }
