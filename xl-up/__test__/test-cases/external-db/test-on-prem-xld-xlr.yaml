@@ -69,8 +69,8 @@ expected-xl-values:
   NsfSharePath: /xebialabs
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
-  XlrOfficialVersion: 8.6.1
-  XldOfficialVersion: 8.6.1
+  XlrOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   InstallMonitoring: false
   OsType: linux
   XldWorkerCount: 2

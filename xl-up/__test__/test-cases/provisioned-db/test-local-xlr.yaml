@@ -69,8 +69,8 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
-  XlrOfficialVersion: 8.6.1
-  XldOfficialVersion: 8.6.1
+  XlrOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   PostgresqlWorkHostpath: /psql
   K8sAuthentication: FilePath
 expected-xl-secrets:

@@ -63,8 +63,8 @@ expected-xl-values:
   InstallXLD: false
   InstallXLR: true
   XlrDbUser: xl-release
-  XlrOfficialVersion: 8.6.1
-  XldOfficialVersion: 8.6.1
+  XlrOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   XlrReportDbUser: xl-release-report
   InstallMonitoring: false
   OsType: linux
