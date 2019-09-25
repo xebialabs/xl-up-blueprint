@@ -1,4 +1,4 @@
-{{if  eq .K8sSetup "AwsEKS" }}
+{{- if  eq .K8sSetup "AwsEKS" }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -12,7 +12,7 @@ spec:
         clusterName: !value EksClusterName
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
-{{else if  eq .K8sSetup "LocalK8S" }}
+{{- else if  eq .K8sSetup "LocalK8S" }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -22,14 +22,14 @@ spec:
         type: k8s.Master
         apiServerURL: !value LocalApiServerURL
         skipTLS: true
-        {{if .UseKubeconfig }}
+        {{- if .UseKubeconfig }}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
-        {{else}}
+        {{- else }}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
-        {{end}}
-{{else}}
+        {{- end }}
+{{- else }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -39,18 +39,18 @@ spec:
         type: k8s.Master
         apiServerURL: !value ApiServerURL
         skipTLS: true
-        {{if .K8sToken}}
+        {{- if .K8sToken}}
         token: !value K8sToken
-        {{else}}
-          {{if eq .K8sClientCertFile ""}}
+        {{- else }}
+          {{- if eq .K8sClientCertFile ""}}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
-          {{else}}
+          {{- else }}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
-          {{end}}
-        {{end}}
-{{end}}
+          {{- end }}
+        {{- end }}
+{{- end }}
 ---
 apiVersion: xl-deploy/v1
 kind: Environments
@@ -60,23 +60,23 @@ spec:
       - name: DICTIONARY
         type: udm.Dictionary
         entries:
-          {{if .UseCustomRegistry}}
+        {{- if .UseCustomRegistry}}
           XLR_VERSION: "{{.XlrTag}}"
           XLD_VERSION: "{{.XldTag}}"
-          {{ else }}
+        {{- else }}
           XLD_OFFICIAL_VERSION: "{{.XldOfficialVersion}}"
           XLR_OFFICIAL_VERSION: "{{.XlrOfficialVersion}}"
-          {{ end }}
-        {{if  eq .K8sSetup "LocalK8S" }}
-        {{if not .ExternalDatabase}}
+        {{- end }}
+        {{- if  eq .K8sSetup "LocalK8S" }}
+            {{- if not .ExternalDatabase}}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
-        {{end}}
-        {{end}}
-        {{if  .InstallXLR }}
-          {{if not .ExternalDatabase }}
+            {{- end }}
+        {{- end }}
+        {{- if  .InstallXLR }}
+          {{- if not .ExternalDatabase }}
           XLR_REPORT_DB_NAME: !value XlrReportDbName
           XLR_DB_NAME: !value XlrDbName
-          {{end}}
+          {{- end }}
           XLR_REPORT_DB_USER: !value XlrReportDbUser
           XLR_DB_USER: !value XlrDbUser
           XLR_KEYSTORE_PASS: !value XlKeyStorePass
@@ -85,46 +85,46 @@ spec:
           XLR_REPORT_DB_PASS: !value XlrReportDbPass
           XLR_DB_PASS: !value XlrDbPass
           XLR_ADMIN_PASS: !value XlrAdminPass
-        {{end}}
-        {{if  .InstallXLD }}
+        {{- end }}
+        {{- if  .InstallXLD }}
           XLD_KEYSTORE: {{ .XlKeyStore | b64enc }}
           XLD_KEYSTORE_PASS: !value XlKeyStorePass
           XLD_LIC: {{ .XldLic | b64enc }}
           XLD_DB_PASS: !value XldDbPass
           XLD_ADMIN_PASS: !value XldAdminPass
-          {{if  eq .K8sSetup "LocalK8S" }}
+          {{- if  eq .K8sSetup "LocalK8S" }}
           XLD_WORK_HOSTPATH: !value XldWorkHostpath
-          {{end}}
-          {{if not .ExternalDatabase }}
+          {{- end }}
+          {{- if not .ExternalDatabase }}
           XLD_DB_NAME: !value XldDbName
-          {{end}}
+          {{- end }}
           XLD_DB_USER: !value XldDbUser
-        {{end}}
-        {{if eq .K8sSetup "AwsEKS"}}
+        {{- end }}
+        {{- if eq .K8sSetup "AwsEKS"}}
           EFS_ID: !value EfsId
           EFS_REGION: !value EfsRegion
-        {{else if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
+        {{- else if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
           NFS_SERVER: !value NsfServerHost
           NFS_PATH: !value NsfSharePath
-        {{end}}
-        {{if not .ExternalDatabase}}
+        {{- end }}
+        {{- if not .ExternalDatabase}}
           POSTGRES_MAX_CONN: !value PostgresMaxConn
           POSTGRES_SHARED_BUFF: !value PostgresSharedBuff
           POSTGRES_SYNC_COMMIT: !value PostgresSyncCommit
           POSTGRES_EFFECT_CACHE_SIZE: !value PostgresEffectCacheSize
           POSTGRES_MAX_WALL_SIZE: !value PostgresMaxWallSize
-        {{end}}
+        {{- end }}
       - name: K8S
         type: udm.Environment
         members:
-          {{if  eq .K8sSetup "AwsEKS" }}
+          {{- if  eq .K8sSetup "AwsEKS" }}
           - Infrastructure/XEBIALABS/EKS-MASTER
-          {{else if  eq .K8sSetup "LocalK8S" }}
+          {{- else if  eq .K8sSetup "LocalK8S" }}
           - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL
-          {{else}}
+          {{- else }}
           - Infrastructure/XEBIALABS/K8s-MASTER
-          {{end}}
+          {{- end }}
         dictionaries:
           - Environments/XEBIALABS/DICTIONARY
 ---
@@ -149,11 +149,11 @@ spec:
           - name: Answers-Configmap-Deployment
             type: udm.Application
             children:
-              {{if .UseCustomRegistry}}
+              {{- if .UseCustomRegistry}}
               - name: {{.XlrTag}}-{{.XldTag}}
-              {{else}}
+              {{- else }}
               - name: {{.XlrOfficialVersion}}-{{.XldOfficialVersion}}
-              {{end}}
+              {{- end }}
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
@@ -163,24 +163,24 @@ spec:
                     file: !file "answers.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "v0.6"
-                {{if not .ExternalDatabase}}
+                {{- if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
-                {{else}}
-                  {{if ne .K8sSetup "LocalK8S"}}
-                    {{if ne .K8sSetup "PlainK8SCluster"}}
+                {{- else }}
+                  {{- if ne .K8sSetup "LocalK8S"}}
+                    {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
-                    {{end}}
-                    {{if ne .K8sSetup "AwsEKS"}}
+                    {{- end }}
+                    {{- if ne .K8sSetup "AwsEKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                    {{else}}
+                    {{- else }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
-                    {{end}}
-                  {{end}}
-                {{end}}
-                {{ if .InstallMonitoring }}
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+                {{- if .InstallMonitoring }}
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
-                {{ end }}
+                {{- end }}
                 undeployDependencies: "true"
           - name: K8s-Ingress-Controller
             type: udm.Application
@@ -190,19 +190,19 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  {{if .UseCustomRegistry}}
+                  {{- if .UseCustomRegistry}}
                   - name: dockercreds
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/dockercred.yaml
-                  {{end}}
+                  {{- end }}
                   - name: haproxy-ingress-controller
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-                  {{if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE")}}
+                  {{- if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE")}}
                   - name: service-l7
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-                  {{end}}
+                  {{- end }}
                   - name: default-backend
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
@@ -210,24 +210,24 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
-                  {{if not ( eq .K8sSetup "LocalK8S" )}}
-                    {{if not .ExternalDatabase}}
+                  {{- if not ( eq .K8sSetup "LocalK8S" )}}
+                    {{- if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
-                    {{else}}
-                      {{if ne .K8sSetup "LocalK8S"}}
-                        {{if ne .K8sSetup "PlainK8SCluster"}}
+                    {{- else }}
+                      {{- if ne .K8sSetup "LocalK8S"}}
+                        {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
-                        {{end}}
-                        {{if ne .K8sSetup "AwsEKS"}}
+                        {{- end }}
+                        {{- if ne .K8sSetup "AwsEKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                        {{else}}
+                        {{- else }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
-                        {{end}}
-                      {{end}}
-                    {{end}}
-                  {{end}}
+                        {{- end }}
+                      {{- end }}
+                    {{- end }}
+                  {{- end }}
                 undeployDependencies: "true"
-          {{if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") }}
+          {{- if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") }}
           - name: K8s-StorageClass
             type: udm.Application
             children:
@@ -236,19 +236,19 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  {{if eq .K8sSetup "AwsEKS" }}
+                  {{- if eq .K8sSetup "AwsEKS" }}
                   - name: gp2
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
                   - name: aws-efs-storageclass
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
-                  {{else if eq .K8sSetup "GoogleGKE" }}
+                  {{- else if eq .K8sSetup "GoogleGKE" }}
                   - name: pd-retain
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
-                  {{ end }}
-          {{end}}
+                  {{- end }}
+          {{- end }}
           {{- if eq .K8sSetup "AwsEKS" }}
           - name: K8S-EFS-Provisioner
             type: udm.Application
@@ -267,8 +267,8 @@ spec:
                   - name: aws-efs-rbac
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
-          {{ end }}
-          {{ if not .ExternalDatabase }}
+          {{- end }}
+          {{- if not .ExternalDatabase }}
           - name: PostgreSQL
             type: udm.Application
             children:
@@ -281,19 +281,19 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
-                  {{if ne .K8sSetup "LocalK8S"}}
-                    {{if ne .K8sSetup "PlainK8SCluster"}}
+                  {{- if ne .K8sSetup "LocalK8S"}}
+                    {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
-                    {{end}}
-                    {{if ne .K8sSetup "AwsEKS"}}
+                    {{- end }}
+                    {{- if ne .K8sSetup "AwsEKS"}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                    {{else}}
+                    {{- else }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
-                    {{end}}
-                  {{end}}
+                    {{- end }}
+                  {{- end }}
                 undeployDependencies: "true"
-          {{end}}
-          {{if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
+          {{- end }}
+          {{- if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
           - name: K8s-NFS-Client-Provisioner
             type: udm.Application
             children:
@@ -311,8 +311,8 @@ spec:
                   - name: storageclass
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
-          {{end}}
-          {{ if .InstallMonitoring }}
+          {{- end }}
+          {{- if .InstallMonitoring }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
             children:
             - name: Elasticsearch-Logging
@@ -460,4 +460,4 @@ spec:
                 applicationDependencies:
                   Prometheus: "v2.7.2"
                 undeployDependencies: "true"
-          {{end}}
+          {{- end }}

@@ -2,31 +2,31 @@ K8sSetup: {{.K8sSetup}}
 UseKubeconfig: {{.UseKubeconfig}}
 ApiServerURL: {{.ApiServerURL}}
 OsType: {{ .OsType }}
- {{if ne .K8sAuthentication ""}}
+{{- if ne .K8sAuthentication ""}}
 K8sAuthentication: {{ .K8sAuthentication }}
-{{end}}
-{{ if eq .K8sSetup "LocalK8S" }}
+{{- end}}
+{{- if eq .K8sSetup "LocalK8S" }}
 LocalApiServerURL: {{ .LocalApiServerURL }}
-{{ end }}
-{{ if eq .K8sToken ""}}
-  {{ if eq .K8sClientCert "" }}
+{{- end }}
+{{- if eq .K8sToken ""}}
+  {{- if eq .K8sClientCert "" }}
 K8sClientCertFile: {{ .CertFile }}
 K8sClientKeyFile: {{ .KeyFile }}
-  {{else}}
+  {{- else}}
 K8sClientCert: {{ .K8sClientCert | b64enc }}
 K8sClientKey: {{ .K8sClientKey | b64enc }}
-  {{end}}
-{{else}}
+  {{- end}}
+{{- else}}
 K8sToken: {{ .K8sToken}}
-{{end}}
-{{ if eq .K8sSetup "GoogleGKE" }}
+{{- end}}
+{{- if eq .K8sSetup "GoogleGKE" }}
 IsGKE: {{eq .K8sSetup "GoogleGKE"}}
-{{ end }}
-{{ if eq .K8sSetup "AwsEKS" }}
+{{- end }}
+{{- if eq .K8sSetup "AwsEKS" }}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
 UseAWSconfig: {{ .UseAWSconfig }}
 EksClusterName: {{ .EksClusterName }}
 IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
-{{ end }}
+{{- end }}
