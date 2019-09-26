@@ -222,13 +222,22 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Deploy"
 
+    - name: XldOfficialVersion
+      type: Select
+      prompt: "Choose the version of the XL Deploy:"
+      promptIf: !expr "!UseCustomRegistry"
+      options:
+        - !expr "version('_showapplicableversions', 'xld')"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The version of both XL Deploy you would like to install"
+
     - name: XldVersion
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter your custom XL Deploy image and tag:"
       promptIf: !expr "UseCustomRegistry && InstallXLD"
-      default: "xl-deploy:8.5.3"
       validate: !expr "version('checkversion', 'xld', XldVersion)"
       description: "This will be the XL Deploy docker image and tag that lives in your private docker registry. For example xl-deploy:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
@@ -248,11 +257,20 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Release"
 
+    - name: XlrOfficialVersion
+      type: Select
+      prompt: "Choose the version of the XL Release:"
+      promptIf: !expr "!UseCustomRegistry"
+      options:
+        - !expr "version('_showapplicableversions', 'xlr')"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The version of both XL Release you would like to install"
+
     - name: XlrVersion
       type: Input
       prompt: "Enter your custom XL Release image and tag:"
       promptIf: !expr "UseCustomRegistry && InstallXLR"
-      default: "xl-release:8.5.3"
       validate: !expr "version('checkversion', 'xlr', XlrVersion)"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -265,16 +283,6 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Enter the XLR custom image:"
-
-    - name: XlVersion
-      type: Select
-      prompt: "Choose the version of the XebiaLabs DevOps Platform:"
-      promptIf: !expr "!UseCustomRegistry"
-      options:
-        - !expr "version('_showapplicableversions')"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The version of both XL Deploy and XL Release that you would like to install"
 
     - name: ExternalDatabase
       type: Confirm

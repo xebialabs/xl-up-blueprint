@@ -68,7 +68,8 @@ expected-xl-values:
   NsfServerHost: nfs-test.com
   NsfSharePath: /xebialabs
   XlrDbUser: xl-release
-  XlVersion: 8.6.1
+  XlrOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   XlrReportDbUser: xl-release-report
   InstallMonitoring: true
   MonitoringUser: mon-user

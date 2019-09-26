@@ -67,7 +67,8 @@ expected-xl-values:
   InstallXLR: true
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
-  XlVersion: 8.6.1
+  XlrOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   InstallMonitoring: true
   MonitoringUser: mon-user
   OsType: linux

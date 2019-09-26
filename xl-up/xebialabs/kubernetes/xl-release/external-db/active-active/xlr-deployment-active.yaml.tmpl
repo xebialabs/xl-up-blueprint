@@ -8,7 +8,7 @@
 {{$XLR_REPORT_DB_PASS := "{{XLR_REPORT_DB_PASS}}"}}
 {{$XLR_KEYSTORE_PASS := "{{XLR_KEYSTORE_PASS}}"}}
 {{$XLR_KEYSTORE := "{{XLR_KEYSTORE}}"}}
-{{$XL_VERSION := "{{XL_VERSION}}"}}
+{{$XLR_OFFICIAL_VERSION := "{{XLR_OFFICIAL_VERSION}}"}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -41,7 +41,7 @@ metadata:
     ingress.kubernetes.io/session-cookie-name: JSESSIONID
     ingress.kubernetes.io/session-cookie-strategy: prefix
     ingress.kubernetes.io/config-backend: |
-      option httpchk head /ha/health HTTP/1.0
+      option httpchk GET /ha/health HTTP/1.0
 spec:
   rules:
     - http:
@@ -104,7 +104,7 @@ spec:
           {{if .UseCustomRegistry }}
           image: {{.RegistryURL}}/{{.XlrVersion}}
           {{ else }}
-          image: xebialabs/xl-release:{{$XL_VERSION}}
+          image: xebialabs/xl-release:{{$XLR_OFFICIAL_VERSION}}
           {{ end }}
           imagePullPolicy: Always
           env:

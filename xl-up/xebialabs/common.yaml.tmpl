@@ -1,4 +1,4 @@
-{{if eq .K8sSetup "LocalK8S"}}
+{{- if eq .K8sSetup "LocalK8S"}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -8,14 +8,14 @@ spec:
         type: k8s.Master
         apiServerURL: !value LocalApiServerURL
         skipTLS: true
-        {{if .UseKubeconfig }}
+        {{- if .UseKubeconfig }}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
-        {{else}}
+        {{- else}}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
-        {{end}}
-{{else if eq .K8sSetup "AwsEKS"}}
+        {{- end}}
+{{- else if eq .K8sSetup "AwsEKS"}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -29,7 +29,7 @@ spec:
         clusterName: !value EksClusterName
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
-{{else}}
+{{- else}}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -39,15 +39,15 @@ spec:
         type: k8s.Master
         apiServerURL: !value ApiServerURL
         skipTLS: true
-        {{if .K8sToken}}
+        {{- if .K8sToken}}
         token: !value K8sToken
-        {{else}}
-          {{if eq .K8sClientCertFile ""}}
+        {{- else}}
+          {{- if eq .K8sClientCertFile ""}}
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
-          {{else}}
+          {{- else}}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
-          {{end}}
-        {{end}}
-{{end}}
+          {{- end}}
+        {{- end}}
+{{- end}}

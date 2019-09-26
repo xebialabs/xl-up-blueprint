@@ -73,7 +73,8 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
-  XlVersion: 8.6.1
+  XlrOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   InstallMonitoring: false
   PostgresMaxConn: 400
   PostgresSharedBuff: 612MB

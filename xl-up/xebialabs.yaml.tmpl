@@ -3,10 +3,10 @@ kind: Import
 metadata:
   imports:
     - xebialabs/xl-k8s-foundation.yaml
-    {{if .InstallXLD}}
+    {{- if .InstallXLD}}
     - xebialabs/xl-deploy.yaml
-    {{end}}
-    {{if .InstallXLR}}
+    {{- end}}
+    {{- if .InstallXLR}}
     - xebialabs/xl-release.yaml
-    {{end}}
+    {{- end}}
     - xebialabs/deployments.yaml
