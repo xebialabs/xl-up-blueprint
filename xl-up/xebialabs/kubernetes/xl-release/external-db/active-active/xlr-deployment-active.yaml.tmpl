@@ -41,7 +41,7 @@ metadata:
     ingress.kubernetes.io/session-cookie-name: JSESSIONID
     ingress.kubernetes.io/session-cookie-strategy: prefix
     ingress.kubernetes.io/config-backend: |
-      option httpchk head /ha/health HTTP/1.0
+      option httpchk GET /ha/health HTTP/1.0
 spec:
   rules:
     - http:
