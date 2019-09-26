@@ -72,6 +72,7 @@ data:
     XldDbPass: {{ .XldDbPass }}
       {{- if eq .K8sSetup "LocalK8S"}}
     XldWorkHostpath: {{ .XldWorkHostpath }}
+    XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
       {{- end}}
       {{- if ne .K8sSetup "LocalK8S" }}
     XldMasterCount: {{ .XldMasterCount }}
@@ -126,6 +127,7 @@ data:
     {{- if not .ExternalDatabase}}
       {{- if eq .K8sSetup "LocalK8S"}}
     PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
+    PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
       {{- end}}
     PostgresMaxConn: {{ .PostgresMaxConn }}
     PostgresSharedBuff: {{ .PostgresSharedBuff }}

@@ -77,6 +77,7 @@ XldDbUser: {{ .XldDbUser }}
 XldDbPass: {{ .XldDbPass }}
   {{- if eq .K8sSetup "LocalK8S"}}
 XldWorkHostpath: {{ .XldWorkHostpath }}
+XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
   {{- end}}
 {{- end}}
 {{- if eq .K8sSetup "AwsEKS" }}
@@ -119,6 +120,7 @@ MonitoringUserPass: {{ .MonitoringUserPass }}
 {{- if not .ExternalDatabase}}
   {{- if eq .K8sSetup "LocalK8S"}}
 PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
+PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
   {{- end}}
 PostgresMaxConn: {{ .PostgresMaxConn }}
 PostgresSharedBuff: {{ .PostgresSharedBuff }}
