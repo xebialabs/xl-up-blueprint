@@ -79,8 +79,7 @@ spec:
       description: "Provide an authentication token for a service account that you have previously configured in your cluster. The service account for which the token is provided should be able to create/modify resources in the Kubernetes cluster"
 
     - name: K8sClientCertFile
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
@@ -88,8 +87,7 @@ spec:
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
 
     - name: K8sClientKeyFile
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
@@ -402,8 +400,7 @@ spec:
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
 
     - name: XldLic
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to the XL Deploy license file:"
       promptIf: !expr "InstallXLD"
       saveInXlvals: true
@@ -506,8 +503,7 @@ spec:
       description: "The password that you would like to use for the  XL Release admin user"
 
     - name: XlrLic
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
       saveInXlvals: true
@@ -631,8 +627,7 @@ spec:
       description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
 
     - name: XlKeyStore
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your XebiaLabs keystore:"
       saveInXlvals: true
       ignoreIfSkipped: true
