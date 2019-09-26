@@ -26,8 +26,8 @@ spec:
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
         {{- else }}
-        tlsCert: !value K8sClientCertFile
-        tlsPrivateKey: !value K8sClientKeyFile
+        tlsCert: {{ .K8sClientCertFile }}
+        tlsPrivateKey: {{ .K8sClientKeyFile }}
         {{- end }}
 {{- else }}
 apiVersion: xl-deploy/v1
@@ -46,8 +46,8 @@ spec:
         tlsCert: !value K8sClientCert
         tlsPrivateKey: !value K8sClientKey
           {{- else }}
-        tlsCert: !value K8sClientCertFile
-        tlsPrivateKey: !value K8sClientKeyFile
+        tlsCert: {{ .K8sClientCertFile }}
+        tlsPrivateKey: {{ .K8sClientKeyFile }}
           {{- end }}
         {{- end }}
 {{- end }}

@@ -403,7 +403,7 @@ spec:
       type: SecretFile
       prompt: "Enter the full path to the XL Deploy license file:"
       promptIf: !expr "InstallXLD"
-      saveInXlvals: true
+      replaceAsIs: true
       ignoreIfSkipped: true
       description: "The local path to an XL Deploy license file"
 
@@ -506,7 +506,7 @@ spec:
       type: SecretFile
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
-      saveInXlvals: true
+      replaceAsIs: true
       ignoreIfSkipped: true
       description: "The local path to an XL Release license file"
 
@@ -629,7 +629,7 @@ spec:
     - name: XlKeyStore
       type: SecretFile
       prompt: "Enter the full path to your XebiaLabs keystore:"
-      saveInXlvals: true
+      replaceAsIs: true
       ignoreIfSkipped: true
       description: "The local path to a JCEKS keystore to use in the XebiaLabs Devops Platform. This facilitates encryption of passwords and secrets in XL Deploy or XL Release. You can use keytool to generate a keystore, for example: keytool -genseckey -alias deployit-passsword-key -keyalg aes -keysize 128 -keypass deployit -keystore /tmp/repository-keystore.jceks -storetype jceks -storepass test123"
 
