@@ -63,6 +63,8 @@ XldWorkerRAMRequest: {{ .XldWorkerRAMRequest }}
 XldWorkerRAMLimit: {{ .XldWorkerRAMLimit }}
 XldWorkerCPURequest: {{ .XldWorkerCPURequest }}
 XldWorkerCPULimit: {{ .XldWorkerCPULimit }}
+XldWorkPvcSize: {{ .XldWorkPvcSize }}
+XldExportPvcSize: {{ .XldExportPvcSize }}
 {{- end }}
 XldAdminPass: {{ .XldAdminPass }}
 XldLic: {{ .XldLic | b64enc }}
@@ -92,6 +94,7 @@ XlrRAMRequest: {{ .XlrRAMRequest }}
 XlrRAMLimit: {{ .XlrRAMLimit }}
 XlrCPURequest: {{ .XlrCPURequest }}
 XlrCPULimit: {{ .XlrCPULimit }}
+XlrReportsPvcSize: {{ .XlrReportsPvcSize }}
 {{- end }}
 XlrAdminPass: {{ .XlrAdminPass }}
 XlrLic: {{ .XlrLic | b64enc }}
@@ -111,6 +114,9 @@ XlKeyStore: {{ .XlKeyStore | b64enc }}
 XlKeyStorePass: {{ .XlKeyStorePass }}
 InstallMonitoring: {{ .InstallMonitoring }}
 {{- if .InstallMonitoring}}
+GrafanaDashboardsPvcSize: {{ .GrafanaDashboardsPvcSize }}
+PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
+ElasticsearchDataPvcSize: {{ .ElasticsearchDataPvcSize }}
 MonitoringDataRetention: {{ .MonitoringDataRetention }}
 MonitoringUser: {{ .MonitoringUser }}
 MonitoringUserPass: {{ .MonitoringUserPass }}
@@ -120,6 +126,7 @@ MonitoringUserPass: {{ .MonitoringUserPass }}
 PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
 PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
   {{- end}}
+PostgresqlDataPvcSize: {{ .PostgresqlDataPvcSize }}
 PostgresMaxConn: {{ .PostgresMaxConn }}
 PostgresSharedBuff: {{ .PostgresSharedBuff }}
 PostgresEffectCacheSize: {{ .PostgresEffectCacheSize }}

@@ -83,6 +83,8 @@ data:
     XldWorkerRAMLimit: {{ .XldWorkerRAMLimit }}
     XldWorkerCPURequest: {{ .XldWorkerCPURequest }}
     XldWorkerCPULimit: {{ .XldWorkerCPULimit }}
+    XldWorkPvcSize: {{ .XldWorkPvcSize }}
+    XldExportPvcSize: {{ .XldExportPvcSize }}
       {{- end }}
     {{- end}}
     {{- if eq .K8sSetup "AwsEKS" }}
@@ -108,6 +110,7 @@ data:
     XlrRAMLimit: {{ .XlrRAMLimit }}
     XlrCPURequest: {{ .XlrCPURequest }}
     XlrCPULimit: {{ .XlrCPULimit }}
+    XlrReportsPvcSize: {{ .XlrReportsPvcSize }}
       {{- end }}
     XlrDbUser: {{ .XlrDbUser }}
     XlrDbPass: {{ .XlrDbPass }}
@@ -118,6 +121,9 @@ data:
     XlKeyStorePass: {{ .XlKeyStorePass }}
     InstallMonitoring: {{ .InstallMonitoring }}
     {{- if .InstallMonitoring}}
+    GrafanaDashboardsPvcSize: {{ .GrafanaDashboardsPvcSize }}
+    PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
+    ElasticsearchDataPvcSize: {{ .ElasticsearchDataPvcSize }}
     MonitoringDataRetention: {{ .MonitoringDataRetention }}
     MonitoringUser: {{ .MonitoringUser }}
     MonitoringUserPass: {{ .MonitoringUserPass }}
@@ -127,6 +133,7 @@ data:
     PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
     PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
       {{- end}}
+    PostgresqlDataPvcSize: {{ .PostgresqlDataPvcSize }}
     PostgresMaxConn: {{ .PostgresMaxConn }}
     PostgresSharedBuff: {{ .PostgresSharedBuff }}
     PostgresEffectCacheSize: {{ .PostgresEffectCacheSize }}
