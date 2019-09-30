@@ -16,6 +16,7 @@ XlrReportDbPass: xl-release-report
 XlKeyStore: ../xl-up/__test__/files/test-file
 XlKeyStorePass: test123
 XlrOfficialVersion: 9.0.2
+XldOfficialVersion: 9.0.2
 InstallMonitoring: true
 XldWorkPvcSize: 5Gi
 XldExportPvcSize: 5Gi
