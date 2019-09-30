@@ -223,7 +223,7 @@ spec:
     - name: XldOfficialVersion
       type: Select
       prompt: "Choose the version of the XL Deploy:"
-      promptIf: !expr "!UseCustomRegistry"
+      promptIf: !expr "!UseCustomRegistry && InstallXLD"
       options:
         - !expr "version('_showapplicableversions', 'xld')"
       saveInXlvals: true
@@ -258,7 +258,7 @@ spec:
     - name: XlrOfficialVersion
       type: Select
       prompt: "Choose the version of the XL Release:"
-      promptIf: !expr "!UseCustomRegistry"
+      promptIf: !expr "!UseCustomRegistry && InstallXLR"
       options:
         - !expr "version('_showapplicableversions', 'xlr')"
       saveInXlvals: true
