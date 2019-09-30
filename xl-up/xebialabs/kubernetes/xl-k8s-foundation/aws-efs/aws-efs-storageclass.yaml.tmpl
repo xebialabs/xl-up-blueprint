@@ -1,7 +1,9 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: aws-efs
+  name: xebialabs-aws-efs
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 provisioner: xebialabs.com/aws-efs
 reclaimPolicy: Retain

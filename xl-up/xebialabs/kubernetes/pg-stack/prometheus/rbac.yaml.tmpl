@@ -1,7 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: prometheus
+  name: xebialabs-prometheus
+  labels:
+    organization: xebialabs
 rules:
 - apiGroups: [""]
   resources:
@@ -22,15 +24,18 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: prometheus
+  namespace: {{ .Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: prometheus
+  name: xebialabs-prometheus
+  labels:
+    organization: xebialabs
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: prometheus
+  name: xebialabs-prometheus
 subjects:
 - kind: ServiceAccount
   name: prometheus

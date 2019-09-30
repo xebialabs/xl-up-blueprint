@@ -2,7 +2,9 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: managed-nfs-storage
+  name: xebialabs-managed-nfs-storage
+  labels:
+    organization: xebialabs
 provisioner: {{$NFS_PROVISIONER_NAME}} # or choose another name, must match deployment's env PROVISIONER_NAME'
 allowVolumeExpansion: true # Allow volume to be expanded dynamically
 reclaimPolicy: Retain

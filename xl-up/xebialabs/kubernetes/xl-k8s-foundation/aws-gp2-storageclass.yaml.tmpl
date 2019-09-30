@@ -2,7 +2,9 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   namespace: {{ .Namespace }}
-  name: gp2-retain
+  name: xebialabs-gp2-retain
+  labels:
+    organization: xebialabs
 parameters:
   fsType: ext4
   type: gp2

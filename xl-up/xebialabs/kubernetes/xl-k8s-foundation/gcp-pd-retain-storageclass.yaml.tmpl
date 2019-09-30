@@ -1,8 +1,10 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: standard-retain
+  name: xebialabs-standard-retain
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 parameters:
   type: pd-standard
 provisioner: kubernetes.io/gce-pd

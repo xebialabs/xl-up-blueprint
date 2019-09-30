@@ -6,11 +6,12 @@ metadata:
   labels:
     app: xl-deploy
     component: master
+    organization: xebialabs
   annotations:
     {{if eq .K8sSetup "AwsEKS" }}
-    volume.beta.kubernetes.io/storage-class: "aws-efs"
+    volume.beta.kubernetes.io/storage-class: "xebialabs-aws-efs"
     {{else}}
-    volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
+    volume.beta.kubernetes.io/storage-class: "xebialabs-managed-nfs-storage"
     {{end}}
 spec:
   accessModes:

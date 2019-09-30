@@ -11,11 +11,12 @@ metadata:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: fluentd-es
+  name: xebialabs-fluentd-es
   labels:
     app: fluentd-es
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 rules:
 - apiGroups:
   - ""
@@ -30,11 +31,12 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: fluentd-es
+  name: xebialabs-fluentd-es
   labels:
     app: fluentd-es
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 subjects:
 - kind: ServiceAccount
   name: fluentd-es
@@ -42,5 +44,5 @@ subjects:
   apiGroup: ""
 roleRef:
   kind: ClusterRole
-  name: fluentd-es
+  name: xebialabs-fluentd-es
   apiGroup: ""
