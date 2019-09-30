@@ -72,6 +72,12 @@ expected-xl-values:
   XldOfficialVersion: 9.0.2
   XlrReportDbUser: xl-release-report
   InstallMonitoring: true
+  XldWorkPvcSize: 5Gi
+  XldExportPvcSize: 5Gi
+  XlrReportsPvcSize: 5Gi
+  GrafanaDashboardsPvcSize: 5Gi
+  PrometheusDataPvcSize: 5Gi
+  ElasticsearchDataPvcSize: 5Gi
   MonitoringUser: mon-user
   OsType: linux
   XldWorkerCount: 2

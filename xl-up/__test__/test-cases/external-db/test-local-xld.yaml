@@ -67,7 +67,6 @@ expected-xl-values:
   InstallXLD: true
   InstallXLR: false
   XldDbUser: xl-deploy
-  XlrOfficialVersion: 9.0.2
   XldOfficialVersion: 9.0.2
   OsType: linux
   K8sAuthentication: FilePath

@@ -97,13 +97,13 @@ spec:
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
-      value: !expr "&& K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
+      value: !expr "K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
-      value: !expr "&& K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
+      value: !expr "K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
       # END
@@ -223,7 +223,7 @@ spec:
     - name: XldOfficialVersion
       type: Select
       prompt: "Choose the version of the XL Deploy:"
-      promptIf: !expr "!UseCustomRegistry"
+      promptIf: !expr "!UseCustomRegistry && InstallXLD"
       options:
         - !expr "version('_showapplicableversions', 'xld')"
       saveInXlvals: true
@@ -258,7 +258,7 @@ spec:
     - name: XlrOfficialVersion
       type: Select
       prompt: "Choose the version of the XL Release:"
-      promptIf: !expr "!UseCustomRegistry"
+      promptIf: !expr "!UseCustomRegistry && InstallXLR"
       options:
         - !expr "version('_showapplicableversions', 'xlr')"
       saveInXlvals: true
@@ -398,6 +398,24 @@ spec:
       default: "3"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
+
+    - name: XldExportPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for XL Deploy export directory"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "10Gi"
+      description: "This field sets the  persistent volume size for XL Deploy export directory. The export directory is the place where XL Deploy temporarily will save files needed for CI export and reports."
+
+    - name: XldWorkPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for XL Deploy work directory"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "5Gi"
+      description: "This field sets the  persistent volume size for XL Deploy work directory. The work directory is used to temporarily store data that cannot be kept in memory."
 
     - name: XldLic
       type: SecretFile
@@ -626,6 +644,15 @@ spec:
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
 
+    - name: XlrReportsPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for XL Release reports directory"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: "5Gi"
+      description: "This field sets the  persistent volume size for XL Release reports directory. The reports directory is used to  store data for the Release audit report feature."
+
     - name: XlKeyStore
       type: SecretFile
       prompt: "Enter the full path to your XebiaLabs keystore:"
@@ -649,6 +676,33 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
+
+    - name: GrafanaDashboardsPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for Grafana dashboards"
+      promptIf: !expr "InstallMonitoring"
+      default: "5Gi"
+      description: "This field sets the  persistent volume size for Grafana. This is the persistent volume where Grafana will persist the data for the dashboards"
+
+    - name: PrometheusDataPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for Prometheus"
+      promptIf: !expr "InstallMonitoring"
+      default: "20Gi"
+      description: "This field sets the  persistent volume size for Prometheus. This is the persistent volume where Prometheus will persist the data"
+
+    - name: ElasticsearchDataPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for Elasticsearch"
+      promptIf: !expr "InstallMonitoring"
+      default: "50Gi"
+      description: "This field sets the  persistent volume size for Elasticsearch. This is the persistent volume where Elasticsearch will persist the data"
 
     - name: MonitoringDataRetention
       type: Input
@@ -677,6 +731,15 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       description: "The password to use for accessing Grafana and Kibana"
+
+    - name: PostgresqlDataPvcSize
+      type: Input
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      prompt: "Enter the desired persistent volume size for Postgresql database"
+      promptIf: !expr "!ExternalDatabase && K8sSetup != 'LocalK8S'"
+      default: !expr "ExternalDatabase ? '' :  '50Gi'"
+      description: "This field sets the  persistent volume size for Postgresql database. This is the persistent volume where Postgresql will persist the data"
 
     - name: PostgresqlWorkHostpathPlain
       type: Input
@@ -761,7 +824,7 @@ spec:
       writeIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
     #xl-deploy
     - path: xebialabs/xl-deploy.yaml.tmpl
-      writeIf: InstallXLD
+      writeIf: !expr InstallXLD
     - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup == 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml.tmpl
@@ -782,7 +845,7 @@ spec:
       writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     #xl-release
     - path: xebialabs/xl-release.yaml.tmpl
-      writeIf: InstallXLR
+      writeIf: !expr InstallXLR
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl

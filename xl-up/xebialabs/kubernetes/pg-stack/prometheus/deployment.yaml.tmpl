@@ -65,7 +65,7 @@ spec:
         {{end}}
         resources:
           requests:
-            storage: 10Gi
+            storage: {{ .PrometheusDataPvcSize }}
 ---
 kind: Service
 apiVersion: v1
