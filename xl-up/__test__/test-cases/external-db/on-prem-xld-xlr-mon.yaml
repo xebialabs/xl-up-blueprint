@@ -22,6 +22,13 @@ XlKeyStorePass: test123
 XlrOfficialVersion: 9.0.2
 XldOfficialVersion: 9.0.2
 InstallMonitoring: true
+XldWorkPvcSize: 5Gi
+XldExportPvcSize: 5Gi
+XlrReportsPvcSize: 5Gi
+PostgresqlDataPvcSize: 5Gi
+GrafanaDashboardsPvcSize: 5Gi
+PrometheusDataPvcSize: 5Gi
+ElasticsearchDataPvcSize: 5Gi
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass
 OsType: linux
