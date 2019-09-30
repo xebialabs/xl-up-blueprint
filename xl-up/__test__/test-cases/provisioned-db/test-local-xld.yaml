@@ -69,7 +69,7 @@ expected-xl-values:
   InstallXLR: false
   XldDbName: xl-deploy
   XldDbUser: xl-deploy
-XldOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.2
   OsType: linux
   PostgresqlWorkHostpath: /psql
   K8sAuthentication: FilePath

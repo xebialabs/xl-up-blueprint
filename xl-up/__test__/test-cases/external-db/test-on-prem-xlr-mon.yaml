@@ -69,7 +69,7 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
   XlrOfficialVersion: 9.0.2
-InstallMonitoring: true
+  InstallMonitoring: true
   MonitoringUser: mon-user
   OsType: linux
   XlrRAMRequest: 1700Mi

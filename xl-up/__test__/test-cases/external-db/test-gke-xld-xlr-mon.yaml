@@ -68,7 +68,7 @@ expected-xl-values:
   XldDbUser: xl-deploy
   XlrDbUser: xl-release
   XlrOfficialVersion: 9.0.2
-XlrReportDbUser: xl-release-report
+  XlrReportDbUser: xl-release-report
   InstallMonitoring: true
   XldWorkPvcSize: 5Gi
   XldExportPvcSize: 5Gi
