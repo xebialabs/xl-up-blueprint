@@ -68,7 +68,7 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
   XlrOfficialVersion: 9.0.2
-  XldOfficialVersion: 9.0.2
+
   XlrRAMRequest: 1740Mi
   XlrRAMLimit: 4Gi
   XlrCPURequest: 0.8

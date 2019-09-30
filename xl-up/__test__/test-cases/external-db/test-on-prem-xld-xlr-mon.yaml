@@ -69,7 +69,7 @@ expected-xl-values:
   NsfSharePath: /xebialabs
   XlrDbUser: xl-release
   XlrOfficialVersion: 9.0.2
-  XldOfficialVersion: 9.0.2
+
   XlrReportDbUser: xl-release-report
   InstallMonitoring: true
   XldWorkPvcSize: 5Gi
