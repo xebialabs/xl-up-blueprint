@@ -80,8 +80,7 @@ spec:
       description: "Provide an authentication token that you have previously configured in your cluster"
 
     - name: K8sClientCertFile
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
@@ -89,8 +88,7 @@ spec:
       description: "Provide the location of the client certificate that you use to connect to Kubernetes"
 
     - name: K8sClientKeyFile
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true

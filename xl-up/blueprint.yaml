@@ -79,8 +79,7 @@ spec:
       description: "Provide an authentication token for a service account that you have previously configured in your cluster. The service account for which the token is provided should be able to create/modify resources in the Kubernetes cluster"
 
     - name: K8sClientCertFile
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your Kubernetes client certificate:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
@@ -88,8 +87,7 @@ spec:
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
 
     - name: K8sClientKeyFile
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your Kubernetes client certificate key:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
@@ -99,13 +97,13 @@ spec:
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
-      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
+      value: !expr "&& K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
-      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
+      value: !expr "&& K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
       # END
@@ -402,11 +400,10 @@ spec:
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
 
     - name: XldLic
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to the XL Deploy license file:"
       promptIf: !expr "InstallXLD"
-      saveInXlvals: true
+      replaceAsIs: true
       ignoreIfSkipped: true
       description: "The local path to an XL Deploy license file"
 
@@ -506,11 +503,10 @@ spec:
       description: "The password that you would like to use for the  XL Release admin user"
 
     - name: XlrLic
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to the XL Release license file:"
       promptIf: !expr "InstallXLR"
-      saveInXlvals: true
+      replaceAsIs: true
       ignoreIfSkipped: true
       description: "The local path to an XL Release license file"
 
@@ -631,10 +627,9 @@ spec:
       description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
 
     - name: XlKeyStore
-      type: File
-      # type: SecretFile should be put after bug https://xebialabs.atlassian.net/browse/LOVE-1162 is fixed
+      type: SecretFile
       prompt: "Enter the full path to your XebiaLabs keystore:"
-      saveInXlvals: true
+      replaceAsIs: true
       ignoreIfSkipped: true
       description: "The local path to a JCEKS keystore to use in the XebiaLabs Devops Platform. This facilitates encryption of passwords and secrets in XL Deploy or XL Release. You can use keytool to generate a keystore, for example: keytool -genseckey -alias deployit-passsword-key -keyalg aes -keysize 128 -keypass deployit -keystore /tmp/repository-keystore.jceks -storetype jceks -storepass test123"
 

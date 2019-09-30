@@ -25,10 +25,8 @@ data:
     K8sClientKeyFile: {{ .KeyFile }}
     K8sClientKey: {{ .K8sClientKeyFile | b64enc }}
       {{- end}}
-      {{- if eq .K8sClientCertFile ""}}
+      {{- if .UseKubeconfig }}
     K8sClientCert: {{ .K8sClientCert | b64enc }}
-      {{- end}}
-      {{- if eq .K8sClientKeyFile ""}}
     K8sClientKey: {{ .K8sClientKey | b64enc }}
       {{- end }}
      {{- end}}
