@@ -67,8 +67,7 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
   XlrOfficialVersion: 9.0.2
-  XldOfficialVersion: 9.0.2
-  K8sAuthentication: FilePath
+K8sAuthentication: FilePath
   ExternalDatabase: true
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report

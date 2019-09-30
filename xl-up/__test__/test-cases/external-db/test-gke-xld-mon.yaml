@@ -66,8 +66,7 @@ expected-xl-values:
   InstallXLD: true
   InstallXLR: false
   XldDbUser: xl-deploy
-  XlrOfficialVersion: 9.0.2
-  XldOfficialVersion: 9.0.2
+XldOfficialVersion: 9.0.2
   InstallMonitoring: true
   MonitoringUser: mon-user
   OsType: linux
