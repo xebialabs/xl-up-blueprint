@@ -74,7 +74,6 @@ expected-xl-values:
   XldWorkPvcSize: 5Gi
   XldExportPvcSize: 5Gi
   XlrReportsPvcSize: 5Gi
-  PostgresqlDataPvcSize: 5Gi
   GrafanaDashboardsPvcSize: 5Gi
   PrometheusDataPvcSize: 5Gi
   ElasticsearchDataPvcSize: 5Gi
