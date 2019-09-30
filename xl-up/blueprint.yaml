@@ -824,7 +824,7 @@ spec:
       writeIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
     #xl-deploy
     - path: xebialabs/xl-deploy.yaml.tmpl
-      writeIf: InstallXLD
+      writeIf: !expr InstallXLD
     - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup == 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml.tmpl
@@ -845,7 +845,7 @@ spec:
       writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     #xl-release
     - path: xebialabs/xl-release.yaml.tmpl
-      writeIf: InstallXLR
+      writeIf: !expr InstallXLR
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
