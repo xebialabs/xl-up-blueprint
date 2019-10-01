@@ -61,8 +61,6 @@ spec:
       options:
         - label: Client key/certificate [Path to files]
           value: FilePath
-        - label: Client key/certificate [User Input]
-          value: UserInput
         - label: Token of an exsiting service account in K8s cluster
           value: Token
       saveInXlvals: true
@@ -85,6 +83,7 @@ spec:
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      replaceAsIs: true
       description: "Provide the location of the client certificate that you use to connect to Kubernetes"
 
     - name: K8sClientKeyFile
@@ -93,6 +92,7 @@ spec:
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      replaceAsIs: true
       description: "Provide the location of the client key that you use to connect to Kubernetes"
 
       # Client certificates used for Upgrade only and downloaded from the Configmap
