@@ -166,10 +166,10 @@ spec:
       spec:
         accessModes: [ "ReadWriteOnce" ]
         {{if eq .K8sSetup "AwsEKS" }}
-        storageClassName: gp2-retain
+        storageClassName: xebialabs-gp2-retain
         {{end}}
         {{if eq .K8sSetup "PlainK8SCluster" }}
-        storageClassName: managed-nfs-storage
+        storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:
           requests:
@@ -180,10 +180,10 @@ spec:
         accessModes:
           - ReadWriteOnce
         {{if eq .K8sSetup "AwsEKS" }}
-        storageClassName: gp2-retain
+        storageClassName: xebialabs-gp2-retain
         {{end}}
         {{if eq .K8sSetup "PlainK8SCluster" }}
-        storageClassName: managed-nfs-storage
+        storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:
           requests:

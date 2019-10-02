@@ -11,11 +11,12 @@ metadata:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: elasticsearch-logging
+  name: xebialabs-elasticsearch-logging
   labels:
     app: elasticsearch-logging
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 rules:
 - apiGroups:
   - ""
@@ -30,11 +31,12 @@ kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   namespace: {{ .Namespace }}
-  name: elasticsearch-logging
+  name: xebialabs-elasticsearch-logging
   labels:
     app: elasticsearch-logging
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 subjects:
 - kind: ServiceAccount
   name: elasticsearch-logging
@@ -42,5 +44,5 @@ subjects:
   apiGroup: ""
 roleRef:
   kind: ClusterRole
-  name: elasticsearch-logging
+  name: xebialabs-elasticsearch-logging
   apiGroup: ""
