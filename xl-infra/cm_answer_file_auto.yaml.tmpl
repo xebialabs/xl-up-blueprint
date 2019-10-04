@@ -2,7 +2,7 @@ K8sSetup: {{.K8sSetup}}
 UseKubeconfig: {{.UseKubeconfig}}
 ApiServerURL: {{.ApiServerURL}}
 OsType: {{ .OsType }}
-{{- if ne .K8sAuthentication ""}}
+{{- if or (and (not .UseKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE")}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{- end}}
 {{- if eq .K8sSetup "LocalK8S" }}

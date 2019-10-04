@@ -61,9 +61,8 @@ spec:
       options:
         - label: Client key/certificate [Path to files]
           value: FilePath
-        - label: Client key/certificate [User Input]
-          value: UserInput
-        - Token
+        - label: Token of an exsiting service account in K8s cluster
+          value: Token
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "How xl up will authenticate with your Kubernetes cluster"
@@ -84,6 +83,7 @@ spec:
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      replaceAsIs: true
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
 
     - name: K8sClientKeyFile
@@ -92,18 +92,19 @@ spec:
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'FilePath'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      replaceAsIs: true
       description: "Provide the location of your client key that is used to connect to Kubernetes"
 
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
-      value: !expr "K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
-      value: !expr "K8sAuthentication == 'FilePath' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
       # END
@@ -646,7 +647,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for XL Release reports directory"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
       default: "5Gi"
       description: "This field sets the  persistent volume size for XL Release reports directory. The reports directory is used to  store data for the Release audit report feature."
 
