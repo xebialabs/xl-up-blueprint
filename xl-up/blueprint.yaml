@@ -98,13 +98,13 @@ spec:
       # Client certificates used for Upgrade only and downloaded from the Configmap
     - name: CertFile
       type: Input
-      value: !expr "!useKubeconfig && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getcertfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client certificate that is used to connect to Kubernetes"
 
     - name: KeyFile
       type: Input
-      value: !expr "!useKubeconfig && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
+      value: !expr "K8sClientCertFile != '' && K8sSetup != 'AwsEKS' ? os('getkeyfilelocation') : ''"
       ignoreIfSkipped: true
       description: "Enter the base64 encoded value of the client key that is used to connect to Kubernetes"
       # END

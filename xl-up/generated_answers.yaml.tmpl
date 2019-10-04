@@ -1,41 +1,35 @@
-K8sSetup: {{ .K8sSetup }}
-UseKubeconfig: {{ .UseKubeconfig }}
-ApiServerURL: {{ .ApiServerURL }}
+K8sSetup: {{.K8sSetup}}
+UseKubeconfig: {{.UseKubeconfig}}
+ApiServerURL: {{.ApiServerURL}}
 OsType: {{ .OsType }}
 {{- if or (and (not .UseKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE")}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{- end}}
-{{- if eq .K8sSetup "LocalK8S"}}
+{{- if eq .K8sSetup "LocalK8S" }}
 LocalApiServerURL: {{ .LocalApiServerURL }}
-{{- end}}
+{{- end }}
 {{- if eq .K8sToken ""}}
- {{- if ne .K8sSetup "AwsEKS"}}
-  {{- if eq .K8sClientCert ""}}
+  {{- if eq .K8sClientCert "" }}
 K8sClientCertFile: {{ .CertFile }}
-K8sClientCert: {{ .K8sClientCertFile | b64enc }}
-  {{- end}}
-  {{- if eq .K8sClientKey ""}}
 K8sClientKeyFile: {{ .KeyFile }}
-K8sClientKey: {{ .K8sClientKeyFile | b64enc }}
-  {{- end}}
-  {{- if eq .K8sClientCertFile "" }}
+  {{- else}}
 K8sClientCert: {{ .K8sClientCert | b64enc }}
 K8sClientKey: {{ .K8sClientKey | b64enc }}
-  {{- end }}
- {{- end}}
-{{- end}}
-{{- if eq .K8sSetup "GoogleGKE"}}
-IsGKE: {{eq .K8sSetup "GoogleGKE"}}
+  {{- end}}
+{{- else}}
 K8sToken: {{ .K8sToken}}
 {{- end}}
+{{- if eq .K8sSetup "GoogleGKE" }}
+IsGKE: {{eq .K8sSetup "GoogleGKE"}}
+{{- end }}
 {{- if eq .K8sSetup "AwsEKS" }}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
+UseAWSconfig: {{ .UseAWSconfig }}
 EksClusterName: {{ .EksClusterName }}
 IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
-UseAWSconfig: {{ .UseAWSconfig }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
-{{- end}}
+{{- end }}
 Namespace: {{ .Namespace }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
