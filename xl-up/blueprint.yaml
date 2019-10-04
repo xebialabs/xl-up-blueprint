@@ -650,7 +650,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for XL Release reports directory"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
       default: "5Gi"
       description: "This field sets the  persistent volume size for XL Release reports directory. The reports directory is used to  store data for the Release audit report feature."
 
