@@ -27,9 +27,8 @@ spec:
       type: Confirm
       prompt: "Do you want to use Kubernetes' current-context from ~/.kube/config?"
       promptIf: !expr "k8sConfig('IsConfigAvailable')"
-      default: true
+      default: !expr "k8sConfig('IsConfigAvailable')"
       saveInXlvals: true
-      ignoreIfSkipped: true
       description: "xl up will try to read and process the current context from your $HOME/.kube/config file and get information like Kubernetes api url, client certificate, client key and token in order to connect to the Kubernetes cluster."
 
     - name: ApiServerURL
@@ -39,6 +38,7 @@ spec:
       default: !expr "k8sConfig('ClusterServer')"
       saveInXlvals: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
+      ignoreIfSkipped: !expr "K8sSetup == 'LocalK8S' ? true : false"
 
     - name: OsType
       type: Input
@@ -130,8 +130,7 @@ spec:
       promptIf: !expr "!UseKubeconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? k8sConfig('ContextCluster') : ''"
       saveInXlvals: true
-      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
-      #ignoreIfSkipped: true
+      ignoreIfSkipped: !expr "K8sSetup == 'AwsEKS' ? false : true"
       description: "The cluster name of your AWS EKS resource. In EKS, this is usually NOT the value of your current context, but rather the simple name you specified when creating the cluster in AWS console"
 
     - name: IsAwsCfgAvailable
@@ -153,8 +152,7 @@ spec:
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('AccessKeyID') : ''"
       saveInXlvals: true
-      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
-      #ignoreIfSkipped: true
+      ignoreIfSkipped: !expr "K8sSetup == 'AwsEKS' ? false : true"
       replaceAsIs: true
       description: "Your AWS access key ID. AWS access key ID is required for xl up in order to connect to your AWS EKS cluster"
 
@@ -164,8 +162,7 @@ spec:
       promptIf: !expr "!UseAWSconfig && K8sSetup == 'AwsEKS' "
       default: !expr "K8sSetup == 'AwsEKS' ? awsCredentials('SecretAccessKey') : ''"
       saveInXlvals: true
-      #THIS CAN BE FIXED ONCE https://xebialabs.atlassian.net/browse/LOVE-1216 IS FIXED
-      #ignoreIfSkipped: true
+      ignoreIfSkipped: !expr "K8sSetup == 'AwsEKS' ? false : true"
       replaceAsIs: true
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
 
