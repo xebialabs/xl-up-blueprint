@@ -2,5 +2,5 @@ K8sSetup: PlainK8SCluster
 UseKubeconfig: false
 ApiServerURL: https://localk8s.com:8443
 K8sAuthentication: FilePath
-K8sClientCertFile: ../xl-up/__test__/files/test-file
-K8sClientKeyFile: ../xl-up/__test__/files/test-file
+K8sClientCertFile: ../integration-tests/files/test-file
+K8sClientKeyFile: ../integration-tests/files/test-file
