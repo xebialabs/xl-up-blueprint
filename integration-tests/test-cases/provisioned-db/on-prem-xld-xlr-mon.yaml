@@ -49,3 +49,12 @@ XlrCPURequest: 0.7
 XlrRAMLimit: 6Gi
 XlrRAMRequest: 1700Mi
 MonitoringDataRetention: 7
+UseCustomRegistry: false
+ExternalDatabase: false
+XldExportPvcSize: 10Gi
+XldWorkPvcSize: 5Gi
+XlrReportsPvcSize: 5Gi
+GrafanaDashboardsPvcSize: 5Gi
+PrometheusDataPvcSize: 20Gi
+ElasticsearchDataPvcSize: 50Gi
+PostgresqlDataPvcSize: 50Gi

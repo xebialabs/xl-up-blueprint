@@ -121,7 +121,8 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         nfsSharePath = "xebialabs-k8s"
-                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        //runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        runXlUpOnPrem(nfsSharePath)
                     } catch (err) {
                         throw err
                     }
@@ -164,7 +165,6 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key"
     sh "rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key"
     sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
-    sh "sed -ie 's@8.6.1@9.0.2@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: ./k8sClientCert-onprem.crt@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: ./k8sClientCert-onprem.key@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
     sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' xl-up/__test__/test-cases/provisioned-db/on-prem-xld-xlr-mon.yaml"
