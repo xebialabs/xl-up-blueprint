@@ -165,139 +165,143 @@ def identify_missing_xlvals(expected_xl_values, configfile):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--blueprints', nargs='+', help="Run one or more specific blueprint instead of all of them")
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('-b', '--blueprints', nargs='+', help="Run one or more specific blueprint instead of all of them")
+    # args = parser.parse_args()
 
-    blueprint_dirs = find_blueprint_file_directories_recursively()
+    # blueprint_dirs = find_blueprint_file_directories_recursively()
 
-    if args.blueprints and len(args.blueprints) > 0:
-        blueprints_filter = [blueprint_dir.strip('/') for blueprint_dir in args.blueprints]
-        blueprint_dirs = [blueprint_dir for blueprint_dir in blueprint_dirs if blueprint_dir in blueprints_filter]
-        if len(blueprint_dirs) != len(blueprints_filter):
-            errormsg("One or more blueprint directories could not be found:")
-            for blueprint_dir in list(set(blueprints_filter) - set(blueprint_dirs)):
-                errormsg('- {}'.format(blueprint_dir))
+    # if args.blueprints and len(args.blueprints) > 0:
+    #     blueprints_filter = [blueprint_dir.strip('/') for blueprint_dir in args.blueprints]
+    #     blueprint_dirs = [blueprint_dir for blueprint_dir in blueprint_dirs if blueprint_dir in blueprints_filter]
+    #     if len(blueprint_dirs) != len(blueprints_filter):
+    #         errormsg("One or more blueprint directories could not be found:")
+    #         for blueprint_dir in list(set(blueprints_filter) - set(blueprint_dirs)):
+    #             errormsg('- {}'.format(blueprint_dir))
+    #         sys.exit(1)
+
+    #     print(greentext('INFO:'), 'Limiting integration tests to:')
+    #     for blueprint_dir in blueprints_filter:
+    #         print(greentext('INFO:'), '- {}'.format(blueprint_dir))
+    #     print('')
+
+    # blueprint_to_test_dirs = {}
+    # for blueprint_dir in blueprint_dirs:
+    #     blueprint_to_test_dirs[blueprint_dir] = '{}/__test__'.format(blueprint_dir)
+
+    # fail_if_missing_test_dirs(blueprint_to_test_dirs.values())
+
+    # for blueprint_dir, test_dir in blueprint_to_test_dirs.items():
+    test_dir = 'integration-tests'
+    blueprint_dir = 'xl-infra'
+    test_files = [filename for filename in glob.iglob('{}/**/test*.yaml'.format(test_dir), recursive=True)]
+    if not test_files:
+        errormsg('Missing test files under {}'.format(test_dir))
+        sys.exit(1)
+
+    env = os.environ.copy()
+    env['PATH'] = '../:{}'.format(env['PATH'])
+
+    for test_file in test_files:
+        print('Processing blueprint test {}'.format(test_file))
+
+        testdef = load_testdef_from_yaml_file(test_file)
+        validate_testdef(testdef)
+
+        answers_file = '{}/{}'.format(os.path.dirname(test_file), testdef['answers-file'])
+        if not os.path.exists(answers_file):
+            errormsg('Missing answers file {}'.format(answers_file))
             sys.exit(1)
 
-        print(greentext('INFO:'), 'Limiting integration tests to:')
-        for blueprint_dir in blueprints_filter:
-            print(greentext('INFO:'), '- {}'.format(blueprint_dir))
-        print('')
-
-    blueprint_to_test_dirs = {}
-    for blueprint_dir in blueprint_dirs:
-        blueprint_to_test_dirs[blueprint_dir] = '{}/__test__'.format(blueprint_dir)
-
-    fail_if_missing_test_dirs(blueprint_to_test_dirs.values())
-
-    for blueprint_dir, test_dir in blueprint_to_test_dirs.items():
-        test_files = [filename for filename in glob.iglob('{}/**/test*.yaml'.format(test_dir), recursive=True)]
-        if not test_files:
-            errormsg('Missing test files under {}'.format(test_dir))
+        try:
+            tempdir = tempfile.TemporaryDirectory(dir='.')
+        except:
+            errormsg('Unable to create temporary directory. Aborting')
             sys.exit(1)
 
-        env = os.environ.copy()
-        env['PATH'] = '../:{}'.format(env['PATH'])
+        os.chdir(tempdir.name)
 
-        for test_file in test_files:
-            print('Processing blueprint test {}'.format(test_file))
-
-            testdef = load_testdef_from_yaml_file(test_file)
-            validate_testdef(testdef)
-
-            answers_file = '{}/{}'.format(os.path.dirname(test_file), testdef['answers-file'])
-            if not os.path.exists(answers_file):
-                errormsg('Missing answers file {}'.format(answers_file))
-                sys.exit(1)
-
-            try:
-                tempdir = tempfile.TemporaryDirectory(dir='.')
-            except:
-                errormsg('Unable to create temporary directory. Aborting')
-                sys.exit(1)
-
-            os.chdir(tempdir.name)
-
-            command = ['../xl', 'blueprint', '--use-defaults', '--local-repo', '../', '--blueprint', '{}'.format(blueprint_dir), '--strict-answers', '--answers', '../{}'.format(answers_file)]
-            print('Executing: {}'.format(' '.join(command)))
-            try:
-                result = subprocess.run(command, capture_output=True, env=env)
-            except Exception as err:
-                errormsg('Tests failed with {0}'.format(err))
-                sys.exit(1)
-            if not result.returncode == 0:
-                if result.stdout:
-                    print('stdout: {}'.format(result.stdout))
-                errormsg('Test failed on {} with message "{}"'.format(answers_file, result.stderr.decode('utf8').strip()))
-                print(redtext('FAILED'))
-                os.chdir('..')
-                sys.exit(result.returncode)
-
-            missing_files = []
-            if 'expected-files' in testdef:
-                if type(testdef['expected-files']) != list:
-                    errormsg('Expected a list for [expected-files], but got a {}'.format(type(testdef['expected-files'])))
-                    sys.exit(1)
-                missing_files = identify_missing_files(testdef['expected-files'])
-            unexpected_files = []
-            if 'not-expected-files' in testdef:
-                if type(testdef['not-expected-files']) != list:
-                    errormsg('Expected a list for [not-expected-files], but got a {}'.format(type(testdef['not-expected-files'])))
-                    sys.exit(1)
-                unexpected_files = identify_not_missing_files(testdef['not-expected-files'])
-            missing_xl_values = []
-            if 'expected-xl-values' in testdef:
-                if type(testdef['expected-xl-values']) != dict:
-                    errormsg('Expected a dict for [expected-xl-values], but got a {}'.format(type(testdef['expected-xl-values'])))
-                    sys.exit(1)
-                configfile = parse_xlvals_file('xebialabs/values.xlvals')
-                missing_xl_values = identify_missing_xlvals(testdef['expected-xl-values'], configfile)
-            missing_xl_secrets = []
-            if 'expected-xl-secrets' in testdef:
-                if type(testdef['expected-xl-secrets']) != dict:
-                    errormsg('Expected a dict for [expected-xl-secrets], but got a {}'.format(type(testdef['expected-xl-secrets'])))
-                    sys.exit(1)
-                configfile = parse_xlvals_file('xebialabs/secrets.xlvals')
-                missing_xl_secrets = identify_missing_xlvals(testdef['expected-xl-secrets'], configfile)
-
+        command = ['../xl', 'up', '--quick-setup', '--dry-run', '--skip-k8s', '--skip-prompts', '--local', '../', '--blueprint', '{}'.format(blueprint_dir), '--answers', '../{}'.format(answers_file)]
+        print('Executing: {}'.format(' '.join(command)))
+        try:
+            result = subprocess.run(command, capture_output=True, env=env)
+        except Exception as err:
+            errormsg('Tests failed with {0}'.format(err))
+            sys.exit(1)
+        if result.returncode != 0:
+            if result.stdout:
+                print('stdout: {}'.format(result.stdout))
+            errormsg('Test failed on {} with message "{}"'.format(answers_file, result.stderr.decode('utf8').strip()))
+            print(redtext('FAILED'))
             os.chdir('..')
-            try:
-                tempdir.cleanup()
-            except:
-                errormsg('Could not remove temp directory')
+            sys.exit(result.returncode)
+        else:
+            print(greentext('EXECUTION SUCCESS'))
+
+        missing_files = []
+        if 'expected-files' in testdef:
+            if type(testdef['expected-files']) != list:
+                errormsg('Expected a list for [expected-files], but got a {}'.format(type(testdef['expected-files'])))
                 sys.exit(1)
-
-            test_passed = True
-            if missing_files:
-                for missing_file in missing_files:
-                    errormsg('Could not find expected file {}'.format(missing_file))
-                test_passed = False
-
-            if unexpected_files:
-                for unexpected_file in unexpected_files:
-                    errormsg('Found file that is not supposed to exist: {}'.format(unexpected_file))
-                test_passed = False
-
-            if missing_xl_values:
-                for mk, mv in missing_xl_values.items():
-                    if 'actual' in mv:
-                        errormsg("Could not find expected value in values.xlvals ({}) - expected '{}', got '{}'".format(mk, mv['expected'], mv['actual']))
-                    else:
-                        errormsg("Could not find expected value in values.xlvals ({}) - expected '{}', but the entry is not in the file".format(mk, mv['expected']))
-                test_passed = False
-
-            if missing_xl_secrets:
-                for mk, mv in missing_xl_secrets.items():
-                    if 'actual' in mv:
-                        errormsg("Could not find expected value in secrets.xlvals ({}) - expected '{}', got '{}'".format(mk, mv['expected'], mv['actual']))
-                    else:
-                        errormsg("Could not find expected value in secrets.xlvals ({}) - expected '{}', but the entry is not in the file".format(mk, mv['expected']))
-                test_passed = False
-
-            if test_passed:
-                print(greentext('SUCCESS'))
-                print('')
-            else:
-                print(redtext('FAILED'))
+            missing_files = identify_missing_files(testdef['expected-files'])
+        unexpected_files = []
+        if 'not-expected-files' in testdef:
+            if type(testdef['not-expected-files']) != list:
+                errormsg('Expected a list for [not-expected-files], but got a {}'.format(type(testdef['not-expected-files'])))
                 sys.exit(1)
+            unexpected_files = identify_not_missing_files(testdef['not-expected-files'])
+        missing_xl_values = []
+        if 'expected-xl-values' in testdef:
+            if type(testdef['expected-xl-values']) != dict:
+                errormsg('Expected a dict for [expected-xl-values], but got a {}'.format(type(testdef['expected-xl-values'])))
+                sys.exit(1)
+            configfile = parse_xlvals_file('xebialabs/values.xlvals')
+            missing_xl_values = identify_missing_xlvals(testdef['expected-xl-values'], configfile)
+        missing_xl_secrets = []
+        if 'expected-xl-secrets' in testdef:
+            if type(testdef['expected-xl-secrets']) != dict:
+                errormsg('Expected a dict for [expected-xl-secrets], but got a {}'.format(type(testdef['expected-xl-secrets'])))
+                sys.exit(1)
+            configfile = parse_xlvals_file('xebialabs/secrets.xlvals')
+            missing_xl_secrets = identify_missing_xlvals(testdef['expected-xl-secrets'], configfile)
+
+        os.chdir('..')
+        try:
+            tempdir.cleanup()
+        except:
+            errormsg('Could not remove temp directory')
+            sys.exit(1)
+
+        test_passed = True
+        if missing_files:
+            for missing_file in missing_files:
+                errormsg('Could not find expected file {}'.format(missing_file))
+            test_passed = False
+
+        if unexpected_files:
+            for unexpected_file in unexpected_files:
+                errormsg('Found file that is not supposed to exist: {}'.format(unexpected_file))
+            test_passed = False
+
+        if missing_xl_values:
+            for mk, mv in missing_xl_values.items():
+                if 'actual' in mv:
+                    errormsg("Could not find expected value in values.xlvals ({}) - expected '{}', got '{}'".format(mk, mv['expected'], mv['actual']))
+                else:
+                    errormsg("Could not find expected value in values.xlvals ({}) - expected '{}', but the entry is not in the file".format(mk, mv['expected']))
+            test_passed = False
+
+        if missing_xl_secrets:
+            for mk, mv in missing_xl_secrets.items():
+                if 'actual' in mv:
+                    errormsg("Could not find expected value in secrets.xlvals ({}) - expected '{}', got '{}'".format(mk, mv['expected'], mv['actual']))
+                else:
+                    errormsg("Could not find expected value in secrets.xlvals ({}) - expected '{}', but the entry is not in the file".format(mk, mv['expected']))
+            test_passed = False
+
+        if test_passed:
+            print(greentext('SUCCESS'))
+            print('')
+        else:
+            print(redtext('FAILED'))
+            sys.exit(1)
