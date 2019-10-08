@@ -1,6 +1,6 @@
 answers-file: on-prem.yaml
 expected-files:
-  - cm_answer_file_auto.yaml
+  - generated_answers.yaml
 expected-xl-values:
   K8sSetup: PlainK8SCluster
   UseKubeconfig: false

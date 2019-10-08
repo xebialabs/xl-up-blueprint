@@ -28,5 +28,5 @@ UseCustomRegistry: true
 RegistryURL: docker.io/xebialabs
 DockerUser: docker-user
 DockerPass: docker-pass
-XldVersion: xl-deploy:8.5.3
-XlrVersion: xl-release:8.5.3
+XldVersion: xl-deploy:9.0.2
+XlrVersion: xl-release:9.0.2
