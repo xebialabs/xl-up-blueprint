@@ -1,6 +1,6 @@
 K8sSetup: PlainK8SCluster
 UseKubeconfig: false
-ApiServerURL: https://k8s.com:6443
+K8sApiServerURL: https://k8s.com:6443
 K8sClientCertFile: ../integration-tests/files/test-file
 K8sClientKeyFile: ../integration-tests/files/test-file
 InstallXLD: false
@@ -20,7 +20,7 @@ XlrRAMRequest: 1740Mi
 XlrRAMLimit: 4Gi
 XlrCPURequest: 0.8
 XlrCPULimit: 4
-InstallMonitoring: false
+MonitoringInstall: false
 OsType: linux
 K8sAuthentication: FilePath
 ExternalDatabase: true

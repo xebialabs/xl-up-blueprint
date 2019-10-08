@@ -1,12 +1,12 @@
 K8sSetup: {{.K8sSetup}}
 UseKubeconfig: {{.UseKubeconfig}}
-ApiServerURL: {{.ApiServerURL}}
+K8sApiServerURL: {{.K8sApiServerURL}}
 OsType: {{ .OsType }}
 {{- if or (and (not .UseKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE")}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{- end}}
 {{- if eq .K8sSetup "LocalK8S" }}
-LocalApiServerURL: {{ .LocalApiServerURL }}
+K8sLocalApiServerURL: {{ .K8sLocalApiServerURL }}
 {{- end }}
 {{- if eq .K8sToken ""}}
   {{- if eq .K8sClientCert "" }}
@@ -110,11 +110,11 @@ XlrReportDbPass: {{ .XlrReportDbPass }}
 {{- end}}
 XlKeyStore: {{ .XlKeyStore | b64enc }}
 XlKeyStorePass: {{ .XlKeyStorePass }}
-InstallMonitoring: {{ .InstallMonitoring }}
-{{- if .InstallMonitoring}}
-GrafanaDashboardsPvcSize: {{ .GrafanaDashboardsPvcSize }}
+MonitoringInstall: {{ .MonitoringInstall }}
+{{- if .MonitoringInstall}}
+MonitoringGrafanaDashboardsPvcSize: {{ .MonitoringGrafanaDashboardsPvcSize }}
 PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
-ElasticsearchDataPvcSize: {{ .ElasticsearchDataPvcSize }}
+MonitoringElasticsearchDataPvcSize: {{ .MonitoringElasticsearchDataPvcSize }}
 MonitoringDataRetention: {{ .MonitoringDataRetention }}
 MonitoringUser: {{ .MonitoringUser }}
 MonitoringUserPass: {{ .MonitoringUserPass }}

@@ -58,7 +58,7 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: AwsEKS
   UseKubeconfig: false
-  ApiServerURL: https://aws-eks.com:6443
+  K8sApiServerURL: https://aws-eks.com:6443
   UseAWSconfig: false
   EksClusterName: test-eks-master
   InstallXLD: false
@@ -68,7 +68,7 @@ expected-xl-values:
   XlrOfficialVersion: 9.0.2
   XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
-  InstallMonitoring: true
+  MonitoringInstall: true
   MonitoringUser: mon-user
   PostgresMaxConn: 400
   PostgresSharedBuff: 612MB

@@ -1,6 +1,6 @@
 K8sSetup: AwsEKS
 UseKubeconfig: false
-ApiServerURL: https://aws-eks.com:6443
+K8sApiServerURL: https://aws-eks.com:6443
 UseAWSconfig: false
 EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
@@ -23,13 +23,13 @@ XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
 XlrOfficialVersion: 9.0.2
 XldOfficialVersion: 9.0.2
-InstallMonitoring: true
+MonitoringInstall: true
 XldWorkPvcSize: 5Gi
 XldExportPvcSize: 5Gi
 XlrReportsPvcSize: 5Gi
-GrafanaDashboardsPvcSize: 5Gi
+MonitoringGrafanaDashboardsPvcSize: 5Gi
 PrometheusDataPvcSize: 5Gi
-ElasticsearchDataPvcSize: 5Gi
+MonitoringElasticsearchDataPvcSize: 5Gi
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass
 OsType: linux

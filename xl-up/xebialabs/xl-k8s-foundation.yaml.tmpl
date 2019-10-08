@@ -6,7 +6,7 @@ spec:
     children:
       - name: EKS-MASTER
         type: k8s.Master
-        apiServerURL: !value ApiServerURL
+        apiServerURL: !value K8sApiServerURL
         skipTLS: true
         isEKS: true
         clusterName: !value EksClusterName
@@ -20,7 +20,7 @@ spec:
     children:
       - name: K8s-MASTER-LOCAL
         type: k8s.Master
-        apiServerURL: !value LocalApiServerURL
+        apiServerURL: !value K8sLocalApiServerURL
         skipTLS: true
         {{- if .UseKubeconfig }}
         tlsCert: !value K8sClientCert
@@ -37,7 +37,7 @@ spec:
     children:
       - name: K8s-MASTER
         type: k8s.Master
-        apiServerURL: !value ApiServerURL
+        apiServerURL: !value K8sApiServerURL
         skipTLS: true
         {{- if .K8sToken}}
         token: !value K8sToken
@@ -177,7 +177,7 @@ spec:
                     {{- end }}
                   {{- end }}
                 {{- end }}
-                {{- if .InstallMonitoring }}
+                {{- if .MonitoringInstall }}
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
                 {{- end }}
@@ -312,7 +312,7 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{- end }}
-          {{- if .InstallMonitoring }}
+          {{- if .MonitoringInstall }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
             children:
             - name: Elasticsearch-Logging

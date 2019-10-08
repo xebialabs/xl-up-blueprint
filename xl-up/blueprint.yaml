@@ -507,7 +507,7 @@ spec:
       replaceAsIs: true
       description: "The password of the provided keystore"
 
-    - name: InstallMonitoring
+    - name: MonitoringInstall
       type: Confirm
       prompt: "Do you want to install monitoring?"
       promptIf: !expr "K8sSetup != 'LocalK8S'"
@@ -516,12 +516,12 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
 
-    - name: GrafanaDashboardsPvcSize
+    - name: MonitoringGrafanaDashboardsPvcSize
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for Grafana dashboards"
-      promptIf: !expr "InstallMonitoring"
+      promptIf: !expr "MonitoringInstall"
       default: "5Gi"
       description: "This field sets the  persistent volume size for Grafana. This is the persistent volume where Grafana will persist the data for the dashboards"
 
@@ -530,23 +530,23 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for Prometheus"
-      promptIf: !expr "InstallMonitoring"
+      promptIf: !expr "MonitoringInstall"
       default: "20Gi"
       description: "This field sets the  persistent volume size for Prometheus. This is the persistent volume where Prometheus will persist the data"
 
-    - name: ElasticsearchDataPvcSize
+    - name: MonitoringElasticsearchDataPvcSize
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for Elasticsearch"
-      promptIf: !expr "InstallMonitoring"
+      promptIf: !expr "MonitoringInstall"
       default: "50Gi"
       description: "This field sets the  persistent volume size for Elasticsearch. This is the persistent volume where Elasticsearch will persist the data"
 
     - name: MonitoringDataRetention
       type: Input
       prompt: "How many days do you want to keep the monitoring data?"
-      promptIf: !expr "InstallMonitoring"
+      promptIf: !expr "MonitoringInstall"
       default: 7
       ignoreIfSkipped: true
       description: "How long to retain monitoring data for"
@@ -554,7 +554,7 @@ spec:
     - name: MonitoringUser
       type: Input
       prompt: "What is the username for the monitoring user?"
-      promptIf: !expr "InstallMonitoring"
+      promptIf: !expr "MonitoringInstall"
       default: admin
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -563,7 +563,7 @@ spec:
     - name: MonitoringUserPass
       type: SecretInput
       prompt: "What is the password for the monitoring user?"
-      promptIf: !expr "InstallMonitoring"
+      promptIf: !expr "MonitoringInstall"
       default: !expr "randPassword()"
       replaceAsIs: true
       saveInXlvals: true
@@ -693,58 +693,58 @@ spec:
       writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     #pg-stack
     - path: xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/configmap.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/secret.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/pvc.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml.tmpl
-      writeIf: !expr "InstallMonitoring"
+      writeIf: !expr "MonitoringInstall"
     #xebialabs files
     - path: generated_answers.yaml.tmpl
     - path: xebialabs.yaml.tmpl

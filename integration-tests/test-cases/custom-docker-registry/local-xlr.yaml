@@ -1,6 +1,6 @@
 K8sSetup: LocalK8S
 UseKubeconfig: false
-LocalApiServerURL: https://localk8s.com:8443
+K8sLocalApiServerURL: https://localk8s.com:8443
 K8sClientCertFile: ../integration-tests/files/test-file
 K8sClientKeyFile: ../integration-tests/files/test-file
 InstallXLD: false

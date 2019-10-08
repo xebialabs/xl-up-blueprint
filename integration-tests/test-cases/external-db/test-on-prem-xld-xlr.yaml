@@ -61,7 +61,7 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: PlainK8SCluster
   UseKubeconfig: false
-  ApiServerURL: https://k8s.com:6443
+  K8sApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: true
   XldDbUser: xl-deploy
@@ -71,7 +71,7 @@ expected-xl-values:
   XlrReportDbUser: xl-release-report
   XlrOfficialVersion: 9.0.2
   XldOfficialVersion: 9.0.2
-  InstallMonitoring: false
+  MonitoringInstall: false
   OsType: linux
   XldWorkerCount: 2
   XldMasterCount: 2

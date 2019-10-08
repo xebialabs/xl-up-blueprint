@@ -1,6 +1,6 @@
 K8sSetup: AwsEKS
 UseKubeconfig: false
-ApiServerURL: https://aws-eks.com:6443
+K8sApiServerURL: https://aws-eks.com:6443
 UseAWSconfig: false
 EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
@@ -23,7 +23,7 @@ XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
 XlrOfficialVersion: 9.0.2
 XldOfficialVersion: 9.0.2
-InstallMonitoring: false
+MonitoringInstall: false
 OsType: linux
 ExternalDatabase: true
 XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy

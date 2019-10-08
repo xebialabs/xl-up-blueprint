@@ -19,7 +19,7 @@ XlrReportDbUser: xl-release-report
 XlrReportDbPass: xl-release-report
 XlKeyStore: /path/to/keystore.jceks
 XlKeyStorePass: test123
-InstallMonitoring: true
+MonitoringInstall: true
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass
 PostgresMaxConn: 400

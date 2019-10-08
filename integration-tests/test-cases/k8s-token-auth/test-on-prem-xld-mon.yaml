@@ -62,7 +62,7 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: PlainK8SCluster
   UseKubeconfig: false
-  ApiServerURL: https://k8s.com:6443
+  K8sApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: false
   XldDbName: xl-deploy
@@ -70,7 +70,7 @@ expected-xl-values:
   XldOfficialVersion: 9.0.2
   NsfServerHost: nfs-test.com
   NsfSharePath: /xebialabs
-  InstallMonitoring: true
+  MonitoringInstall: true
   MonitoringUser: mon-user
   PostgresMaxConn: 400
   PostgresSharedBuff: 612MB

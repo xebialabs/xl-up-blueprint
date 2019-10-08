@@ -63,13 +63,13 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: GoogleGKE
   UseKubeconfig: false
-  ApiServerURL: https://k8s.com:6443
+  K8sApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: false
   XldDbName: xl-deploy
   XldDbUser: xl-deploy
   XldOfficialVersion: 9.0.2
-  InstallMonitoring: true
+  MonitoringInstall: true
   MonitoringUser: mon-user
   PostgresMaxConn: 400
   PostgresSharedBuff: 612MB

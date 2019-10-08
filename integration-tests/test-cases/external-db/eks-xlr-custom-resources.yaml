@@ -1,6 +1,6 @@
 K8sSetup: AwsEKS
 UseKubeconfig: false
-ApiServerURL: https://aws-eks.com:6443
+K8sApiServerURL: https://aws-eks.com:6443
 UseAWSconfig: false
 EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
@@ -22,7 +22,7 @@ XlrRAMRequest: 1740Mi
 XlrRAMLimit: 4Gi
 XlrCPURequest: 0.8
 XlrCPULimit: 4
-InstallMonitoring: false
+MonitoringInstall: false
 OsType: linux
 ExternalDatabase: true
 XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release

@@ -84,7 +84,7 @@ spec:
         {{end}}
         resources:
           requests:
-            storage: {{ .ElasticsearchDataPvcSize }}
+            storage: {{ .MonitoringElasticsearchDataPvcSize }}
 ---
 apiVersion: v1
 kind: Service
