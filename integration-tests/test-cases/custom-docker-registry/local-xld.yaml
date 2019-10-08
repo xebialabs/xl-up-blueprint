@@ -20,3 +20,4 @@ RegistryURL: docker.io/xebialabs
 DockerUser: docker-user
 DockerPass: docker-pass
 XldVersion: xl-deploy:8.5.3
+XldWorkHostpath: integration-tests/files/

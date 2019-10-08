@@ -16,3 +16,4 @@ OsType: linux
 K8sAuthentication: FilePath
 ExternalDatabase: true
 XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+XldWorkHostpath: integration-tests/files/

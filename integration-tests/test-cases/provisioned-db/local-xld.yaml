@@ -16,3 +16,4 @@ XldOfficialVersion: 9.0.2
 OsType: linux
 PostgresqlWorkHostpathPlain: /psql
 K8sAuthentication: FilePath
+XldWorkHostpath: integration-tests/files/
