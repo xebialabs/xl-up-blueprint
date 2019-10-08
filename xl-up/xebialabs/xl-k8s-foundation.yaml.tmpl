@@ -315,6 +315,7 @@ spec:
           {{- if .MonitoringInstall }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
             children:
+            {{- if not .UseExternalElasticsearch }}
             - name: Elasticsearch-Logging
               type: udm.Application
               children:
@@ -338,6 +339,7 @@ spec:
                 applicationDependencies:
                   K8s-Ingress-Controller: "v0.6"
                 undeployDependencies: "true"
+            {{- end }}
             - name: Fluentd
               type: udm.Application
               children:
@@ -356,7 +358,9 @@ spec:
                   type: k8s.ResourcesFile
                   file: !file "kubernetes/efk-stack/fluentd/daemonset.yaml"
                 applicationDependencies:
+                {{- if not .UseExternalElasticsearch }}
                   Elasticsearch-Logging: "v6.5.0"
+                {{- end }}
                 undeployDependencies: "true"
             - name: Kibana
               type: udm.Application

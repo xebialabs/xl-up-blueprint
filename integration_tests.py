@@ -143,6 +143,14 @@ def identify_missing_xlvals(expected_xl_values, configfile):
 
     return missing_values
 
+def identify_not_missing_xlvals(not_expected_xl_values, config_file):
+    not_missing_values = []
+    for nev in not_expected_xl_values:
+        if config_file.has_option('default', nev):
+            not_missing_values.append(nev)
+
+    return not_missing_values
+
 def run_tests(test_files, blueprint_dir, command_flags):
     env = os.environ.copy()
     env['PATH'] = '../:{}'.format(env['PATH'])
@@ -190,12 +198,14 @@ def run_tests(test_files, blueprint_dir, command_flags):
                 errormsg('Expected a list for [expected-files], but got a {}'.format(type(testdef['expected-files'])))
                 sys.exit(1)
             missing_files = identify_missing_files(testdef['expected-files'])
+        
         unexpected_files = []
         if 'not-expected-files' in testdef:
             if type(testdef['not-expected-files']) != list:
                 errormsg('Expected a list for [not-expected-files], but got a {}'.format(type(testdef['not-expected-files'])))
                 sys.exit(1)
             unexpected_files = identify_not_missing_files(testdef['not-expected-files'])
+        
         missing_xl_values = []
         if 'expected-xl-values' in testdef:
             if type(testdef['expected-xl-values']) != dict:
@@ -203,6 +213,7 @@ def run_tests(test_files, blueprint_dir, command_flags):
                 sys.exit(1)
             configfile = parse_xlvals_file('xebialabs/values.xlvals')
             missing_xl_values = identify_missing_xlvals(testdef['expected-xl-values'], configfile)
+        
         missing_xl_secrets = []
         if 'expected-xl-secrets' in testdef:
             if type(testdef['expected-xl-secrets']) != dict:
@@ -210,6 +221,22 @@ def run_tests(test_files, blueprint_dir, command_flags):
                 sys.exit(1)
             configfile = parse_xlvals_file('xebialabs/secrets.xlvals')
             missing_xl_secrets = identify_missing_xlvals(testdef['expected-xl-secrets'], configfile)
+
+        not_missing_xl_vals = []
+        if 'not-expected-values' in testdef:
+            if type(testdef['not-expected-values']) != list:
+                errormsg('Expected a list for [not-expected-values], but got a {}'.format(type(testdef['not-expected-values'])))
+                sys.exit(1)
+            configfile = parse_xlvals_file('xebialabs/values.xlvals')
+            not_missing_xl_vals = identify_not_missing_xlvals(testdef['not-expected-values'], configfile)
+
+        not_missing_xl_secrets = []
+        if 'not-expected-secrets' in testdef:
+            if type(testdef['not-expected-secrets']) != list:
+                errormsg('Expected a list for [not-expected-secrets], byt got a {}'.format(type(testdef['not-expected-secrets'])))
+                sys.exit(1)
+            configfile = parse_xlvals_file('xebialabs/secrets.xlvals')
+            not_missing_xl_secrets = identify_not_missing_xlvals(testdef['not-expected-secrets'], configfile)
 
         os.chdir('..')
         try:
@@ -245,6 +272,14 @@ def run_tests(test_files, blueprint_dir, command_flags):
                     errormsg("Could not find expected value in secrets.xlvals ({}) - expected '{}', but the entry is not in the file".format(mk, mv['expected']))
             test_passed = False
 
+        for item in not_missing_xl_vals:
+                errormsg("Unexpected value defined in values.xlvals ({})".format(item))
+                test_passed = False
+
+        for item in not_missing_xl_secrets:
+            errormsg("Unexpected value defined in secrets.xlvals ({})".format(item))
+            test_passed = False
+            
         if test_passed:
             print(greentext('SUCCESS'))
             print('')

@@ -19,12 +19,12 @@ spec:
     spec:
       initContainers:
       - name: wait-for-elasticsearch
-        image: busybox:1
+        image: jgoclawski/wget:1.0
         command:
         - 'sh'
         - '-c'
         - >
-          until [ "$(wget -O /dev/null -q --spider -T2 http://elasticsearch-logging.{{- .Namespace }}.svc:9200; echo $?)" == "0" ]; do
+          until [ "$(wget {{ if .ElasticsearchHasAuthentication }}--user {{ .ElasticsearchUsername }} --password {{ .ElasticsearchPassword }}{{ end }} -O /dev/null -q --spider -T2 {{ if .UseExternalElasticsearch }}{{ .ElasticsearchUrlScheme }}{{ .ElasticsearchUrl }}:9200{{ else }}http://elasticsearch-logging.{{- .Namespace }}.svc:9200{{ end }}; echo $?)" == "0" ]; do
             echo "ElasticSearch is not ready yet";
             sleep 2;
           done
@@ -40,7 +40,13 @@ spec:
             memory: 1Gi
         env:
           - name: ELASTICSEARCH_URL
-            value: http://elasticsearch-logging.{{- .Namespace }}.svc:9200
+            value: "{{ if .UseExternalElasticsearch }}{{ .ElasticsearchUrlScheme }}{{ .ElasticsearchUrl }}:9200{{ else }}http://elasticsearch-logging.{{- .Namespace }}.svc:9200{{ end }}"
+          {{- if .ElasticsearchUsername }}
+          - name: ELASTICSEARCH_USERNAME
+            value: "{{ .ElasticsearchUsername }}"
+          - name: ELASTICSEARCH_PASSWORD
+            value: "{{ .ElasticsearchPassword }}"
+          {{- end }}
           - name: SERVER_BASEPATH
             value: /kibana
           - name: KIBANA_DEFAULTAPPID

@@ -155,7 +155,11 @@ data:
       @type elasticsearch
       @log_level info
       include_tag_key true
-      host elasticsearch-logging.{{ .Namespace }}.svc
+      host {{ if .UseExternalElasticsearch }}{{ .ElasticsearchUrl }}{{ else }}elasticsearch-logging.{{ .Namespace }}.svc{{ end }}
+      {{- if ne .ElasticsearchUsername "" }}
+      user {{ .ElasticsearchUsername }} 
+      password {{ .ElasticsearchPassword }}
+      {{- end }}
       port 9200
       logstash_format true
       <buffer>

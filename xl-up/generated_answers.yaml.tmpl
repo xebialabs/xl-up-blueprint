@@ -114,7 +114,18 @@ MonitoringInstall: {{ .MonitoringInstall }}
 {{- if .MonitoringInstall}}
 MonitoringGrafanaDashboardsPvcSize: {{ .MonitoringGrafanaDashboardsPvcSize }}
 PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
+UseExternalElasticsearch: {{ .UseExternalElasticsearch }}
+{{- if not .UseExternalElasticsearch }}
 MonitoringElasticsearchDataPvcSize: {{ .MonitoringElasticsearchDataPvcSize }}
+{{- else }}
+ElasticsearchUrlScheme: {{ .ElasticsearchUrlScheme }}
+ElasticsearchUrl: {{ .ElasticsearchUrl }}
+ElasticsearchHasAuthentication: {{ .ElasticsearchHasAuthentication }}
+    {{- if .ElasticsearchHasAuthentication }}
+ElasticsearchUsername: {{ .ElasticsearchUsername }}
+ElasticsearchPassword: {{ .ElasticsearchPassword }}
+    {{- end }}
+{{- end }}
 MonitoringDataRetention: {{ .MonitoringDataRetention }}
 MonitoringUser: {{ .MonitoringUser }}
 MonitoringUserPass: {{ .MonitoringUserPass }}
