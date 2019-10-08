@@ -169,7 +169,7 @@ spec:
 
 
   files:
-    - path: cm_answer_file_auto.yaml.tmpl
+    - path: generated_answers.yaml.tmpl
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"
     - path: cert.key.tmpl
