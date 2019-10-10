@@ -1,6 +1,4 @@
 answers-file: gke.yaml
-expected-files:
-  - generated_answers.yaml
 expected-xl-values:
   K8sSetup: GoogleGKE
   UseKubeconfig: false

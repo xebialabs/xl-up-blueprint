@@ -169,7 +169,6 @@ spec:
 
 
   files:
-    - path: generated_answers.yaml.tmpl
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"
     - path: cert.key.tmpl

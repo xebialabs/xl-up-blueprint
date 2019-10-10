@@ -1,6 +1,4 @@
 answers-file: eks.yaml
-expected-files:
-  - generated_answers.yaml
 expected-xl-values:
   K8sSetup: AwsEKS
   UseKubeconfig: false
