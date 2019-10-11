@@ -1,6 +1,4 @@
 answers-file: local-kube.yaml
-expected-files:
-  - cm_answer_file_auto.yaml
 expected-xl-values:
   K8sSetup: LocalK8S
   UseKubeconfig: false
