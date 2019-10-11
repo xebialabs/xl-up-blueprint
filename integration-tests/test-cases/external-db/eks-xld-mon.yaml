@@ -1,6 +1,6 @@
 K8sSetup: AwsEKS
 UseKubeconfig: false
-ApiServerURL: https://aws-eks.com:6443
+K8sApiServerURL: https://aws-eks.com:6443
 UseAWSconfig: false
 EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
@@ -16,7 +16,7 @@ EfsRegion: eu-west-1
 XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
 XldOfficialVersion: 9.0.2
-InstallMonitoring: true
+MonitoringInstall: true
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass
 OsType: linux

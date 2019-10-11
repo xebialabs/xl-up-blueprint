@@ -61,7 +61,7 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: AwsEKS
   UseKubeconfig: false
-  ApiServerURL: https://aws-eks.com:6443
+  K8sApiServerURL: https://aws-eks.com:6443
   UseAWSconfig: false
   EksClusterName: test-eks-master
   InstallXLD: true
@@ -73,7 +73,7 @@ expected-xl-values:
   EfsRegion: eu-west-1
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
-  InstallMonitoring: false
+  MonitoringInstall: false
   OsType: linux
   XldWorkerCount: 2
   XldMasterCount: 2

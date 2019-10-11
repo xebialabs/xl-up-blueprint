@@ -1,6 +1,6 @@
 K8sSetup: AwsEKS
 UseKubeconfig: false
-ApiServerURL: https://aws-eks.com:6443
+K8sApiServerURL: https://aws-eks.com:6443
 UseAWSconfig: false
 EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
@@ -19,7 +19,7 @@ XlrReportDbUser: xl-release-report
 XlrReportDbPass: xl-release-report
 XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
-InstallMonitoring: true
+MonitoringInstall: true
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass
 PostgresMaxConn: 400

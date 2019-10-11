@@ -85,11 +85,11 @@ data:
     {{- end}}
     XlKeyStore: {{ .XlKeyStore | b64enc }}
     XlKeyStorePass: {{ .XlKeyStorePass }}
-    InstallMonitoring: {{ .InstallMonitoring }}
-    {{- if .InstallMonitoring}}
-    GrafanaDashboardsPvcSize: {{ .GrafanaDashboardsPvcSize }}
+    MonitoringInstall: {{ .MonitoringInstall }}
+    {{- if .MonitoringInstall}}
+    MonitoringGrafanaDashboardsPvcSize: {{ .MonitoringGrafanaDashboardsPvcSize }}
     PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
-    ElasticsearchDataPvcSize: {{ .ElasticsearchDataPvcSize }}
+    MonitoringElasticsearchDataPvcSize: {{ .MonitoringElasticsearchDataPvcSize }}
     MonitoringDataRetention: {{ .MonitoringDataRetention }}
     MonitoringUser: {{ .MonitoringUser }}
     MonitoringUserPass: {{ .MonitoringUserPass }}

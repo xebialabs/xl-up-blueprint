@@ -1,6 +1,6 @@
 K8sSetup: PlainK8SCluster
 UseKubeconfig: false
-ApiServerURL: https://k8s.com:6443
+K8sApiServerURL: https://k8s.com:6443
 K8sClientCertFile: ../integration-tests/files/test-file
 K8sClientKeyFile: ../integration-tests/files/test-file
 InstallXLD: true
@@ -24,7 +24,7 @@ XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
 XlrOfficialVersion: 9.0.2
 XldOfficialVersion: 9.0.2
-InstallMonitoring: false
+MonitoringInstall: false
 PostgresMaxConn: 400
 PostgresSharedBuff: 612MB
 PostgresEffectCacheSize: 2GB

@@ -31,9 +31,9 @@ spec:
       saveInXlvals: true
       description: "xl up will try to read and process the current context from your $HOME/.kube/config file and get information like Kubernetes api url, client certificate, client key and token in order to connect to the Kubernetes cluster."
 
-    - name: ApiServerURL
+    - name: K8sApiServerURL
       type: Input
-      prompt: "Enter the ApiServerURL of your Kubernetes installation:"
+      prompt: "Enter the K8sApiServerURL of your Kubernetes installation:"
       promptIf: !expr "!UseKubeconfig && K8sSetup != 'LocalK8S'"
       default: !expr "k8sConfig('ClusterServer')"
       saveInXlvals: true
@@ -47,7 +47,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
 
-    - name: LocalApiServerURL
+    - name: K8sLocalApiServerURL
       type: Input
       value: !expr "K8sSetup == 'LocalK8S' ? os('_defaultapiserverurl') : ''"
       saveInXlvals: true

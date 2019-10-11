@@ -61,7 +61,7 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: AwsEKS
   UseKubeconfig: false
-  ApiServerURL: https://aws-eks.com:6443
+  K8sApiServerURL: https://aws-eks.com:6443
   UseAWSconfig: false
   EksClusterName: test-eks-master
   InstallXLD: true
@@ -70,7 +70,7 @@ expected-xl-values:
   XldOfficialVersion: 9.0.2
   EfsId: test1234561
   EfsRegion: eu-west-1
-  InstallMonitoring: true
+  MonitoringInstall: true
   MonitoringUser: mon-user
   OsType: linux
   ExternalDatabase: true

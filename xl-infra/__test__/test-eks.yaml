@@ -2,7 +2,7 @@ answers-file: eks.yaml
 expected-xl-values:
   K8sSetup: AwsEKS
   UseKubeconfig: false
-  ApiServerURL: https://aws-eks.com:6443
+  K8sApiServerURL: https://aws-eks.com:6443
   useAWSConfig: false
   EksClusterName: test-eks-master
 expected-xl-secrets:

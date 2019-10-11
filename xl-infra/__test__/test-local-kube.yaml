@@ -2,5 +2,5 @@ answers-file: local-kube.yaml
 expected-xl-values:
   K8sSetup: LocalK8S
   UseKubeconfig: false
-  LocalApiServerURL: https://localk8s.com:8443
+  K8sLocalApiServerURL: https://localk8s.com:8443
   K8sAuthentication: FilePath

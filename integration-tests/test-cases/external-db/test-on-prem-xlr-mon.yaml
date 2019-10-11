@@ -61,7 +61,7 @@ not-expected-files:
 expected-xl-values:
   K8sSetup: PlainK8SCluster
   UseKubeconfig: false
-  ApiServerURL: https://k8s.com:6443
+  K8sApiServerURL: https://k8s.com:6443
   InstallXLD: false
   InstallXLR: true
   NsfServerHost: nfs-test.com
@@ -69,7 +69,7 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
   XlrOfficialVersion: 9.0.2
-  InstallMonitoring: true
+  MonitoringInstall: true
   MonitoringUser: mon-user
   OsType: linux
   XlrRAMRequest: 1700Mi
