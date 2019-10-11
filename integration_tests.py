@@ -263,7 +263,7 @@ if __name__ == '__main__':
     print('')
     print(greentext('Executing unit tests for XL-UP'))
     print('')
-    run_tests(test_files, blueprint_dir, ['up', '--quick-setup', '--dry-run', '--skip-k8s', '--skip-prompts', '--local', '../'])
+    run_tests(test_files, blueprint_dir, ['up', '--quick-setup', '--dry-run', '--skip-k8s', '--skip-prompts', '--local-repo', '../'])
 
     # Blueprint tests
     blueprint_dirs = [blueprint_dir, 'xl-up']
