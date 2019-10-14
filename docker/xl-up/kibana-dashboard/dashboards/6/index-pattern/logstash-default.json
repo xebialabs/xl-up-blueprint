@@ -1,0 +1,13 @@
+{
+  "version": "6.3.2",
+  "objects": [{
+    "id": "logstash-*",
+    "type": "index-pattern",
+    "version": 1,
+    "attributes": {
+      "title": "logstash-*",
+      "timeFieldName": "@timestamp"
+    }
+  }
+  ]
+}
