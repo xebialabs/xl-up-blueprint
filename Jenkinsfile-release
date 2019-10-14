@@ -20,7 +20,7 @@ pipeline {
         stage('Push XL-UP Blueprints to Dist server') {
             agent {
                 node {
-                    label 'xld||xlr'
+                    label 'xld||xlr||xli'
                 }
             }
 
