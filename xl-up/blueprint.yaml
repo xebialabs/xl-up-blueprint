@@ -302,38 +302,6 @@ spec:
       replaceAsIs: true
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
-    - name: EfsId
-      type: Input
-      prompt: "Enter your Amazon EFS ID:"
-      promptIf: !expr "K8sSetup == 'AwsEKS'"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The ID of the AWS EFS instance which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your AWS EFS instance can be mounted in the nodes of your AWS EKS cluster"
-
-    - name: EfsRegion
-      type: Input
-      prompt: "Enter your Amazon EFS region:"
-      promptIf: !expr "K8sSetup == 'AwsEKS'"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
-
-    - name: NsfServerHost
-      type: Input
-      prompt: "Enter your NFS server name or IP address:"
-      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
-
-    - name: NsfSharePath
-      type: Input
-      prompt: "Enter your NFS share path:"
-      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
-
     - name: XldWorkHostpathPlain
       type: Input
       prompt: "Enter the local directory path that XL Deploy can use as a work directory:"
@@ -447,11 +415,11 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
-      prompt: "Enter the desired RAM limit for the XL Release pods"
+      prompt: "Enter the desired RAM request for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
       default: "1700Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMRequest)"
-      description: "This field sets the amount of RAM you would like the XL Release pods to be limited to in the Kubernetes cluster"
+      description: "This field sets the amount of RAM you would like the XL Release pods to be requested  in the Kubernetes cluster"
 
     - name: XlrRAMLimit
       type: Input
@@ -477,11 +445,11 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
-      prompt: "Enter the desired CPU requests for the XL Release pods"
+      prompt: "Enter the desired CPU limit for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
       default: "3"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPULimit)"
-      description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
+      description: "This field sets the amount of CPU you would like the XL Release pods to have limited to in the Kubernetes cluster"
 
     - name: XlrReportsPvcSize
       type: Input
@@ -506,6 +474,38 @@ spec:
       ignoreIfSkipped: true
       replaceAsIs: true
       description: "The password of the provided keystore"
+
+    - name: EfsId
+      type: Input
+      prompt: "Enter your Amazon EFS ID:"
+      promptIf: !expr "K8sSetup == 'AwsEKS'"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The ID of the AWS EFS instance which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your AWS EFS instance can be mounted in the nodes of your AWS EKS cluster"
+
+    - name: EfsRegion
+      type: Input
+      prompt: "Enter your Amazon EFS region:"
+      promptIf: !expr "K8sSetup == 'AwsEKS'"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
+
+    - name: NsfServerHost
+      type: Input
+      prompt: "Enter your NFS server name or IP address:"
+      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
+
+    - name: NsfSharePath
+      type: Input
+      prompt: "Enter your NFS share path:"
+      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
 
     - name: MonitoringInstall
       type: Confirm
