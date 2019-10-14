@@ -1,0 +1,35 @@
+#!groovy
+
+pipeline {
+    agent none
+    parameters {
+        string(name: 'RELEASE_BRANCH_NAME', defaultValue: 'master', description: 'The branch from which to make the release')
+        string(name: 'RELEASE_FOLDER', defaultValue: '', description: 'Folder to copy artifacts into')
+        string(name: 'DIST_SERVER_PATH', defaultValue: 'xl-up-blueprints', description: 'The folder path in dist server')
+    }
+
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20', artifactDaysToKeepStr: '7', artifactNumToKeepStr: '5'))
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        ansiColor('xterm')
+    }
+
+    stages {
+        stage('Push XL-UP Blueprints to Dist server') {
+            agent {
+                node {
+                    label 'xld||xlr'
+                }
+            }
+
+            steps {
+                checkout scm
+                sh "echo 'Release folder: ${params.RELEASE_FOLDER}'"
+                sh "echo 'Release branch: ${params.RELEASE_BRANCH_NAME}'"
+                sh "rsync -razv --delete --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='/xl-infra/***' --include='/xl-up/***' --include='index.json' --include='LICENCE.txt' --exclude='*' . ${env.DIST_SERVER_USER}@${env.DIST_SERVER_HOSTNAME}:${params.DIST_SERVER_PATH}/${params.RELEASE_FOLDER}"
+            }
+        }
+    }
+}
