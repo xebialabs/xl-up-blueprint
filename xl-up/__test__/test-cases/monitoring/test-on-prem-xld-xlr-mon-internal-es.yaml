@@ -84,14 +84,14 @@ expected-xl-values:
   PostgresMaxWallSize: 512MB
   OsType: linux
   K8sAuthentication: Token
-  UseExternalElasticsearch: false
+  MonitoringUseExternalElasticsearch: false
 not-expected-values:
-  - ElasticsearchUrlScheme
-  - ElasticsearchUrl
-  - ElasticsearchUsername
-  - ElasticsearchHasAuthentication
+  - MonitoringElasticsearchUrlScheme
+  - MonitoringElasticsearchUrl
+  - MonitoringElasticsearchUsername
+  - MonitoringElasticsearchHasAuthentication
 not-expected-secrets:
-  - ElasticsearchPassword
+  - MonitoringElasticsearchPassword
 expected-xl-secrets:
   MonitoringUserPass: mon-pass
   XlKeyStorePass: test123

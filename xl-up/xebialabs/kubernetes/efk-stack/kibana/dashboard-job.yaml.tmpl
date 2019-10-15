@@ -16,7 +16,7 @@ spec:
         - 'sh'
         - '-c'
         - >
-          until [ "$(wget {{ if .ElasticsearchHasAuthentication }}--user {{ .ElasticsearchUsername }} --password {{ .ElasticsearchPassword }}{{ end }} -O /dev/null -q --spider -T2 {{ if .UseExternalElasticsearch }}{{ .ElasticsearchUrlScheme }}{{ .ElasticsearchUrl }}:9200{{ else }}http://elasticsearch-logging.{{- .Namespace }}.svc:9200{{ end }}; echo $?)" == "0" ] ; do
+          until [ "$(wget {{ if .MonitoringElasticsearchHasAuthentication }}--user {{ .MonitoringElasticsearchUsername }} --password {{ .MonitoringElasticsearchPassword }}{{ end }} -O /dev/null -q --spider -T2 {{ if .MonitoringUseExternalElasticsearch }}{{ .MonitoringElasticsearchUrlScheme }}{{ .MonitoringElasticsearchUrl }}:9200{{ else }}http://elasticsearch-logging.{{- .Namespace }}.svc:9200{{ end }}; echo $?)" == "0" ] ; do
           echo "ElasticSearch is not ready yet";
           sleep 2;
           done
@@ -26,12 +26,12 @@ spec:
         imagePullPolicy: Always
         env:
           - name: ELASTICSEARCH_URL
-            value: "{{ if .UseExternalElasticsearch }}{{ .ElasticsearchUrlScheme }}{{ .ElasticsearchUrl }}:9200{{ else }}http://elasticsearch-logging.{{- .Namespace }}.svc:9200{{ end }}"
-          {{- if .ElasticsearchUsername }}
+            value: "{{ if .MonitoringUseExternalElasticsearch }}{{ .MonitoringElasticsearchUrlScheme }}{{ .MonitoringElasticsearchUrl }}:9200{{ else }}http://elasticsearch-logging.{{- .Namespace }}.svc:9200{{ end }}"
+          {{- if .MonitoringElasticsearchUsername }}
           - name: ELASTICSEARCH_USERNAME
-            value: "{{ .ElasticsearchUsername }}"
+            value: "{{ .MonitoringElasticsearchUsername }}"
           - name: ELASTICSEARCH_PASSWORD
-            value: "{{ .ElasticsearchPassword }}"
+            value: "{{ .MonitoringElasticsearchPassword }}"
           {{- end }}
           - name: KIBANA_URL
             value: "http://kibana-logging.{{- .Namespace }}.svc:5601"

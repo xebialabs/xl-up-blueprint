@@ -33,9 +33,9 @@ PostgresSyncCommit: "off"
 PostgresMaxWallSize: 512MB
 OsType: linux
 K8sAuthentication: Token
-UseExternalElasticsearch: true
-ElasticsearchUrlScheme: http://
-ElasticsearchUrl: 10.0.0.1
-ElasticsearchHasAuthentication: true
-ElasticsearchUsername: testuser
-ElasticsearchPassword: testpass
+MonitoringUseExternalElasticsearch: true
+MonitoringElasticsearchUrlScheme: http://
+MonitoringElasticsearchUrl: 10.0.0.1
+MonitoringElasticsearchHasAuthentication: true
+MonitoringElasticsearchUsername: testuser
+MonitoringElasticsearchPassword: testpass

@@ -88,17 +88,17 @@ data:
     MonitoringInstall: {{ .MonitoringInstall }}
     {{- if .MonitoringInstall}}
     MonitoringGrafanaDashboardsPvcSize: {{ .MonitoringGrafanaDashboardsPvcSize }}
-    PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
-    UseExternalElasticsearch: {{ .UseExternalElasticsearch }}
-    {{- if not .UseExternalElasticsearch }}
+    MonitoringPrometheusDataPvcSize: {{ .MonitoringPrometheusDataPvcSize }}
+    MonitoringUseExternalElasticsearch: {{ .MonitoringUseExternalElasticsearch }}
+    {{- if not .MonitoringUseExternalElasticsearch }}
     MonitoringElasticsearchDataPvcSize: {{ .MonitoringElasticsearchDataPvcSize }}
     {{- else }}
-    ElasticsearchUrlScheme: {{ .ElasticsearchUrlScheme }}
-    ElasticsearchUrl: {{ .ElasticsearchUrl }}
-    ElasticsearchHasAuthentication: {{ .ElasticsearchHasAuthentication }}
-        {{- if .ElasticsearchHasAuthentication }}
-    ElasticsearchUsername: {{ .ElasticsearchUsername }}
-    ElasticsearchPassword: {{ .ElasticsearchPassword }}
+    MonitoringElasticsearchUrlScheme: {{ .MonitoringElasticsearchUrlScheme }}
+    MonitoringElasticsearchUrl: {{ .MonitoringElasticsearchUrl }}
+    MonitoringElasticsearchHasAuthentication: {{ .MonitoringElasticsearchHasAuthentication }}
+        {{- if .MonitoringElasticsearchHasAuthentication }}
+    MonitoringElasticsearchUsername: {{ .MonitoringElasticsearchUsername }}
+    MonitoringElasticsearchPassword: {{ .MonitoringElasticsearchPassword }}
         {{- end }}
     {{- end }}
     MonitoringDataRetention: {{ .MonitoringDataRetention }}
