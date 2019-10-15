@@ -1,0 +1,172 @@
+##reach the db url ORACLE:
+# jdbc:oracle:thin:@oracle11g.xebialabs-dev.svc.cluster.local:1521:xe
+## username/pass: xlrelease:xlrelease xlarchive:xlarchive
+
+# xlr container that can be used is  xl-docker.xebialabs.com/xl-release-oracle:9.0.2
+
+##reach the db url POSTGRES:
+# jdbc:postgresql://postgresql.xebialabs-dev.svc.cluster.local:5432/xldeploy   username/pass: xldeploy:xldeploy
+# jdbc:postgresql://postgresql.xebialabs-dev.svc.cluster.local:5432/xlrelease   username/pass: xlrelease:xlrelease
+# jdbc:postgresql://postgresql.xebialabs-dev.svc.cluster.local:5432/xlarchive   username/pass: xlarchive:xlarchive
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: xebialabs-dev
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: oracle11g
+  namespace: xebialabs-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: oracle11g
+  template:
+    metadata:
+      labels:
+        app: oracle11g
+    spec:
+      containers:
+      - name: oracle11g
+        image: xl-docker.xebialabs.com/xl-up-oracle:11g
+        ports:
+        - containerPort: 50000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle11g
+  namespace: xebialabs-dev
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 1521
+      targetPort: 1521
+  selector:
+    app: oracle11g
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: postgresql-init-sql
+  namespace: xebialabs-dev
+data:
+  init-sql.sh: |-
+    #!/bin/bash
+    set -e
+
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+
+        CREATE USER "xldeploy" WITH ENCRYPTED PASSWORD 'xldeploy';
+        CREATE DATABASE "xldeploy";
+        GRANT ALL PRIVILEGES ON DATABASE "xldeploy" TO "xldeploy";
+
+        CREATE USER "xlrelease" WITH ENCRYPTED PASSWORD 'xlrelease';
+        CREATE DATABASE "xlrelease";
+        GRANT ALL PRIVILEGES ON DATABASE "xlrelease" TO "xlrelease";
+
+        CREATE USER "xlarchive" WITH ENCRYPTED PASSWORD 'xlarchive';
+        CREATE DATABASE "xlarchive";
+        GRANT ALL PRIVILEGES ON DATABASE "xlarchive" TO "xlarchive";
+    EOSQL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: xebialabs-dev
+  labels:
+    app: postgresql
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgresql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql
+  namespace: xebialabs-dev
+  labels:
+    app: postgresql
+spec:
+  serviceName: postgresql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      initContainers:
+        - name: fix-the-volume-permission
+          image: busybox
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - chown -R 70:70 /var/lib/postgresql
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+        - name: "remove-lost-found"
+          image: "busybox:1.26.2"
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - 'sh'
+            - '-c'
+            - 'rm -rf /var/lib/postgresql/lost+found'
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: data
+      containers:
+        - image: postgres:10.5
+          name: postgresql
+          command: ["docker-entrypoint.sh"]
+          args:
+            - "-c"
+            - "max_connections=512"
+            - "-c"
+            - "synchronous_commit=off"
+            - "-c"
+            - "effective_cache_size=1GB"
+            - "-c"
+            - "shared_buffers=512MB"
+            - "-c"
+            - "max_wal_size=256MB"
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: "0.5"
+            limits:
+              memory: 2Gi
+              cpu: "1"
+          ports:
+            - containerPort: 5432
+              name: postgresql
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+            - name: postgresql-init-sql
+              subPath: init-sql.sh
+              mountPath: /docker-entrypoint-initdb.d/init-sql.sh
+      volumes:
+        - name: postgresql-init-sql
+          configMap:
+            name: postgresql-init-sql
+            defaultMode: 0777
+        - name: data
+          emptyDir: {}
