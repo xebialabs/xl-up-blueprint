@@ -27,7 +27,7 @@ pipeline {
                 checkout scm
                 sh "echo 'Release folder: ${params.RELEASE_FOLDER}'"
                 sh "echo 'Release branch: ${params.RELEASE_BRANCH_NAME}'"
-                sh "rsync -razv --delete --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='/xl-infra/***' --include='/xl-up/***' --include='index.json' --include='LICENCE.txt' --exclude='*' . ${env.DIST_SERVER_USER}@${env.DIST_SERVER_HOSTNAME}:/var/www/dist.xebialabs.com/public/xl-up-blueprints/${params.RELEASE_FOLDER}"
+                sh "rsync -razv --delete --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='/xl-infra/***' --include='/xl-up/***' --include='index.json' --include='LICENCE.txt' --exclude='*' . ${env.DIST_SERVER_USER}@${env.DIST_SERVER_HOSTNAME}:${env.DIST_SERVER_UP_BLUEPRINT_PATH}/${params.RELEASE_FOLDER}"
             }
         }
     }
