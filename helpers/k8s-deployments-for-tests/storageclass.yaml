@@ -1,0 +1,129 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: xebialabs-nfs-client-provisioner-dev
+  namespace: xebialabs-dev
+  labels:
+    organization: xebialabs-dev
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: xebialabs-nfs-client-provisioner-dev-runner
+  namespace: xebialabs-dev
+  labels:
+    organization: xebialabs
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: xebialabs-run-nfs-client-provisioner-dev
+  namespace: xebialabs-dev
+  labels:
+    organization: xebialabs
+subjects:
+  - kind: ServiceAccount
+    name: xebialabs-nfs-client-provisioner-dev
+    namespace: xebialabs-dev
+roleRef:
+  kind: ClusterRole
+  name: xebialabs-nfs-client-provisioner-dev-runner
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: xebialabs-leader-locking-nfs-client-provisioner-dev
+  namespace: xebialabs-dev
+  labels:
+    organization: xebialabs
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: xebialabs-leader-locking-nfs-client-provisioner-dev
+  namespace: xebialabs-dev
+  labels:
+    organization: xebialabs
+subjects:
+  - kind: ServiceAccount
+    name: xebialabs-nfs-client-provisioner-dev
+    # replace with namespace where provisioner is deployed
+    namespace: xebialabs-dev
+roleRef:
+  kind: Role
+  name: xebialabs-leader-locking-nfs-client-provisioner-dev
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner-dev
+  namespace: xebialabs-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner-dev
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner-dev
+    spec:
+      serviceAccountName: xebialabs-nfs-client-provisioner-dev
+      containers:
+        - name: nfs-client-provisioner-dev
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: xebialabs-nfs-storage-provisioner
+            - name: NFS_SERVER
+              value: 172.16.0.45
+            - name: NFS_PATH
+              value: /xebialabs-k8s
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 172.16.0.45
+            path: /xebialabs-k8s
+
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: xebialabs-managed-nfs-storage-dev
+  namespace: xebialabs-dev
+  labels:
+    organization: xebialabs
+provisioner: xebialabs-nfs-storage-provisioner # or choose another name, must match deployment's env PROVISIONER_NAME'
+allowVolumeExpansion: true # Allow volume to be expanded dynamically
+reclaimPolicy: Retain
+parameters:
+  archiveOnDelete: "true" # When set to "false" your PVs will not be archived
+                           # by the provisioner upon deletion of the PVC.
