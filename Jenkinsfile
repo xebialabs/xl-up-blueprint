@@ -121,7 +121,7 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         nfsSharePath = "xebialabs-k8s"
-                        //runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
                         runXlUpOnPrem(nfsSharePath)
                     } catch (err) {
                         throw err
@@ -147,8 +147,9 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
     sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' sample-answers/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' sample-answers/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@8.6.1@9.0.2@g' sample-answers/eks-xld-xlr-mon-full.yaml"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
+
 }
 
 def runXlUpOnPrem(String nsfSharePath) {
@@ -174,5 +175,7 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
+
 }
