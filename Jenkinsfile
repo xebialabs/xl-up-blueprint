@@ -154,16 +154,18 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
 def runXlUpOnPrem(String nsfSharePath) {
     sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
         echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
+        tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt
+        rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt
     fi"""
-    sh "tr ' ' '\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt"
-    sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt"
-    sh "rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt"
+
     sh """ if [[ ! -f "k8sClientCert-onprem.key" ]]; then
         echo ${ON_PREM_KEY} >> k8sClientCert-onprem-tmp.key
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key
+        tr '%' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key
+        rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key
     fi"""
-    sh "tr ' ' '\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key"
-    sh "tr '%' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key"
-    sh "rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key"
+
     sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: ./k8sClientCert-onprem.crt@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: ./k8sClientCert-onprem.key@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
