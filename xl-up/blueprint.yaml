@@ -539,11 +539,11 @@ spec:
 
     - name: MonitoringElasticsearchUrl
       type: Input
-      prompt: "The host URL or IP address of the Elasticsearch cluster to push logs to"
+      prompt: "The host or IP address of the Elasticsearch cluster to push logs to. Only the URL host or IP without URL Scheme and port"
       promptIf: !expr "MonitoringUseExternalElasticsearch"
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "The host URL or IP address of your pre-existing Elasticsearch cluster"
+      description: "The host or IP address of your pre-existing Elasticsearch cluster. Only the URL host or IP without URL Scheme and port"
 
     - name: MonitoringElasticsearchHasAuthentication
       type: Confirm
