@@ -149,6 +149,7 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' sample-answers/eks-xld-xlr-mon-full.yaml"
     sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
 
@@ -177,5 +178,6 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
     sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
