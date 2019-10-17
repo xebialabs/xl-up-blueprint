@@ -69,7 +69,11 @@ pipeline {
                     try {
                         sh "mkdir -p temp"
                         dir('temp') {
-                            sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                            if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+                                sh "git clone -b ${env.BRANCH_NAME} git@github.com:xebialabs/xl-cli.git || true"
+                            } else {
+                                sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                            }
                         }
                         dir('temp/xl-cli') {
                             sh "./gradlew goClean goBuild -x goTest -x updateLicenses"
