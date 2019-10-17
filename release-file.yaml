@@ -1,3 +1,6 @@
+
+# apply using "xl apply -f release-file.yaml --xl-release-username "<your ldap user>" --xl-release-password "<your ldap password>" --xl-release-url https://xl-release.xebialabs.com:5516"
+
 apiVersion: xl-release/v1
 kind: Templates
 spec:
