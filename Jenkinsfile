@@ -139,19 +139,20 @@ def notifySlack(String message, String notificationColor) {
 }
 
 def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoint, String efsFileId) {
-    sh "sed -ie 's@https://aws-eks.com:6443@${eksEndpoint}@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@test1234561@${efsFileId}@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@test-eks-master@xl-up-master@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' sample-answers/eks-xld-xlr-mon-full.yaml"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a sample-answers/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "sed -ie 's@https://aws-eks.com:6443@${eksEndpoint}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@SOMEKEY@${awsAccessKeyId}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@test1234561@${efsFileId}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@test-eks-master@xl-up-master@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
+
 
 def runXlUpOnPrem(String nsfSharePath) {
     sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
@@ -168,16 +169,16 @@ def runXlUpOnPrem(String nsfSharePath) {
         rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key
     fi"""
 
-    sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: ./k8sClientCert-onprem.crt@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: ./k8sClientCert-onprem.key@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' sample-answers/on-prem-xld-xlr-mon-full.yaml"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a sample-answers/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: ./k8sClientCert-onprem.crt@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: ./k8sClientCert-onprem.key@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
