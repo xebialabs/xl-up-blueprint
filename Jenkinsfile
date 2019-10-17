@@ -67,11 +67,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "mkdir -p xld"
-                        dir('xld') {
+                        sh "mkdir -p temp"
+                        dir('temp') {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
-                        dir('xld/xl-cli') {
+                        dir('temp/xl-cli') {
                             sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
                             stash name: "xl-up", inludes: "build/darwin-amd64/xl"
                         }
@@ -104,11 +104,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "mkdir -p xld"
-                        dir('xld') {
+                        sh "mkdir -p temp"
+                        dir('temp') {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
-                        dir('xld/xl-cli') {
+                        dir('temp/xl-cli') {
                             sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
                         }
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
@@ -147,9 +147,9 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
     sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
 
@@ -177,8 +177,8 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "sed -ie 's@XldLic: ../xl-up/__test__/files/test-file@XldLic: ./deployit-license.lic@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlrLic: ../xl-up/__test__/files/test-file@XlrLic: ./xl-release.lic@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@XlKeyStore: ../xl-up/__test__/files/test-file@XlKeyStore: ./xl-up/__test__/files/keystore.jceks@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./temp/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
