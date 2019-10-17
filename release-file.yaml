@@ -25,20 +25,23 @@ spec:
       color: '#0099CC'
     - phase: Release
       tasks:
-      - name: Release new version of xl-seed
-        type: jenkins.Build
-        jenkinsServer: Jenkins NG
-        jobName: XL Up/job/xl-seed
-        jobParameters: |-
-          RELEASE_BRANCH_NAME=${BLUEPRINTS_VERSION}-maintenance
-          VERSION=${BLUEPRINTS_VERSION}
-      - name: Release new version of UP Blueprints
-        type: jenkins.Build
-        jenkinsServer: Jenkins NG
-        jobName: XL Up/job/XL UP Blueprints Release
-        jobParameters: |-
-          RELEASE_BRANCH_NAME=${BLUEPRINTS_VERSION}-maintenance
-          RELEASE_FOLDER=${BLUEPRINTS_VERSION}
+      - name: Release new version
+        type: xlrelease.ParallelGroup
+        tasks:
+        - name: Release new version of xl-seed
+          type: jenkins.Build
+          jenkinsServer: Jenkins NG
+          jobName: XL Up/job/xl-seed
+          jobParameters: |-
+            RELEASE_BRANCH_NAME=${BLUEPRINTS_VERSION}-maintenance
+            VERSION=${BLUEPRINTS_VERSION}
+        - name: Release new version of UP Blueprints
+          type: jenkins.Build
+          jenkinsServer: Jenkins NG
+          jobName: XL Up/job/XL UP Blueprints Release
+          jobParameters: |-
+            RELEASE_BRANCH_NAME=${BLUEPRINTS_VERSION}-maintenance
+            RELEASE_FOLDER=${BLUEPRINTS_VERSION}
       - name: Verify blueprint release
         type: webhook.UrlCheck
         url: https://dist.xebialabs.com/public/xl-up-blueprints/${BLUEPRINTS_VERSION}/index.json
