@@ -50,43 +50,6 @@ pipeline {
 
             }
         }
-        stage('Run XL UP Master') {
-            agent {
-                node {
-                    label 'xld||xlr||xli'
-                }
-            }
-
-            when {
-                expression {
-                    Branches.onMasterBranch(env.BRANCH_NAME) &&
-                            githubLabelsPresent(this, ['run-xl-up-master'])
-                }
-            }
-
-            steps {
-                script {
-                    try {
-                        sh "mkdir -p temp"
-                        dir('temp') {
-                            sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                        }
-                        dir('temp/xl-cli') {
-                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
-                            stash name: "xl-up", inludes: "build/darwin-amd64/xl"
-                        }
-                        unstash name: "xl-up"
-                        awsAccessKey = sh (script: 'aws sts get-caller-identity --query \'UserId\' --output text', returnStdout: true).trim()
-                        eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
-                        efsFileSystem = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                        runXlUpOnEks(awsAccessKey, eksEndpoint)
-                    } catch (err) {
-                        throw err
-                    }
-                }
-
-            }
-        }
         stage('Run XL UP Branch') {
             agent {
                 node {
@@ -109,7 +72,7 @@ pipeline {
                             sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                         }
                         dir('temp/xl-cli') {
-                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -PincludeXlUp"
+                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses"
                         }
                         awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
                         awsAccessKeyIdLine = awsConfigure.split("\n")[1]
