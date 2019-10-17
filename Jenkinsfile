@@ -90,6 +90,7 @@ pipeline {
                         nfsSharePath = "xebialabs-k8s"
                         runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
                         runXlUpOnPrem(nfsSharePath)
+
                     } catch (err) {
                         throw err
                     }
