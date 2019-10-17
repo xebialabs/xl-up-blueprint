@@ -113,8 +113,19 @@ XlKeyStorePass: {{ .XlKeyStorePass }}
 MonitoringInstall: {{ .MonitoringInstall }}
 {{- if .MonitoringInstall}}
 MonitoringGrafanaDashboardsPvcSize: {{ .MonitoringGrafanaDashboardsPvcSize }}
-PrometheusDataPvcSize: {{ .PrometheusDataPvcSize }}
+MonitoringPrometheusDataPvcSize: {{ .MonitoringPrometheusDataPvcSize }}
+MonitoringUseExternalElasticsearch: {{ .MonitoringUseExternalElasticsearch }}
+{{- if not .MonitoringUseExternalElasticsearch }}
 MonitoringElasticsearchDataPvcSize: {{ .MonitoringElasticsearchDataPvcSize }}
+{{- else }}
+MonitoringElasticsearchUrlScheme: {{ .MonitoringElasticsearchUrlScheme }}
+MonitoringElasticsearchUrl: {{ .MonitoringElasticsearchUrl }}
+MonitoringElasticsearchHasAuthentication: {{ .MonitoringElasticsearchHasAuthentication }}
+    {{- if .MonitoringElasticsearchHasAuthentication }}
+MonitoringElasticsearchUsername: {{ .MonitoringElasticsearchUsername }}
+MonitoringElasticsearchPassword: {{ .MonitoringElasticsearchPassword }}
+    {{- end }}
+{{- end }}
 MonitoringDataRetention: {{ .MonitoringDataRetention }}
 MonitoringUser: {{ .MonitoringUser }}
 MonitoringUserPass: {{ .MonitoringUserPass }}

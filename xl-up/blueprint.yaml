@@ -516,6 +516,61 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
 
+    - name: MonitoringUseExternalElasticsearch
+      type: Confirm
+      prompt: "Do you want to use a pre-existing Elasticsearch cluster?"
+      promptIf: !expr "MonitoringInstall"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "By default, a pre-configured elasticsearch cluster will be installed in kubernetes. If you already have an existing Elasticsearch cluster set up, you might want to choose this option"
+
+    - name: MonitoringElasticsearchUrlScheme
+      type: Select
+      options:
+        - label: HTTP
+          value: http://
+        - label: HTTPS
+          value: https://
+      prompt: Select the scheme to use when connecting to your Elasticsearch cluster
+      promptIf: !expr "MonitoringUseExternalElasticsearch"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+
+    - name: MonitoringElasticsearchUrl
+      type: Input
+      prompt: "The host or IP address of the Elasticsearch cluster to push logs to. Only the URL host or IP without URL Scheme and port"
+      promptIf: !expr "MonitoringUseExternalElasticsearch"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The host or IP address of your pre-existing Elasticsearch cluster. Only the URL host or IP without URL Scheme and port"
+
+    - name: MonitoringElasticsearchHasAuthentication
+      type: Confirm
+      prompt: "Does this Elasticsearch cluster require authentication?"
+      promptIf: !expr "MonitoringUseExternalElasticsearch"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+
+    - name: MonitoringElasticsearchUsername
+      type: Input
+      prompt: "The username to use when authenticating to Elasticsearch"
+      promptIf: !expr "MonitoringElasticsearchHasAuthentication"
+      default: ''
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "If you have Elasticsearch installed along with X-Pack, you might be required to authenticate to your Elasticsearch cluster. Input the username, if any, here"
+
+    - name: MonitoringElasticsearchPassword
+      type: SecretInput
+      prompt: "The password to use when authenticating to Elasticsearch"
+      promptIf: !expr "MonitoringElasticsearchHasAuthentication"
+      default: ''
+      replaceAsIs: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "If you have Elasticsearch installed along with X-Pack, you might be required to authenticate to your Elasticsearch cluster. Input the password here"
+
     - name: MonitoringGrafanaDashboardsPvcSize
       type: Input
       saveInXlvals: true
@@ -525,7 +580,7 @@ spec:
       default: "5Gi"
       description: "This field sets the  persistent volume size for Grafana. This is the persistent volume where Grafana will persist the data for the dashboards"
 
-    - name: PrometheusDataPvcSize
+    - name: MonitoringPrometheusDataPvcSize
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -539,7 +594,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for Elasticsearch"
-      promptIf: !expr "MonitoringInstall"
+      promptIf: !expr "MonitoringInstall && !MonitoringUseExternalElasticsearch"
       default: "50Gi"
       description: "This field sets the  persistent volume size for Elasticsearch. This is the persistent volume where Elasticsearch will persist the data"
 

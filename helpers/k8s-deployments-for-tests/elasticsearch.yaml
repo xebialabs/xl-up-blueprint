@@ -1,0 +1,89 @@
+##reach ES:
+# http://elasticsearch.xebialabs-dev.svc.cluster.local:9200   username/pass: elastic:<set during setup>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  namespace: xebialabs-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      initContainers:
+        - name: elasticsearch-init
+          image: busybox
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
+        - name: fix-the-volume-permission
+          image: busybox
+          command:
+            - sh
+            - -c
+            - chown -R 1000:1000 /usr/share/elasticsearch/data
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+        - name: increase-fd-ulimit
+          image: busybox
+          command: ["sh", "-c", "ulimit -n 65536"]
+          securityContext:
+            privileged: true
+      containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+          resources:
+            limits:
+              cpu: 1.5
+            requests:
+              cpu: 0.5
+              memory: 2.5Gi
+          ports:
+            - containerPort: 9200
+              name: rest
+              protocol: TCP
+            - containerPort: 9300
+              name: inter-node
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+          env:
+            - name: discovery.type
+              value: "single-node"
+            - name: ES_JAVA_OPTS
+              value: "-Xms2g -Xmx2g"
+            - name: xpack.security.enabled
+              value: "true"
+            - name: "NAMESPACE"
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+      volumes:
+        - name: data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: xebialabs-dev
+  labels:
+    app: elasticsearch
+spec:
+  ports:
+    - port: 9200
+      name: rest
+    - port: 9300
+      name: inter-node
+  selector:
+    app: elasticsearch

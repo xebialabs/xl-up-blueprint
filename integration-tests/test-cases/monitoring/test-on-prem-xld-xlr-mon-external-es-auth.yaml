@@ -1,4 +1,4 @@
-answers-file: eks-xld-xlr-mon.yaml
+answers-file: on-prem-xld-xlr-mon-external-es-auth.yaml
 expected-files:
   - xebialabs/common.yaml
   - xebialabs/deployments.yaml
@@ -9,12 +9,10 @@ expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
   #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
@@ -52,54 +50,45 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
 not-expected-files:
   #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 expected-xl-values:
-  K8sSetup: AwsEKS
+  K8sSetup: PlainK8SCluster
   UseKubeconfig: false
-  K8sApiServerURL: https://aws-eks.com:6443
-  UseAWSconfig: false
-  EksClusterName: test-eks-master
+  K8sApiServerURL: https://k8s.com:6443
   InstallXLD: true
   InstallXLR: true
+  XldDbName: xl-deploy
   XldDbUser: xl-deploy
-  EfsId: test1234561
-  EfsRegion: eu-west-1
+  NsfServerHost: nfs-test.com
+  NsfSharePath: /xebialabs
+  XlrDbName: xl-release
   XlrDbUser: xl-release
   XlrOfficialVersion: 9.0.2
   XldOfficialVersion: 9.0.2
+  XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
   MonitoringInstall: true
-  XldWorkPvcSize: 5Gi
-  XldExportPvcSize: 5Gi
-  XlrReportsPvcSize: 5Gi
-  MonitoringGrafanaDashboardsPvcSize: 5Gi
-  MonitoringPrometheusDataPvcSize: 5Gi
-  MonitoringElasticsearchDataPvcSize: 5Gi
   MonitoringUser: mon-user
+  PostgresMaxConn: 400
+  PostgresSharedBuff: 612MB
+  PostgresEffectCacheSize: 2GB
+  PostgresSyncCommit: "off"
+  PostgresMaxWallSize: 512MB
   OsType: linux
-  XldWorkerCount: 2
-  XldMasterCount: 2
-  XldMasterRAMRequest: 1600Mi
-  XldMasterRAMLimit: 6Gi
-  XldMasterCPURequest: 0.7
-  XldMasterCPULimit: 3
-  XldWorkerRAMRequest: 1600Mi
-  XldWorkerRAMLimit: 6Gi
-  XldWorkerCPURequest: 0.7
-  XldWorkerCPULimit: 3
-  XlrRAMRequest: 1700Mi
-  XlrRAMLimit: 6Gi
-  XlrCPURequest: 0.7
-  XlrCPULimit: 3
-  ExternalDatabase: true
-  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
-  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  K8sAuthentication: Token
+  MonitoringUseExternalElasticsearch: true
+  MonitoringElasticsearchUrlScheme: http://
+  MonitoringElasticsearchUrl: 10.0.0.1
+  MonitoringElasticsearchHasAuthentication: true
+  MonitoringElasticsearchUsername: testuser
 expected-xl-secrets:
   MonitoringUserPass: mon-pass
   XlKeyStorePass: test123
@@ -108,5 +97,4 @@ expected-xl-secrets:
   XlrAdminPass: password
   XlrDbPass: xl-release
   XlrReportDbPass: xl-release-report
-  AWSAccessKey: SOMEKEY
-  AWSAccessSecret: SOMEMOREKEY
+  MonitoringElasticsearchPassword: testpass

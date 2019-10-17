@@ -9,9 +9,11 @@ metadata:
     kubernetes.io/ingress.class: haproxy
     ingress.kubernetes.io/rewrite-target: /
     ingress.kubernetes.io/ssl-redirect: "false"
+    {{- if not .MonitoringElasticsearchHasAuthentication }}
     ingress.kubernetes.io/auth-type: "basic"
     ingress.kubernetes.io/auth-realm: "Kibana Authentication"
     ingress.kubernetes.io/auth-secret: "kibana-secret"
+    {{- end }}
 spec:
   rules:
     - http:
@@ -20,6 +22,8 @@ spec:
             backend:
               serviceName: kibana-logging
               servicePort: 5601
+{{- if not .MonitoringElasticsearchHasAuthentication }}
+# Don't include it, because if you have ES auth, you need to sign into kibana using an ES user
 ---
 apiVersion: v1
 kind: Secret
@@ -28,3 +32,4 @@ metadata:
   namespace: {{ .Namespace }}
 data:
   auth: {{ cat .MonitoringUser "::" .MonitoringUserPass | b64enc }}
+{{- end }}
