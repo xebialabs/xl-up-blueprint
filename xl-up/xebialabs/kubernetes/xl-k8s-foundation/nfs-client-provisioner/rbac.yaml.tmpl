@@ -2,6 +2,7 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: xebialabs-nfs-client-provisioner
+  namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
 ---
@@ -44,6 +45,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: xebialabs-leader-locking-nfs-client-provisioner
+  namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
 rules:
@@ -55,6 +57,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: xebialabs-leader-locking-nfs-client-provisioner
+  namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
 subjects:

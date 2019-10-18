@@ -2,7 +2,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: xebialabs-standard-retain
-  namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
 parameters:
