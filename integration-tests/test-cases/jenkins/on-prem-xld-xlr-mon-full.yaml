@@ -25,7 +25,7 @@ XldWorkerCPULimit: 3
 XldWorkPvcSize: 5Gi
 XldExportPvcSize: 10Gi
 XldAdminPass: 3WHeb9DEIXpFDwSd
-XldLic: ../xl-up/__test__/files/test-file
+XldLic: ./deployit-license.lic
 XldDbName: xl-deploy
 XldDbUser: sa
 XldDbPass: PxA3pBBLcGFAxlvA
@@ -37,14 +37,14 @@ XlrCPURequest: 0.7
 XlrCPULimit: 3
 XlrReportsPvcSize: 5Gi
 XlrAdminPass: nsSuJMZpiug21GjB
-XlrLic: ../xl-up/__test__/files/test-file
+XlrLic: ./xl-release.lic
 XlrDbName: xl-release
 XlrReportDbName: xl-release-report
 XlrDbUser: xl-release
 XlrDbPass: bkDvQntYVqCe0aIA
 XlrReportDbUser: xl-release-report
 XlrReportDbPass: uKpGeS6wXvpaukuh
-XlKeyStore: ../xl-up/__test__/files/test-file
+XlKeyStore: ./integration-tests/files/keystore.jceks
 XlKeyStorePass: test123
 MonitoringInstall: true
 MonitoringGrafanaDashboardsPvcSize: 5Gi
