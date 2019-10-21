@@ -117,7 +117,6 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
 
 }
 
-
 def runXlUpOnPrem(String nsfSharePath) {
     sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
         echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
