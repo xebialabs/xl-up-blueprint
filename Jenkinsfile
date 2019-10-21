@@ -185,7 +185,9 @@ def runXlUpOnPrem(String nsfSharePath) {
 }
 
 def runXlUpOnGke() {
-    sh "gcloud auth activate-service-account xl-up-ci@xl-up-247011.iam.gserviceaccount.com --key-file=/var/lib/jenkins/.gcloud/account.json"
+    GKE_ACCOUNT_EMAIL = sh(script: 'cat /var/lib/jenkins/.gcloud/account.json | python -c \'import json, sys; obj = json.load(sys.stdin); print obj["client_email"];\'', returnStdout: true).trim()
+
+    sh "gcloud auth activate-service-account ${GKE_ACCOUNT_EMAIL} --key-file=/var/lib/jenkins/.gcloud/account.json"
     sh "gcloud container clusters get-credentials  gke-xl-up-cluster --zone europe-west3-b --project xl-up-247011"
     sh "curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl"
     sh "chmod +x ./kubectl"
