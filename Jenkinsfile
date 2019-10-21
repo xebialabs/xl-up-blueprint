@@ -208,7 +208,7 @@ def runXlUpOnGke() {
     sh "sed -ie 's@{{XLR_LIC}}@./xl-release.lic@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{XL_KEYSTORE}}@./xl-up/__test__/files/keystore.jceks@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
 
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }
