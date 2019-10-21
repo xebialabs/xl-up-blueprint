@@ -1,13 +1,9 @@
 K8sSetup: {{.K8sSetup}}
 UseKubeconfig: {{.UseKubeconfig}}
 K8sApiServerURL: {{.K8sApiServerURL}}
-OsType: {{ .OsType }}
 {{- if or (and (not .UseKubeconfig) (ne .K8sSetup "AwsEKS")) (eq .K8sSetup "GoogleGKE")}}
 K8sAuthentication: {{ .K8sAuthentication }}
 {{- end}}
-{{- if eq .K8sSetup "LocalK8S" }}
-K8sLocalApiServerURL: {{ .K8sLocalApiServerURL }}
-{{- end }}
 {{- if eq .K8sToken ""}}
   {{- if eq .K8sClientCert "" }}
 K8sClientCertFile: {{ .CertFile }}
@@ -26,11 +22,9 @@ IsGKE: {{eq .K8sSetup "GoogleGKE"}}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
 UseAWSconfig: {{ .UseAWSconfig }}
 EksClusterName: {{ .EksClusterName }}
-IsAwsCfgAvailable: {{ .IsAwsCfgAvailable }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 {{- end }}
-Namespace: {{ .Namespace }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
@@ -50,7 +44,7 @@ XlrOfficialVersion: {{ .XlrOfficialVersion }}
 {{- end }}
 ExternalDatabase: {{ .ExternalDatabase }}
 {{- if .InstallXLD}}
-{{- if ne .K8sSetup "LocalK8S" }}
+  {{- if ne .K8sSetup "LocalK8S" }}
 XldMasterCount: {{ .XldMasterCount }}
 XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
 XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
@@ -63,7 +57,7 @@ XldWorkerCPURequest: {{ .XldWorkerCPURequest }}
 XldWorkerCPULimit: {{ .XldWorkerCPULimit }}
 XldWorkPvcSize: {{ .XldWorkPvcSize }}
 XldExportPvcSize: {{ .XldExportPvcSize }}
-{{- end }}
+  {{- end }}
 XldAdminPass: {{ .XldAdminPass }}
 XldLic: {{ .XldLic | b64enc }}
   {{- if .ExternalDatabase}}
@@ -74,7 +68,6 @@ XldDbName: {{ .XldDbName }}
 XldDbUser: {{ .XldDbUser }}
 XldDbPass: {{ .XldDbPass }}
   {{- if eq .K8sSetup "LocalK8S"}}
-XldWorkHostpath: {{ .XldWorkHostpath }}
 XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
   {{- end}}
 {{- end}}
@@ -121,7 +114,6 @@ MonitoringUserPass: {{ .MonitoringUserPass }}
 {{- end}}
 {{- if not .ExternalDatabase}}
   {{- if eq .K8sSetup "LocalK8S"}}
-PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
 PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
   {{- end}}
 PostgresqlDataPvcSize: {{ .PostgresqlDataPvcSize }}

@@ -61,7 +61,7 @@ spec:
       options:
         - label: Client key/certificate [Path to files]
           value: FilePath
-        - label: Token of an exsiting service account in K8s cluster
+        - label: Token of an existing service account in K8s cluster
           value: Token
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -112,7 +112,8 @@ spec:
     - name: K8sClientCert
       type: SecretEditor
       description: "Using the Kubernetes client certificate from your context"
-      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'FilePath' && K8sAuthentication != 'Token'? k8sConfig('UserClientCertificateData') : ''"
+      # The value is adjusted by XL-CLI
+      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == '' ? k8sConfig('UserClientCertificateData') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
@@ -120,7 +121,8 @@ spec:
     - name: K8sClientKey
       type: SecretEditor
       description: "Using the Kubernetes client certificate key from your context"
-      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication != 'FilePath' && K8sAuthentication != 'Token' ? k8sConfig('UserClientKeyData') : ''"
+      # The value is adjusted by XL-CLI
+      value: !expr "UseKubeconfig && K8sSetup != 'AwsEKS' && K8sAuthentication == '' ? k8sConfig('UserClientKeyData') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true

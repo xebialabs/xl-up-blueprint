@@ -5,7 +5,6 @@ metadata:
   namespace: {{ .Namespace }}
 data:
   answers.yaml: |-
-    Namespace: {{ .Namespace }}
     UseCustomRegistry: {{.UseCustomRegistry}}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
@@ -35,7 +34,6 @@ data:
     XldDbUser: {{ .XldDbUser }}
     XldDbPass: {{ .XldDbPass }}
       {{- if eq .K8sSetup "LocalK8S"}}
-    XldWorkHostpath: {{ .XldWorkHostpath }}
     XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
       {{- end}}
       {{- if ne .K8sSetup "LocalK8S" }}
@@ -96,7 +94,6 @@ data:
     {{- end}}
     {{- if not .ExternalDatabase}}
       {{- if eq .K8sSetup "LocalK8S"}}
-    PostgresqlWorkHostpath: {{ .PostgresqlWorkHostpath }}
     PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
       {{- end}}
     PostgresqlDataPvcSize: {{ .PostgresqlDataPvcSize }}
