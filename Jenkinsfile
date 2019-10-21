@@ -121,8 +121,9 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         nfsSharePath = "xebialabs-k8s"
-                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
-                        runXlUpOnPrem(nfsSharePath)
+                        // runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        // runXlUpOnPrem(nfsSharePath)
+                        runXlUpOnGke()
                     } catch (err) {
                         throw err
                     }
@@ -181,4 +182,31 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
     sh "./xld/xl-cli/build/linux-amd64/xl up -v -d -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
+}
+
+def runXlUpOnGke() {
+    sh "gcloud auth activate-service-account xl-up-ci@xl-up-247011.iam.gserviceaccount.com --key-file=/var/lib/jenkins/.gcloud/account.json"
+    sh "gcloud container clusters get-credentials  gke-xl-up-cluster --zone europe-west3-b --project xl-up-247011"
+    sh "curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl"
+    sh "chmod +x ./kubectl"
+
+    GKE_ENDPOINT = sh(script: './kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim()
+    SECRET_NAME = sh(script: "./kubectl get secrets -o custom-columns=:metadata.name -n kube-system | grep xebialabs-admin", returnStdout: true).trim()
+    GKE_TOKEN = sh(script: "./kubectl get secrets --field-selector metadata.name=${SECRET_NAME} -n kube-system -o=jsonpath='{.items[].data.token}' | base64 -d", returnStdout: true).trim()
+    NFS_PATH = sh(script: "gcloud filestore instances list --project xl-up-247011 --format='csv(fileShares.name,networks.ipAddresses[0])' | sed -n 2p | tr ',' '\n' | sed -n 1p", returnStdout: true).trim()
+    NFS_HOST = sh(script: "gcloud filestore instances list --project xl-up-247011 --format='csv(fileShares.name,networks.ipAddresses[0])' | sed -n 2p | tr ',' '\n' | sed -n 2p", returnStdout: true).trim()
+
+    sh "rm ./kubectl"
+
+    sh "sed -ie 's@{{GKE_ENDPOINT}}@${GKE_ENDPOINT}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{K8S_TOKEN}}@${GKE_TOKEN}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{NFS_HOST}}@${NFS_HOST}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{NFS_PATH}}@${NFS_PATH}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{XLD_LIC}}@./deployit-license.lic@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{XLR_LIC}}@./xl-release.lic@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{XL_KEYSTORE}}@./xl-up/__test__/files/keystore.jceks@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l ."
+    sh "./xld/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }
