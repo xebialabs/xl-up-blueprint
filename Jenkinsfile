@@ -70,7 +70,7 @@ pipeline {
                         sh "mkdir -p temp"
                         dir('temp') {
                             if (githubLabelsPresent(this, ['same-branch-on-cli'])){
-                                sh "git clone -b ${env.BRANCH_NAME} git@github.com:xebialabs/xl-cli.git || true"
+                                sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
                             } else {
                                 sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                             }
