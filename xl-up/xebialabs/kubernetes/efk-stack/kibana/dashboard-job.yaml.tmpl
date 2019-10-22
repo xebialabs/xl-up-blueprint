@@ -20,6 +20,16 @@ spec:
           echo "ElasticSearch is not ready yet";
           sleep 2;
           done
+      - name: wait-for-kibana
+        image: busybox:1
+        command:
+        - 'sh'
+        - '-c'
+        - >
+          until [ "$(wget -O /dev/null -q --spider -T2 http://kibana-logging.{{- .Namespace }}.svc:5601/status; echo $?)" == "0" ] ; do
+          echo "Kibana is not ready yet";
+          sleep 2;
+          done
       containers:
       - name: dashboards
         image: "xebialabsunsupported/xl-kibana:1.0.0"
