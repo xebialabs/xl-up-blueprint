@@ -1,0 +1,69 @@
+
+# apply using "xl apply -f release-file.yaml --xl-release-username "<your ldap user>" --xl-release-password "<your ldap password>" --xl-release-url https://xl-release.xebialabs.com:5516"
+
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: xl-up
+  children:
+  - template: XL UP Blueprints release template
+    description: XLR pipeline to release XL UP blueprints every milestone
+    phases:
+    - phase: Prepare
+      tasks:
+      - name: Create Branch for xl-seed release
+        type: github.CreateBranch
+        server: XebiaLabs GitHub (from community GitHub plugin)
+        organization: xebialabs
+        repositoryName: xl-seed
+        oldBranch: ${GIT_BRANCH}
+        newBranch: ${BLUEPRINTS_VERSION}-maintenance
+      - name: Create Branch for blueprint release
+        type: github.CreateBranch
+        server: XebiaLabs GitHub (from community GitHub plugin)
+        organization: xebialabs
+        repositoryName: xl-up-blueprint
+        oldBranch: ${GIT_BRANCH}
+        newBranch: ${BLUEPRINTS_VERSION}-maintenance
+      color: '#0099CC'
+    - phase: Release
+      tasks:
+      - name: Release new version
+        type: xlrelease.ParallelGroup
+        tasks:
+        - name: Release new version of xl-seed
+          type: jenkins.Build
+          jenkinsServer: Jenkins NG
+          jobName: XL Up/job/xl-seed
+          jobParameters: |-
+            RELEASE_BRANCH_NAME=${BLUEPRINTS_VERSION}-maintenance
+            VERSION=${BLUEPRINTS_VERSION}
+        - name: Release new version of UP Blueprints
+          type: jenkins.Build
+          jenkinsServer: Jenkins NG
+          jobName: XL Up/job/XL UP Blueprints Release
+          jobParameters: |-
+            RELEASE_BRANCH_NAME=${BLUEPRINTS_VERSION}-maintenance
+            RELEASE_FOLDER=${BLUEPRINTS_VERSION}
+      - name: Verify blueprint release
+        type: webhook.UrlCheck
+        url: https://dist.xebialabs.com/public/xl-up-blueprints/${BLUEPRINTS_VERSION}/index.json
+      - name: Notify team
+        type: slack.Notification
+        server: Kube-Love
+        message: UP Blueprints version ${BLUEPRINTS_VERSION} was released to https://dist.xebialabs.com/public/xl-up-blueprints/${BLUEPRINTS_VERSION}
+          and a new branch ${BLUEPRINTS_VERSION}-maintenance has been created in GitHub.
+        titleLink: https://dist.xebialabs.com/public/xl-up-blueprints/${BLUEPRINTS_VERSION}
+        color: good
+      color: '#0099CC'
+    variables:
+    - type: xlrelease.StringVariable
+      key: BLUEPRINTS_VERSION
+      label: Blueprints Version
+      description: The release version to use, should be x.x.x notation
+    - type: xlrelease.StringVariable
+      key: GIT_BRANCH
+      label: Git branch
+      description: Git branch to build
+      value: master
+    riskProfile: Default risk profile
