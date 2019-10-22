@@ -23,7 +23,7 @@ pipeline {
         ON_PREM_KEY = "${env.ON_PREM_KEY}"
         ON_PREM_K8S_API_URL = "${env.ON_PREM_K8S_API_URL}"
         NSF_SERVER_HOST = "${env.NSF_SERVER_HOST}"
-        XL_UP_GCP_PROJECT_ID = "${XL_UP_GCP_PROJECT_ID}"
+        XL_UP_GCP_PROJECT_ID = "${env.XL_UP_GCP_PROJECT_ID}"
     }
 
     stages {
