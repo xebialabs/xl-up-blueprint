@@ -203,7 +203,7 @@ def runXlUpOnGke() {
     sh "sed -ie 's@{{GKE_ENDPOINT}}@${GKE_ENDPOINT}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{K8S_TOKEN}}@${GKE_TOKEN}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{NFS_HOST}}@${NFS_HOST}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@{{NFS_PATH}}@${NFS_PATH}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{NFS_PATH}}@/${NFS_PATH}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{XLD_LIC}}@./deployit-license.lic@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{XLR_LIC}}@./xl-release.lic@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{XL_KEYSTORE}}@./integration-tests/files/keystore.jceks@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
