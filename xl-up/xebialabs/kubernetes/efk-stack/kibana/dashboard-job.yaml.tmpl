@@ -22,7 +22,7 @@ spec:
           done
       containers:
       - name: dashboards
-        image: "xebialabsunsupported/xl-kibana:1.0.0"
+        image: xebialabs/kibana-dashboard:1.0.0
         imagePullPolicy: Always
         env:
           - name: ELASTICSEARCH_URL
