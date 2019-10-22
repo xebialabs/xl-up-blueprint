@@ -88,8 +88,8 @@ pipeline {
                         eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
                         efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
                         nfsSharePath = "xebialabs-k8s"
-                        // runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
-                        // runXlUpOnPrem(nfsSharePath)
+                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                        runXlUpOnPrem(nfsSharePath)
                         runXlUpOnGke()
                     } catch (err) {
                         throw err
