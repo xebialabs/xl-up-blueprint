@@ -92,7 +92,9 @@ pipeline {
                         runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
                         runXlUpOnPrem(nfsSharePath)
                         runXlUpOnGke()
+                        sh "rm -rf temp"
                     } catch (err) {
+                        sh "rm -rf temp"
                         throw err
                     }
                 }
