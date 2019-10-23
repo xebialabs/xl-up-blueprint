@@ -78,8 +78,8 @@ expected-xl-values:
   PostgresMaxWallSize: 512MB
   OsType: linux
   K8sAuthentication: Token
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
 expected-xl-secrets:
   XlKeyStorePass: test123
   XldAdminPass: password

@@ -75,8 +75,8 @@ expected-xl-values:
   MonitoringInstall: false
   OsType: linux
   K8sAuthentication: Token
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   ExternalDatabase: true
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report

@@ -77,8 +77,8 @@ expected-xl-values:
   PostgresMaxWallSize: 512MB
   OsType: linux
   K8sAuthentication: Token
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   UseCustomRegistry: true
   RegistryURL: docker.io/xebialabs
   DockerUser: docker-user

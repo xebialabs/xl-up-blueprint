@@ -66,8 +66,8 @@ expected-xl-values:
   InstallXLR: false
   XldDbUser: xl-deploy
   XldOfficialVersion: 9.0.5
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   MonitoringInstall: true
   MonitoringUser: mon-user
   OsType: linux

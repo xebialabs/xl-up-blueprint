@@ -87,8 +87,8 @@ expected-xl-values:
   XlrRAMLimit: 6Gi
   XlrCPURequest: 0.7
   XlrCPULimit: 3
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   ExternalDatabase: true
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release

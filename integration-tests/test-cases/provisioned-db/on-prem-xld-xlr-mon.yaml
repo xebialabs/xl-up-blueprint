@@ -10,8 +10,8 @@ XldLic: ../integration-tests/files/test-file
 XldDbName: xl-deploy
 XldDbUser: xl-deploy
 XldDbPass: xl-deploy
-NsfServerHost: nfs-test.com
-NsfSharePath: /xebialabs
+NfsServerHost: nfs-test.com
+NfsSharePath: /xebialabs
 XlrAdminPass: password
 XlrLic: ../integration-tests/files/test-file
 XlrDbName: xl-release

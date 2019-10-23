@@ -29,8 +29,8 @@ XldLic: ./deployit-license.lic
 XldDbName: xl-deploy
 XldDbUser: sa
 XldDbPass: PxA3pBBLcGFAxlvA
-NsfServerHost: nfs-test.com
-NsfSharePath: /xebialabs
+NfsServerHost: nfs-test.com
+NfsSharePath: /xebialabs
 XlrRAMRequest: 1700Mi
 XlrRAMLimit: 6Gi
 XlrCPURequest: 0.7

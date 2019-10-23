@@ -56,8 +56,8 @@ data:
     EfsRegion: {{ .EfsRegion }}
     {{- end}}
     {{- if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster"))}}
-    NsfServerHost: {{ .NsfServerHost }}
-    NsfSharePath: {{ .NsfSharePath }}
+    NfsServerHost: {{ .NfsServerHost }}
+    NfsSharePath: {{ .NfsSharePath }}
     {{- end}}
     {{- if .InstallXLR}}
     XlrAdminPass: {{ .XlrAdminPass }}

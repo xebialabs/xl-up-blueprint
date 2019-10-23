@@ -65,8 +65,8 @@ expected-xl-values:
   K8sApiServerURL: https://k8s.com:6443
   InstallXLD: false
   InstallXLR: true
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   XlrDbName: xl-release
   XlrDbUser: xl-release
   XlrReportDbName: xl-release-report

@@ -9,8 +9,8 @@ XldAdminPass: password
 XldLic: ../integration-tests/files/test-file
 XldDbUser: xl-deploy
 XldDbPass: xl-deploy
-NsfServerHost: nfs-test.com
-NsfSharePath: /xebialabs
+NfsServerHost: nfs-test.com
+NfsSharePath: /xebialabs
 XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
 XldOfficialVersion: 9.0.5

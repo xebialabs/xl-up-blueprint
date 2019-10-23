@@ -27,8 +27,8 @@ XldLic: ./deployit-license.lic
 XldDbName: xl-deploy
 XldDbUser: sa
 XldDbPass: PxA3pBBLcGFAxlvA
-NsfServerHost: {{NFS_HOST}}
-NsfSharePath: {{NFS_PATH}}
+NfsServerHost: {{NFS_HOST}}
+NfsSharePath: {{NFS_PATH}}
 XlrRAMRequest: 1700Mi
 XlrRAMLimit: 6Gi
 XlrCPURequest: 0.7

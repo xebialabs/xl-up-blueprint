@@ -491,7 +491,7 @@ spec:
       ignoreIfSkipped: true
       description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
 
-    - name: NsfServerHost
+    - name: NfsServerHost
       type: Input
       prompt: "Enter your NFS server name or IP address:"
       promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
@@ -499,7 +499,7 @@ spec:
       ignoreIfSkipped: true
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
 
-    - name: NsfSharePath
+    - name: NfsSharePath
       type: Input
       prompt: "Enter your NFS share path:"
       promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"

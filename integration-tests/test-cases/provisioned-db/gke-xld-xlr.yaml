@@ -30,5 +30,5 @@ OsType: linux
 K8sAuthentication: FilePath
 K8sClientCertFile: ../integration-tests/files/test-file
 K8sClientKeyFile: ../integration-tests/files/test-file
-NsfServerHost: nfs-test.com
-NsfSharePath: /xebialabs
+NfsServerHost: nfs-test.com
+NfsSharePath: /xebialabs

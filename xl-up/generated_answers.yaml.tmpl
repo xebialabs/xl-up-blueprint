@@ -76,8 +76,8 @@ EfsId: {{ .EfsId }}
 EfsRegion: {{ .EfsRegion }}
 {{- end}}
 {{- if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster"))}}
-NsfServerHost: {{ .NsfServerHost }}
-NsfSharePath: {{ .NsfSharePath }}
+NfsServerHost: {{ .NfsServerHost }}
+NfsSharePath: {{ .NfsSharePath }}
 {{- end}}
 {{- if .InstallXLR}}
 {{- if ne .K8sSetup "LocalK8S" }}

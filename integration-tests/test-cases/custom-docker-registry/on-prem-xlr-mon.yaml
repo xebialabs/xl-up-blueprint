@@ -5,8 +5,8 @@ K8sClientCertFile: ../integration-tests/files/test-file
 K8sClientKeyFile: ../integration-tests/files/test-file
 InstallXLD: false
 InstallXLR: true
-NsfServerHost: nfs-test.com
-NsfSharePath: /xebialabs
+NfsServerHost: nfs-test.com
+NfsSharePath: /xebialabs
 XlrAdminPass: password
 XlrLic: ../integration-tests/files/test-file
 XlrDbName: xl-release

@@ -105,8 +105,8 @@ spec:
           EFS_REGION: !value EfsRegion
         {{- else if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
-          NFS_SERVER: !value NsfServerHost
-          NFS_PATH: !value NsfSharePath
+          NFS_SERVER: !value NfsServerHost
+          NFS_PATH: !value NfsSharePath
         {{- end }}
         {{- if not .ExternalDatabase}}
           POSTGRES_MAX_CONN: !value PostgresMaxConn

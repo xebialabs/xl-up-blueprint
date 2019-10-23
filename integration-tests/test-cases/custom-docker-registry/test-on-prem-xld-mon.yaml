@@ -67,8 +67,8 @@ expected-xl-values:
   InstallXLR: false
   XldDbName: xl-deploy
   XldDbUser: xl-deploy
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   MonitoringInstall: true
   MonitoringUser: mon-user
   PostgresMaxConn: 400

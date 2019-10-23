@@ -73,8 +73,8 @@ expected-xl-values:
   K8sAuthentication: Token
   XldWorkerCount: 2
   XldMasterCount: 2
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   ExternalDatabase: true
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
 expected-xl-secrets:

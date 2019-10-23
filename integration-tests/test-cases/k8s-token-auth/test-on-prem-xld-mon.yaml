@@ -68,8 +68,8 @@ expected-xl-values:
   XldDbName: xl-deploy
   XldDbUser: xl-deploy
   XldOfficialVersion: 9.0.5
-  NsfServerHost: nfs-test.com
-  NsfSharePath: /xebialabs
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
   MonitoringInstall: true
   MonitoringUser: mon-user
   PostgresMaxConn: 400
