@@ -10,7 +10,7 @@ XldDbUser: xl-deploy
 XldDbPass: xl-deploy
 XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
-XldOfficialVersion: 9.0.2
+XldOfficialVersion: 9.0.5
 MonitoringInstall: true
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass

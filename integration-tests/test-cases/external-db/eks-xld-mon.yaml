@@ -15,7 +15,7 @@ EfsId: test1234561
 EfsRegion: eu-west-1
 XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
-XldOfficialVersion: 9.0.2
+XldOfficialVersion: 9.0.5
 MonitoringInstall: true
 MonitoringUser: mon-user
 MonitoringUserPass: mon-pass

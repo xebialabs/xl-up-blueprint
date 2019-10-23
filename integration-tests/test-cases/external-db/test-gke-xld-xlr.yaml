@@ -68,8 +68,8 @@ expected-xl-values:
   XldDbUser: xl-deploy
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
-  XlrOfficialVersion: 9.0.2
-  XldOfficialVersion: 9.0.2
+  XlrOfficialVersion: 9.0.6
+  XldOfficialVersion: 9.0.5
   MonitoringInstall: false
   OsType: linux
   K8sAuthentication: Token

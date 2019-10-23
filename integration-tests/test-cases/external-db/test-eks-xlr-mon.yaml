@@ -63,7 +63,7 @@ expected-xl-values:
   InstallXLD: false
   InstallXLR: true
   XlrDbUser: xl-release
-  XlrOfficialVersion: 9.0.2
+  XlrOfficialVersion: 9.0.6
   XlrReportDbUser: xl-release-report
   MonitoringInstall: true
   MonitoringUser: mon-user

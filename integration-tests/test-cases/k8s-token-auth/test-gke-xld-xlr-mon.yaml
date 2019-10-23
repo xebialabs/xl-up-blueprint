@@ -70,8 +70,8 @@ expected-xl-values:
   XldDbUser: xl-deploy
   XlrDbName: xl-release
   XlrDbUser: xl-release
-  XlrOfficialVersion: 9.0.2
-  XldOfficialVersion: 9.0.2
+  XlrOfficialVersion: 9.0.6
+  XldOfficialVersion: 9.0.5
   XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
   MonitoringInstall: true

@@ -66,7 +66,7 @@ expected-xl-values:
   InstallXLR: true
   XlrDbUser: xl-release
   XlrReportDbUser: xl-release-report
-  XlrOfficialVersion: 9.0.2
+  XlrOfficialVersion: 9.0.6
   K8sAuthentication: FilePath
   ExternalDatabase: true
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release

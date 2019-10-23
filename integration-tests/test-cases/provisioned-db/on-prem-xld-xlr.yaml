@@ -22,8 +22,8 @@ XlrReportDbUser: xl-release-report
 XlrReportDbPass: xl-release-report
 XlKeyStore: ../integration-tests/files/test-file
 XlKeyStorePass: test123
-XlrOfficialVersion: 9.0.2
-XldOfficialVersion: 9.0.2
+XlrOfficialVersion: 9.0.6
+XldOfficialVersion: 9.0.5
 MonitoringInstall: false
 PostgresMaxConn: 400
 PostgresSharedBuff: 612MB

@@ -70,7 +70,7 @@ expected-xl-values:
   XlrDbUser: xl-release
   XlrReportDbName: xl-release-report
   XlrReportDbUser: xl-release-report
-  XlrOfficialVersion: 9.0.2
+  XlrOfficialVersion: 9.0.6
   MonitoringInstall: true
   MonitoringUser: mon-user
   PostgresMaxConn: 400

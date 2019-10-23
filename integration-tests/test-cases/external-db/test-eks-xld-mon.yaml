@@ -67,7 +67,7 @@ expected-xl-values:
   InstallXLD: true
   InstallXLR: false
   XldDbUser: xl-deploy
-  XldOfficialVersion: 9.0.2
+  XldOfficialVersion: 9.0.5
   EfsId: test1234561
   EfsRegion: eu-west-1
   MonitoringInstall: true
