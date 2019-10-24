@@ -18,11 +18,11 @@ spec:
 
     - name: UseCustomRegistry
       type: Confirm
-      prompt: "Do you want to use custom Docker Registry?"
+      prompt: "Do you want to use custom Docker Registry and custom images?"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
+      description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries, like jdbc drivers to connect to external databases, and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
 
     - name: RegistryURL
       type: Input
@@ -123,11 +123,11 @@ spec:
 
     - name: ExternalDatabase
       type: Confirm
-      prompt: "Would you like to use an external database:"
+      prompt: "Would you like to use an external database?"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "xl up will deploy by default a Postgresql instance within your Kubernetes installation save the data of XL Deploy or XL Release. If you want to use your own existing Database then type yes in this question. Make sure that your Database is reachable within the Kubernetes cluster"
+      description: "xl up will deploy by default a Postgresql instance within your Kubernetes installation save the data of XL Deploy or XL Release. If you want to use your own existing Database then type yes in this question. Make sure that your Database is reachable within the Kubernetes cluster. If you want to use Oracle or DB2 then you must also provide custom docker images for XL Deploy and XL Release with appropriate jdbc driver included."
 
     - name: XldAdminPass
       type: SecretInput
