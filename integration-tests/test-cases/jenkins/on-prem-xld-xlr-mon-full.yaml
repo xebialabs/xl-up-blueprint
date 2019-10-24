@@ -48,7 +48,7 @@ XlKeyStore: ./integration-tests/files/keystore.jceks
 XlKeyStorePass: test123
 MonitoringInstall: true
 MonitoringGrafanaDashboardsPvcSize: 5Gi
-PrometheusDataPvcSize: 20Gi
+MonitoringPrometheusDataPvcSize: 20Gi
 MonitoringElasticsearchDataPvcSize: 50Gi
 MonitoringDataRetention: 7
 MonitoringUser: admin

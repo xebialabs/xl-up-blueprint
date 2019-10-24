@@ -55,6 +55,6 @@ XldExportPvcSize: 10Gi
 XldWorkPvcSize: 5Gi
 XlrReportsPvcSize: 5Gi
 GrafanaDashboardsPvcSize: 5Gi
-PrometheusDataPvcSize: 20Gi
+MonitoringPrometheusDataPvcSize: 20Gi
 ElasticsearchDataPvcSize: 50Gi
 PostgresqlDataPvcSize: 50Gi

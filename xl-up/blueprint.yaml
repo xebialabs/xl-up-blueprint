@@ -525,7 +525,7 @@ spec:
       default: "5Gi"
       description: "This field sets the  persistent volume size for Grafana. This is the persistent volume where Grafana will persist the data for the dashboards"
 
-    - name: PrometheusDataPvcSize
+    - name: MonitoringPrometheusDataPvcSize
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true

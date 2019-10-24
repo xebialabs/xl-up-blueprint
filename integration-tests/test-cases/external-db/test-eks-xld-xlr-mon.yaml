@@ -78,7 +78,7 @@ expected-xl-values:
   XldExportPvcSize: 5Gi
   XlrReportsPvcSize: 5Gi
   MonitoringGrafanaDashboardsPvcSize: 5Gi
-  PrometheusDataPvcSize: 5Gi
+  MonitoringPrometheusDataPvcSize: 5Gi
   MonitoringElasticsearchDataPvcSize: 5Gi
   MonitoringUser: mon-user
   OsType: linux

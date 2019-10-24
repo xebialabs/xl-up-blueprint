@@ -65,7 +65,7 @@ spec:
         {{end}}
         resources:
           requests:
-            storage: {{ .PrometheusDataPvcSize }}
+            storage: {{ .MonitoringPrometheusDataPvcSize }}
 ---
 kind: Service
 apiVersion: v1
