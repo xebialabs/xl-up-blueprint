@@ -59,6 +59,14 @@ spec:
       ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Deploy"
 
+    - name: XldDeploymentTimeout
+      type: Input
+      prompt: "Timeout interval of XL Deploy masters and workers deployment"
+      value: 120
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Timeout interval of XL Deploy masters and workers deployment. The value of this parameter is the number of retries until readiness probe check passes and not the number of seconds. The interval between each try is 5 seconds"
+
     - name: XldOfficialVersion
       type: Select
       prompt: "Choose the version of the XL Deploy:"
@@ -93,6 +101,15 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Whether or not you would like to install XL Release"
+
+    - name: XlrDeploymentTimeout
+      type: Input
+      prompt: "Timeout interval of XL Release nodes deployment"
+      value: 120
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Timeout interval of XL Release nodes deployment. The value of this parameter is the number of retries until readiness probe check passes and not the number of seconds. The interval between each try is 5 seconds "
+
 
     - name: XlrOfficialVersion
       type: Select

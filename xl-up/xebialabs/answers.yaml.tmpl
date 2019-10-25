@@ -17,9 +17,11 @@ data:
     {{- else }}
       {{- if .InstallXLD}}
     XldOfficialVersion: {{ .XldOfficialVersion }}
+    XldDeploymentTimeout: {{ .XldDeploymentTimeout }}
       {{- end}}
       {{- if .InstallXLR}}
     XlrOfficialVersion: {{ .XlrOfficialVersion }}
+    XlrDeploymentTimeout: {{ .XlrDeploymentTimeout }}
       {{- end}}
     {{- end }}
     ExternalDatabase: {{ .ExternalDatabase }}
