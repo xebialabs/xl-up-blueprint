@@ -20,19 +20,24 @@ spec:
                 {{- if  eq .K8sSetup "LocalK8S" }}
                   - name: xld-deployment
                     type: k8s.ResourcesFile
+                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
                     file: !file kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
                   {{- else }}
                   - name: xld-deployment-master
                     type: k8s.ResourcesFile
+                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
                     file: !file kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
                   - name: xld-deployment-worker
                     type: k8s.ResourcesFile
+                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
                     file: !file kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
                   - name: xld-1work-pvc
                     type: k8s.ResourcesFile
+                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
                     file: !file kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
                   - name: xld-1export-pvc
                     type: k8s.ResourcesFile
+                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
                     file: !file kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
                   {{- end}}
                 applicationDependencies: null
