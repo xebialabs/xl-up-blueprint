@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: {{ .Namespace }}
+data:
+  enabled_plugins: '[rabbitmq_management,rabbitmq_jms_topic_exchange].'
+  rabbitmq.conf: |
+    default_user = {{ .RabbitMQUsername }}
+    default_pass = {{ .RabbitMQPassword }}
+    loopback_users = none

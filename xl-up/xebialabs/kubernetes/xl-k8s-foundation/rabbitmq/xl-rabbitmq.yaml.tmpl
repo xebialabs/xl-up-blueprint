@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: {{ .Namespace }}
+  labels:
+    app: rabbitmq
+spec:
+  type: NodePort
+  ports:
+    - port: 5672
+      name: mq-port
+    - port: 15672
+      name: management-port
+  selector:
+    app: rabbitmq
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: {{ .Namespace }}
+  labels:
+    app: rabbitmq
+spec:
+  serviceAccountName: rabbitmq
+  serviceName: rabbitmq
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - image: rabbitmq:3.8.0-management
+          name: rabbitmq
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: "0.5"
+            limits:
+              memory: 1Gi
+              cpu: "1"
+          ports:
+            - containerPort: 5672
+              name: mq-port
+            - containerPort: 15672
+              name: management-port
+          livenessProbe:
+            exec:
+              # This is just an example. There is no "one true health check" but rather
+              # several rabbitmq-diagnostics commands that can be combined to form increasingly comprehensive
+              # and intrusive health checks.
+              # Learn more at https://www.rabbitmq.com/monitoring.html#health-checks.
+              #
+              # Stage 2 check:
+              command: ["rabbitmq-diagnostics", "status"]
+            initialDelaySeconds: 60
+            # See https://www.rabbitmq.com/monitoring.html for monitoring frequency recommendations.
+            periodSeconds: 60
+            timeoutSeconds: 15
+          readinessProbe:
+            exec:
+              # This is just an example. There is no "one true health check" but rather
+              # several rabbitmq-diagnostics commands that can be combined to form increasingly comprehensive
+              # and intrusive health checks.
+              # Learn more at https://www.rabbitmq.com/monitoring.html#health-checks.
+              #
+              # Stage 2 check:
+              command: ["rabbitmq-diagnostics", "status"]
+              # To use a stage 4 check:
+              # command: ["rabbitmq-diagnostics", "check_port_connectivity"]
+            initialDelaySeconds: 20
+            periodSeconds: 60
+            timeoutSeconds: 10
+          env:
+            - name: RABBITMQ_ERLANG_COOKIE
+              value: "{{ .RabbitMQErlangCookie }}"
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+            - name: config-volume
+              mountPath: /etc/rabbitmq
+      volumes:
+        - name: config-volume
+          configMap:
+            name: rabbitmq-config
+            items:
+              - key: rabbitmq.conf
+                path: rabbitmq.conf
+              - key: enabled_plugins
+                path: enabled_plugins
+  {{if eq .K8sSetup "LocalK8S" }}
+        - name: data
+          emptyDir: {}
+  {{else}}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{if eq .K8sSetup "AwsEKS" }}
+        storageClassName: xebialabs-gp2-retain
+        {{else if eq .K8sSetup "GoogleGKE" }}
+        storageClassName: xebialabs-standard-retain
+        {{else if eq .K8sSetup "PlainK8SCluster" }}
+        storageClassName: xebialabs-managed-nfs-storage
+        {{end}}
+        resources:
+          requests:
+            storage: 5Gi
+  {{end}}

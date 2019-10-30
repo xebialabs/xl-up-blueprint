@@ -182,6 +182,9 @@ spec:
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
                 {{- end }}
+                {{- if not .RabbitMQExternal }}
+                  RabbitMQ: "3.8.0-management"
+                {{- end }}
                 undeployDependencies: "true"
           - name: K8s-Ingress-Controller
             type: udm.Application
@@ -327,6 +330,29 @@ spec:
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+          {{- end }}
+          {{- if not .RabbitMQExternal }}
+          - name: RabbitMQ
+            type: udm.Application
+            children:
+              - name: "3.8.0-management"
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: RabbitMQ-rbac
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
+                  - name: RabbitMQ-configmap
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
+                  - name: RabbitMQ-statefulset
+                    type: k8s.ResourcesFile
+                    readinessProbeRetry: 120
+                    file: !file kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
+                  - name: RabbitMQ-ingress
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
           {{- end }}
           {{- if .MonitoringInstall }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
