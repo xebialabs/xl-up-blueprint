@@ -39,6 +39,16 @@ data:
     XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
       {{- end}}
       {{- if ne .K8sSetup "LocalK8S" }}
+    RabbitMQExternal: {{ .RabbitMQExternal }}
+    RabbitMQDriver: {{ .RabbitMQDriver }}
+    {{- if .RabbitMQExternal }}
+    RabbitMQUrl: {{ .RabbitMQUrl }}
+    {{- end }}
+    RabbitMQUsername: {{ .RabbitMQUsername }}
+    RabbitMQPassword: {{ .RabbitMQPassword }}
+    {{- if not .RabbitMQExternal }}
+    RabbitMQErlangCookie: {{ .RabbitMQErlangCookie }}
+    {{- end }}
     XldMasterCount: {{ .XldMasterCount }}
     XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
     XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
@@ -105,13 +115,3 @@ data:
     PostgresSyncCommit: {{ .PostgresSyncCommit }}
     PostgresMaxWallSize: {{ .PostgresMaxWallSize }}
     {{- end}}
-    RabbitMQExternal: {{ .RabbitMQExternal }}
-    RabbitMQDriver: {{ .RabbitMQDriver }}
-    {{- if .RabbitMQExternal }}
-    RabbitMQUrl: {{ .RabbitMQUrl }}
-    {{- end }}
-    RabbitMQUsername: {{ .RabbitMQUsername }}
-    RabbitMQPassword: {{ .RabbitMQPassword }}
-    {{- if not .RabbitMQExternal }}
-    RabbitMQErlangCookie: {{ .RabbitMQErlangCookie }}
-    {{- end }}

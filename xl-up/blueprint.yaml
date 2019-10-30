@@ -333,6 +333,66 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
 
+    - name: RabbitMQExternal
+      type: Confirm
+      prompt: Would you like to use an existing RabbitMQ/ActiveMQ server for XL Deploy?
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: false
+      saveInXlvals: true
+      description: 'If you already have an existing RabbitMQ or ActiveMQ server, it is recommended to set this to TRUE and provide a connection string for that server. Otherwise, you can choose to have xl up create a RabbitMQ instance for you'
+
+    - name: RabbitMQUrl
+      type: Input
+      prompt: "Specify the URL of your RabbitMQ/ActiveMQ instance"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: 'The connection URL of your pre-existing RabbitMQ or ActiveMQ instance, including the prefix "amqp://"'
+
+    - name: RabbitMQDriver
+      type: Select
+      options:
+        - label: RabbitMQ
+          value: com.rabbitmq.jms.admin.RMQConnectionFactory
+        - label: ActiveMQ
+          value: org.apache.activemq.ActiveMQConnectionFactory
+      prompt: "Select the type of driver you need to use to connect to your external MQ instance"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      default: 'com.rabbitmq.jms.admin.RMQConnectionFactory'
+      saveInXlvals: true
+      ignoreIfSkipped: false
+      description: 'This options selects the driver that XL Deploy will use to connect to your external MQ instance'
+
+
+    - name: RabbitMQUsername
+      type: Input
+      prompt: "Specify the username for the default RabbitMQ user"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      default: 'guest'
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: 'The username to use for the main administrator user for this RabbitMQ instance'
+
+    - name: RabbitMQPassword
+      type: SecretInput
+      prompt: "Specify the password for the default RabbitMQ user"
+      default: !expr "randPassword()"
+      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      replaceAsIs: true
+      description: 'The password to use for the main administrator user for this RabbitMQ instance'
+
+    - name: RabbitMQErlangCookie
+      type: SecretInput
+      prompt: "Erlang cookie for securing RabbitMQ clusters"
+      promptIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      default: !expr "randPassword()"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      replaceAsIs: true
+      description: 'The shared secret to use when clustering RabbitMQ'
+
     - name: XlrAdminPass
       type: SecretInput
       prompt: "Enter the password that you want to use for the XL Release admin user:"
@@ -655,63 +715,6 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The maximum size the WAL can reach before being flushed"
-
-    - name: RabbitMQExternal
-      type: Confirm
-      prompt: Would you like to use an existing RabbitMQ/ActiveMQ server for XL Deploy?
-      default: false
-      saveInXlvals: true
-      description: 'If you already have an existing RabbitMQ or ActiveMQ server, it is recommended to set this to TRUE and provide a connection string for that server. Otherwise, you can choose to have xl up create a RabbitMQ instance for you'
-
-    - name: RabbitMQUrl
-      type: Input
-      prompt: "Specify the URL of your RabbitMQ/ActiveMQ instance"
-      promptIf: !expr "RabbitMQExternal"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: 'The connection URL of your pre-existing RabbitMQ or ActiveMQ instance, including the prefix "amqp://"'
-
-    - name: RabbitMQDriver
-      type: Select
-      options:
-        - label: RabbitMQ
-          value: com.rabbitmq.jms.admin.RMQConnectionFactory
-        - label: ActiveMQ
-          value: org.apache.activemq.ActiveMQConnectionFactory
-      prompt: "Select the type of driver you need to use to connect to your external MQ instance"
-      promptIf: !expr 'RabbitMQExternal'
-      default: 'com.rabbitmq.jms.admin.RMQConnectionFactory'
-      saveInXlvals: true
-      ignoreIfSkipped: false
-      description: 'This options selects the driver that XL Deploy will use to connect to your external MQ instance'
-
-
-    - name: RabbitMQUsername
-      type: Input
-      prompt: "Specify the username for the default RabbitMQ user"
-      default: 'guest'
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: 'The username to use for the main administrator user for this RabbitMQ instance'
-
-    - name: RabbitMQPassword
-      type: SecretInput
-      prompt: "Specify the password for the default RabbitMQ user"
-      default: !expr "randPassword()"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      replaceAsIs: true
-      description: 'The password to use for the main administrator user for this RabbitMQ instance'
-
-    - name: RabbitMQErlangCookie
-      type: SecretInput
-      prompt: "Erlang cookie for securing RabbitMQ clusters"
-      promptIf: !expr "!RabbitMQExternal"
-      default: !expr "randPassword()"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      replaceAsIs: true
-      description: 'The shared secret to use when clustering RabbitMQ'
 
   files:
     #xl-k8s-foundation
