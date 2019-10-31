@@ -31,14 +31,6 @@ spec:
                     type: k8s.ResourcesFile
                     readinessProbeRetry: {{ .XldDeploymentTimeout }}
                     file: !file kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-                  - name: xld-1work-pvc
-                    type: k8s.ResourcesFile
-                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
-                    file: !file kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
-                  - name: xld-1export-pvc
-                    type: k8s.ResourcesFile
-                    readinessProbeRetry: {{ .XldDeploymentTimeout }}
-                    file: !file kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
                   {{- end}}
                 applicationDependencies: null
                 undeployDependencies: "true"

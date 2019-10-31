@@ -164,6 +164,9 @@ spec:
                     file: !file "answers.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "v0.6"
+               {{- if ne .K8sSetup "LocalK8S"}}
+                  XL-PVC-Claims: "1.0.0"
+               {{- end }}
                 {{- if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
                 {{- else }}
@@ -404,6 +407,28 @@ spec:
                 applicationDependencies:
                   Fluentd: "v0.12"
                 undeployDependencies: "true"
+            - name: XL-PVC-Claims
+              type: udm.Application
+              children:
+                - name: "1.0.0"
+                  type: udm.DeploymentPackage
+                  orchestrator:
+                    - sequential-by-dependency
+                  deployables:
+                    - name: pvc-xld-export
+                      type: k8s.ResourcesFile
+                      readinessProbeRetry: 120
+                      file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml"
+                    - name: pvc-xld-work
+                      type: k8s.ResourcesFile
+                      readinessProbeRetry: 120
+                      file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml"
+                    - name: pvc-xlr-reports
+                      type: k8s.ResourcesFile
+                      readinessProbeRetry: 120
+                      file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml"
+                  applicationDependencies:
+                  undeployDependencies: "true"
             - name: Kube-State-Metrics
               type: udm.Application
               children:
