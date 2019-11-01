@@ -38,7 +38,7 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
   - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
   - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
-  - xebialabs/kubernetes/pg-stack/grafana/pvc-xlr-reports.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
