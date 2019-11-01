@@ -123,14 +123,6 @@ spec:
               value: {{$XLD_KEYSTORE}}
             - name: FORCE_UPGRADE
               value: "true"
-            - name: XLD_TASK_QUEUE_DRIVER_CLASS_NAME
-              value: {{ .RabbitMQDriver }}
-            - name: XLD_TASK_QUEUE_URL
-              value: "{{- if .RabbitMQExternal }}{{ .RabbitMQUrl }}{{- else }}amqp://rabbitmq.{{ .Namespace }}.svc.cluster.local:5672{{- end }}"
-            - name: XLD_TASK_QUEUE_USERNAME
-              value: {{ .RabbitMQUsername }}
-            - name: XLD_TASK_QUEUE_PASSWORD
-              value: {{ .RabbitMQPassword }}
           resources:
             requests:
               memory: 2Gi

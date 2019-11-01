@@ -76,9 +76,6 @@ spec:
             initialDelaySeconds: 20
             periodSeconds: 60
             timeoutSeconds: 10
-          env:
-            - name: RABBITMQ_ERLANG_COOKIE
-              value: "{{ .RabbitMQErlangCookie }}"
           volumeMounts:
             - name: data
               mountPath: /var/lib/rabbitmq

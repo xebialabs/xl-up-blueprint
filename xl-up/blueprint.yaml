@@ -383,16 +383,6 @@ spec:
       replaceAsIs: true
       description: 'The password to use for the main administrator user for this RabbitMQ instance'
 
-    - name: RabbitMQErlangCookie
-      type: SecretInput
-      prompt: "Erlang cookie for securing RabbitMQ clusters"
-      promptIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
-      default: !expr "randPassword()"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      replaceAsIs: true
-      description: 'The shared secret to use when clustering RabbitMQ'
-
     - name: XlrAdminPass
       type: SecretInput
       prompt: "Enter the password that you want to use for the XL Release admin user:"
@@ -824,13 +814,13 @@ spec:
       writeIf: !expr "MonitoringInstall"
     #rabbitmq
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
     #xebialabs files
     - path: generated_answers.yaml.tmpl
     - path: xebialabs.yaml.tmpl

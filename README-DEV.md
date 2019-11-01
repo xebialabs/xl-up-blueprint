@@ -7,3 +7,27 @@ xl up -b xl-infra -l /PATH/TO/xl-up-blueprint/
 ```
 
 When you make a PR and also want to run integration test against an existing EKS cluster, GKE or Plain mutlinode K8s cluster then add label ``run-xl-up-pr`` in your github PR, then this pr will run against master in xl-cli branch. If you are working in story that has changes also in xl-cli repo in a branch with the same name then also add ``same-branch-on-cli`` label in your pr
+
+# Testing v2
+
+A need arose to be able to test more than simple existence/non-existence of files. Thus the xl-blueprint-test repo was created. The binary from that repo is here, called `main`.
+
+The new test framework necessitates a new test file structure. But fear not! I have also added the ability to convert existing test files to the new format. This is done simply by doing the following
+
+```
+./main --convert ./integration-tests/test-cases/
+```
+
+This command will recursively look for test YAML files, and output their equivelant to a folder called `new_tests` within said tests' directory. When we're ready, we can then delete the old tests and move to using the new format instead. 
+
+## Running v2 tests
+
+To actually run the v2 tests - run the following command
+
+```
+./main --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases/**/new_files'
+```
+
+This will again recurse through the `test-path` provided within `local-repo-path`, and run all the tests it finds in sequence. Now you might wonder why it takes so long (+- 1 minute at the time of writing this). Reason is that it runs many more tests than it used to using the old method. Each file will contain roughly 100 assertions after conversion - that's excluding the content assertions. I have tried implementing parallel testing with a `--parallel` flag, but somewhere that got messed up as the `xl` binary keeps throwing weird memory panics. Might need to look into this further as required. 
+
+An example for this new format can be found in the `xl-yaml-test` repo. I have also included one for the new RabbitMQ setup. 

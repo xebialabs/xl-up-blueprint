@@ -19,6 +19,11 @@ expected-files:
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  #rabbitmq
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
 not-expected-files:
   #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml

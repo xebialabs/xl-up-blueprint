@@ -49,6 +49,11 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+  #rabbitmq
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
 not-expected-files:
   #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml

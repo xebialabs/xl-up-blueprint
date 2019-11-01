@@ -182,7 +182,7 @@ spec:
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
                 {{- end }}
-                {{- if not .RabbitMQExternal }}
+                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") }}
                   RabbitMQ: "3.8.0-management"
                 {{- end }}
                 undeployDependencies: "true"
