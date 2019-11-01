@@ -256,7 +256,8 @@ if __name__ == '__main__':
     # xl up tests
     test_dir = 'integration-tests'
     blueprint_dir = 'xl-infra'
-    test_files = [filename for filename in glob.iglob('{}/**/test*.yaml'.format(test_dir), recursive=True)]
+    # Filter out new test files (containg v2 or new_files)
+    test_files = filter(lambda x: 'v2' not in x and 'new_files' not in x, [filename for filename in glob.iglob('{}/**/test*.yaml'.format(test_dir), recursive=True)])
     if not test_files:
         errormsg('Missing test files under {}'.format(test_dir))
         sys.exit(1)
