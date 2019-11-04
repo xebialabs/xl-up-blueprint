@@ -25,7 +25,7 @@ XldWorkerCPULimit: 3
 XldWorkPvcSize: 5Gi
 XldExportPvcSize: 10Gi
 XldAdminPass: 3WHeb9DEIXpFDwSd
-XldLic: ./deployit-license.lic
+XldLic: deployit-license.lic
 XldDbName: xl-deploy
 XldDbUser: sa
 XldDbPass: PxA3pBBLcGFAxlvA
@@ -37,7 +37,7 @@ XlrCPURequest: 0.7
 XlrCPULimit: 3
 XlrReportsPvcSize: 5Gi
 XlrAdminPass: nsSuJMZpiug21GjB
-XlrLic: ./xl-release.lic
+XlrLic: xl-release.lic
 XlrDbName: xl-release
 XlrReportDbName: xl-release-report
 XlrDbUser: xl-release

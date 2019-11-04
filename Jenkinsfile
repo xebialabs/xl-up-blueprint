@@ -20,6 +20,7 @@ pipeline {
         REPOSITORY_NAME = 'xl-up-blueprint'
         DIST_SERVER_CRED = credentials('distserver')
         ON_PREM_CERT = "${env.ON_PREM_CERT}"
+        ON_PREM_CERT_WINDOWS = "${env.ON_PREM_CERT_WINDOWS}"
         ON_PREM_KEY = "${env.ON_PREM_KEY}"
         ON_PREM_K8S_API_URL = "${env.ON_PREM_K8S_API_URL}"
         NSF_SERVER_HOST = "${env.NSF_SERVER_HOST}"
@@ -193,7 +194,7 @@ def runXlUpOnPrem(String nsfSharePath) {
 def runXlUpOnPremWindows(String nsfSharePath) {
     bat """ if not exist "k8sClientCert-onprem.crt" (
         echo
-        echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
+        echo ${ON_PREM_CERT_WINDOWS} >> k8sClientCert-onprem-tmp.crt
     )"""
 
     //bat """ if not exist "k8sClientCert-onprem.key" (
