@@ -13,7 +13,7 @@ expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
   #xl-deploy xl-release
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
   #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
@@ -47,6 +47,8 @@ not-expected-files:
   #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   #xl-k8s-foundation
@@ -56,8 +58,8 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
   #rabbitmq
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml

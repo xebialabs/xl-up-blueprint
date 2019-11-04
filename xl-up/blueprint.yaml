@@ -746,9 +746,9 @@ spec:
       writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
-    - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
-    - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
     #xl-release
     - path: xebialabs/xl-release.yaml.tmpl
@@ -757,7 +757,7 @@ spec:
       writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup == 'LocalK8S'"
-    - path: xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml.tmpl
+    - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
