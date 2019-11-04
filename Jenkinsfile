@@ -78,7 +78,7 @@ pipeline {
         //                    }
         //                }
         //                dir('temp/xl-cli') {
-        //                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses"
+        //                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64 -x buildWindowsAmd64"
         //                }
         //                awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
         //                awsAccessKeyIdLine = awsConfigure.split("\n")[1]
@@ -129,7 +129,7 @@ pipeline {
                             }
                         }
                         dir('temp\\xl-cli') {
-                            bat "./gradlew goClean goBuild -x goTest -x updateLicenses"
+                            bat "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64 -x buildLinuxAmd64"
                         }
 
                         bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
@@ -214,9 +214,9 @@ def runXlUpOnPremWindows(String nsfSharePath) {
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: k8sClientCert-onprem.key@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
-    sh "./temp/xl-cli/build/windows-amd64/xl up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/xl-cli/build/windows-amd64/xl up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l ."
-    sh "./temp/xl-cli/build/windows-amd64/xl up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/windows-amd64/xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/xl-cli/build/windows-amd64/xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l ."
+    sh "./temp/xl-cli/build/windows-amd64/xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
 
