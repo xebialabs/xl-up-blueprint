@@ -380,6 +380,7 @@ spec:
       promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      revealOnSummary: true
       replaceAsIs: true
       description: 'The password to use for the main administrator user for this RabbitMQ instance'
 

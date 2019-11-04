@@ -46,9 +46,6 @@ data:
     {{- end }}
     RabbitMQUsername: {{ .RabbitMQUsername }}
     RabbitMQPassword: {{ .RabbitMQPassword }}
-    {{- if not .RabbitMQExternal }}
-    RabbitMQErlangCookie: {{ .RabbitMQErlangCookie }}
-    {{- end }}
     XldMasterCount: {{ .XldMasterCount }}
     XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
     XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
