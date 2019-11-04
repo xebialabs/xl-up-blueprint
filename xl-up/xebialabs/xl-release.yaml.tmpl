@@ -24,10 +24,6 @@ spec:
             file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 {{- else}}
             file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-          - name: xlr-1pvc
-            readinessProbeRetry:  {{ .XlrDeploymentTimeout }}
-            type: k8s.ResourcesFile
-            file: !file kubernetes/xl-release/external-db/active-active/pvc.yaml
 {{- end}}
           applicationDependencies: null
           undeployDependencies: "false"
