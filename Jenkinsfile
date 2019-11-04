@@ -124,9 +124,9 @@ pipeline {
                     try {
                         bat "if not exist temp mkdir temp"
 
-                        dir('temp') {
-                            unstash name: "xl-cli-windows"
-                        }
+                       // dir('temp') {
+                       //     unstash name: "xl-cli-windows"
+                       // }
 
                         bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                         bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
