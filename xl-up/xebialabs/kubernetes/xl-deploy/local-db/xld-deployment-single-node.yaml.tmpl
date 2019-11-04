@@ -104,7 +104,6 @@ spec:
             - name: XL_CLUSTER_MODE
               value: default
             - name: XL_DB_URL
-            - name: XL_DB_URL
               {{if .ExternalDatabase}}
               value: {{.XldDbUrl}}
               {{else}}

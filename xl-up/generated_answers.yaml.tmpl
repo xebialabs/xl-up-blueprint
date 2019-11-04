@@ -45,6 +45,13 @@ XlrOfficialVersion: {{ .XlrOfficialVersion }}
 ExternalDatabase: {{ .ExternalDatabase }}
 {{- if .InstallXLD}}
   {{- if ne .K8sSetup "LocalK8S" }}
+RabbitMQExternal: {{ .RabbitMQExternal }}
+RabbitMQDriver: {{ .RabbitMQDriver }}
+  {{- if .RabbitMQExternal }}
+RabbitMQUrl: {{ .RabbitMQUrl }}
+  {{- end }}
+RabbitMQUsername: {{ .RabbitMQUsername }}
+RabbitMQPassword: {{ .RabbitMQPassword }}
 XldMasterCount: {{ .XldMasterCount }}
 XldMasterRAMRequest: {{ .XldMasterRAMRequest }}
 XldMasterRAMLimit: {{ .XldMasterRAMLimit }}
