@@ -57,3 +57,7 @@ PostgresSharedBuff: 512MB
 PostgresEffectCacheSize: 1GB
 PostgresSyncCommit: off
 PostgresMaxWallSize: 256MB
+RabbitMQExternal: false
+RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
+RabbitMQUsername: guest
+RabbitMQPassword: hnBpgI63nuDoHrcb
