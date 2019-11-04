@@ -51,7 +51,8 @@ pipeline {
 
             }
         }
-        stage('Run XL UP Branch') {
+
+        stage('Run XL UP Branch Linux') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -101,6 +102,51 @@ pipeline {
 
             }
         }
+
+        stage('Run XL UP Branch Windows') {
+            agent {
+                node {
+                    label 'windows-jdk8'
+                }
+            }
+
+            when {
+                expression {
+                    !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                            githubLabelsPresent(this, ['run-xl-up-pr'])
+                }
+            }
+
+            steps {
+                script {
+                    try {
+                        bat "if not exist temp mkdir temp"
+                        dir('temp') {
+                            if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+                                bat "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
+                            } else {
+                                bat "git clone git@github.com:xebialabs/xl-cli.git || true"
+                            }
+                        }
+                        dir('temp\\xl-cli') {
+                            bat "./gradlew goClean goBuild -x goTest -x updateLicenses"
+                        }
+
+                        bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                        bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+
+                        runXlUpOnPrem(nfsSharePath)
+
+                        bat "rmdir /q /s temp"
+                    } catch (err) {
+                        bat "rmdir /q /s temp"
+                        throw err
+                    }
+                }
+
+            }
+        }
+
     }
 }
 
