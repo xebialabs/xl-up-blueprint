@@ -195,7 +195,7 @@ def runXlUpOnPremWindows(String nsfSharePath) {
     bat """ if not exist "k8sClientCert-onprem.crt" (
         echo
         echo ${ON_PREM_CERT_WINDOWS} >> k8sClientCert-onprem-tmp.crt
-        tr ' ' '\\\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
         tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt
         rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt
     )"""
