@@ -195,16 +195,19 @@ def runXlUpOnPremWindows(String nsfSharePath) {
     bat """ if not exist "k8sClientCert-onprem.crt" (
         echo
         echo ${ON_PREM_CERT_WINDOWS} >> k8sClientCert-onprem-tmp.crt
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
+        tr '#' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt
+        rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt
     )"""
 
-    //bat """ if not exist "k8sClientCert-onprem.key" (
-    //    echo
-    //    echo ${ON_PREM_KEY} >> k8sClientCert-onprem-tmp.key
-    //    tr ' ' '\\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key
-    //    tr '%' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key
-    //    rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key
-    //)"""
-    //
+    bat """ if not exist "k8sClientCert-onprem.key" (
+        echo
+        echo ${ON_PREM_KEY_WINDOWS} >> k8sClientCert-onprem-tmp.key
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key
+        tr '#' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key
+        rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key
+    )"""
+
     bat "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     bat "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: k8sClientCert-onprem.crt@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     bat "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: k8sClientCert-onprem.key@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
