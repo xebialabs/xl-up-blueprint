@@ -130,8 +130,6 @@ pipeline {
                                 dir('temp/xl-cli') {
                                     sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
                                 }
-
-                                awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
                                 runXlUpOnGke()
