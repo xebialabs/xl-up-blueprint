@@ -109,7 +109,7 @@ pipeline {
         stage('Run XL UP Branch Windows') {
             agent {
                 node {
-                    label 'windows-jdk8'
+                    label 'windows-2016'
                 }
             }
 
