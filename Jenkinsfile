@@ -53,57 +53,143 @@ pipeline {
             }
         }
 
-        stage('Run XL UP Branch Linux') {
-            agent {
-                node {
-                    label 'xld||xlr||xli'
-                }
-            }
+        stage('Run XL UP Branch Windows') {
 
-            when {
-                expression {
-                    !Branches.onMasterBranch(env.BRANCH_NAME) &&
-                            githubLabelsPresent(this, ['run-xl-up-pr'])
-                }
-            }
 
-            steps {
-                script {
-                    try {
-                        sh "mkdir -p temp"
-                        dir('temp') {
-                            if (githubLabelsPresent(this, ['same-branch-on-cli'])){
-                                sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
-                            } else {
-                                sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+            parallel {
+                stage('e2e tests on AWS EKS') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+                                        sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
+                                    } else {
+                                        sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                                    }
+                                }
+                                dir('temp/xl-cli') {
+                                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                                    stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
+                                }
+
+                                awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
+                                awsAccessKeyIdLine = awsConfigure.split("\n")[1]
+                                awsSecretKeyIdLine = awsConfigure.split("\n")[2]
+                                awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
+                                awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
+                                efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
+                                runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
                             }
                         }
-                        dir('temp/xl-cli') {
-                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
-                            stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
-                        }
 
-                        awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
-                        awsAccessKeyIdLine = awsConfigure.split("\n")[1]
-                        awsSecretKeyIdLine = awsConfigure.split("\n")[2]
-                        awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
-                        awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
-                        sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
-                        sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
-                        eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
-                        efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                        nfsSharePath = "xebialabs-k8s"
-                     //   runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
-                     //   runXlUpOnPrem(nfsSharePath)
-                     //   runXlUpOnGke()
-                     //   sh "rm -rf temp"
-                    } catch (err) {
-                       // sh "rm -rf temp"
-                        throw err
                     }
+
                 }
 
+                stage('e2e tests on GCP GKE') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+                                        sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
+                                    } else {
+                                        sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                                    }
+                                }
+                                dir('temp/xl-cli') {
+                                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                                }
+
+                                awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                runXlUpOnGke()
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+
+                    }
+
+                }
+                stage('e2e tests on On-Prem') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+                                        sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
+                                    } else {
+                                        sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                                    }
+                                }
+                                dir('temp/xl-cli') {
+                                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                                }
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                nfsSharePath = "xebialabs-k8s"
+                                runXlUpOnPrem(nfsSharePath)
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+
+                    }
+
+                }
+
+
             }
+
+
+
         }
 
         stage('Run XL UP Branch Windows') {
