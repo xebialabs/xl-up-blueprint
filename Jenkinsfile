@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        stage('Run XL UP Branch Windows') {
+        stage('Run XL UP Branch Linux') {
 
 
             parallel {
