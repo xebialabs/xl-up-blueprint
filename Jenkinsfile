@@ -53,6 +53,46 @@ pipeline {
             }
         }
 
+        stage('Build xl cli') {
+            agent {
+                node {
+                    label 'xld||xlr||xli'
+                }
+            }
+
+            when {
+                expression {
+                    !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                            githubLabelsPresent(this, ['run-xl-up-pr'])
+                }
+            }
+
+            steps {
+                script {
+                    try {
+                        sh "mkdir -p temp"
+                        dir('temp') {
+                            if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+                                sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
+                            } else {
+                                sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+                            }
+                        }
+                        dir('temp/xl-cli') {
+                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                            stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
+                            stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
+                        }
+                        sh "rm -rf temp"
+                    } catch (err) {
+                        sh "rm -rf temp"
+                        throw err
+                    }
+                }
+
+            }
+        }
+
         stage('Run XL UP Branch Linux') {
 
 
@@ -73,17 +113,8 @@ pipeline {
                             try {
                                 sh "mkdir -p temp"
                                 dir('temp') {
-                                    if (githubLabelsPresent(this, ['same-branch-on-cli'])){
-                                        sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
-                                    } else {
-                                        sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                                    }
+                                    unstash name: "xl-cli-linux"
                                 }
-                                dir('temp/xl-cli') {
-                                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
-                                    stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
-                                }
-
                                 awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
                                 awsAccessKeyIdLine = awsConfigure.split("\n")[1]
                                 awsSecretKeyIdLine = awsConfigure.split("\n")[2]
@@ -121,14 +152,7 @@ pipeline {
                             try {
                                 sh "mkdir -p temp"
                                 dir('temp') {
-                                    if (githubLabelsPresent(this, ['same-branch-on-cli'])){
-                                        sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
-                                    } else {
-                                        sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                                    }
-                                }
-                                dir('temp/xl-cli') {
-                                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                                    unstash name: "xl-cli-linux"
                                 }
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
@@ -159,14 +183,7 @@ pipeline {
                             try {
                                 sh "mkdir -p temp"
                                 dir('temp') {
-                                    if (githubLabelsPresent(this, ['same-branch-on-cli'])){
-                                        sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
-                                    } else {
-                                        sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                                    }
-                                }
-                                dir('temp/xl-cli') {
-                                    sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                                    unstash name: "xl-cli-linux"
                                 }
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
@@ -218,9 +235,9 @@ pipeline {
                         nfsSharePath = "xebialabs-k8s"
                         runXlUpOnPremWindows(nfsSharePath)
 
-                        //bat "rmdir /q /s temp"
+                        bat "rmdir /q /s temp"
                     } catch (err) {
-                        //bat "rmdir /q /s temp"
+                        bat "rmdir /q /s temp"
                         throw err
                     }
                 }
