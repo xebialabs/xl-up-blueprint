@@ -266,7 +266,7 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
 }
 
 
-def runXlUpOnPrem(String nsfSharePath) {
+def runXlUpOnPrem(String nfsSharePath) {
     sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
         echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
         tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
@@ -292,7 +292,7 @@ def runXlUpOnPrem(String nsfSharePath) {
 
 }
 
-def runXlUpOnPremWindows(String nsfSharePath) {
+def runXlUpOnPremWindows(String nfsSharePath) {
     bat """ if not exist "k8sClientCert-onprem.crt" (
         echo
         echo ${ON_PREM_CERT_WINDOWS} >> k8sClientCert-onprem-tmp.crt
