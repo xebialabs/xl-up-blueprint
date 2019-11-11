@@ -1,5 +1,5 @@
 extends: 'eks-base.yaml'
-# xl_mode: up
+xl_mode: up
 expect:
   assertion:
     generated_files:
