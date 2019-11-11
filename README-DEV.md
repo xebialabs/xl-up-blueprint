@@ -31,3 +31,19 @@ To actually run the v2 tests - run the following command
 This will again recurse through the `test-path` provided within `local-repo-path`, and run all the tests it finds in sequence. Now you might wonder why it takes so long (+- 1 minute at the time of writing this). Reason is that it runs many more tests than it used to using the old method. Each file will contain roughly 100 assertions after conversion - that's excluding the content assertions. I have tried implementing parallel testing with a `--parallel` flag, but somewhere that got messed up as the `xl` binary keeps throwing weird memory panics. Might need to look into this further as required. 
 
 An example for this new format can be found in the `xl-yaml-test` repo. I have also included one for the new RabbitMQ setup. 
+
+## Clean up disk in AWS and GCP
+
+The default policy of volumes deletion is RETAIN. This means that during testing many volumes are created but not deleted and this result in polluting the cloud infra. To clean up the volumes run this command in
+
+AWS:
+
+```$xslt
+for i in `aws ec2 describe-volumes --query "Volumes[*].{ID:VolumeId,Name:Tags[?Key=='Name'].Value}" --output text | grep kubernetes-dynamic | awk '{print $1}'`; do aws ec2 delete-volume --volume-id $i; done
+```   
+
+GCP:
+
+```$xslt
+for i in `gcloud compute disks list | grep xl-up-cluster--pvc | awk '{print $1}'`; do gcloud compute disks delete $i -q; done
+```
