@@ -20,6 +20,7 @@ pipeline {
         REPOSITORY_NAME = 'xl-up-blueprint'
         DIST_SERVER_CRED = credentials('distserver')
         ON_PREM_CERT = "${env.ON_PREM_CERT}"
+        ON_PREM_CERT_WINDOWS = "${env.ON_PREM_CERT_WINDOWS}"
         ON_PREM_KEY = "${env.ON_PREM_KEY}"
         ON_PREM_K8S_API_URL = "${env.ON_PREM_K8S_API_URL}"
         NSF_SERVER_HOST = "${env.NSF_SERVER_HOST}"
@@ -51,7 +52,8 @@ pipeline {
 
             }
         }
-        stage('Run XL UP Branch') {
+
+        stage('Build xl cli') {
             agent {
                 node {
                     label 'xld||xlr||xli'
@@ -77,21 +79,10 @@ pipeline {
                             }
                         }
                         dir('temp/xl-cli') {
-                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses"
+                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                            stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
+                            stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
                         }
-                        awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
-                        awsAccessKeyIdLine = awsConfigure.split("\n")[1]
-                        awsSecretKeyIdLine = awsConfigure.split("\n")[2]
-                        awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
-                        awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
-                        sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
-                        sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
-                        eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
-                        efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                        nfsSharePath = "xebialabs-k8s"
-                        runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
-                        runXlUpOnPrem(nfsSharePath)
-                        runXlUpOnGke()
                         sh "rm -rf temp"
                     } catch (err) {
                         sh "rm -rf temp"
@@ -101,6 +92,159 @@ pipeline {
 
             }
         }
+
+        stage('Run XL UP Branch Linux') {
+
+
+            parallel {
+                stage('e2e tests on AWS EKS') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    unstash name: "xl-cli-linux"
+                                }
+                                awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
+                                awsAccessKeyIdLine = awsConfigure.split("\n")[1]
+                                awsSecretKeyIdLine = awsConfigure.split("\n")[2]
+                                awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
+                                awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
+                                efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
+                                runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+
+                    }
+
+                }
+
+                stage('e2e tests on GCP GKE') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    unstash name: "xl-cli-linux"
+                                }
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                runXlUpOnGke()
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+
+                    }
+
+                }
+                stage('e2e tests on On-Prem') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    unstash name: "xl-cli-linux"
+                                }
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                nfsSharePath = "xebialabs-k8s"
+                                runXlUpOnPrem(nfsSharePath)
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+
+
+        }
+
+        stage('Run XL UP Branch Windows') {
+            agent {
+                node {
+                    label 'windows-jdk8'
+                }
+            }
+
+            when {
+                expression {
+                    !Branches.onMasterBranch(env.BRANCH_NAME) &&
+                            githubLabelsPresent(this, ['run-xl-up-pr'])
+                }
+            }
+
+            steps {
+                script {
+                    try {
+                        bat "if not exist temp mkdir temp"
+
+                        dir('temp') {
+                            unstash name: "xl-cli-windows"
+                        }
+
+                        bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                        bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                        nfsSharePath = "xebialabs-k8s"
+                        runXlUpOnPremWindows(nfsSharePath)
+
+                        bat "rmdir /q /s temp"
+                    } catch (err) {
+                        bat "rmdir /q /s temp"
+                        throw err
+                    }
+                }
+
+            }
+        }
+
     }
 }
 
@@ -115,14 +259,14 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
     sh "sed -ie 's@SOMEMOREKEY@${awsSecretKeyId}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@test1234561@${efsFileId}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@test-eks-master@xl-up-master@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
-    sh "./temp/xl-cli/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/xl-cli/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./temp/xl-cli/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
 
 
-def runXlUpOnPrem(String nsfSharePath) {
+def runXlUpOnPrem(String nfsSharePath) {
     sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
         echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
         tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
@@ -142,9 +286,37 @@ def runXlUpOnPrem(String nsfSharePath) {
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: ./k8sClientCert-onprem.key@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
-    sh "./temp/xl-cli/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/xl-cli/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./temp/xl-cli/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+
+}
+
+def runXlUpOnPremWindows(String nfsSharePath) {
+    bat """ if not exist "k8sClientCert-onprem.crt" (
+        echo
+        echo ${ON_PREM_CERT_WINDOWS} >> k8sClientCert-onprem-tmp.crt
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
+        tr '#' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt
+        rm -f k8sClientCert-onprem-tmp.crt | rm -f k8sClientCert-onprem-tmp2.crt
+    )"""
+
+    bat """ if not exist "k8sClientCert-onprem.key" (
+        echo
+        echo ${ON_PREM_KEY_WINDOWS} >> k8sClientCert-onprem-tmp.key
+        tr ' ' '\\n' < k8sClientCert-onprem-tmp.key > k8sClientCert-onprem-tmp2.key
+        tr '#' ' ' < k8sClientCert-onprem-tmp2.key > k8sClientCert-onprem.key
+        rm -f k8sClientCert-onprem-tmp.key | rm -f k8sClientCert-onprem-tmp2.key
+    )"""
+
+    bat "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
+    bat "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: k8sClientCert-onprem.crt@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
+    bat "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: k8sClientCert-onprem.key@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
+    bat "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
+    bat "sed -ie 's@/xebialabs@/${nfsSharePath}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
+    bat "temp\\build\\windows-amd64\\xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    bat "temp\\build\\windows-amd64\\xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --skip-prompts --dry-run"
+    bat "temp\\build\\windows-amd64\\xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
 
@@ -165,7 +337,7 @@ def runXlUpOnGke() {
     sh "sed -ie 's@{{NFS_HOST}}@${NFS_HOST}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{NFS_PATH}}@/${NFS_PATH}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
 
-    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l ."
-    sh "./temp/xl-cli/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }
