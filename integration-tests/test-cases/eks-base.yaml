@@ -1,0 +1,61 @@
+xl_mode: up
+expect:
+  assertion:
+    generated_files:
+      - file_name: xebialabs/deployments.yaml
+        has_elements:
+          '[0]spec.package': 'Applications/XEBIALABS/XL-K8S-FOUNDATION/K8s-NameSpace/1.0'
+          '[1]spec.environment': 'Environments/XEBIALABS/K8S'
+      - file_name: xebialabs/xl-k8s-foundation.yaml
+        has_elements:
+          '[0]spec[0].children[0].name': 'EKS-MASTER'
+          '[0]spec[0].children[0].isEKS': true
+      - file_name: xebialabs/common.yaml
+        has_elements:
+          'spec[0].children[0].name': 'EKS-MASTER'
+          'spec[0].children[0].apiServerURL': 'https://aws-eks.com:6443'
+          'spec[0].children[0].clusterName': 'test-eks-master'
+          'spec[0].children[0].accessKey': 'SOMEKEY'
+          'spec[0].children[0].accessSecret': 'SOMEMOREKEY'
+    values:
+      K8sApiServerURL: https://aws-eks.com:6443
+      K8sSetup: AwsEKS
+      OsType: linux
+      EfsId: test1234561
+      EfsRegion: eu-west-1
+      EksClusterName: test-eks-master
+      UseAWSconfig: false
+      UseKubeconfig: false
+    secrets:
+      AWSAccessKey: SOMEKEY
+      AWSAccessSecret: SOMEMOREKEY
+  to_exist:
+    - xebialabs/common.yaml
+    - xebialabs/deployments.yaml
+    - xebialabs/xl-k8s-foundation.yaml
+    #xl-k8s-foundation
+    - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
+  to_not_exist:
+    #xl-k8s-foundation
+    - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+    - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+with_answers:
+  AWSAccessKey: SOMEKEY
+  AWSAccessSecret: SOMEMOREKEY
+  EfsId: test1234561
+  EfsRegion: eu-west-1
+  EksClusterName: test-eks-master
+  K8sApiServerURL: https://aws-eks.com:6443
+  K8sSetup: AwsEKS
+  OsType: linux
+  UseAWSconfig: false
+  UseKubeconfig: false
