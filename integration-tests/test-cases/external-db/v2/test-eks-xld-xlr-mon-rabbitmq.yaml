@@ -1,8 +1,9 @@
+extends: ../../eks-base.yaml
+xl_mode: up
 expect:
   assertion:
     generated_files:
-    - excludes_elements: []
-      file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
       has_elements:
         '[3]kind': 'StatefulSet'
         '[3]metadata.name': 'xl-deploy-master'
@@ -11,8 +12,6 @@ expect:
         '[3]spec.template.spec.containers[0].env[14].value': 'test'
         '[3]spec.template.spec.containers[0].env[15].value': 'place'
     secrets:
-      AWSAccessKey: SOMEKEY
-      AWSAccessSecret: SOMEMOREKEY
       MonitoringUserPass: mon-pass
       RabbitMQPassword: place
       XlKeyStorePass: test123
@@ -22,26 +21,18 @@ expect:
       XlrDbPass: xl-release
       XlrReportDbPass: xl-release-report
     values:
-      EfsId: test1234561
-      EfsRegion: eu-west-1
-      EksClusterName: test-eks-master
       ExternalDatabase: true
       InstallXLD: true
       InstallXLR: true
-      K8sApiServerURL: https://aws-eks.com:6443
-      K8sSetup: AwsEKS
       MonitoringElasticsearchDataPvcSize: 5Gi
       MonitoringGrafanaDashboardsPvcSize: 5Gi
       MonitoringInstall: true
       MonitoringPrometheusDataPvcSize: 5Gi
       MonitoringUser: mon-user
-      OsType: linux
       RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
       RabbitMQExternal: true
       RabbitMQUrl: amqp://some.rabbitmq:5672
       RabbitMQUsername: test
-      UseAWSconfig: false
-      UseKubeconfig: false
       XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
       XldDbUser: xl-deploy
       XldExportPvcSize: 5Gi
@@ -68,26 +59,15 @@ expect:
       XlrReportDbUser: xl-release-report
       XlrReportsPvcSize: 5Gi
   to_exist:
-  - xebialabs/common.yaml
-  - xebialabs/deployments.yaml
+  #xl-deploy xl-release
   - xebialabs/xl-deploy.yaml
   - xebialabs/xl-release.yaml
-  - xebialabs/xl-k8s-foundation.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/export-pvc.yaml
-  - xebialabs/kubernetes/xl-deploy/external-db/active-active/work-pvc.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
-  - xebialabs/kubernetes/xl-release/external-db/active-active/pvc.yaml
+  #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
@@ -98,6 +78,7 @@ expect:
   - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
+  #pg
   - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
@@ -115,40 +96,29 @@ expect:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
   to_not_exist:
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  #rabbitmq
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-with_answers:
-  AWSAccessKey: SOMEKEY
-  AWSAccessSecret: SOMEMOREKEY
-  EfsId: test1234561
-  EfsRegion: eu-west-1
-  EksClusterName: test-eks-master
+with_answers: 
   ExternalDatabase: true
   InstallXLD: true
   InstallXLR: true
-  K8sApiServerURL: https://aws-eks.com:6443
-  K8sSetup: AwsEKS
   MonitoringElasticsearchDataPvcSize: 5Gi
   MonitoringGrafanaDashboardsPvcSize: 5Gi
   MonitoringInstall: true
   MonitoringPrometheusDataPvcSize: 5Gi
   MonitoringUser: mon-user
   MonitoringUserPass: mon-pass
-  OsType: linux
   RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
   RabbitMQExternal: true
   RabbitMQPassword: place
   RabbitMQUrl: amqp://some.rabbitmq:5672
   RabbitMQUsername: test
-  UseAWSconfig: false
-  UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XldAdminPass: password
