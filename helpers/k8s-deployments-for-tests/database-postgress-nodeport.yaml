@@ -1,0 +1,137 @@
+##reach the db url POSTGRES:
+# jdbc:postgresql://172.16.16.24:30432/xldeploy   username/pass: xldeploy:xldeploy
+# jdbc:postgresql://172.16.16.24:30432/xlrelease   username/pass: xlrelease:xlrelease
+# jdbc:postgresql://172.16.16.24:30432/xlarchive   username/pass: xlarchive:xlarchive
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: xebialabs-test
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: postgresql-init-sql
+  namespace: xebialabs-test
+data:
+  init-sql.sh: |-
+    #!/bin/bash
+    set -e
+
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+
+        CREATE USER "xldeploy" WITH ENCRYPTED PASSWORD 'xldeploy';
+        CREATE DATABASE "xldeploy";
+        GRANT ALL PRIVILEGES ON DATABASE "xldeploy" TO "xldeploy";
+
+        CREATE USER "xlrelease" WITH ENCRYPTED PASSWORD 'xlrelease';
+        CREATE DATABASE "xlrelease";
+        GRANT ALL PRIVILEGES ON DATABASE "xlrelease" TO "xlrelease";
+
+        CREATE USER "xlarchive" WITH ENCRYPTED PASSWORD 'xlarchive';
+        CREATE DATABASE "xlarchive";
+        GRANT ALL PRIVILEGES ON DATABASE "xlarchive" TO "xlarchive";
+    EOSQL
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgresql
+  namespace: xebialabs-test
+  labels:
+    app: postgresql
+spec:
+  type: NodePort
+  selector:
+    app: postgresql
+  ports:
+    - name: http
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+      nodePort: 30432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql
+  namespace: xebialabs-test
+  labels:
+    app: postgresql
+spec:
+  serviceName: postgresql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      initContainers:
+        - name: fix-the-volume-permission
+          image: busybox
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - chown -R 70:70 /var/lib/postgresql
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+        - name: "remove-lost-found"
+          image: "busybox:1.26.2"
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - 'sh'
+            - '-c'
+            - 'rm -rf /var/lib/postgresql/lost+found'
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: data
+      containers:
+        - image: postgres:10.5
+          name: postgresql
+          command: ["docker-entrypoint.sh"]
+          args:
+            - "-c"
+            - "max_connections=512"
+            - "-c"
+            - "synchronous_commit=off"
+            - "-c"
+            - "effective_cache_size=1GB"
+            - "-c"
+            - "shared_buffers=512MB"
+            - "-c"
+            - "max_wal_size=256MB"
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: "0.5"
+            limits:
+              memory: 2Gi
+              cpu: "1"
+          ports:
+            - containerPort: 5432
+              name: postgresql
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+            - name: postgresql-init-sql
+              subPath: init-sql.sh
+              mountPath: /docker-entrypoint-initdb.d/init-sql.sh
+      volumes:
+        - name: postgresql-init-sql
+          configMap:
+            name: postgresql-init-sql
+            defaultMode: 0777
+        - name: data
+          emptyDir: {}
+
