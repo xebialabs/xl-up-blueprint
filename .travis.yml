@@ -7,19 +7,7 @@ language: python
 python: 3.7.2
 
 #----------------------------------------------------------------------
-# Install all tools and check configuration
-#----------------------------------------------------------------------
-before_install:
-  - python --version
-
-#----------------------------------------------------------------------
-# Install dependencies
-#----------------------------------------------------------------------
-install:
-  - pip install pyyaml
-
-#----------------------------------------------------------------------
 # Launch tests
 #----------------------------------------------------------------------
 script:
-  - python integration_tests.py
+  - ./main --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'

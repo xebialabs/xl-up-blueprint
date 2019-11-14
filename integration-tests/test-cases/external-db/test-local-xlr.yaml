@@ -1,18 +1,35 @@
-answers-file: local-xlr.yaml
-expected-files:
+expect:
+  assertion:
+    generated_files: []
+    secrets:
+      XlKeyStorePass: test123
+      XlrAdminPass: password
+      XlrDbPass: xl-release
+      XlrReportDbPass: xl-release-report
+    values:
+      ExternalDatabase: true
+      InstallXLD: false
+      InstallXLR: true
+      K8sAuthentication: FilePath
+      K8sLocalApiServerURL: https://localk8s.com:8443
+      K8sSetup: LocalK8S
+      UseKubeconfig: false
+      XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+      XlrDbUser: xl-release
+      XlrOfficialVersion: 9.0.6
+      XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+      XlrReportDbUser: xl-release-report
+  to_exist:
   - xebialabs/common.yaml
   - xebialabs/deployments.yaml
   - xebialabs/xl-release.yaml
   - xebialabs/xl-k8s-foundation.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-  #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
-not-expected-files:
+  to_not_exist:
   - xebialabs/xl-deploy.yaml
-  #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
@@ -24,13 +41,11 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
-  #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
@@ -41,7 +56,6 @@ not-expected-files:
   - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
-  #pg
   - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
@@ -58,26 +72,30 @@ not-expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
-  #rabbitmq
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-expected-xl-values:
-  K8sSetup: LocalK8S
-  UseKubeconfig: false
-  K8sLocalApiServerURL: https://localk8s.com:8443
+with_answers:
+  ExternalDatabase: true
   InstallXLD: false
   InstallXLR: true
-  XlrDbUser: xl-release
-  XlrReportDbUser: xl-release-report
-  XlrOfficialVersion: 9.0.6
   K8sAuthentication: FilePath
-  ExternalDatabase: true
-  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
-expected-xl-secrets:
+  K8sClientCertFile: ../integration-tests/files/test-file
+  K8sClientKeyFile: ../integration-tests/files/test-file
+  K8sLocalApiServerURL: https://localk8s.com:8443
+  K8sSetup: LocalK8S
+  OsType: linux
+  UseKubeconfig: false
+  XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XlrAdminPass: password
   XlrDbPass: xl-release
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrDbUser: xl-release
+  XlrLic: ../integration-tests/files/test-file
+  XlrOfficialVersion: 9.0.6
   XlrReportDbPass: xl-release-report
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  XlrReportDbUser: xl-release-report
+xl_mode: up
