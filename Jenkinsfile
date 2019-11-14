@@ -40,7 +40,7 @@ pipeline {
                     try {
                         githubNotify context: "Testing blueprint", status: "PENDING"
                         checkout scm
-                        sh "./tester --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'"
+                        sh "./tester --local-repo-path \$(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'"
                         githubNotify context: "Testing blueprint", status: "SUCCESS"
                         notifySlack("Testing blueprint succeeded", "good")
                     } catch (err) {
