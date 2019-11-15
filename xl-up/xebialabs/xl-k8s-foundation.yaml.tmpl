@@ -286,6 +286,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
           {{- end }}
+          {{- if ne .K8sSetup "LocalK8S"}}
           - name: XL-PVC-Claims
             type: udm.Application
             children:
@@ -308,6 +309,7 @@ spec:
                     file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml"
                 applicationDependencies:
                 undeployDependencies: "true"
+          {{- end }}
           {{- if not .ExternalDatabase }}
           - name: PostgreSQL
             type: udm.Application
@@ -357,7 +359,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{- end }}
-          {{- if not .RabbitMQExternal }}
+          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") }}
           - name: RabbitMQ
             type: udm.Application
             children:
