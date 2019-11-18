@@ -10,4 +10,4 @@ python: 3.7.2
 # Launch tests
 #----------------------------------------------------------------------
 script:
-  - ./main --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'
+  - ./tester --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'
