@@ -12,7 +12,7 @@ expect:
       K8sAuthentication: FilePath
       K8sLocalApiServerURL: https://localk8s.com:8443
       K8sSetup: LocalK8S
-      OsType: darwin
+
       UseKubeconfig: false
       XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
       XldDbUser: xl-deploy
@@ -85,7 +85,7 @@ with_answers:
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sLocalApiServerURL: https://localk8s.com:8443
   K8sSetup: LocalK8S
-  OsType: darwin
+
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123

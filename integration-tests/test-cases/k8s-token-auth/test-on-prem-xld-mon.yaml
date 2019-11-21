@@ -16,7 +16,7 @@ expect:
       MonitoringUser: mon-user
       NfsServerHost: nfs-test.com
       NfsSharePath: /xebialabs
-      OsType: darwin
+
       PostgresEffectCacheSize: 2GB
       PostgresMaxConn: 400
       PostgresMaxWallSize: 512MB
@@ -92,7 +92,7 @@ with_answers:
   MonitoringUserPass: mon-pass
   NfsServerHost: nfs-test.com
   NfsSharePath: /xebialabs
-  OsType: darwin
+
   PostgresEffectCacheSize: 2GB
   PostgresMaxConn: 400
   PostgresMaxWallSize: 512MB

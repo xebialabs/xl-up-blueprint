@@ -23,7 +23,7 @@ expect:
       MonitoringUser: mon-user
       NfsServerHost: nfs-test.com
       NfsSharePath: /xebialabs
-      OsType: darwin
+
       UseKubeconfig: false
       XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
       XldDbUser: xl-deploy
@@ -124,7 +124,7 @@ with_answers:
   MonitoringUserPass: mon-pass
   NfsServerHost: nfs-test.com
   NfsSharePath: /xebialabs
-  OsType: darwin
+
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123

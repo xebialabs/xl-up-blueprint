@@ -1,7 +1,7 @@
 K8sSetup: AwsEKS
 UseKubeconfig: false
 K8sApiServerURL: https://aws-eks.com:6443
-OsType: darwin
+
 K8sClientCertFile:
 K8sClientKeyFile:
 IsEKS: true

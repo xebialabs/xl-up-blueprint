@@ -36,7 +36,7 @@ The `tester` utility make use of `xl` cli in this repo. If you want to run the t
 ./tester-darwin --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases/**'
 ```
 
-The test are build and run mainly on our CI some local test may fail because they target a different url
+The test are build and run mainly on our CI some local tests (18) may fail because they target a different url
 
 ```
 [INFO   ]  Running tests defined in file ./integration-tests/test-cases/external-db/test-local-xlr.yaml (runner.py:52)
