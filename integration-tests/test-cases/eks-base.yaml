@@ -20,7 +20,7 @@ expect:
     values:
       K8sApiServerURL: https://aws-eks.com:6443
       K8sSetup: AwsEKS
-      OsType: linux
+      OsType: darwin
       EfsId: test1234561
       EfsRegion: eu-west-1
       EksClusterName: test-eks-master
@@ -56,6 +56,6 @@ with_answers:
   EksClusterName: test-eks-master
   K8sApiServerURL: https://aws-eks.com:6443
   K8sSetup: AwsEKS
-  OsType: linux
+  OsType: darwin
   UseAWSconfig: false
   UseKubeconfig: false

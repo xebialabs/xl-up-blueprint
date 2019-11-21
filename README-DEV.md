@@ -20,14 +20,31 @@ The new test framework necessitates a new test file structure. But fear not! The
 
 This command will recursively look for `test-*` YAML files, and output their equivelant to a folder called `v2` within said tests' directory. When we're ready, we can then delete the old tests and move to using the new format instead. 
 
-## Running v2 tests
+## Running v2 tests linux
 
 To actually run the v2 tests - run the following command
 
 ```
-./tester --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases/**/v2'
+./tester --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases/**'
 ```
 
+## Running v2 tests mac
+
+The `tester` utility make use of `xl` cli in this repo. If you want to run the tests on mac then you have to replace the `xl` cli with darwin distribution and use the `tester-darwin` utility. To actually run the v2 tests - run the following command
+
+```
+./tester-darwin --local-repo-path $(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases/**'
+```
+
+The test are build and run mainly on our CI some local test may fail because they target a different url
+
+```
+[INFO   ]  Running tests defined in file ./integration-tests/test-cases/external-db/test-local-xlr.yaml (runner.py:52)
+[INFO   ]  Running command  in temp dir ./tmpmgz_5qyn -> ./xl up --quick-setup --dry-run --skip-k8s --skip-prompts --local-repo /Users/elton/IdeaProjects/xl-up-blueprint --answers answers.yaml (runner.py:130)
+[ERROR  ]  Value incorrect for key "K8sLocalApiServerURL": Expected "https://localk8s.com:8443", but got "https://host.docker.internal:6443 (runner.py:87)
+[ERROR  ]  1 tests failed (total 71 total tests registered) - failing for file ./integration-tests/test-cases/external-db/test-local-xlr.yaml (runner.py:90)
+
+``` 
 This will again recurse through the `test-path` provided within `local-repo-path`, and run all the tests it finds in sequence. Now you might wonder why it takes so long (+- 1 minute at the time of writing this). Reason is that it runs many more tests than it used to using the old method. Each file will contain roughly 100 assertions after conversion - that's excluding the content assertions. We have tried implementing parallel testing with a `--parallel` flag, but somewhere that got messed up as the `xl` binary keeps throwing weird memory panics. Might need to look into this further as required. 
 
 An example for this new format can be found in the `xl-yaml-test` repo. An example test for the new RabbitMQ setup is already included in this repo. 

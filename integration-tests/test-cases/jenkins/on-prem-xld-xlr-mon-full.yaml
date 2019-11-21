@@ -1,7 +1,7 @@
 K8sSetup: PlainK8SCluster
 UseKubeconfig: false
 K8sApiServerURL: https://k8s.com:6443
-OsType: linux
+OsType: darwin
 K8sAuthentication: FilePath
 K8sClientCertFile: ../xl-up/__test__/files/test-file
 K8sClientKeyFile: ../xl-up/__test__/files/test-file

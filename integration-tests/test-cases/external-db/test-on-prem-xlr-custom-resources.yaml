@@ -16,7 +16,7 @@ expect:
       MonitoringInstall: false
       NfsServerHost: nfs-test.com
       NfsSharePath: /xebialabs
-      OsType: linux
+      OsType: darwin
       UseKubeconfig: false
       XlrCPULimit: 4
       XlrCPURequest: 0.8
@@ -96,7 +96,7 @@ with_answers:
   MonitoringInstall: false
   NfsServerHost: nfs-test.com
   NfsSharePath: /xebialabs
-  OsType: linux
+  OsType: darwin
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123

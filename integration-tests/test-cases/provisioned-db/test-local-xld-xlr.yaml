@@ -14,7 +14,7 @@ expect:
       K8sAuthentication: FilePath
       K8sLocalApiServerURL: https://localk8s.com:8443
       K8sSetup: LocalK8S
-      OsType: linux
+      OsType: darwin
       PostgresqlWorkHostpath: /psql
       UseKubeconfig: false
       XldDbName: xl-deploy
@@ -88,7 +88,7 @@ with_answers:
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sLocalApiServerURL: https://localk8s.com:8443
   K8sSetup: LocalK8S
-  OsType: linux
+  OsType: darwin
   PostgresqlWorkHostpathPlain: /psql
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
@@ -99,7 +99,7 @@ with_answers:
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
   XldOfficialVersion: 9.0.5
-  XldWorkHostpath: /tmp/xld-work
+  XldWorkHostpathPlain: /tmp/xld-work
   XlrAdminPass: password
   XlrDbName: xl-release
   XlrDbPass: xl-release
