@@ -96,4 +96,5 @@ with_answers:
   XldLic: ../integration-tests/files/test-file
   XldOfficialVersion: 9.0.5
   XldWorkHostpathPlain: integration-tests/files/
+  XldWorkHostpath: integration-tests/files/
 xl_mode: up

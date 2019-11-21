@@ -108,6 +108,7 @@ with_answers:
   XldLic: ../integration-tests/files/test-file
   XldVersion: xl-deploy:8.5.3
   XldWorkHostpathPlain: /tmp/xld-work
+  XldWorkHostpath: /tmp/xld-work
   XlrAdminPass: password
   XlrDbName: xl-release
   XlrDbPass: xl-release
