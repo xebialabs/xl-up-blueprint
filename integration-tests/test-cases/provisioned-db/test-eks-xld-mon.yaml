@@ -1,26 +1,32 @@
-answers-file: eks-xld-mon.yaml
-expected-files:
-  - xebialabs/common.yaml
-  - xebialabs/deployments.yaml
+extends: ../eks-base.yaml
+xl_mode: up
+expect:
+  assertion:
+    generated_files: []
+    secrets:
+      MonitoringUserPass: mon-pass
+      XlKeyStorePass: test123
+      XldAdminPass: password
+      XldDbPass: xl-deploy
+    values:
+      InstallXLD: true
+      InstallXLR: false
+      MonitoringInstall: true
+      MonitoringUser: mon-user
+      PostgresEffectCacheSize: 2GB
+      PostgresMaxConn: 400
+      PostgresMaxWallSize: 512MB
+      PostgresSharedBuff: 612MB
+      PostgresSyncCommit: 'off'
+      XldDbName: xl-deploy
+      XldDbUser: xl-deploy
+      XldOfficialVersion: 9.0.5
+  to_exist:
   - xebialabs/xl-deploy.yaml
-  - xebialabs/xl-k8s-foundation.yaml
-  #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
-  #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
@@ -31,7 +37,6 @@ expected-files:
   - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
-  #pg
   - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
@@ -48,42 +53,28 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
-not-expected-files:
+  to_not_exist:
   - xebialabs/xl-release.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
-  #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
-expected-xl-values:
-  K8sSetup: AwsEKS
-  UseKubeconfig: false
-  K8sApiServerURL: https://aws-eks.com:6443
-  UseAWSconfig: false
-  EksClusterName: test-eks-master
+with_answers:
   InstallXLD: true
   InstallXLR: false
-  XldDbName: xl-deploy
-  XldDbUser: xl-deploy
-  XldOfficialVersion: 9.0.5
-  EfsId: test1234561
-  EfsRegion: eu-west-1
   MonitoringInstall: true
   MonitoringUser: mon-user
-  PostgresMaxConn: 400
-  PostgresSharedBuff: 612MB
+  MonitoringUserPass: mon-pass
   PostgresEffectCacheSize: 2GB
-  PostgresSyncCommit: "off"
+  PostgresMaxConn: 400
   PostgresMaxWallSize: 512MB
-  OsType: linux
-expected-xl-secrets:
+  PostgresSharedBuff: 612MB
+  PostgresSyncCommit: 'off'
+  XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XldAdminPass: password
+  XldDbName: xl-deploy
   XldDbPass: xl-deploy
-  AWSAccessKey: SOMEKEY
-  AWSAccessSecret: SOMEMOREKEY
-  MonitoringUserPass: mon-pass
+  XldDbUser: xl-deploy
+  XldLic: ../integration-tests/files/test-file
+  XldOfficialVersion: 9.0.5

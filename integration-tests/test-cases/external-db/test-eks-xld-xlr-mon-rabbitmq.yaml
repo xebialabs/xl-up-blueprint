@@ -1,21 +1,67 @@
-answers-file: eks-xld-xlr-mon-rabbitmq.yaml
-expected-files:
-  - xebialabs/common.yaml
-  - xebialabs/deployments.yaml
+extends: ../eks-base.yaml
+xl_mode: up
+expect:
+  assertion:
+    generated_files:
+    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+      has_elements:
+        '[3]kind': 'StatefulSet'
+        '[3]metadata.name': 'xl-deploy-master'
+        '[3]spec.template.spec.containers[0].name': 'xl-deploy'
+        '[3]spec.template.spec.containers[0].env[13].value': 'amqp://some.rabbitmq:5672'
+        '[3]spec.template.spec.containers[0].env[14].value': 'test'
+        '[3]spec.template.spec.containers[0].env[15].value': 'place'
+    secrets:
+      MonitoringUserPass: mon-pass
+      RabbitMQPassword: place
+      XlKeyStorePass: test123
+      XldAdminPass: password
+      XldDbPass: xl-deploy
+      XlrAdminPass: password
+      XlrDbPass: xl-release
+      XlrReportDbPass: xl-release-report
+    values:
+      ExternalDatabase: true
+      InstallXLD: true
+      InstallXLR: true
+      MonitoringElasticsearchDataPvcSize: 5Gi
+      MonitoringGrafanaDashboardsPvcSize: 5Gi
+      MonitoringInstall: true
+      MonitoringPrometheusDataPvcSize: 5Gi
+      MonitoringUser: mon-user
+      RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
+      RabbitMQExternal: true
+      RabbitMQUrl: amqp://some.rabbitmq:5672
+      RabbitMQUsername: test
+      XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+      XldDbUser: xl-deploy
+      XldExportPvcSize: 5Gi
+      XldMasterCPULimit: 3
+      XldMasterCPURequest: 0.7
+      XldMasterCount: 2
+      XldMasterRAMLimit: 6Gi
+      XldMasterRAMRequest: 1600Mi
+      XldOfficialVersion: 9.0.5
+      XldWorkPvcSize: 5Gi
+      XldWorkerCPULimit: 3
+      XldWorkerCPURequest: 0.7
+      XldWorkerCount: 2
+      XldWorkerRAMLimit: 6Gi
+      XldWorkerRAMRequest: 1600Mi
+      XlrCPULimit: 3
+      XlrCPURequest: 0.7
+      XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+      XlrDbUser: xl-release
+      XlrOfficialVersion: 9.0.6
+      XlrRAMLimit: 6Gi
+      XlrRAMRequest: 1700Mi
+      XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+      XlrReportDbUser: xl-release-report
+      XlrReportsPvcSize: 5Gi
+  to_exist:
+  #xl-deploy xl-release
   - xebialabs/xl-deploy.yaml
   - xebialabs/xl-release.yaml
-  - xebialabs/xl-k8s-foundation.yaml
-  #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
@@ -49,11 +95,7 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
-not-expected-files:
-  #xl-k8s-foundation
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  to_not_exist:
   #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
@@ -62,60 +104,38 @@ not-expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-expected-xl-values:
-  K8sSetup: AwsEKS
-  UseKubeconfig: false
-  K8sApiServerURL: https://aws-eks.com:6443
-  UseAWSconfig: false
-  EksClusterName: test-eks-master
+with_answers: 
+  ExternalDatabase: true
   InstallXLD: true
   InstallXLR: true
-  XldDbUser: xl-deploy
-  EfsId: test1234561
-  EfsRegion: eu-west-1
-  XlrDbUser: xl-release
-  XlrOfficialVersion: 9.0.6
-  XldOfficialVersion: 9.0.5
-  XlrReportDbUser: xl-release-report
-  MonitoringInstall: true
-  XldWorkPvcSize: 5Gi
-  XldExportPvcSize: 5Gi
-  XlrReportsPvcSize: 5Gi
-  MonitoringGrafanaDashboardsPvcSize: 5Gi
-  MonitoringPrometheusDataPvcSize: 5Gi
   MonitoringElasticsearchDataPvcSize: 5Gi
+  MonitoringGrafanaDashboardsPvcSize: 5Gi
+  MonitoringInstall: true
+  MonitoringPrometheusDataPvcSize: 5Gi
   MonitoringUser: mon-user
-  OsType: linux
-  XldWorkerCount: 2
-  XldMasterCount: 2
-  XldMasterRAMRequest: 1600Mi
-  XldMasterRAMLimit: 6Gi
-  XldMasterCPURequest: 0.7
-  XldMasterCPULimit: 3
-  XldWorkerRAMRequest: 1600Mi
-  XldWorkerRAMLimit: 6Gi
-  XldWorkerCPURequest: 0.7
-  XldWorkerCPULimit: 3
-  XlrRAMRequest: 1700Mi
-  XlrRAMLimit: 6Gi
-  XlrCPURequest: 0.7
-  XlrCPULimit: 3
-  ExternalDatabase: true
-  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
-  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
-  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  MonitoringUserPass: mon-pass
+  RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
   RabbitMQExternal: true
+  RabbitMQPassword: place
   RabbitMQUrl: amqp://some.rabbitmq:5672
   RabbitMQUsername: test
-  RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
-expected-xl-secrets:
-  MonitoringUserPass: mon-pass
+  XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XldAdminPass: password
   XldDbPass: xl-deploy
+  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+  XldDbUser: xl-deploy
+  XldExportPvcSize: 5Gi
+  XldLic: ../integration-tests/files/test-file
+  XldOfficialVersion: 9.0.5
+  XldWorkPvcSize: 5Gi
   XlrAdminPass: password
   XlrDbPass: xl-release
+  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+  XlrDbUser: xl-release
+  XlrLic: ../integration-tests/files/test-file
+  XlrOfficialVersion: 9.0.6
   XlrReportDbPass: xl-release-report
-  AWSAccessKey: SOMEKEY
-  AWSAccessSecret: SOMEMOREKEY
-  RabbitMQPassword: place
+  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+  XlrReportDbUser: xl-release-report
+  XlrReportsPvcSize: 5Gi

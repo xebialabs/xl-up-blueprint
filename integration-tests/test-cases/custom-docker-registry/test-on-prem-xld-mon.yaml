@@ -1,10 +1,40 @@
-answers-file: on-prem-xld-mon.yaml
-expected-files:
+expect:
+  assertion:
+    generated_files: []
+    secrets:
+      DockerPass: docker-pass
+      MonitoringUserPass: mon-pass
+      XlKeyStorePass: test123
+      XldAdminPass: password
+      XldDbPass: xl-deploy
+    values:
+      DockerUser: docker-user
+      InstallXLD: true
+      InstallXLR: false
+      K8sApiServerURL: https://k8s.com:6443
+      K8sAuthentication: FilePath
+      K8sSetup: PlainK8SCluster
+      MonitoringInstall: true
+      MonitoringUser: mon-user
+      NfsServerHost: nfs-test.com
+      NfsSharePath: /xebialabs
+
+      PostgresEffectCacheSize: 2GB
+      PostgresMaxConn: 400
+      PostgresMaxWallSize: 512MB
+      PostgresSharedBuff: 612MB
+      PostgresSyncCommit: 'off'
+      RegistryURL: docker.io/xebialabs
+      UseCustomRegistry: true
+      UseKubeconfig: false
+      XldDbName: xl-deploy
+      XldDbUser: xl-deploy
+      XldVersion: xl-deploy:8.5.3
+  to_exist:
   - xebialabs/common.yaml
   - xebialabs/deployments.yaml
   - xebialabs/xl-deploy.yaml
   - xebialabs/xl-k8s-foundation.yaml
-  #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
@@ -14,10 +44,8 @@ expected-files:
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-  #efk
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
@@ -28,7 +56,6 @@ expected-files:
   - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
-  #pg
   - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
   - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
@@ -45,46 +72,48 @@ expected-files:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
-not-expected-files:
+  to_not_exist:
   - xebialabs/xl-release.yaml
-  #xl-deploy xl-release
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-  #xl-k8s-foundation
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
-expected-xl-values:
-  K8sSetup: PlainK8SCluster
-  UseKubeconfig: false
-  K8sApiServerURL: https://k8s.com:6443
+with_answers:
+  DockerPass: docker-pass
+  DockerUser: docker-user
   InstallXLD: true
   InstallXLR: false
-  XldDbName: xl-deploy
-  XldDbUser: xl-deploy
-  NfsServerHost: nfs-test.com
-  NfsSharePath: /xebialabs
+  K8sApiServerURL: https://k8s.com:6443
+  K8sAuthentication: FilePath
+  K8sClientCertFile: ../integration-tests/files/test-file
+  K8sClientKeyFile: ../integration-tests/files/test-file
+  K8sSetup: PlainK8SCluster
   MonitoringInstall: true
   MonitoringUser: mon-user
-  PostgresMaxConn: 400
-  PostgresSharedBuff: 612MB
+  MonitoringUserPass: mon-pass
+  NfsServerHost: nfs-test.com
+  NfsSharePath: /xebialabs
+
   PostgresEffectCacheSize: 2GB
-  PostgresSyncCommit: "off"
+  PostgresMaxConn: 400
   PostgresMaxWallSize: 512MB
-  OsType: linux
-  K8sAuthentication: FilePath
-  UseCustomRegistry: true
+  PostgresSharedBuff: 612MB
+  PostgresSyncCommit: 'off'
   RegistryURL: docker.io/xebialabs
-  DockerUser: docker-user
-  XldVersion: xl-deploy:8.5.3
-expected-xl-secrets:
+  UseCustomRegistry: true
+  UseKubeconfig: false
+  XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XldAdminPass: password
+  XldDbName: xl-deploy
   XldDbPass: xl-deploy
-  MonitoringUserPass: mon-pass
-  DockerPass: docker-pass
+  XldDbUser: xl-deploy
+  XldLic: ../integration-tests/files/test-file
+  XldVersion: xl-deploy:8.5.3
+xl_mode: up
