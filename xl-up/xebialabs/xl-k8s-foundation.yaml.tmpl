@@ -185,7 +185,7 @@ spec:
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
                 {{- end }}
-                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") }}
+                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") ( .InstallXLD)}}
                   RabbitMQ: "3.8.0-management"
                 {{- end }}
                 undeployDependencies: "true"
@@ -295,6 +295,7 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
+                  {{- if .InstallXLD }}
                   - name: pvc-xld-export
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
@@ -303,10 +304,13 @@ spec:
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml"
+                  {{- end }}
+                  {{- if .InstallXLR }}
                   - name: pvc-xlr-reports
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml"
+                  {{- end }}
                 applicationDependencies:
                 undeployDependencies: "true"
           {{- end }}
@@ -359,7 +363,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{- end }}
-          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") }}
+          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") ( .InstallXLD)}}
           - name: RabbitMQ
             type: udm.Application
             children:
