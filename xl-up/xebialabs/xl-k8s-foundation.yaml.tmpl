@@ -69,7 +69,7 @@ spec:
         {{- end }}
         {{- if  eq .K8sSetup "LocalK8S" }}
             {{- if not .ExternalDatabase}}
-             {{- if or (ne .OsType "linux") (ne .OsType "windows") }}
+             {{- if ne .OsType "windows" }}
           POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
              {{- end }}
             {{- end }}
