@@ -139,7 +139,7 @@ spec:
             defaultMode: 0777
   {{if eq .K8sSetup "LocalK8S" }}
         - name: data
-          {{if eq .OsType "linux" }}
+          {{- if or (eq .OsType "linux") (eq .OsType "windows") }}
           emptyDir: {}
           {{else}}
           hostPath:
