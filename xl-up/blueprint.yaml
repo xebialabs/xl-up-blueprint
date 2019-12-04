@@ -349,7 +349,6 @@ spec:
       ignoreIfSkipped: false
       description: 'This options selects the driver that XL Deploy will use to connect to your external MQ instance'
 
-
     - name: RabbitMQUsername
       type: Input
       prompt: "Specify the username for the default RabbitMQ user"
