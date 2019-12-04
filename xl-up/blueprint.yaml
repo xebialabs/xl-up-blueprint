@@ -319,20 +319,6 @@ spec:
       replaceAsIs: true
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
-    - name: XldWorkHostpathPlain
-      type: Input
-      prompt: "Enter the local directory path that XL Deploy can use as a work directory:"
-      promptIf: !expr "K8sSetup == 'LocalK8S' && InstallXLD && OsType != 'linux' "
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "Local path to a folder in your machine that will be used as a Kubernetes volume where XL Deploy will persist the data from the work directory. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
-
-    - name: XldWorkHostpath
-      type: Input
-      value: !expr "K8sSetup == 'LocalK8S' && InstallXLD && OsType != 'linux' ? normalizePath(XldWorkHostpathPlain) : ''"
-      saveInXlvals: true
-      ignoreIfSkipped: true
-
     - name: RabbitMQExternal
       type: Confirm
       prompt: Would you like to use an existing RabbitMQ/ActiveMQ server for XL Deploy?
@@ -647,20 +633,6 @@ spec:
       promptIf: !expr "!ExternalDatabase && K8sSetup != 'LocalK8S'"
       default: !expr "ExternalDatabase ? '' :  '50Gi'"
       description: "This field sets the  persistent volume size for Postgresql database. This is the persistent volume where Postgresql will persist the data"
-
-    - name: PostgresqlWorkHostpathPlain
-      type: Input
-      prompt: "Enter the local directory path where PostgreSQL can store its data:"
-      promptIf: !expr "!ExternalDatabase && K8sSetup == 'LocalK8S' && OsType != 'linux' && OsType != 'windows' "
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "Local path to a folder in your machine that will be used as a Kubernetes volume where Postgresql will persist the its data. Make sure the folder already exist and it is empty every time you run xl up command for initial deployment"
-
-    - name: PostgresqlWorkHostpath
-      type: Input
-      value: !expr "!ExternalDatabase && K8sSetup == 'LocalK8S' && OsType != 'linux' && OsType != 'windows' ? normalizePath(PostgresqlWorkHostpathPlain) : ''"
-      saveInXlvals: true
-      ignoreIfSkipped: true
 
     - name: PostgresMaxConn
       type: Input

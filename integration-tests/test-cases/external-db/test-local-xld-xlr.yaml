@@ -102,8 +102,6 @@ with_answers:
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
   XldOfficialVersion: 9.0.5
-  XldWorkHostpathPlain: /tmp/xld-work
-  XldWorkHostpath: /tmp/xld-work
   XlrAdminPass: password
   XlrDbPass: xl-release
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release

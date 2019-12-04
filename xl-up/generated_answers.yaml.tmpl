@@ -74,9 +74,6 @@ XldDbName: {{ .XldDbName }}
   {{- end}}
 XldDbUser: {{ .XldDbUser }}
 XldDbPass: {{ .XldDbPass }}
-  {{- if eq .K8sSetup "LocalK8S"}}
-XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
-  {{- end}}
 {{- end}}
 {{- if eq .K8sSetup "AwsEKS" }}
 EfsId: {{ .EfsId }}
@@ -120,11 +117,6 @@ MonitoringUser: {{ .MonitoringUser }}
 MonitoringUserPass: {{ .MonitoringUserPass }}
 {{- end}}
 {{- if not .ExternalDatabase}}
-  {{- if eq .K8sSetup "LocalK8S"}}
-    {{- if ne .OsType "windows" }}
-PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
-    {{- end }}
-  {{- end}}
 PostgresqlDataPvcSize: {{ .PostgresqlDataPvcSize }}
 PostgresMaxConn: {{ .PostgresMaxConn }}
 PostgresSharedBuff: {{ .PostgresSharedBuff }}

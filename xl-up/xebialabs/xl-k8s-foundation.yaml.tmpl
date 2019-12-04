@@ -67,13 +67,6 @@ spec:
           XLD_OFFICIAL_VERSION: "{{.XldOfficialVersion}}"
           XLR_OFFICIAL_VERSION: "{{.XlrOfficialVersion}}"
         {{- end }}
-        {{- if  eq .K8sSetup "LocalK8S" }}
-            {{- if not .ExternalDatabase}}
-             {{- if ne .OsType "windows" }}
-          POSTGRESQL_HOSTPATH: !value PostgresqlWorkHostpath
-             {{- end }}
-            {{- end }}
-        {{- end }}
         {{- if  .InstallXLR }}
           {{- if not .ExternalDatabase }}
           XLR_REPORT_DB_NAME: !value XlrReportDbName
@@ -94,9 +87,6 @@ spec:
           XLD_LIC: {{ .XldLic | b64enc }}
           XLD_DB_PASS: !value XldDbPass
           XLD_ADMIN_PASS: !value XldAdminPass
-          {{- if  eq .K8sSetup "LocalK8S" }}
-          XLD_WORK_HOSTPATH: !value XldWorkHostpath
-          {{- end }}
           {{- if not .ExternalDatabase }}
           XLD_DB_NAME: !value XldDbName
           {{- end }}
