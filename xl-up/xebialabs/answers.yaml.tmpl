@@ -103,7 +103,7 @@ data:
     {{- end}}
     {{- if not .ExternalDatabase}}
       {{- if eq .K8sSetup "LocalK8S"}}
-         {{- if or (ne .OsType "linux") (ne .OsType "windows") }}
+         {{- if ne .OsType "windows" }}
     PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
          {{- end }}
       {{- end}}
