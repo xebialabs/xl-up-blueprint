@@ -35,9 +35,6 @@ data:
       {{- end}}
     XldDbUser: {{ .XldDbUser }}
     XldDbPass: {{ .XldDbPass }}
-      {{- if eq .K8sSetup "LocalK8S"}}
-    XldWorkHostpathPlain: {{ .XldWorkHostpathPlain }}
-      {{- end}}
       {{- if ne .K8sSetup "LocalK8S" }}
     RabbitMQExternal: {{ .RabbitMQExternal }}
     RabbitMQDriver: {{ .RabbitMQDriver }}
@@ -102,9 +99,6 @@ data:
     MonitoringUserPass: {{ .MonitoringUserPass }}
     {{- end}}
     {{- if not .ExternalDatabase}}
-      {{- if eq .K8sSetup "LocalK8S"}}
-    PostgresqlWorkHostpathPlain: {{ .PostgresqlWorkHostpathPlain }}
-      {{- end}}
     PostgresqlDataPvcSize: {{ .PostgresqlDataPvcSize }}
     PostgresMaxConn: {{ .PostgresMaxConn }}
     PostgresSharedBuff: {{ .PostgresSharedBuff }}

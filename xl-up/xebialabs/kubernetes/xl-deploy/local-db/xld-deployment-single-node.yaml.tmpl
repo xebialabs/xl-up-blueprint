@@ -149,14 +149,8 @@ spec:
       {{ end }}
       {{if eq .K8sSetup "LocalK8S" }}
       volumes:
-        # Use hostPath to persist your data on your local machine or emptyDir for minikube
         - name: work
-          {{if eq .OsType "linux" }}
           emptyDir: {}
-          {{else}}
-          hostPath:
-            path: {{$XLD_WORK_HOSTPATH}}
-          {{end}}
       {{end}}
   {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster" ))}}
   volumeClaimTemplates:
