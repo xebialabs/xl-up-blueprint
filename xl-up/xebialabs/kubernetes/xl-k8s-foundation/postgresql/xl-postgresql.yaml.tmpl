@@ -139,12 +139,7 @@ spec:
             defaultMode: 0777
   {{if eq .K8sSetup "LocalK8S" }}
         - name: data
-          {{if eq .OsType "linux" }}
           emptyDir: {}
-          {{else}}
-          hostPath:
-            path: {{$POSTGRESQL_HOSTPATH}}
-          {{end}}
   {{else}}
   volumeClaimTemplates:
     - metadata:

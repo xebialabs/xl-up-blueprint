@@ -13,8 +13,6 @@ expect:
       K8sAuthentication: FilePath
       K8sLocalApiServerURL: https://localk8s.com:8443
       K8sSetup: LocalK8S
-
-      PostgresqlWorkHostpath: /psql
       RegistryURL: docker.io/xebialabs
       UseCustomRegistry: true
       UseKubeconfig: false
@@ -87,8 +85,6 @@ with_answers:
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sLocalApiServerURL: https://localk8s.com:8443
   K8sSetup: LocalK8S
-
-  PostgresqlWorkHostpathPlain: /psql
   RegistryURL: docker.io/xebialabs
   UseCustomRegistry: true
   UseKubeconfig: false
@@ -100,6 +96,4 @@ with_answers:
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
   XldVersion: xl-deploy:8.5.3
-  XldWorkHostpathPlain: integration-tests/files/
-  XldWorkHostpath: integration-tests/files/
 xl_mode: up
