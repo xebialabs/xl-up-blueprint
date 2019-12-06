@@ -92,7 +92,7 @@ spec:
           command:
             - 'sh'
             - '-c'
-            - 'rm -rf /var/lib/postgresql/lost+found'
+            - 'rm -rf /var/lib/postgresql/data/lost+found'
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: data
