@@ -11,8 +11,8 @@ expect:
       InstallXLD: true
       InstallXLR: false
       K8sAuthentication: FilePath
-      K8sLocalApiServerURL: https://localk8s.com:8443
-      K8sSetup: LocalK8S
+      K8sLocalApiServerURL: https://DockerDesktopK8s.com:8443
+      K8sSetup: DockerDesktopK8s
       RegistryURL: docker.io/xebialabs
       UseCustomRegistry: true
       UseKubeconfig: false
@@ -83,8 +83,8 @@ with_answers:
   K8sAuthentication: FilePath
   K8sClientCertFile: ../integration-tests/files/test-file
   K8sClientKeyFile: ../integration-tests/files/test-file
-  K8sLocalApiServerURL: https://localk8s.com:8443
-  K8sSetup: LocalK8S
+  K8sLocalApiServerURL: https://DockerDesktopK8s.com:8443
+  K8sSetup: DockerDesktopK8s
   RegistryURL: docker.io/xebialabs
   UseCustomRegistry: true
   UseKubeconfig: false

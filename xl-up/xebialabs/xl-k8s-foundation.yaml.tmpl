@@ -12,7 +12,7 @@ spec:
         clusterName: !value EksClusterName
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
-{{- else if  eq .K8sSetup "LocalK8S" }}
+{{- else if  eq .K8sSetup "DockerDesktopK8s" }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
 spec:
@@ -112,7 +112,7 @@ spec:
         members:
           {{- if  eq .K8sSetup "AwsEKS" }}
           - Infrastructure/XEBIALABS/EKS-MASTER
-          {{- else if  eq .K8sSetup "LocalK8S" }}
+          {{- else if  eq .K8sSetup "DockerDesktopK8s" }}
           - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL
           {{- else }}
           - Infrastructure/XEBIALABS/K8s-MASTER
@@ -156,13 +156,13 @@ spec:
                     file: !file "answers.yaml"
                 applicationDependencies:
                   K8s-Ingress-Controller: "v0.6"
-               {{- if ne .K8sSetup "LocalK8S"}}
+               {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                   XL-PVC-Claims: "1.0.0"
                {{- end }}
                 {{- if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
                 {{- else }}
-                  {{- if ne .K8sSetup "LocalK8S"}}
+                   {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                     {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
@@ -177,7 +177,7 @@ spec:
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
                 {{- end }}
-                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") ( .InstallXLD)}}
+                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")( .InstallXLD)}}
                   RabbitMQ: "3.8.0-management"
                 {{- end }}
                 undeployDependencies: "true"
@@ -214,11 +214,11 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
-                  {{- if not ( eq .K8sSetup "LocalK8S" )}}
+                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                     {{- if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
                     {{- else }}
-                      {{- if ne .K8sSetup "LocalK8S"}}
+                      {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                         {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                         {{- end }}
@@ -278,7 +278,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
           {{- end }}
-          {{- if ne .K8sSetup "LocalK8S"}}
+          {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
           - name: XL-PVC-Claims
             type: udm.Application
             children:
@@ -320,7 +320,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
-                  {{- if ne .K8sSetup "LocalK8S"}}
+                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                     {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
@@ -355,7 +355,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{- end }}
-          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "LocalK8S") ( .InstallXLD)}}
+          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") ( .InstallXLD)}}
           - name: RabbitMQ
             type: udm.Application
             children:

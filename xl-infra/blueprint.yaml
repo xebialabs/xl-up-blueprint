@@ -13,7 +13,9 @@ spec:
       prompt: "Select the Kubernetes setup where the XebiaLabs Devops Platform will be installed:"
       options:
         - label: Local K8s from Docker Desktop for Mac/Windows
-          value: LocalK8S
+          value: DockerDesktopK8s
+        - label: Local K8s from Minikube
+          value: MinikubeK8s
         - label: AWS EKS
           value: AwsEKS
         - label: Google Kubernetes Engine
@@ -34,11 +36,11 @@ spec:
     - name: K8sApiServerURL
       type: Input
       prompt: "Enter the K8sApiServerURL of your Kubernetes installation:"
-      promptIf: !expr "!UseKubeconfig && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "!UseKubeconfig && K8sSetup != 'DockerDesktopK8s'"
       default: !expr "k8sConfig('ClusterServer')"
       saveInXlvals: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"
-      ignoreIfSkipped: !expr "K8sSetup == 'LocalK8S' ? true : false"
+      ignoreIfSkipped: !expr "K8sSetup == 'DockerDesktopK8s' ? true : false"
 
     - name: OsType
       type: Input
@@ -49,7 +51,7 @@ spec:
 
     - name: K8sLocalApiServerURL
       type: Input
-      value: !expr "K8sSetup == 'LocalK8S' ? os('_defaultapiserverurl') : ''"
+      value: !expr "K8sSetup == 'DockerDesktopK8s' ? os('_defaultapiserverurl') : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The API Server URL of your Kubernetes installation. This is usually the Kubernetes Master URL. This can be found by running kubectl cluster-info"

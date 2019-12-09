@@ -1,6 +1,6 @@
-K8sSetup: LocalK8S
+K8sSetup: DockerDesktopK8s
 UseKubeconfig: false
-K8sLocalApiServerURL: https://localk8s.com:8443
+K8sLocalApiServerURL: https://DockerDesktopK8s.com:8443
 K8sAuthentication: FilePath
 K8sClientCertFile: ../xl-infra/__test__/files/test-file
 K8sClientKeyFile: ../xl-infra/__test__/files/test-file

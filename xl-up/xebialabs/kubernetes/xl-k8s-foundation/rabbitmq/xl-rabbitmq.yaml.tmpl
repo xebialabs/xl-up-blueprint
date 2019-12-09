@@ -90,7 +90,7 @@ spec:
                 path: rabbitmq.conf
               - key: enabled_plugins
                 path: enabled_plugins
-  {{if eq .K8sSetup "LocalK8S" }}
+  {{if eq .K8sSetup "DockerDesktopK8s" }}
         - name: data
           emptyDir: {}
   {{else}}

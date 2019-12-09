@@ -147,7 +147,7 @@ spec:
       imagePullSecrets:
       - name: dockercred
       {{ end }}
-      {{if eq .K8sSetup "LocalK8S" }}
+      {{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
       volumes:
         - name: work
           emptyDir: {}
