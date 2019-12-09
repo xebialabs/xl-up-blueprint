@@ -727,7 +727,7 @@ spec:
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup == 'DockerDesktopK8s'"
+      writeIf: !expr "InstallXLR && (K8sSetup == 'DockerDesktopK8s' || K8sSetup == 'MinikubeK8s')"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml.tmpl
       writeIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     #efk
