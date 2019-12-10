@@ -1,4 +1,4 @@
-answers-file: local-kube.yaml
+answers-file: local-dockerdesktopk8s.yaml
 expected-xl-values:
   K8sSetup: DockerDesktopK8s
   UseKubeconfig: false
