@@ -15,7 +15,7 @@ expect:
       InstallXLR: true
       K8sAuthentication: FilePath
       K8sApiServerURL: https://minikube.com:8443
-      K8sSetup: DockerDesktopK8s
+      K8sSetup: MinikubeK8s
       RegistryURL: docker.io/xebialabs
       UseCustomRegistry: true
       UseKubeconfig: false
@@ -91,7 +91,7 @@ with_answers:
   K8sClientCertFile: ../integration-tests/files/test-file
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sApiServerURL: https://minikube.com:8443
-  K8sSetup: DockerDesktopK8s
+  K8sSetup: MinikubeK8s
   RegistryURL: docker.io/xebialabs
   UseCustomRegistry: true
   UseKubeconfig: false

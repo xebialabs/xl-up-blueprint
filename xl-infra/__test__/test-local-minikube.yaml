@@ -1,6 +1,6 @@
 answers-file: local-dockerdesktopk8s.yaml
 expected-xl-values:
-  K8sSetup: DockerDesktopK8s
+  K8sSetup: MinikubeK8s
   UseKubeconfig: false
   K8sApiServerURL: https://DockerDesktopK8s.com:8443
   K8sAuthentication: FilePath
