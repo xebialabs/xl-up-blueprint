@@ -317,7 +317,6 @@ spec:
       default: xl-deploy
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "This will be the XL Deploy database name that xl up will create in the  Postgresql instance that will be provisioned in your Kubernetes cluster"
 
     - name: XldDbUser
@@ -327,7 +326,7 @@ spec:
       default: sa
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
     - name: XldDbPass
@@ -339,7 +338,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
-      overrideDefault: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
     - name: RabbitMQExternal
@@ -381,7 +380,7 @@ spec:
       default: 'guest'
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
+      overrideDefault: !expr "RabbitMQExternal"
       description: 'The username to use for the main administrator user for this RabbitMQ instance'
 
     - name: RabbitMQPassword
@@ -393,7 +392,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
-      overrideDefault: true
+      overrideDefault: !expr "RabbitMQExternal"
       description: 'The password to use for the main administrator user for this RabbitMQ instance'
 
     - name: XlrAdminPass
@@ -433,7 +432,6 @@ spec:
       default: xl-release
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "This will be the XL Release repository database name that xl up will create in the  Postgresql instance that will be provisioned in your Kubernetes cluster"
 
     - name: XlrDbUser
@@ -443,7 +441,7 @@ spec:
       default: xl-release
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release"
 
     - name: XlrDbPass
@@ -455,7 +453,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
-      overrideDefault: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release"
 
     - name: XlrReportDbUrl
@@ -475,7 +473,6 @@ spec:
       default: xl-release-report
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "This will be the XL Release reporting database name that xl up will create in the  Postgresql instance that will be provisioned in your Kubernetes cluster"
 
     - name: XlrReportDbUser
@@ -485,7 +482,7 @@ spec:
       default: xl-release-report
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release's Reporting Database"
 
     - name: XlrReportDbPass
@@ -497,7 +494,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
-      overrideDefault: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release's Reporting Database"
 
     - name: XlrRAMRequest
