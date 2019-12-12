@@ -137,7 +137,7 @@ spec:
           configMap:
             name: postgresql-init-sql
             defaultMode: 0777
-  {{if eq .K8sSetup "LocalK8S" }}
+  {{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
         - name: data
           emptyDir: {}
   {{else}}

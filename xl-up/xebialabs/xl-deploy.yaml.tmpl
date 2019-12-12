@@ -17,7 +17,7 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                {{- if  eq .K8sSetup "LocalK8S" }}
+                {{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
                   - name: xld-deployment
                     type: k8s.ResourcesFile
                     readinessProbeRetry: {{ .XldDeploymentTimeout }}
