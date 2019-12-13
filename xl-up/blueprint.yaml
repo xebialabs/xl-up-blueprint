@@ -171,7 +171,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the number of XL Deploy masters to spin up"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 2
       description: "XL Deploy can be started up in an active-active setup. This means there can be many 'masters' to coordinate tasks across an arbitrary amount of 'workers'. This setting defines the preferred number of masters to spin up"
 
@@ -181,7 +181,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired RAM requests for the XL Deploy Master pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1600Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
@@ -192,7 +192,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired RAM limit for the XL Deploy Master pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMLimit)"
       description: "This field sets the amount of RAM you would like the XL Deploy Master pods to be limited to in the Kubernetes cluster"
@@ -203,7 +203,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired CPU requests for the XL Deploy Master pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldMasterCPURequest)"
       description: "This field sets the amount of CPU you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
@@ -214,7 +214,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired CPU limit for the XL Deploy Master pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldMasterCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Deploy Master pods to be limited to in the Kubernetes cluster"
@@ -225,7 +225,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the number of XL Deploy workers to spin up"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 2
       description: "XL Deploy can be started up in an active-active setup. This means there can be many 'workers' to execute deployment tasks. This setting defines the preferred number of workers to spin up"
 
@@ -235,7 +235,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired RAM requests for the XL Deploy Worker pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1600Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
@@ -246,7 +246,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired RAM limit for the XL Deploy Worker pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMLimit)"
       description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
@@ -257,7 +257,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired CPU requests for the XL Deploy Worker pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPURequest)"
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
@@ -268,7 +268,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired CPU limit for the XL Deploy Worker pods"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
@@ -278,7 +278,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for XL Deploy export directory"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "10Gi"
       description: "This field sets the  persistent volume size for XL Deploy export directory. The export directory is the place where XL Deploy temporarily will save files needed for CI export and reports."
 
@@ -287,7 +287,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for XL Deploy work directory"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "5Gi"
       description: "This field sets the  persistent volume size for XL Deploy work directory. The work directory is used to temporarily store data that cannot be kept in memory."
 
@@ -344,7 +344,7 @@ spec:
     - name: RabbitMQExternal
       type: Confirm
       prompt: Would you like to use an existing RabbitMQ/ActiveMQ server for XL Deploy?
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -353,7 +353,7 @@ spec:
     - name: RabbitMQUrl
       type: Input
       prompt: "Specify the URL of your RabbitMQ/ActiveMQ instance"
-      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
@@ -367,7 +367,7 @@ spec:
         - label: ActiveMQ
           value: org.apache.activemq.ActiveMQConnectionFactory
       prompt: "Select the type of driver you need to use to connect to your external MQ instance"
-      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 'com.rabbitmq.jms.admin.RMQConnectionFactory'
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -377,7 +377,7 @@ spec:
     - name: RabbitMQUsername
       type: Input
       prompt: "Specify the username for the default RabbitMQ user"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 'guest'
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -388,7 +388,7 @@ spec:
       type: SecretInput
       prompt: "Specify the password for the default RabbitMQ user"
       default: !expr "randPassword()"
-      promptIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       revealOnSummary: true
@@ -504,7 +504,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired RAM request for the XL Release pods"
-      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1700Mi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Release pods to be requested  in the Kubernetes cluster"
@@ -515,7 +515,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired RAM limit for the XL Release pods"
-      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
       # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMLimit)"
       description: "This field sets the amount of RAM you would like the XL Release pods to be limited to in the Kubernetes cluster"
@@ -526,7 +526,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired CPU requests for the XL Release pods"
-      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPURequest)"
       description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
@@ -537,7 +537,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       prompt: "Enter the desired CPU limit for the XL Release pods"
-      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
       # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Release pods to have limited to in the Kubernetes cluster"
@@ -547,7 +547,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for XL Release reports directory"
-      promptIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "5Gi"
       description: "This field sets the  persistent volume size for XL Release reports directory. The reports directory is used to  store data for the Release audit report feature."
 
@@ -601,8 +601,8 @@ spec:
     - name: MonitoringInstall
       type: Confirm
       prompt: "Do you want to install monitoring?"
-      promptIf: !expr "K8sSetup != 'LocalK8S'"
-      default: !expr "K8sSetup != 'LocalK8S'"
+      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
@@ -669,7 +669,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       prompt: "Enter the desired persistent volume size for Postgresql database"
-      promptIf: !expr "!ExternalDatabase && K8sSetup != 'LocalK8S'"
+      promptIf: !expr "!ExternalDatabase && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: !expr "ExternalDatabase ? '' :  '50Gi'"
       description: "This field sets the  persistent volume size for Postgresql database. This is the persistent volume where Postgresql will persist the data"
 
@@ -749,7 +749,7 @@ spec:
     - path: xebialabs/xl-deploy.yaml.tmpl
       writeIf: !expr InstallXLD
     - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup == 'LocalK8S'"
+      writeIf: !expr "InstallXLD && (K8sSetup == 'DockerDesktopK8s' || K8sSetup == 'MinikubeK8s')"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml.tmpl
       writeIf:  !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml.tmpl
@@ -759,22 +759,22 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml.tmpl
       writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     #xl-release
     - path: xebialabs/xl-release.yaml.tmpl
       writeIf: !expr InstallXLR
     - path: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup == 'LocalK8S'"
+      writeIf: !expr "InstallXLR && (K8sSetup == 'DockerDesktopK8s' || K8sSetup == 'MinikubeK8s')"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml.tmpl
-      writeIf: !expr "InstallXLR && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     #efk
     - path: xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
@@ -831,13 +831,13 @@ spec:
       writeIf: !expr "MonitoringInstall"
     #rabbitmq
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'LocalK8S'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     #xebialabs files
     - path: generated_answers.yaml.tmpl
     - path: xebialabs.yaml.tmpl

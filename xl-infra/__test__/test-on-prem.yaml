@@ -2,5 +2,5 @@ answers-file: on-prem.yaml
 expected-xl-values:
   K8sSetup: PlainK8SCluster
   UseKubeconfig: false
-  K8sApiServerURL: https://localk8s.com:8443
+  K8sApiServerURL: https://DockerDesktopK8s.com:8443
   K8sAuthentication: FilePath

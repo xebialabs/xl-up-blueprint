@@ -44,7 +44,7 @@ XlrOfficialVersion: {{ .XlrOfficialVersion }}
 {{- end }}
 ExternalDatabase: {{ .ExternalDatabase }}
 {{- if .InstallXLD}}
-  {{- if ne .K8sSetup "LocalK8S" }}
+  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
 RabbitMQExternal: {{ .RabbitMQExternal }}
 RabbitMQDriver: {{ .RabbitMQDriver }}
   {{- if .RabbitMQExternal }}
@@ -84,7 +84,7 @@ NfsServerHost: {{ .NfsServerHost }}
 NfsSharePath: {{ .NfsSharePath }}
 {{- end}}
 {{- if .InstallXLR}}
-{{- if ne .K8sSetup "LocalK8S" }}
+{{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
 XlrRAMRequest: {{ .XlrRAMRequest }}
 XlrRAMLimit: {{ .XlrRAMLimit }}
 XlrCPURequest: {{ .XlrCPURequest }}

@@ -41,7 +41,7 @@ The test are build and run mainly on our CI some local tests (18) may fail becau
 ```
 [INFO   ]  Running tests defined in file ./integration-tests/test-cases/external-db/test-local-xlr.yaml (runner.py:52)
 [INFO   ]  Running command  in temp dir ./tmpmgz_5qyn -> ./xl up --quick-setup --dry-run --skip-k8s --skip-prompts --local-repo /Users/elton/IdeaProjects/xl-up-blueprint --answers answers.yaml (runner.py:130)
-[ERROR  ]  Value incorrect for key "K8sLocalApiServerURL": Expected "https://localk8s.com:8443", but got "https://host.docker.internal:6443 (runner.py:87)
+[ERROR  ]  Value incorrect for key "K8sLocalApiServerURL": Expected "https://DockerDesktopK8s.com:8443", but got "https://host.docker.internal:6443 (runner.py:87)
 [ERROR  ]  1 tests failed (total 71 total tests registered) - failing for file ./integration-tests/test-cases/external-db/test-local-xlr.yaml (runner.py:90)
 
 ``` 

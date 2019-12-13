@@ -20,7 +20,7 @@ spec:
           - name: xlr-deployment
             type: k8s.ResourcesFile
             readinessProbeRetry:  {{ .XlrDeploymentTimeout }}
-{{- if  eq .K8sSetup "LocalK8S" }}
+{{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
             file: !file kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 {{- else}}
             file: !file kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml

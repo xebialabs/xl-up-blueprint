@@ -90,10 +90,6 @@ spec:
                 path: rabbitmq.conf
               - key: enabled_plugins
                 path: enabled_plugins
-  {{if eq .K8sSetup "LocalK8S" }}
-        - name: data
-          emptyDir: {}
-  {{else}}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -109,4 +105,3 @@ spec:
         resources:
           requests:
             storage: 5Gi
-  {{end}}
