@@ -26,7 +26,7 @@ expect:
       XldMasterCount: 3
       XldMasterRAMLimit: 6Gi
       XldMasterRAMRequest: 1600Mi
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
       XldWorkerCPULimit: 3
       XldWorkerCPURequest: 0.7
       XldWorkerCount: 5
@@ -113,6 +113,6 @@ with_answers:
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
   XldMasterCount: 3
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1
   XldWorkerCount: 5
 xl_mode: up

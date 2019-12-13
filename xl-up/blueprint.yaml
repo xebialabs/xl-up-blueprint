@@ -641,7 +641,6 @@ spec:
       promptIf: !expr "MonitoringInstall"
       default: 7
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "How long to retain monitoring data for"
 
     - name: MonitoringUser
@@ -680,7 +679,6 @@ spec:
       default: !expr "ExternalDatabase ? '' :  '512'"
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "The maximum number of connections to allow on the installed PostgreSQL instance. This should always be above 50"
 
     - name: PostgresSharedBuff
@@ -690,7 +688,6 @@ spec:
       default: !expr "ExternalDatabase ? '' :  '512MB'"
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "The amount of system buffer space to allocate to the PostgreSQL instance"
 
     - name: PostgresEffectCacheSize
@@ -700,7 +697,6 @@ spec:
       default: !expr "ExternalDatabase ? '' :  '1GB'"
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "The amount of cache space to allocate to the PostgreSQL instance"
 
     - name: PostgresSyncCommit
@@ -710,7 +706,6 @@ spec:
       default: !expr "ExternalDatabase ? '' :  'off'"
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "Turn on if you want synchronous commits in PostgreSQL"
 
     - name: PostgresMaxWallSize
@@ -720,7 +715,6 @@ spec:
       default: !expr "ExternalDatabase ? '' :  '256MB'"
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
       description: "The maximum size the WAL can reach before being flushed"
 
   files:

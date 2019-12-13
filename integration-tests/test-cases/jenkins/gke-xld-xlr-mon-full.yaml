@@ -7,8 +7,8 @@ Namespace: xebialabs
 UseCustomRegistry: false
 InstallXLD: true
 InstallXLR: true
-XldOfficialVersion: 9.0.5
-XlrOfficialVersion: 9.0.6
+XldOfficialVersion: 9.5.1
+XlrOfficialVersion: 9.5.2
 ExternalDatabase: false
 XldMasterCount: 2
 XldMasterRAMRequest: 1600Mi

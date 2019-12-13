@@ -19,10 +19,10 @@ expect:
       UseKubeconfig: false
       XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
       XldDbUser: xl-deploy
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
       XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
       XlrDbUser: xl-release
-      XlrOfficialVersion: 9.0.6
+      XlrOfficialVersion: 9.5.2
       XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
       XlrReportDbUser: xl-release-report
   to_exist:
@@ -101,13 +101,13 @@ with_answers:
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1
   XlrAdminPass: password
   XlrDbPass: xl-release
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   XlrDbUser: xl-release
   XlrLic: ../integration-tests/files/test-file
-  XlrOfficialVersion: 9.0.6
+  XlrOfficialVersion: 9.5.2
   XlrReportDbPass: xl-release-report
   XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
   XlrReportDbUser: xl-release-report

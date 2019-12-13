@@ -21,7 +21,7 @@ expect:
       PostgresSyncCommit: 'off'
       XlrDbName: xl-release
       XlrDbUser: xl-release
-      XlrOfficialVersion: 9.0.6
+      XlrOfficialVersion: 9.5.2
       XlrReportDbName: xl-release-report
       XlrReportDbUser: xl-release-report
   to_exist:
@@ -85,7 +85,7 @@ with_answers:
   XlrDbPass: xl-release
   XlrDbUser: xl-release
   XlrLic: ../integration-tests/files/test-file
-  XlrOfficialVersion: 9.0.6
+  XlrOfficialVersion: 9.5.2
   XlrReportDbName: xl-release-report
   XlrReportDbPass: xl-release-report
   XlrReportDbUser: xl-release-report

@@ -22,7 +22,7 @@ expect:
       XldMasterCount: 2
       XldMasterRAMLimit: 6Gi
       XldMasterRAMRequest: 1600Mi
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
       XldWorkerCPULimit: 3
       XldWorkerCPURequest: 0.7
       XldWorkerCount: 2
@@ -32,7 +32,7 @@ expect:
       XlrCPURequest: 0.7
       XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
       XlrDbUser: xl-release
-      XlrOfficialVersion: 9.0.6
+      XlrOfficialVersion: 9.5.2
       XlrRAMLimit: 6Gi
       XlrRAMRequest: 1700Mi
       XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
@@ -91,13 +91,13 @@ with_answers:
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1
   XlrAdminPass: password
   XlrDbPass: xl-release
   XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   XlrDbUser: xl-release
   XlrLic: ../integration-tests/files/test-file
-  XlrOfficialVersion: 9.0.6
+  XlrOfficialVersion: 9.5.2
   XlrReportDbPass: xl-release-report
   XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
   XlrReportDbUser: xl-release-report

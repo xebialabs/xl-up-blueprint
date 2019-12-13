@@ -20,7 +20,7 @@ expect:
       PostgresSyncCommit: 'off'
       XldDbName: xl-deploy
       XldDbUser: xl-deploy
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
   to_exist:
   - xebialabs/xl-deploy.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
@@ -77,4 +77,4 @@ with_answers:
   XldDbPass: xl-deploy
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1
