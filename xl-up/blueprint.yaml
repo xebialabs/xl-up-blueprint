@@ -415,7 +415,7 @@ spec:
       replaceAsIs: true
       ignoreIfSkipped: true
       overrideDefault: true
-      validate: !expr "isValidAbsPath(XldLic, 'true')"
+      validate: !expr "isValidAbsPath(XlrLic, 'true')"
       description: "The local path to an XL Release license file"
 
     - name: XlrDbUrl
@@ -558,7 +558,7 @@ spec:
       prompt: "Enter the full path to your XebiaLabs keystore:"
       replaceAsIs: true
       ignoreIfSkipped: true
-      validate: !expr "isValidAbsPath(XldLic, 'true')"
+      validate: !expr "isValidAbsPath(XlKeyStore, 'true')"
       description: "The local path to a JCEKS keystore to use in the XebiaLabs Devops Platform. This facilitates encryption of passwords and secrets in XL Deploy or XL Release. You can use keytool to generate a keystore, for example: keytool -genseckey -alias deployit-passsword-key -keyalg aes -keysize 128 -keypass deployit -keystore /tmp/repository-keystore.jceks -storetype jceks -storepass test123"
 
     - name: XlKeyStorePass
@@ -599,6 +599,7 @@ spec:
       promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      validate: !expr "isValidAbsPath(NfsSharePath, 'true')"
       description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
 
     - name: MonitoringInstall
