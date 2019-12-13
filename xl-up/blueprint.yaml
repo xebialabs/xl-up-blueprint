@@ -22,6 +22,7 @@ spec:
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries, like jdbc drivers to connect to external databases, and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
 
     - name: RegistryURL
@@ -31,6 +32,7 @@ spec:
       default: "docker.io/xebialabs"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "When using a custom Docker registry, enter the URL of that registry here. If the the docker registry you are using is Dockerhub then your registry url will look like: docker.io/MY_COMPANY. If you have an internal docker registry then it may look like: xl-docker.xebialabs.com "
 
     - name: DockerUser
@@ -40,6 +42,7 @@ spec:
       default: " "
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "When using a custom Docker registry that requires authentication, pass that username in here"
 
     - name: DockerPass
@@ -49,6 +52,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
+      overrideDefault: true
       description: "When using a custom Docker registry that requires authentication, pass that password in here"
 
     - name: InstallXLD
@@ -57,6 +61,7 @@ spec:
       default: true
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "Whether or not you would like to install XL Deploy"
 
     - name: XldDeploymentTimeout
@@ -92,6 +97,7 @@ spec:
       value: !expr "(UseCustomRegistry && InstallXLD) ? version('getversionfromtag', XldVersion) : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "Enter the XLD custom image:"
 
     - name: InstallXLR
@@ -100,6 +106,7 @@ spec:
       default: true
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "Whether or not you would like to install XL Release"
 
     - name: XlrDeploymentTimeout
@@ -136,6 +143,7 @@ spec:
       value: !expr "(UseCustomRegistry && InstallXLR) ? version('getversionfromtag', XlrVersion) : ''"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "Enter the XLR custom image:"
 
     - name: ExternalDatabase
@@ -161,6 +169,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the number of XL Deploy masters to spin up"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 2
@@ -170,6 +179,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired RAM requests for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1600Mi"
@@ -180,6 +190,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired RAM limit for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
@@ -190,6 +201,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired CPU requests for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
@@ -200,6 +212,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired CPU limit for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
@@ -210,6 +223,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the number of XL Deploy workers to spin up"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 2
@@ -219,6 +233,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired RAM requests for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1600Mi"
@@ -229,6 +244,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired RAM limit for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
@@ -239,6 +255,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired CPU requests for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
@@ -249,6 +266,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired CPU limit for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
@@ -279,6 +297,7 @@ spec:
       promptIf: !expr "InstallXLD"
       replaceAsIs: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "The local path to an XL Deploy license file"
 
     - name: XldDbUrl
@@ -288,6 +307,7 @@ spec:
       default: jdbc:postgresql://postgresql:5432/xl-deploy
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Deploy. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_DEPLOY_DB_NAME"
 
     - name: XldDbName
@@ -306,6 +326,7 @@ spec:
       default: sa
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
     - name: XldDbPass
@@ -317,6 +338,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster Posgresql database, that will be associated with XL Deploy"
 
     - name: RabbitMQExternal
@@ -325,6 +347,7 @@ spec:
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: false
       saveInXlvals: true
+      ignoreIfSkipped: true
       description: 'If you already have an existing RabbitMQ or ActiveMQ server, it is recommended to set this to TRUE and provide a connection string for that server. Otherwise, you can choose to have xl up create a RabbitMQ instance for you'
 
     - name: RabbitMQUrl
@@ -333,6 +356,7 @@ spec:
       promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: 'The connection URL of your pre-existing RabbitMQ or ActiveMQ instance, including the prefix "amqp://"'
 
     - name: RabbitMQDriver
@@ -346,7 +370,8 @@ spec:
       promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 'com.rabbitmq.jms.admin.RMQConnectionFactory'
       saveInXlvals: true
-      ignoreIfSkipped: false
+      ignoreIfSkipped: true
+      overrideDefault: true
       description: 'This options selects the driver that XL Deploy will use to connect to your external MQ instance'
 
     - name: RabbitMQUsername
@@ -356,6 +381,7 @@ spec:
       default: 'guest'
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: !expr "RabbitMQExternal"
       description: 'The username to use for the main administrator user for this RabbitMQ instance'
 
     - name: RabbitMQPassword
@@ -367,6 +393,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
+      overrideDefault: !expr "RabbitMQExternal"
       description: 'The password to use for the main administrator user for this RabbitMQ instance'
 
     - name: XlrAdminPass
@@ -386,6 +413,7 @@ spec:
       promptIf: !expr "InstallXLR"
       replaceAsIs: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "The local path to an XL Release license file"
 
     - name: XlrDbUrl
@@ -395,6 +423,7 @@ spec:
       default: jdbc:postgresql://postgresql:5432/xl-release
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release repository. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_DB_NAME"
 
     - name: XlrDbName
@@ -413,6 +442,7 @@ spec:
       default: xl-release
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release"
 
     - name: XlrDbPass
@@ -424,6 +454,7 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release"
 
     - name: XlrReportDbUrl
@@ -433,6 +464,7 @@ spec:
       default: jdbc:postgresql://postgresql:5432/xl-release-report
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release reporting . For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_REPORTING_DB_NAME"
 
     - name: XlrReportDbName
@@ -451,6 +483,7 @@ spec:
       default: xl-release-report
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database username you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release's Reporting Database"
 
     - name: XlrReportDbPass
@@ -462,12 +495,14 @@ spec:
       ignoreIfSkipped: true
       revealOnSummary: true
       replaceAsIs: true
+      overrideDefault: !expr "ExternalDatabase"
       description: "The database password you want to use when using an external database, or the user to create when choosing to use an in-cluster database, that will be associated with XL Release's Reporting Database"
 
     - name: XlrRAMRequest
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired RAM request for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1700Mi"
@@ -478,6 +513,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired RAM limit for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
@@ -488,6 +524,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired CPU requests for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
@@ -498,6 +535,7 @@ spec:
       type: Input
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       prompt: "Enter the desired CPU limit for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
@@ -567,6 +605,7 @@ spec:
       default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "Whether or not to install monitoring utilities (ElasticSearch, Kibana, Grafana, FluentD, Kube State Metric server and Prometheus) in your cluster"
 
     - name: MonitoringGrafanaDashboardsPvcSize

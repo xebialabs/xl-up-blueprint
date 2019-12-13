@@ -17,7 +17,7 @@ expect:
       XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
       XldDbUser: xl-deploy
       XldMasterCount: 2
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
       XldWorkerCount: 2
   to_exist:
   - xebialabs/xl-deploy.yaml
@@ -75,4 +75,4 @@ with_answers:
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1

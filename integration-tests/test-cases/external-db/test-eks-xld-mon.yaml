@@ -21,7 +21,7 @@ expect:
       XldMasterCount: 2
       XldMasterRAMLimit: 6Gi
       XldMasterRAMRequest: 1600Mi
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
       XldWorkerCPULimit: 3
       XldWorkerCPURequest: 0.7
       XldWorkerCount: 2
@@ -83,4 +83,4 @@ with_answers:
   XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1

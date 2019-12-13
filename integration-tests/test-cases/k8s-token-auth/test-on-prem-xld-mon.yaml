@@ -25,7 +25,7 @@ expect:
       UseKubeconfig: false
       XldDbName: xl-deploy
       XldDbUser: xl-deploy
-      XldOfficialVersion: 9.0.5
+      XldOfficialVersion: 9.5.1
   to_exist:
   - xebialabs/common.yaml
   - xebialabs/deployments.yaml
@@ -106,5 +106,5 @@ with_answers:
   XldDbPass: xl-deploy
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.0.5
+  XldOfficialVersion: 9.5.1
 xl_mode: up
