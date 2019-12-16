@@ -86,7 +86,6 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      validate: !expr "isValidAbsPath(K8sClientCertFile, 'true')"
       description: "Provide the location of your client certificate that is used to connect to Kubernetes"
 
     - name: K8sClientKeyFile
@@ -96,7 +95,6 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       replaceAsIs: true
-      validate: !expr "isValidAbsPath(K8sClientKeyFile, 'true')"
       description: "Provide the location of your client key that is used to connect to Kubernetes"
 
       # Client certificates used for Upgrade only and downloaded from the Configmap
