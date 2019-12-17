@@ -596,6 +596,7 @@ spec:
       promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
       saveInXlvals: true
       ignoreIfSkipped: true
+      validate: !expr "isValidAbsPath(NfsSharePath)"
       description: "The share path on the NFS instance that which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). For example: /xebialabs-share , make sure you type in the forward slash"
 
     - name: MonitoringInstall
