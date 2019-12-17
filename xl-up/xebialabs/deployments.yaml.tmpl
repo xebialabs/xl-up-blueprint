@@ -7,11 +7,7 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  {{- if .UseCustomRegistry}}
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlrTag}}-{{.XldTag}}
-  {{- else}}
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.XlrOfficialVersion}}-{{.XldOfficialVersion}}
-  {{- end}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.AnswersConfigmapName}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
     - sequential-by-dependency

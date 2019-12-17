@@ -718,6 +718,10 @@ spec:
       ignoreIfSkipped: true
       description: "The maximum size the WAL can reach before being flushed"
 
+    - name: AnswersConfigmapName
+      value: !expr "getMd5HashOfAnswers()"
+      description: "A unique hash based on the answers to ensure config map is deployed on update"
+
   files:
     #xl-k8s-foundation
     - path: xebialabs/xl-k8s-foundation.yaml.tmpl
