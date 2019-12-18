@@ -719,7 +719,7 @@ spec:
       description: "The maximum size the WAL can reach before being flushed"
 
     - name: AnswersConfigmapName
-      value: !expr "getMd5HashOfAnswers()"
+      value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass')"
       description: "A unique hash based on the answers to ensure config map is deployed on update"
 
   files:
