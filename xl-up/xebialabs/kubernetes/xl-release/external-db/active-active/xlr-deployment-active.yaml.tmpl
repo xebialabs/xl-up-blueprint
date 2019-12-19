@@ -9,6 +9,39 @@
 {{$XLR_KEYSTORE_PASS := "{{XLR_KEYSTORE_PASS}}"}}
 {{$XLR_KEYSTORE := "{{XLR_KEYSTORE}}"}}
 {{$XLR_OFFICIAL_VERSION := "{{XLR_OFFICIAL_VERSION}}"}}
+{{- if not .ExternalDatabase}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: postgresql-init-sql-xlr
+  namespace: {{ .Namespace }}
+data:
+  init-sql.sh: |-
+    #!/bin/sh
+    set -e
+
+    if psql -v ON_ERROR_STOP=1 -h "$POSTGRES_HOST"  --username "$POSTGRES_USER" -lqt | cut -d \| -f 1 | grep -qw {{$XLR_DB_NAME}}; then
+       echo "database {{$XLR_DB_NAME}} exists"
+    else
+        psql -v ON_ERROR_STOP=1 -h "$POSTGRES_HOST" --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+            CREATE USER "{{$XLR_DB_USER}}" WITH ENCRYPTED PASSWORD '{{$XLR_DB_PASS}}';
+            CREATE DATABASE "{{$XLR_DB_NAME}}";
+            GRANT ALL PRIVILEGES ON DATABASE "{{$XLR_DB_NAME}}" TO "{{$XLR_DB_USER}}";
+    EOSQL
+       echo "database {{$XLR_DB_NAME}} created"
+    fi
+    if psql -v ON_ERROR_STOP=1 -h "$POSTGRES_HOST"  --username "$POSTGRES_USER" -lqt | cut -d \| -f 1 | grep -qw {{$XLR_REPORT_DB_NAME}}; then
+       echo "database {{$XLR_REPORT_DB_NAME}} exists"
+    else
+        psql -v ON_ERROR_STOP=1 -h "$POSTGRES_HOST" --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+            CREATE USER "{{$XLR_REPORT_DB_USER}}" WITH ENCRYPTED PASSWORD '{{$XLR_REPORT_DB_PASS}}';
+            CREATE DATABASE "{{$XLR_REPORT_DB_NAME}}";
+            GRANT ALL PRIVILEGES ON DATABASE "{{$XLR_REPORT_DB_NAME}}" TO "{{$XLR_REPORT_DB_USER}}";
+    EOSQL
+       echo "database {{$XLR_REPORT_DB_NAME}} created"
+    fi
+---
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -98,6 +131,25 @@ spec:
              value: postgresql
            - name: POSTGRES_PORT
              value: "5432"
+        - name: create-db
+          image: xebialabs/tiny-tools
+          imagePullPolicy: Always
+          command:
+            - '/bin/sh'
+            - '/tmp/init-sql.sh'
+          securityContext:
+            privileged: true
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+            - name: POSTGRES_HOST
+              value: postgresql
+          volumeMounts:
+            - name: postgresql-init-sql-xlr
+              subPath: init-sql.sh
+              mountPath: /tmp/init-sql.sh
         {{end}}
       containers:
         - name: xl-release
@@ -171,6 +223,12 @@ spec:
       - name: dockercred
       {{ end }}
       volumes:
+        {{- if not .ExternalDatabase}}
+        - name: postgresql-init-sql-xlr
+          configMap:
+            name: postgresql-init-sql-xlr
+            defaultMode: 0777
+        {{- end }}
         - name: reports-dir
           persistentVolumeClaim:
             claimName: xlr-reports-claim
