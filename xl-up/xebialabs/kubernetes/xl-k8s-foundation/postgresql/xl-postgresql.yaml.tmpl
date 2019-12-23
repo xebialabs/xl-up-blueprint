@@ -1,12 +1,3 @@
-{{$XLD_DB_USER := "{{XLD_DB_USER}}"}}
-{{$XLD_DB_PASS := "{{XLD_DB_PASS}}"}}
-{{$XLD_DB_NAME := "{{XLD_DB_NAME}}"}}
-{{$XLR_DB_USER := "{{XLR_DB_USER}}"}}
-{{$XLR_DB_PASS := "{{XLR_DB_PASS}}"}}
-{{$XLR_DB_NAME := "{{XLR_DB_NAME}}"}}
-{{$XLR_REPORT_DB_USER := "{{XLR_REPORT_DB_USER}}"}}
-{{$XLR_REPORT_DB_PASS := "{{XLR_REPORT_DB_PASS}}"}}
-{{$XLR_REPORT_DB_NAME := "{{XLR_REPORT_DB_NAME}}"}}
 {{$POSTGRES_MAX_CONN := "{{POSTGRES_MAX_CONN}}"}}
 {{$POSTGRES_SYNC_COMMIT := "{{POSTGRES_SYNC_COMMIT}}"}}
 {{$POSTGRES_EFFECT_CACHE_SIZE := "{{POSTGRES_EFFECT_CACHE_SIZE}}"}}
@@ -14,34 +5,6 @@
 {{$POSTGRES_MAX_WALL_SIZE := "{{POSTGRES_MAX_WALL_SIZE}}"}}
 {{$POSTGRESQL_HOSTPATH := "{{POSTGRESQL_HOSTPATH}}"}}
 
-
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: postgresql-init-sql
-  namespace: {{ .Namespace }}
-data:
-  init-sql.sh: |-
-    #!/bin/bash
-    set -e
-
-    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-        {{if .InstallXLD }}
-        CREATE USER "{{$XLD_DB_USER}}" WITH ENCRYPTED PASSWORD '{{$XLD_DB_PASS}}';
-        CREATE DATABASE "{{$XLD_DB_NAME}}";
-        GRANT ALL PRIVILEGES ON DATABASE "{{$XLD_DB_NAME}}" TO "{{$XLD_DB_USER}}";
-        {{end}}
-        {{if .InstallXLR }}
-        CREATE USER "{{$XLR_DB_USER}}" WITH ENCRYPTED PASSWORD '{{$XLR_DB_PASS}}';
-        CREATE DATABASE "{{$XLR_DB_NAME}}";
-        GRANT ALL PRIVILEGES ON DATABASE "{{$XLR_DB_NAME}}" TO "{{$XLR_DB_USER}}";
-
-        CREATE USER "{{$XLR_REPORT_DB_USER}}" WITH ENCRYPTED PASSWORD '{{$XLR_REPORT_DB_PASS}}';
-        CREATE DATABASE "{{$XLR_REPORT_DB_NAME}}";
-        GRANT ALL PRIVILEGES ON DATABASE "{{$XLR_REPORT_DB_NAME}}" TO "{{$XLR_REPORT_DB_USER}}";
-        {{end}}
-    EOSQL
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -111,11 +74,6 @@ spec:
             - "shared_buffers={{$POSTGRES_SHARED_BUFF}}"
             - "-c"
             - "max_wal_size={{$POSTGRES_MAX_WALL_SIZE}}"
-          env:
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_DB
-              value: postgres
           resources:
             requests:
               memory: 1Gi
@@ -129,14 +87,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
-            - name: postgresql-init-sql
-              subPath: init-sql.sh
-              mountPath: /docker-entrypoint-initdb.d/init-sql.sh
       volumes:
-        - name: postgresql-init-sql
-          configMap:
-            name: postgresql-init-sql
-            defaultMode: 0777
   {{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
         - name: data
           emptyDir: {}
