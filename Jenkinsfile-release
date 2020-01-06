@@ -22,7 +22,6 @@ pipeline {
                     label 'xld||xlr||xli'
                 }
             }
-
             steps {
                 checkout scm
                 sh "echo 'Release folder: ${params.RELEASE_FOLDER}'"
