@@ -113,7 +113,8 @@ spec:
     - name: XlrDeploymentTimeout
       type: Input
       prompt: "Timeout interval of XL Release nodes deployment"
-      value: 120
+      promptIf: !expr "InstallXLR"
+      default: 120
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Timeout interval of XL Release nodes deployment. The value of this parameter is the number of retries until readiness probe check passes and not the number of seconds. The interval between each try is 5 seconds "
