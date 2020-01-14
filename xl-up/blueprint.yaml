@@ -735,6 +735,10 @@ spec:
       writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml.tmpl
       writeIf: !expr "K8sSetup == 'GoogleGKE'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/azurefile-storageclass.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AzureAKS'"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/azuredisk-retain-storage.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'AzureAKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/dockercred.yaml.tmpl
       writeIf: !expr "UseCustomRegistry"
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
