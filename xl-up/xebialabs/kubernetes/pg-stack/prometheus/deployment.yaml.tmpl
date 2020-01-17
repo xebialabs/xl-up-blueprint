@@ -62,6 +62,8 @@ spec:
         storageClassName: xebialabs-standard-retain
         {{else if eq .K8sSetup "PlainK8SCluster" }}
         storageClassName: xebialabs-managed-nfs-storage
+        {{else if eq .K8sSetup "AzureAKS" }}
+        storageClassName: xebialabs-default-retain
         {{end}}
         resources:
           requests:

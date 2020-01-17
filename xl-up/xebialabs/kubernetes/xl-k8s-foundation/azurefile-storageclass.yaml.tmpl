@@ -2,6 +2,8 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: xebialabs-managed-azurefile
+  labels:
+    organization: xebialabs
 provisioner: kubernetes.io/azure-file
 mountOptions:
   - dir_mode=0777
@@ -13,3 +15,4 @@ mountOptions:
   - cache=none
 parameters:
   skuName: Standard_LRS
+reclaimPolicy: Retain
