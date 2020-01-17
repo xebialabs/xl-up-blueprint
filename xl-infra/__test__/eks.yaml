@@ -5,4 +5,3 @@ UseAWSconfig: false
 EksClusterName: test-eks-master
 AWSAccessKey: SOMEKEY
 AWSAccessSecret: SOMEMOREKEY
-UseInternalLoadBalancer: false
