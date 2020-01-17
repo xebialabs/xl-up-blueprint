@@ -170,15 +170,6 @@ spec:
       ignoreIfSkipped: !expr "K8sSetup == 'AwsEKS' ? false : true"
       replaceAsIs: true
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
-
-    - name: UseInternalLoadBalancer
-      type: Confirm
-      prompt: "Do you want to use an internal load balancer"
-      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
-      default: true
-      saveInXlvals: true
-      ignoreIfSkipped: false
-      description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
   files:
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"
