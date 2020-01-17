@@ -174,10 +174,10 @@ spec:
     - name: UseInternalLoadBalancer
       type: Confirm
       prompt: "Do you want to use an internal load balancer"
-      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE'"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
       default: true
-      saveInXLvals: true
-      replaceAsIs: true
+      saveInXlvals: true
+      ignoreIfSkipped: false
       description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
   files:
     - path: cert.crt.tmpl
