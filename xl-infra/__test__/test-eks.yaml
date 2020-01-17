@@ -5,6 +5,7 @@ expected-xl-values:
   K8sApiServerURL: https://aws-eks.com:6443
   useAWSConfig: false
   EksClusterName: test-eks-master
+  UseInternalLoadBalancer: false
 expected-xl-secrets:
   AWSAccessKey: SOMEKEY
   AWSAccessSecret: SOMEMOREKEY
