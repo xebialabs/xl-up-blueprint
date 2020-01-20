@@ -25,6 +25,15 @@ spec:
       overrideDefault: true
       description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries, like jdbc drivers to connect to external databases, and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
 
+    - name: UseInternalLoadBalancer
+      type: Confirm
+      prompt: "Do you want to use an internal load balancer"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      default: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
+
     - name: RegistryURL
       type: Input
       prompt: "Enter your Docker registry URL and organization:"

@@ -17,6 +17,7 @@ K8sToken: {{ .K8sToken}}
 {{- end}}
 {{- if eq .K8sSetup "GoogleGKE" }}
 IsGKE: {{eq .K8sSetup "GoogleGKE"}}
+UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
 {{- if eq .K8sSetup "AwsEKS" }}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
@@ -24,6 +25,7 @@ UseAWSconfig: {{ .UseAWSconfig }}
 EksClusterName: {{ .EksClusterName }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
+UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}

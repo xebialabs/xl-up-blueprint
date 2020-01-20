@@ -170,8 +170,6 @@ spec:
       ignoreIfSkipped: !expr "K8sSetup == 'AwsEKS' ? false : true"
       replaceAsIs: true
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
-
-
   files:
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"

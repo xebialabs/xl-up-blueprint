@@ -56,6 +56,6 @@ with_answers:
   EksClusterName: test-eks-master
   K8sApiServerURL: https://aws-eks.com:6443
   K8sSetup: AwsEKS
-
+  UseInternalLoadBalancer: false
   UseAWSconfig: false
   UseKubeconfig: false
