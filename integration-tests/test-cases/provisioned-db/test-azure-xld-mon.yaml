@@ -21,8 +21,6 @@ expect:
       XldDbName: xl-deploy
       XldDbUser: xl-deploy
       XldOfficialVersion: 9.5.1
-      K8sClientCertFile: ../integration-tests/files/test-file
-      K8sClientKeyFile: ../integration-tests/files/test-file
   to_exist:
     - xebialabs/xl-deploy.yaml
     - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
@@ -66,8 +64,6 @@ expect:
     - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
     - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 with_answers:
-  K8sClientCertFile: ../integration-tests/files/test-file
-  K8sClientKeyFile: ../integration-tests/files/test-file
   InstallXLD: true
   InstallXLR: false
   MonitoringInstall: true

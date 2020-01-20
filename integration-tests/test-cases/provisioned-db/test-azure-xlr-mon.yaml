@@ -24,8 +24,6 @@ expect:
       XlrOfficialVersion: 9.5.2
       XlrReportDbName: xl-release-report
       XlrReportDbUser: xl-release-report
-      K8sClientCertFile: ../integration-tests/files/test-file
-      K8sClientKeyFile: ../integration-tests/files/test-file
   to_exist:
   - xebialabs/xl-release.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
@@ -91,5 +89,3 @@ with_answers:
   XlrReportDbName: xl-release-report
   XlrReportDbPass: xl-release-report
   XlrReportDbUser: xl-release-report
-  K8sClientCertFile: ../integration-tests/files/test-file
-  K8sClientKeyFile: ../integration-tests/files/test-file
