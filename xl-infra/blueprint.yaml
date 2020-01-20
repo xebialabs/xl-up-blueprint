@@ -147,6 +147,7 @@ spec:
       type: Confirm
       prompt: "Do you want to use the AWS credentials from your ~/.aws/credentials file?"
       promptIf: !expr "IsAwsCfgAvailable && K8sSetup == 'AwsEKS'"
+      default: !expr "IsAwsCfgAvailable && K8sSetup == 'AwsEKS' ? true : false"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Use the currently configured profile and associated credentials from your $HOME/.aws/credentials file. From this file xl up will get the credentials from the [default] section. These credentials are required for xl up in order to connect to your AWS EKS cluster"
