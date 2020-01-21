@@ -18,6 +18,8 @@ spec:
           value: MinikubeK8s
         - label: AWS EKS
           value: AwsEKS
+        - label: Azure AKS
+          value: AzureAKS
         - label: Google Kubernetes Engine
           value: GoogleGKE
         - label: Plain multi-node K8s cluster

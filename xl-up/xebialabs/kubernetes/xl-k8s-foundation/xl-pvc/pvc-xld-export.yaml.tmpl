@@ -10,6 +10,8 @@ metadata:
   annotations:
     {{if eq .K8sSetup "AwsEKS" }}
     volume.beta.kubernetes.io/storage-class: "xebialabs-aws-efs"
+    {{else if eq .K8sSetup "AzureAKS"}}
+    volume.beta.kubernetes.io/storage-class: "xebialabs-managed-azurefile"
     {{else}}
     volume.beta.kubernetes.io/storage-class: "xebialabs-managed-nfs-storage"
     {{end}}
