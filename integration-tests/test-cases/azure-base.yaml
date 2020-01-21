@@ -41,3 +41,4 @@ with_answers:
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sSetup: AzureAKS
   UseKubeconfig: false
+  UseInternalLoadBalancer: false
