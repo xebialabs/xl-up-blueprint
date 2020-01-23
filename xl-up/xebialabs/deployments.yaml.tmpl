@@ -7,7 +7,7 @@ spec:
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.AnswersConfigmapName}}
+  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Answers-Configmap-Deployment/{{.AnswersConfigmapHash}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
     - sequential-by-dependency
@@ -17,9 +17,9 @@ apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
   {{- if .UseCustomRegistry}}
-  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldTag}}
+  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldTag}}-{{.XLDVersionHash}}
   {{- else}}
-  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldOfficialVersion}}
+  package: Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/{{.XldOfficialVersion}}-{{.XLDVersionHash}}
   {{- end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:
@@ -31,9 +31,9 @@ apiVersion: xl-deploy/v1
 kind: Deployment
 spec:
   {{- if .UseCustomRegistry}}
-  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrTag}}
+  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrTag}}-{{.XLRVersionHash}}
   {{- else}}
-  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrOfficialVersion}}
+  package: Applications/XEBIALABS/XL-RELEASE/XL-Release-Deployment/{{.XlrOfficialVersion}}-{{.XLRVersionHash}}
   {{- end}}
   environment: Environments/XEBIALABS/K8S
   orchestrators:

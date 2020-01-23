@@ -141,7 +141,7 @@ spec:
           - name: Answers-Configmap-Deployment
             type: udm.Application
             children:
-              - name: {{.AnswersConfigmapName}}
+              - name: {{.AnswersConfigmapHash}}
                 type: udm.DeploymentPackage
                 orchestrator:
                   - sequential-by-dependency
