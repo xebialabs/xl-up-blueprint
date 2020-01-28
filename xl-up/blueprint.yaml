@@ -90,6 +90,7 @@ spec:
       prompt: "Enter your custom XL Deploy image and tag:"
       promptIf: !expr "UseCustomRegistry && InstallXLD"
       validate: !expr "version('checkversion', 'xld', XldVersion)"
+      overrideDefault: true
       description: "This will be the XL Deploy docker image and tag that lives in your private docker registry. For example xl-deploy:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
       # This question will not be asked but used to extract the tag information which will be used as version
@@ -135,6 +136,7 @@ spec:
       validate: !expr "version('checkversion', 'xlr', XlrVersion)"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "This will be the XL Release docker image and tag that lives in your private docker registry. For example xl-release:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
       # This question will not be asked but used to extract the tag information which will be used as version
