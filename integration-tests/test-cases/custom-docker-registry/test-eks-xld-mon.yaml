@@ -7,7 +7,7 @@ expect:
         excludes_elements:
           - '[3]spec'
         has_elements:
-          '[2]spec.package': 'Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/8.5.3'
+          '[2]spec.package': 'Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/8.5.3-ca30a245a29d376db512080720a910f4'
     secrets:
       DockerPass: docker-pass
       MonitoringUserPass: mon-pass
