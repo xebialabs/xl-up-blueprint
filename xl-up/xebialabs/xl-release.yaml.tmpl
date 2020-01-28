@@ -9,9 +9,9 @@ spec:
         type: udm.Application
         children:
         {{- if  .UseCustomRegistry }}
-        - name: "{{.XlrTag}}"
+        - name: "{{.XlrTag}}-{{.XLRVersionHash}}"
         {{- else }}
-        - name: "{{.XlrOfficialVersion}}"
+        - name: "{{.XlrOfficialVersion}}-{{.XLRVersionHash}}"
         {{- end}}
           orchestrator:
             - sequential-by-dependency

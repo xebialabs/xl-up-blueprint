@@ -99,6 +99,7 @@ spec:
       prompt: "Enter your custom XL Deploy image and tag:"
       promptIf: !expr "UseCustomRegistry && InstallXLD"
       validate: !expr "version('checkversion', 'xld', XldVersion)"
+      overrideDefault: true
       description: "This will be the XL Deploy docker image and tag that lives in your private docker registry. For example xl-deploy:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
       # This question will not be asked but used to extract the tag information which will be used as version
@@ -127,7 +128,6 @@ spec:
       ignoreIfSkipped: true
       description: "Timeout interval of XL Release nodes deployment. The value of this parameter is the number of retries until readiness probe check passes and not the number of seconds. The interval between each try is 5 seconds "
 
-
     - name: XlrOfficialVersion
       type: Select
       prompt: "Choose the version of the XL Release:"
@@ -145,6 +145,7 @@ spec:
       validate: !expr "version('checkversion', 'xlr', XlrVersion)"
       saveInXlvals: true
       ignoreIfSkipped: true
+      overrideDefault: true
       description: "This will be the XL Release docker image and tag that lives in your private docker registry. For example xl-release:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
       # This question will not be asked but used to extract the tag information which will be used as version
@@ -358,7 +359,7 @@ spec:
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: 'If you already have an existing RabbitMQ or ActiveMQ server, it is recommended to set this to TRUE and provide a connection string for that server. Otherwise, you can choose to have xl up create a RabbitMQ instance for you'
+      description: "If you already have an existing RabbitMQ or ActiveMQ server, it is recommended to set this to TRUE and provide a connection string for that server. Otherwise, you can choose to have xl up create a RabbitMQ instance for you"
 
     - name: RabbitMQUrl
       type: Input
@@ -378,21 +379,21 @@ spec:
           value: org.apache.activemq.ActiveMQConnectionFactory
       prompt: "Select the type of driver you need to use to connect to your external MQ instance"
       promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
-      default: 'com.rabbitmq.jms.admin.RMQConnectionFactory'
+      default: "com.rabbitmq.jms.admin.RMQConnectionFactory"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
-      description: 'This options selects the driver that XL Deploy will use to connect to your external MQ instance'
+      description: "This options selects the driver that XL Deploy will use to connect to your external MQ instance"
 
     - name: RabbitMQUsername
       type: Input
       prompt: "Specify the username for the default RabbitMQ user"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
-      default: 'guest'
+      default: "guest"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: !expr "RabbitMQExternal"
-      description: 'The username to use for the main administrator user for this RabbitMQ instance'
+      description: "The username to use for the main administrator user for this RabbitMQ instance"
 
     - name: RabbitMQPassword
       type: SecretInput
@@ -404,7 +405,7 @@ spec:
       revealOnSummary: true
       replaceAsIs: true
       overrideDefault: !expr "RabbitMQExternal"
-      description: 'The password to use for the main administrator user for this RabbitMQ instance'
+      description: "The password to use for the main administrator user for this RabbitMQ instance"
 
     - name: XlrAdminPass
       type: SecretInput
@@ -728,9 +729,21 @@ spec:
       ignoreIfSkipped: true
       description: "The maximum size the WAL can reach before being flushed"
 
-    - name: AnswersConfigmapName
+    - name: AnswersConfigmapHash
       value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass')"
       description: "A unique hash based on the answers to ensure config map is deployed on update"
+      ignoreIfSkipped: true
+
+    - name: XLDVersionHash
+      value: !expr "md5HashOfAnswersIncluding('UseCustomRegistry', 'RegistryURL', 'XldTag', 'XldOfficialVersion', 'XldVersion', 'XldMasterCount', 'XldMasterRAMRequest', 'XldMasterRAMLimit', 'XldMasterCPURequest', 'XldMasterCPULimit', 'XldWorkerCount','XldWorkerRAMRequest', 'XldWorkerRAMLimit', 'XldWorkerCPURequest', 'XldWorkerCPULimit', 'XldLic', 'XldDbUrl', 'XldDbUser', 'XldDbPass',
+      'RabbitMQUrl', 'RabbitMQDriver', 'RabbitMQUsername', 'RabbitMQPassword')"
+      description: "A unique hash based on the answers to ensure XLD is deployed on update"
+      ignoreIfSkipped: true
+
+    - name: XLRVersionHash
+      value: !expr "md5HashOfAnswersIncluding('UseCustomRegistry', 'RegistryURL', 'XlrTag', 'XlrOfficialVersion', 'XlrVersion', 'XlrLic', 'XlrDbUrl', 'XlrDbUser', 'XlrDbPass', 'XlrReportDbUrl', 'XlrReportDbUser', 'XlrReportDbPass', 'XlrRAMRequest', 'XlrRAMLimit', 'XlrCPURequest', 'XlrCPULimit')"
+      description: "A unique hash based on the answers to ensure XLR is deployed on update"
+      ignoreIfSkipped: true
 
   files:
     #xl-k8s-foundation
@@ -764,7 +777,7 @@ spec:
     - path: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml.tmpl
       writeIf: !expr "InstallXLD && (K8sSetup == 'DockerDesktopK8s' || K8sSetup == 'MinikubeK8s')"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml.tmpl
-      writeIf:  !expr "K8sSetup == 'AwsEKS'"
+      writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml.tmpl
       writeIf: !expr "K8sSetup == 'AwsEKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml.tmpl

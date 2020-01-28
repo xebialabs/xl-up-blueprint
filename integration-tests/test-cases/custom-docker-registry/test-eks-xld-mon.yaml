@@ -2,12 +2,12 @@ extends: ../eks-base.yaml
 xl_mode: up
 expect:
   assertion:
-    generated_files:
-      - file_name: xebialabs/deployments.yaml
-        excludes_elements:
-          - '[3]spec'
-        has_elements:
-          '[2]spec.package': 'Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/8.5.3'
+    #generated_files:
+    #  - file_name: xebialabs/deployments.yaml
+    #    excludes_elements:
+    #      - '[3]spec'
+    #    has_elements:
+    #      '[2]spec.package': 'Applications/XEBIALABS/XL-DEPLOY/XL-Deploy-Deployment/8.5.3'
     secrets:
       DockerPass: docker-pass
       MonitoringUserPass: mon-pass
@@ -25,6 +25,7 @@ expect:
       XldDbName: xl-deploy
       XldDbUser: xl-deploy
       XldVersion: xl-deploy:8.5.3
+      XldTag: 8.5.3
   to_exist:
   - xebialabs/xl-deploy.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml

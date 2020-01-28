@@ -9,9 +9,9 @@ spec:
             type: udm.Application
             children:
               {{- if  .UseCustomRegistry }}
-              - name: "{{.XldTag}}"
+              - name: "{{.XldTag}}-{{.XLDVersionHash}}"
               {{- else }}
-              - name: "{{.XldOfficialVersion}}"
+              - name: "{{.XldOfficialVersion}}-{{.XLDVersionHash}}"
               {{- end }}
                 type: udm.DeploymentPackage
                 orchestrator:
