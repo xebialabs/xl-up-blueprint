@@ -63,7 +63,7 @@ expect:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
+
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml

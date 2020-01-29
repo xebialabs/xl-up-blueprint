@@ -790,8 +790,6 @@ spec:
       writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml.tmpl
       writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
-    - path: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml.tmpl
-      writeIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     #xl-release
     - path: xebialabs/xl-release.yaml.tmpl
       writeIf: !expr InstallXLR

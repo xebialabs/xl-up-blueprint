@@ -47,7 +47,7 @@ expect:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
+
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
