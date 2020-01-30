@@ -79,7 +79,7 @@ pipeline {
                             }
                         }
                         dir('temp/xl-cli') {
-                            sh "./gradlew goClean goBuild -x goTest -x updateLicenses -x buildDarwinAmd64"
+                            sh "./gradlew clean build -x test -x updateLicenses -x buildDarwinAmd64"
                             stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
                             stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
                         }
