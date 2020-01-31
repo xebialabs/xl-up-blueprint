@@ -33,7 +33,7 @@ expect:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
+
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml

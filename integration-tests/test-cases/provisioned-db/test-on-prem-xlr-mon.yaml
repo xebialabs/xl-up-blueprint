@@ -82,7 +82,7 @@ expect:
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-work.yaml
+
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
