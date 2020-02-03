@@ -70,22 +70,20 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "mkdir -p temp"
-                        dir('temp') {
+                        sh "mkdir -p temp-cli"
+                        dir('temp-cli') {
                             if (githubLabelsPresent(this, ['same-branch-on-cli'])){
                                 sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
                             } else {
                                 sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                             }
                         }
-                        dir('temp/xl-cli') {
+                        dir('temp-cli/xl-cli') {
                             sh "./gradlew clean build -x test -x updateLicenses -x buildDarwinAmd64"
                             stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
                             stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
                         }
-                        sh "rm -rf temp"
                     } catch (err) {
-                        sh "rm -rf temp"
                         throw err
                     }
                 }
