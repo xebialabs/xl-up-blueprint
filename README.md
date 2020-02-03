@@ -1,6 +1,6 @@
 # xl-up-blueprint
-This blueprint is usable only on `xl up` command . Cannot be used separately with `xl blueprint` command.
 
+This blueprint is usable only on `xl up` command . Cannot be used separately with `xl blueprint` command.
 
 ## Monitoring
 
@@ -8,13 +8,13 @@ This blueprint is usable only on `xl up` command . Cannot be used separately wit
 
 By default, `xl up` will install the following components
 
-- Elasticsearch 
+- Elasticsearch
 - Kibana
 - FluentD
 - Prometheus
 - Grafana
 
-By using these components, issues in the XL DevOps platform can quickly be identified and remedied. The dashboards and visualizations provided should be enough to get you started, but feel free to modify them according to your needs. 
+By using these components, issues in the XL DevOps platform can quickly be identified and remedied. The dashboards and visualizations provided should be enough to get you started, but feel free to modify them according to your needs.
 
 ### Querying from Kibana
 
@@ -36,11 +36,10 @@ Of course, Elasticsearch is much more powerful and you can tailor dashboards and
 
 ### Querying from Grafana
 
-The Grafana implementation provided by the `xl up` command hooks into the deployed [Prometheus](https://prometheus.io) instance to aggregate and visualize metric data coming from the XL DevOps Platform. 
+The Grafana implementation provided by the `xl up` command hooks into the deployed [Prometheus](https://prometheus.io) instance to aggregate and visualize metric data coming from the XL DevOps Platform.
 
-The default `XebiaLabs Monitoring` dashboard gives insights on the JVM and OS level metrics coming from XL Deploy and XL Release, as well as additional metrics on the provisioned resources. Feel free to customize this dashboard according to your needs. 
+The default `XebiaLabs Monitoring` dashboard gives insights on the JVM and OS level metrics coming from XL Deploy and XL Release, as well as additional metrics on the provisioned resources. Feel free to customize this dashboard according to your needs.
 
 As with Kibana, Grafana can also show statistics for a certain time period, as pictured below.
 
 ![grafana time search](docs/img/grafana-time-search.png)
-
