@@ -83,7 +83,9 @@ pipeline {
                             stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
                             stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
                         }
+                        sh "chmod -R +w temp && rm -rf temp"
                     } catch (err) {
+                        sh "chmod -R +w temp && rm -rf temp"
                         throw err
                     }
                 }
@@ -265,7 +267,7 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
 
 
 def runXlUpOnPrem(String nfsSharePath) {
-    sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
+    sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then
         echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
         tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
         tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt
