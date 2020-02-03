@@ -21,7 +21,7 @@ expect:
       MonitoringInstall: true
       MonitoringPrometheusDataPvcSize: 5Gi
       MonitoringUser: mon-user
-      NfsServerHost: nfs-test.com
+      NfsServerHost: 12.2.2.2
       NfsSharePath: /xebialabs
 
       UseKubeconfig: false
@@ -122,7 +122,7 @@ with_answers:
   MonitoringPrometheusDataPvcSize: 5Gi
   MonitoringUser: mon-user
   MonitoringUserPass: mon-pass
-  NfsServerHost: nfs-test.com
+  NfsServerHost: 12.2.2.2
   NfsSharePath: /xebialabs
 
   UseKubeconfig: false
