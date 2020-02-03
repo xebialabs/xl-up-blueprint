@@ -83,9 +83,9 @@ pipeline {
                             stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
                             stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
                         }
-                        sh "chmod -R +w temp && rm -rf temp"
+                        sh "if [ -d temp ]; then chmod -R +w temp; rm -rf temp; fi"
                     } catch (err) {
-                        sh "chmod -R +w temp && rm -rf temp"
+                        sh "if [ -d temp ]; then chmod -R +w temp; rm -rf temp; fi"
                         throw err
                     }
                 }
