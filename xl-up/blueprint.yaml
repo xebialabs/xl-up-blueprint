@@ -185,6 +185,7 @@ spec:
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 2
       description: "XL Deploy can be started up in an active-active setup. This means there can be many 'masters' to coordinate tasks across an arbitrary amount of 'workers'. This setting defines the preferred number of masters to spin up"
+      validate: !expr "regex('[0-9]+', XldMasterCount)"
 
     - name: XldMasterRAMRequest
       type: Input
@@ -194,7 +195,7 @@ spec:
       prompt: "Enter the desired RAM requests for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1600Mi"
-      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMRequest)"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XldMasterRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
 
     - name: XldMasterRAMLimit
@@ -205,7 +206,7 @@ spec:
       prompt: "Enter the desired RAM limit for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
-      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldMasterRAMLimit)"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XldMasterRAMLimit)"
       description: "This field sets the amount of RAM you would like the XL Deploy Master pods to be limited to in the Kubernetes cluster"
 
     - name: XldMasterCPURequest
@@ -216,7 +217,7 @@ spec:
       prompt: "Enter the desired CPU requests for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
-      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldMasterCPURequest)"
+      validate: !expr "regex('\\\\d*\\\\.?\\\\d+m?', XldMasterCPURequest)"
       description: "This field sets the amount of CPU you would like the XL Deploy Master pods to have requested in the Kubernetes cluster"
 
     - name: XldMasterCPULimit
@@ -227,7 +228,7 @@ spec:
       prompt: "Enter the desired CPU limit for the XL Deploy Master pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
-      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldMasterCPULimit)"
+      validate: !expr "regex('\\\\d*\\\\.?\\\\d+m?', XldMasterCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Deploy Master pods to be limited to in the Kubernetes cluster"
 
     - name: XldWorkerCount
@@ -239,6 +240,7 @@ spec:
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: 2
       description: "XL Deploy can be started up in an active-active setup. This means there can be many 'workers' to execute deployment tasks. This setting defines the preferred number of workers to spin up"
+      validate: !expr "regex('[0-9]+', XldWorkerCount)"
 
     - name: XldWorkerRAMRequest
       type: Input
@@ -248,7 +250,7 @@ spec:
       prompt: "Enter the desired RAM requests for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1600Mi"
-      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMRequest)"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XldWorkerRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
 
     - name: XldWorkerRAMLimit
@@ -259,7 +261,7 @@ spec:
       prompt: "Enter the desired RAM limit for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
-      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XldWorkerRAMLimit)"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XldWorkerRAMLimit)"
       description: "This field sets the amount of RAM you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
 
     - name: XldWorkerCPURequest
@@ -270,7 +272,7 @@ spec:
       prompt: "Enter the desired CPU requests for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
-      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPURequest)"
+      validate: !expr "regex('\\\\d*\\\\.?\\\\d+m?', XldWorkerCPURequest)"
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to have requested in the Kubernetes cluster"
 
     - name: XldWorkerCPULimit
@@ -281,7 +283,7 @@ spec:
       prompt: "Enter the desired CPU limit for the XL Deploy Worker pods"
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
-      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XldWorkerCPULimit)"
+      validate: !expr "regex('\\\\d*\\\\.?\\\\d+m?', XldWorkerCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Deploy Worker pods to be limited to in the Kubernetes cluster"
 
     - name: XldExportPvcSize
@@ -292,6 +294,7 @@ spec:
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "10Gi"
       description: "This field sets the  persistent volume size for XL Deploy export directory. The export directory is the place where XL Deploy temporarily will save files needed for CI export and reports."
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XldExportPvcSize)"
 
     - name: XldWorkPvcSize
       type: Input
@@ -301,6 +304,7 @@ spec:
       promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "5Gi"
       description: "This field sets the  persistent volume size for XL Deploy work directory. The work directory is used to temporarily store data that cannot be kept in memory."
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XldWorkPvcSize)"
 
     - name: XldLic
       type: SecretFile
@@ -320,6 +324,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Deploy. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_DEPLOY_DB_NAME"
+      validate: !expr "regex('jdbc:\\\\w+:\\\\/\\\\/\\\\S+(:\\\\d+)?\\\\/?\\\\S*', XldDbUrl)"
 
     - name: XldDbName
       type: Input
@@ -369,6 +374,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       description: 'The connection URL of your pre-existing RabbitMQ or ActiveMQ instance, including the prefix "amqp://"'
+      validate: !expr "regex('amqp:\\\\/\\\\/\\\\S+(:\\\\d+)?\\\\/?\\\\S*', RabbitMQUrl)"
 
     - name: RabbitMQDriver
       type: Select
@@ -436,6 +442,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release repository. For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_DB_NAME"
+      validate: !expr "regex('jdbc:\\\\w+:\\\\/\\\\/\\\\S+(:\\\\d+)?\\\\/?\\\\S*', XlrDbUrl)"
 
     - name: XlrDbName
       type: Input
@@ -477,6 +484,7 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       description: "The JDBC url for your external database. Note that it should include also the db name which you have already created in your Database instance for XL Release reporting . For example in case you have an external Postgresql instance  this parameter should look like: jdbc:postgresql://DB_HOSTNAME_OR_IP:PORT/XL_RELEASE_REPORTING_DB_NAME"
+      validate: !expr "regex('jdbc:\\\\w+:\\\\/\\\\/\\\\S+(:\\\\d+)?\\\\/?\\\\S*', XlrReportDbUrl)"
 
     - name: XlrReportDbName
       type: Input
@@ -517,7 +525,7 @@ spec:
       prompt: "Enter the desired RAM request for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "1700Mi"
-      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMRequest)"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XlrRAMRequest)"
       description: "This field sets the amount of RAM you would like the XL Release pods to be requested  in the Kubernetes cluster"
 
     - name: XlrRAMLimit
@@ -528,7 +536,7 @@ spec:
       prompt: "Enter the desired RAM limit for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "6Gi"
-      # validate: !expr "regex('^\\d+\\.?\\d*[G|M]i$', XlrRAMLimit)"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XlrRAMLimit)"
       description: "This field sets the amount of RAM you would like the XL Release pods to be limited to in the Kubernetes cluster"
 
     - name: XlrCPURequest
@@ -539,7 +547,7 @@ spec:
       prompt: "Enter the desired CPU requests for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "0.7"
-      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPURequest)"
+      validate: !expr "regex('\\\\d*\\\\.?\\\\d+m?', XlrCPURequest)"
       description: "This field sets the amount of CPU you would like the XL Release pods to have requested in the Kubernetes cluster"
 
     - name: XlrCPULimit
@@ -550,7 +558,7 @@ spec:
       prompt: "Enter the desired CPU limit for the XL Release pods"
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "3"
-      # validate: !expr "regex('^\\d*\\.?\\d+m?$', XlrCPULimit)"
+      validate: !expr "regex('\\\\d*\\\\.?\\\\d+m?', XlrCPULimit)"
       description: "This field sets the amount of CPU you would like the XL Release pods to have limited to in the Kubernetes cluster"
 
     - name: XlrReportsPvcSize
@@ -561,6 +569,7 @@ spec:
       promptIf: !expr "InstallXLR && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "5Gi"
       description: "This field sets the  persistent volume size for XL Release reports directory. The reports directory is used to  store data for the Release audit report feature."
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', XlrReportsPvcSize)"
 
     - name: XlKeyStore
       type: SecretFile
@@ -600,6 +609,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
+      validate: !expr "regex('(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9])[.]){3}(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9]))', NfsServerHost)"
+
 
     - name: NfsSharePath
       type: Input
@@ -628,6 +639,8 @@ spec:
       promptIf: !expr "MonitoringInstall"
       default: "5Gi"
       description: "This field sets the  persistent volume size for Grafana. This is the persistent volume where Grafana will persist the data for the dashboards"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', MonitoringGrafanaDashboardsPvcSize)"
+
 
     - name: MonitoringPrometheusDataPvcSize
       type: Input
@@ -637,6 +650,8 @@ spec:
       promptIf: !expr "MonitoringInstall"
       default: "20Gi"
       description: "This field sets the  persistent volume size for Prometheus. This is the persistent volume where Prometheus will persist the data"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', MonitoringPrometheusDataPvcSize)"
+
 
     - name: MonitoringElasticsearchDataPvcSize
       type: Input
@@ -646,6 +661,7 @@ spec:
       promptIf: !expr "MonitoringInstall"
       default: "50Gi"
       description: "This field sets the  persistent volume size for Elasticsearch. This is the persistent volume where Elasticsearch will persist the data"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', MonitoringElasticsearchDataPvcSize)"
 
     - name: MonitoringDataRetention
       type: Input
@@ -654,6 +670,7 @@ spec:
       default: 7
       ignoreIfSkipped: true
       description: "How long to retain monitoring data for"
+      validate: !expr "regex('[0-9]+', MonitoringDataRetention)"
 
     - name: MonitoringUser
       type: Input
@@ -683,6 +700,7 @@ spec:
       promptIf: !expr "!ExternalDatabase && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: !expr "ExternalDatabase ? '' :  '50Gi'"
       description: "This field sets the  persistent volume size for Postgresql database. This is the persistent volume where Postgresql will persist the data"
+      validate: !expr "regex('\\\\d+\\\\.?\\\\d*[G|M]i', PostgresqlDataPvcSize)"
 
     - name: PostgresMaxConn
       type: Input
@@ -692,6 +710,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The maximum number of connections to allow on the installed PostgreSQL instance. This should always be above 50"
+      validate: !expr "regex('[0-9]{2,}', PostgresMaxConn) && PostgresMaxConn > 50"
 
     - name: PostgresSharedBuff
       type: Input
@@ -701,6 +720,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The amount of system buffer space to allocate to the PostgreSQL instance"
+      validate: !expr "regex('\\\\d+[G|M]B', PostgresSharedBuff)"
 
     - name: PostgresEffectCacheSize
       type: Input
@@ -710,6 +730,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The amount of cache space to allocate to the PostgreSQL instance"
+      validate: !expr "regex('\\\\d+[G|M]B', PostgresEffectCacheSize)"
 
     - name: PostgresSyncCommit
       type: Input
@@ -728,6 +749,7 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The maximum size the WAL can reach before being flushed"
+      validate: !expr "regex('\\\\d+[G|M]B', PostgresMaxWallSize)"
 
     - name: AnswersConfigmapHash
       value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass')"
