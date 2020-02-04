@@ -72,7 +72,6 @@ spec:
       description: "Define how xl up will authenticate with your Kubernetes cluster"
 
     - name: K8sToken
-#      type: SecretInput
       type: SecretEditor
       prompt: "Provide authentication token for the existing service account:"
       promptIf: !expr "K8sSetup != 'AwsEKS' && K8sAuthentication == 'Token'"

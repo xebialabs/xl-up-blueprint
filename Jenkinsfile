@@ -70,22 +70,22 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "mkdir -p temp"
-                        dir('temp') {
+                        sh "mkdir -p temp-cli"
+                        dir('temp-cli') {
                             if (githubLabelsPresent(this, ['same-branch-on-cli'])){
                                 sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
                             } else {
                                 sh "git clone git@github.com:xebialabs/xl-cli.git || true"
                             }
                         }
-                        dir('temp/xl-cli') {
+                        dir('temp-cli/xl-cli') {
                             sh "./gradlew clean build -x test -x updateLicenses -x buildDarwinAmd64"
                             stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
                             stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
                         }
-                        sh "rm -rf temp"
+                        sh "if [ -d temp-cli ]; then chmod -R +w temp-cli; rm -rf temp-cli; fi"
                     } catch (err) {
-                        sh "rm -rf temp"
+                        sh "if [ -d temp-cli ]; then chmod -R +w temp-cli; rm -rf temp-cli; fi"
                         throw err
                     }
                 }
@@ -260,14 +260,14 @@ def runXlUpOnEks(String awsAccessKeyId, String awsSecretKeyId, String eksEndpoin
     sh "sed -ie 's@test1234561@${efsFileId}@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@test-eks-master@xl-up-master@g' integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml"
     sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/eks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
 
 
 def runXlUpOnPrem(String nfsSharePath) {
-    sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then 
+    sh """ if [[ ! -f "k8sClientCert-onprem.crt" ]]; then
         echo ${ON_PREM_CERT} >> k8sClientCert-onprem-tmp.crt
         tr ' ' '\\n' < k8sClientCert-onprem-tmp.crt > k8sClientCert-onprem-tmp2.crt
         tr '%' ' ' < k8sClientCert-onprem-tmp2.crt > k8sClientCert-onprem.crt
@@ -284,10 +284,10 @@ def runXlUpOnPrem(String nfsSharePath) {
     sh "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: ./k8sClientCert-onprem.crt@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: ./k8sClientCert-onprem.key@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
-    sh "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@12.2.2.2@${NSF_SERVER_HOST}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@/xebialabs@/${nfsSharePath}@g' integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml"
     sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -a integration-tests/test-cases/jenkins/on-prem-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 
 }
@@ -312,7 +312,7 @@ def runXlUpOnPremWindows(String nfsSharePath) {
     bat "sed -ie 's@https://k8s.com:6443@${ON_PREM_K8S_API_URL}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     bat "sed -ie 's@K8sClientCertFile: ../xl-up/__test__/files/test-file@K8sClientCertFile: k8sClientCert-onprem.crt@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     bat "sed -ie 's@K8sClientKeyFile: ../xl-up/__test__/files/test-file@K8sClientKeyFile: k8sClientCert-onprem.key@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
-    bat "sed -ie 's@nfs-test.com@${NSF_SERVER_HOST}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
+    bat "sed -ie 's@12.2.2.2@${NSF_SERVER_HOST}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     bat "sed -ie 's@/xebialabs@/${nfsSharePath}@g' integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml"
     bat "temp\\build\\windows-amd64\\xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --undeploy --skip-prompts"
     bat "temp\\build\\windows-amd64\\xl.exe up -a integration-tests\\test-cases\\jenkins\\on-prem-xld-xlr-mon-full-windows.yaml -b xl-infra -l . --skip-prompts --dry-run"
@@ -338,6 +338,6 @@ def runXlUpOnGke() {
     sh "sed -ie 's@{{NFS_PATH}}@/${NFS_PATH}@g' integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml"
 
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version 9.5.0 --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }

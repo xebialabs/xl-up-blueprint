@@ -17,7 +17,7 @@ expect:
       K8sSetup: PlainK8SCluster
       MonitoringInstall: true
       MonitoringUser: mon-user
-      NfsServerHost: nfs-test.com
+      NfsServerHost: 12.2.2.2
       NfsSharePath: /xebialabs
 
       PostgresEffectCacheSize: 2GB
@@ -104,7 +104,7 @@ with_answers:
   MonitoringPrometheusDataPvcSize: 20Gi
   MonitoringUser: mon-user
   MonitoringUserPass: mon-pass
-  NfsServerHost: nfs-test.com
+  NfsServerHost: 12.2.2.2
   NfsSharePath: /xebialabs
 
   PostgresEffectCacheSize: 2GB

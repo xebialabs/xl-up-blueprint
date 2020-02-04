@@ -15,7 +15,7 @@ expect:
       K8sAuthentication: FilePath
       K8sSetup: PlainK8SCluster
       MonitoringInstall: false
-      NfsServerHost: nfs-test.com
+      NfsServerHost: 12.2.2.2
       NfsSharePath: /xebialabs
 
       PostgresEffectCacheSize: 2GB
@@ -95,7 +95,7 @@ with_answers:
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sSetup: PlainK8SCluster
   MonitoringInstall: false
-  NfsServerHost: nfs-test.com
+  NfsServerHost: 12.2.2.2
   NfsSharePath: /xebialabs
 
   PostgresEffectCacheSize: 2GB
