@@ -42,7 +42,8 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
-      description: "When using a custom Docker registry, enter the URL of that registry here. If the the docker registry you are using is Dockerhub then your registry url will look like: docker.io/MY_COMPANY. If you have an internal docker registry then it may look like: xl-docker.xebialabs.com "
+      description: "When using a custom Docker registry, enter the URL of that registry here. If the the docker registry you are using is Dockerhub then your registry url will look like: docker.io/MY_COMPANY. If you have an internal docker registry then it may look like: xl-docker.xebialabs.com"
+      validate: !expr "regex('[a-zA-Z0-9][a-zA-Z0-9-._/]*', RegistryURL)"
 
     - name: DockerUser
       type: Input
