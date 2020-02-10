@@ -24,6 +24,8 @@ spec:
           value: GoogleGKE
         - label: Plain multi-node K8s cluster
           value: PlainK8SCluster
+        - label: Bigly Kubernetes Cluster
+          value: BigCluster
       saveInXlvals: true
       description: "The flavour of Kubernetes to deploy or undeploy the XebiaLabs Devops Platform to. Only the listed options are supported"
 
