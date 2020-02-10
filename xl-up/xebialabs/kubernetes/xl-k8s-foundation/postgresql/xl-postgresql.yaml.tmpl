@@ -87,8 +87,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
-      volumes:
   {{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
+      volumes:
         - name: data
           emptyDir: {}
   {{else}}
