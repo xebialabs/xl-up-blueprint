@@ -162,9 +162,9 @@ spec:
                     {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
-                    {{- if ne .K8sSetup "AwsEKS"}}
+                    {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                    {{- else }}
+                    {{- else if eq .K8sSetup "AwsEKS" }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
                     {{- end }}
                   {{- end }}
@@ -218,9 +218,9 @@ spec:
                         {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                         {{- end }}
-                        {{- if ne .K8sSetup "AwsEKS"}}
+                        {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                        {{- else }}
+                        {{- else if eq .K8sSetup "AwsEKS" }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
                         {{- end }}
                       {{- end }}
