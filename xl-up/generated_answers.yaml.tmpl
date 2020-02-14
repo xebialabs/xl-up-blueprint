@@ -27,6 +27,10 @@ AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
+{{- if eq .K8sSetup "AzureAKS" }}
+IsAKS: {{eq .K8sSetup "AzureAKS"}}
+UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
+{{- end }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
