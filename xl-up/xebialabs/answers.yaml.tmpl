@@ -65,6 +65,9 @@ data:
     NfsServerHost: {{ .NfsServerHost }}
     NfsSharePath: {{ .NfsSharePath }}
     {{- end}}
+    {{- if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "AwsEKS") (eq .K8sSetup "AzureAKS"))}}
+    UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
+    {{- end}}
     {{- if .InstallXLR}}
     XlrAdminPass: {{ .XlrAdminPass }}
     XlrLic: {{ .XlrLic | b64enc }}
