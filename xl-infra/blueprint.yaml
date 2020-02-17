@@ -177,7 +177,7 @@ spec:
       type: Confirm
       default: false
       saveInXlvals: true
-      prompt: "Would you like to use a custom namespace"
+      prompt: "Do you have a custom namespace"
       description: "Use an already existing namespace in your kubernetes cluster"
 
     - name: Namespace
