@@ -8,14 +8,6 @@ metadata:
   version: 1.0
 spec:
   parameters:
-    - name: Namespace
-      type: Input
-      prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
-      value: xebialabs
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The namespace to install the XebiaLabs Devops Platform into"
-
     - name: UseCustomRegistry
       type: Confirm
       prompt: "Do you want to use custom Docker Registry and custom images?"

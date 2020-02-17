@@ -172,6 +172,22 @@ spec:
       ignoreIfSkipped: !expr "K8sSetup == 'AwsEKS' ? false : true"
       replaceAsIs: true
       description: "Your AWS secret access key. AWS secret access key is required for xl up in order to connect to your AWS EKS cluster"
+
+    - name: UseCustomNamespace
+      type: Confirm
+      default: false
+      saveInXlvals: true
+      prompt: "Would you like to use a custom namespace"
+      description: "Use an already existing namespace in your kubernetes cluster"
+
+    - name: Namespace
+      type: Input
+      promptIf: !expr "UseCustomNamespace"
+      prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
+      default: xebialabs
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The namespace to install the XebiaLabs Devops Platform into"
   files:
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"
