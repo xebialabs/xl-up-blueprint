@@ -53,3 +53,4 @@ with_answers:
   NfsSharePath: /xebialabs
   UseInternalLoadBalancer: false
   UseKubeconfig: false
+  UseCustomNamespace: false
