@@ -3,6 +3,8 @@ kind: ServiceAccount
 metadata:
   name: rabbitmq
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 automountServiceAccountToken: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -10,6 +12,8 @@ kind: Role
 metadata:
   name: endpoint-reader
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 rules:
   - apiGroups: [""]
     resources: ["endpoints"]
@@ -20,6 +24,8 @@ kind: RoleBinding
 metadata:
   name: endpoint-reader
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 subjects:
   - kind: ServiceAccount
     name: rabbitmq

@@ -12,6 +12,12 @@ spec:
         clusterName: !value EksClusterName
         accessKey: !value AWSAccessKey
         accessSecret: !value AWSAccessSecret
+        {{- if .UseCustomNamespace }}
+        children:
+        - name: {{.Namespace }}
+          type: k8s.Namespace
+          namespaceName: {{.Namespace}}
+        {{- end }}
 {{- else if  eq .K8sSetup "DockerDesktopK8s" }}
 apiVersion: xl-deploy/v1
 kind: Infrastructure
@@ -28,6 +34,12 @@ spec:
         {{- else }}
         tlsCert: !value K8sClientCertFile
         tlsPrivateKey: !value K8sClientKeyFile
+        {{- end }}
+        {{- if .UseCustomNamespace }}
+        children:
+        - name: {{.Namespace }}
+          type: k8s.Namespace
+          namespaceName: {{.Namespace}}
         {{- end }}
 {{- else }}
 apiVersion: xl-deploy/v1
@@ -50,6 +62,12 @@ spec:
         tlsPrivateKey: !value K8sClientKeyFile
           {{- end }}
         {{- end }}
+        {{- if .UseCustomNamespace }}
+        children:
+        - name: {{.Namespace }}
+          type: k8s.Namespace
+          namespaceName: {{.Namespace}}
+          {{- end }}
 {{- end }}
 ---
 apiVersion: xl-deploy/v1
@@ -112,11 +130,20 @@ spec:
         members:
           {{- if  eq .K8sSetup "AwsEKS" }}
           - Infrastructure/XEBIALABS/EKS-MASTER
+          {{- if .UseCustomNamespace }}
+          - Infrastructure/XEBIALABS/EKS-MASTER/{{.Namespace}}
+          {{- end }}
           {{- else if  eq .K8sSetup "DockerDesktopK8s" }}
           - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL
+          {{- if .UseCustomNamespace }}
+          - Infrastructure/XEBIALABS/K8s-MASTER-LOCAL/{{.Namespace}}
+          {{- end }}
           {{- else }}
           - Infrastructure/XEBIALABS/K8s-MASTER
+          {{- if .UseCustomNamespace }}
+          - Infrastructure/XEBIALABS/K8s-MASTER/{{.Namespace}}
           {{- end }}
+          {{- end }}         
         dictionaries:
           - Environments/XEBIALABS/DICTIONARY
 ---
@@ -127,6 +154,7 @@ spec:
     children:
       - directory: XL-K8S-FOUNDATION
         children:
+        {{- if not .UseCustomNamespace }}
           - name: K8s-NameSpace
             type: udm.Application
             children:
@@ -138,6 +166,7 @@ spec:
                   - name: xebialabs
                     type: k8s.NamespaceSpec
                     namespaceName: {{ .Namespace }}
+        {{- end }}
           - name: Answers-Configmap-Deployment
             type: udm.Application
             children:

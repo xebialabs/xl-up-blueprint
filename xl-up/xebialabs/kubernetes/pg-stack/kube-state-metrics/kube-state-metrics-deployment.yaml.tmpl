@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: kube-state-metrics
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 spec:
   selector:
     matchLabels:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: kube-state-metrics
+        organization: xebialabs
     spec:
       serviceAccountName: kube-state-metrics
       containers:

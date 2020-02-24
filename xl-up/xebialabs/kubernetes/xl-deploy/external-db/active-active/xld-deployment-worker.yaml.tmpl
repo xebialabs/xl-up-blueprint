@@ -15,6 +15,7 @@ metadata:
   labels:
     app: xl-deploy
     component: worker
+    organization: xebialabs
 spec:
   selector:
     app: xl-deploy
@@ -31,6 +32,8 @@ kind: StatefulSet
 metadata:
   name: xl-deploy-worker
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 spec:
   serviceName: "xl-deploy-worker"
   replicas: {{ .XldWorkerCount }}
@@ -45,6 +48,7 @@ spec:
       labels:
         app: xl-deploy
         component: worker
+        organization: xebialabs
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
