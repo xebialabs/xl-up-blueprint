@@ -1,4 +1,4 @@
-extends: ../azure-base.yaml
+extends: ../azure-base-cn.yaml
 xl_mode: up
 expect:
   assertion:

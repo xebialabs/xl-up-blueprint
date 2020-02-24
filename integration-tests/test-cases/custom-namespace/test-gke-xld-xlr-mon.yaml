@@ -1,4 +1,4 @@
-extends: ../gke-base.yaml
+extends: ../gke-base-cn.yaml
 xl_mode: up
 expect:
   assertion:
