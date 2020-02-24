@@ -47,5 +47,18 @@ spec:
             value: "http://elasticsearch-logging.{{- .Namespace }}.svc:9200"
           - name: KIBANA_URL
             value: "http://kibana-logging.{{- .Namespace }}.svc:5601"
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        beta.kubernetes.io/arch: amd64
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+        {{- end}}
+      {{- end}}
       imagePullSecrets:
         - name: xebialabs-pull-secret

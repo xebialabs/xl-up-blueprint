@@ -21,6 +21,19 @@ spec:
           image: gcr.io/google_containers/defaultbackend:1.4
           ports:
             - containerPort: 8080
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        beta.kubernetes.io/arch: amd64
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+        {{- end}}
+      {{- end}}
 ---
 apiVersion: v1
 kind: Service

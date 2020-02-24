@@ -50,6 +50,19 @@ spec:
         - containerPort: 5601
           name: ui
           protocol: TCP
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        beta.kubernetes.io/arch: amd64
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+        {{- end}}
+      {{- end}}
 ---
 apiVersion: v1
 kind: Service

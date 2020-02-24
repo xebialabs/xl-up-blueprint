@@ -26,6 +26,15 @@ spec:
       ignoreIfSkipped: true
       description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
 
+    - name: IsHybridCluster
+      type: Confirm
+      prompt: "Is this a hybrid cluster?"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: false
+      description: "If the current cluster contains both linux and windows nodes"
+
     - name: RegistryURL
       type: Input
       prompt: "Enter your Docker registry URL and organization:"
