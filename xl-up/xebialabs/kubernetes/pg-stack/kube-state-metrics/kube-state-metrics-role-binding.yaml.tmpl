@@ -4,6 +4,8 @@ kind: RoleBinding
 metadata:
   name: kube-state-metrics
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

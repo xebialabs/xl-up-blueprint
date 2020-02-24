@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: grafana
+    organization: xebialabs
   name: grafana
   namespace: {{ .Namespace }}
 spec:
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: grafana
+        organization: xebialabs
     spec:
       initContainers:
         - name: fix-the-volume-permission
@@ -77,6 +79,7 @@ metadata:
   labels:
     app: grafana
     component: core
+    organization: xebialabs
 spec:
   type: ClusterIP
   ports:

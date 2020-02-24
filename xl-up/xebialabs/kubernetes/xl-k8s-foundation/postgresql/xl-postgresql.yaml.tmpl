@@ -12,6 +12,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: postgresql
+    organization: xebialabs
 spec:
   ports:
     - port: 5432
@@ -25,6 +26,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: postgresql
+    organization: xebialabs
 spec:
   serviceName: postgresql
   replicas: 1
@@ -35,6 +37,7 @@ spec:
     metadata:
       labels:
         app: postgresql
+        organization: xebialabs
     spec:
       initContainers:
         - name: fix-the-volume-permission

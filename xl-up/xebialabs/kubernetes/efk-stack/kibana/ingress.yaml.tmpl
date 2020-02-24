@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: kibana
+    organization: xebialabs
   annotations:
     kubernetes.io/ingress.class: haproxy
     ingress.kubernetes.io/rewrite-target: /
@@ -26,5 +27,7 @@ kind: Secret
 metadata:
   name: kibana-secret
   namespace: {{ .Namespace }}
+  labels: 
+    organization: xebialabs
 data:
   auth: {{ cat .MonitoringUser "::" .MonitoringUserPass | b64enc }}

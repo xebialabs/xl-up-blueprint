@@ -25,6 +25,8 @@ kind: ServiceAccount
 metadata:
   name: prometheus
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
