@@ -1,4 +1,4 @@
-extends: ../eks-base.yaml
+extends: ../eks-base-cn.yaml
 xl_mode: up
 expect:
   assertion:

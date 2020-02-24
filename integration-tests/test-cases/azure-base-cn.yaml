@@ -1,0 +1,44 @@
+expect:
+  assertion:
+    generated_files:
+      - file_name: xebialabs/deployments.yaml
+        has_elements:
+          '[0]spec.environment': 'Environments/XEBIALABS/K8S'
+      - file_name: xebialabs/xl-k8s-foundation.yaml
+        has_elements:
+          '[0]spec[0].children[0].name': 'K8s-MASTER'
+    secrets:
+    values:
+      UseKubeconfig: false
+      K8sApiServerURL: https://k8s.com:6443
+      K8sAuthentication: FilePath
+      K8sSetup: AzureAKS
+  to_exist:
+  - xebialabs/common.yaml
+  - xebialabs/deployments.yaml
+  - xebialabs/xl-k8s-foundation.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/azuredisk-retain-storage.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/azurefile-storageclass.yaml
+  to_not_exist:
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-conf.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
+with_answers:
+  K8sApiServerURL: https://k8s.com:6443
+  K8sAuthentication: FilePath
+  K8sClientCertFile: ../integration-tests/files/test-file
+  K8sClientKeyFile: ../integration-tests/files/test-file
+  K8sSetup: AzureAKS
+  UseKubeconfig: false
+  UseInternalLoadBalancer: false
+  UseCustomNamespace: false
