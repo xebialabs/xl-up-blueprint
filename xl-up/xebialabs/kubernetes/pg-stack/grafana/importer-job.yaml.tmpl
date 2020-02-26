@@ -30,6 +30,8 @@ spec:
           done
       containers:
       - name: grafana-import-dashboards
+        labels:
+          organization: xebialabs
         image: giantswarm/tiny-tools
         command: ["/bin/sh", "/dashboard-importer.sh"]
         workingDir: /opt/grafana-import-dashboards
