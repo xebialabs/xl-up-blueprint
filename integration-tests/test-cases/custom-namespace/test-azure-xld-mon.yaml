@@ -83,5 +83,5 @@ with_answers:
   XldDbUser: xl-deploy
   XldLic: ../integration-tests/files/test-file
   XldOfficialVersion: 9.5.1
-  UseCustomNamespace: false
+  UseCustomNamespace: true
   Namespace: customNamespace
