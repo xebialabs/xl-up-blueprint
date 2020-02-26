@@ -164,10 +164,40 @@ pipeline {
                                 throw err
                             }
                         }
+                    }
+                }
 
+                stage('e2e tests on Azure AKS') {
+                    agent {
+                        label "xld|xlr|xli"
                     }
 
+                    when {
+                        expression {
+                            !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    unstash name: "xl-cli-linux"
+                                }
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                runXlUpOnAks()
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+                    }
                 }
+
                 stage('e2e tests on On-Prem') {
                     agent {
                         label "xld||xlr||xli"
@@ -341,4 +371,20 @@ def runXlUpOnGke() {
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+}
+
+def runXlUpOnAks() {
+    sh "az account set --subscription 2c7e7531-85ec-400b-81b4-fe6158191c7d"
+    sh "az aks get-credentials --name xl-up-aks --resource-group xl-up-aks --overwrite-existing"
+
+    AKS_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim()
+    SECRET_NAME = sh(script: "kubectl get secrets -o custom-columns=:metadata.name -n default | grep default-token", returnStdout: true).trim()
+    AKS_TOKEN = sh(script: "kubectl get secrets --field-selector metadata.name=${SECRET_NAME} -n default -o=jsonpath='{.items[].data.token}' | base64 -d", returnStdout: true).trim()
+
+    sh "sed -ie 's@{{AKS_ENDPOINT}}@${AKS_ENDPOINT}@g' integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{AKS_TOKEN}}@${AKS_TOKEN}@g' integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml"
+
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }
