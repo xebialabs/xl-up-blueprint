@@ -177,17 +177,17 @@ spec:
       type: Confirm
       default: false
       saveInXlvals: true
-      prompt: "Do you have a custom namespace"
-      description: "Use an already existing namespace in your kubernetes cluster"
+      prompt: "Do you want to use an existing Kubernetes namespace?"
+      description: "Use an already existing namespace in your kubernetes cluster for doing an initial deployment, update or undeployment  of the Xebialabs Devops Platform."
 
     - name: Namespace
       type: Input
       promptIf: !expr "UseCustomNamespace"
-      prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
+      prompt: "Enter the name of the existing Kubernetes namespace where the XebiaLabs DevOps Platform will be installed, updated or undeployed:"
       default: xebialabs
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "The namespace to install the XebiaLabs Devops Platform into"
+      description: "The existing Kubernetes namespace to install, update or undeploy the XebiaLabs Devops Platform "
   files:
     - path: cert.crt.tmpl
       writeIf: !expr "K8sClientCertFile != ''"
