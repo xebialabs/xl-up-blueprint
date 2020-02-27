@@ -29,70 +29,70 @@ pipeline {
     }
 
     stages {
-        stage('Test xl-up Blueprint') {
-            agent {
-                node {
-                    label 'xld||xlr||xli'
-                }
-            }
+        // stage('Test xl-up Blueprint') {
+        //     agent {
+        //         node {
+        //             label 'xld||xlr||xli'
+        //         }
+        //     }
 
-            steps {
-                script {
-                    try {
-                        githubNotify context: "Testing blueprint", status: "PENDING"
-                        checkout scm
-                        sh "./tester --local-repo-path \$(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'"
-                        githubNotify context: "Testing blueprint", status: "SUCCESS"
-                        notifySlack("Testing blueprint succeeded", "good")
-                    } catch (err) {
-                        githubNotify context: "Testing blueprint", status: "FAILURE"
-                        notifySlack("Testing blueprint failed", "danger")
-                        throw err
-                    }
-                }
+        //     steps {
+        //         script {
+        //             try {
+        //                 githubNotify context: "Testing blueprint", status: "PENDING"
+        //                 checkout scm
+        //                 sh "./tester --local-repo-path \$(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'"
+        //                 githubNotify context: "Testing blueprint", status: "SUCCESS"
+        //                 notifySlack("Testing blueprint succeeded", "good")
+        //             } catch (err) {
+        //                 githubNotify context: "Testing blueprint", status: "FAILURE"
+        //                 notifySlack("Testing blueprint failed", "danger")
+        //                 throw err
+        //             }
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
-        stage('Build xl cli') {
-            agent {
-                node {
-                    label 'xld||xlr||xli'
-                }
-            }
+        // stage('Build xl cli') {
+        //     agent {
+        //         node {
+        //             label 'xld||xlr||xli'
+        //         }
+        //     }
 
-            when {
-                expression {
-                    !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
-                            githubLabelsPresent(this, ['run-xl-up-pr'])
-                }
-            }
+        //     when {
+        //         expression {
+        //             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+        //                     githubLabelsPresent(this, ['run-xl-up-pr'])
+        //         }
+        //     }
 
-            steps {
-                script {
-                    try {
-                        sh "mkdir -p temp-cli"
-                        dir('temp-cli') {
-                            if (githubLabelsPresent(this, ['same-branch-on-cli'])){
-                                sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
-                            } else {
-                                sh "git clone git@github.com:xebialabs/xl-cli.git || true"
-                            }
-                        }
-                        dir('temp-cli/xl-cli') {
-                            sh "./gradlew clean build -x test -x updateLicenses -x buildDarwinAmd64"
-                            stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
-                            stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
-                        }
-                        sh "if [ -d temp-cli ]; then chmod -R +w temp-cli; rm -rf temp-cli; fi"
-                    } catch (err) {
-                        sh "if [ -d temp-cli ]; then chmod -R +w temp-cli; rm -rf temp-cli; fi"
-                        throw err
-                    }
-                }
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh "mkdir -p temp-cli"
+        //                 dir('temp-cli') {
+        //                     if (githubLabelsPresent(this, ['same-branch-on-cli'])){
+        //                         sh "git clone -b ${CHANGE_BRANCH} git@github.com:xebialabs/xl-cli.git || true"
+        //                     } else {
+        //                         sh "git clone git@github.com:xebialabs/xl-cli.git || true"
+        //                     }
+        //                 }
+        //                 dir('temp-cli/xl-cli') {
+        //                     sh "./gradlew clean build -x test -x updateLicenses -x buildDarwinAmd64"
+        //                     stash name: "xl-cli-windows", includes: "build/windows-amd64/xl.exe"
+        //                     stash name: "xl-cli-linux", includes: "build/linux-amd64/xl"
+        //                 }
+        //                 sh "if [ -d temp-cli ]; then chmod -R +w temp-cli; rm -rf temp-cli; fi"
+        //             } catch (err) {
+        //                 sh "if [ -d temp-cli ]; then chmod -R +w temp-cli; rm -rf temp-cli; fi"
+        //                 throw err
+        //             }
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         stage('Run XL UP Branch Linux') {
 
