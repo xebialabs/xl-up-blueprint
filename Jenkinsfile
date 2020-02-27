@@ -169,7 +169,7 @@ pipeline {
 
                 stage('e2e tests on Azure AKS') {
                     agent {
-                        label "xld|xlr|xli"
+                        label "xld||xlr||xli"
                     }
 
                     when {
