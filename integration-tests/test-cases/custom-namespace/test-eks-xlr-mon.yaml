@@ -1,0 +1,94 @@
+extends: ../eks-base-cn.yaml
+xl_mode: up
+expect:
+  assertion:
+    generated_files: []
+    secrets:
+      MonitoringUserPass: mon-pass
+      XlKeyStorePass: test123
+      XlrAdminPass: password
+      XlrDbPass: xl-release
+      XlrReportDbPass: xl-release-report
+    values:
+      InstallXLD: false
+      InstallXLR: true
+      MonitoringInstall: true
+      MonitoringUser: mon-user
+      PostgresEffectCacheSize: 2GB
+      PostgresMaxConn: 400
+      PostgresMaxWallSize: 512MB
+      PostgresSharedBuff: 612MB
+      PostgresSyncCommit: 'off'
+      XlrDbName: xl-release
+      XlrDbUser: xl-release
+      XlrOfficialVersion: 9.5.2
+      XlrReportDbName: xl-release-report
+      XlrReportDbUser: xl-release-report
+      Namespace: customNamespace
+  to_exist:
+  - xebialabs/xl-release.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/secret.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+  to_not_exist:
+  - xebialabs/xl-deploy.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
+
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
+with_answers:
+  InstallXLD: false
+  InstallXLR: true
+  MonitoringInstall: true
+  MonitoringUser: mon-user
+  MonitoringUserPass: mon-pass
+  PostgresEffectCacheSize: 2GB
+  PostgresMaxConn: 400
+  PostgresMaxWallSize: 512MB
+  PostgresSharedBuff: 612MB
+  PostgresSyncCommit: 'off'
+  XlKeyStore: ../integration-tests/files/test-file
+  XlKeyStorePass: test123
+  XlrAdminPass: password
+  XlrDbName: xl-release
+  XlrDbPass: xl-release
+  XlrDbUser: xl-release
+  XlrLic: ../integration-tests/files/test-file
+  XlrOfficialVersion: 9.5.2
+  XlrReportDbName: xl-release-report
+  XlrReportDbPass: xl-release-report
+  XlrReportDbUser: xl-release-report
+  UseCustomNamespace: true
+  Namespace: customNamespace

@@ -5,12 +5,14 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
+    organization: xebialabs
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: xebialabs-nfs-client-provisioner-runner
   labels:
+    organization: xebialabs
     organization: xebialabs
 rules:
   - apiGroups: [""]
@@ -32,6 +34,7 @@ metadata:
   name: xebialabs-run-nfs-client-provisioner
   labels:
     organization: xebialabs
+    organization: xebialabs
 subjects:
   - kind: ServiceAccount
     name: xebialabs-nfs-client-provisioner
@@ -48,6 +51,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
+    organization: xebialabs
 rules:
   - apiGroups: [""]
     resources: ["endpoints"]
@@ -59,6 +63,7 @@ metadata:
   name: xebialabs-leader-locking-nfs-client-provisioner
   namespace: {{ .Namespace }}
   labels:
+    organization: xebialabs
     organization: xebialabs
 subjects:
   - kind: ServiceAccount

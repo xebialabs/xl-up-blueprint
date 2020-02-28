@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: rabbitmq
+    organization: xebialabs
   annotations:
     kubernetes.io/ingress.class: haproxy
     ingress.kubernetes.io/rewrite-target: /

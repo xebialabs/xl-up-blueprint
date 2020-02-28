@@ -31,6 +31,8 @@ UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 IsAKS: {{eq .K8sSetup "AzureAKS"}}
 UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
+Namespace: {{.Namespace}}
+UseCustomNamespace: {{.UseCustomNamespace}}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}

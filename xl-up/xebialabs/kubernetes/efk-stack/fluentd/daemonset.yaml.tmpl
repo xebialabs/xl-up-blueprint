@@ -8,6 +8,7 @@ metadata:
     version: v2.12.5
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 spec:
   selector:
     matchLabels:
@@ -19,6 +20,7 @@ spec:
         app: fluentd-es
         kubernetes.io/cluster-service: "true"
         version: v2.12.5
+        organization: xebialabs
       # This annotation ensures that fluentd does not get evicted if the node
       # supports critical pod annotation based priority scheme.
       # Note that this does not guarantee admission on the nodes (#40573).

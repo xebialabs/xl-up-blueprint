@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     run: ingress-default-backend
+    organization: xebialabs
   name: ingress-default-backend
   namespace: {{ .Namespace }}
 spec:
@@ -26,6 +27,7 @@ kind: Service
 metadata:
   labels:
     run: ingress-default-backend
+    organization: xebialabs
   name: ingress-default-backend
   namespace: {{ .Namespace }}
 spec:
@@ -43,6 +45,7 @@ metadata:
   name: ingress-default-backend
   namespace: {{ .Namespace }}
   labels:
+    organization: xebialabs
     app: ingress-default-backend
   annotations:
     kubernetes.io/ingress.class: haproxy

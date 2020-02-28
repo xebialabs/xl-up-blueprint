@@ -3,6 +3,8 @@ kind: Secret
 metadata:
   name: dockercred
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 data:
   {{ $userPass := printf "%s:%s" .DockerUser .DockerPass }}
   {{ $auth := printf "\"auth\":\"%s\"" ($userPass | b64enc) }}

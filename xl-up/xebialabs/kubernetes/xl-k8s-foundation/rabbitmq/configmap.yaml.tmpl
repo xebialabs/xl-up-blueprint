@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: rabbitmq-config
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 data:
   enabled_plugins: '[rabbitmq_management,rabbitmq_jms_topic_exchange].'
   rabbitmq.conf: |

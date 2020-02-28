@@ -7,6 +7,7 @@ metadata:
     app: kibana-logging
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 spec:
   replicas: 1
   selector:
@@ -60,6 +61,7 @@ metadata:
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "kibana"
+    organization: xebialabs
 spec:
   type: ClusterIP
   ports:

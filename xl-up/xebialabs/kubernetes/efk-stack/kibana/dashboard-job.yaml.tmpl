@@ -5,8 +5,14 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: kibana-dashboards
+    organization: xebialabs
 spec:
   template:
+    metadata:
+      name: kibana-dashboards
+      labels:
+        app: kibana-dashboards
+        organization: xebialabs
     spec:
       restartPolicy: OnFailure
       initContainers:
@@ -31,7 +37,9 @@ spec:
           sleep 2;
           done
       containers:
-      - name: dashboards
+      - name: kibana-dashboards
+        labels:
+          organization: xebialabs
         image: xebialabs/kibana-dashboard:1.0.0
         imagePullPolicy: Always
         env:
