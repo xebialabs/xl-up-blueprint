@@ -4,9 +4,6 @@ expect:
   assertion:
     generated_files:
     - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-      has_elements:
-        '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-backend-protocol': 'tcp'
-        '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-connection-idle-timeout': '300'
       excludes_elements:
         '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-internal': 'true'
         '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
