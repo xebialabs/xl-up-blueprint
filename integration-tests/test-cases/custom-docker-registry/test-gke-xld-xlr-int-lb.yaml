@@ -17,9 +17,9 @@ expect:
       has_elements:
         '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-backend-protocol': 'tcp'
         '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-connection-idle-timeout': '300'
+        '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
       excludes_elements:
         '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-internal': 'true'
-        '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
         '[0]metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-internal': 'true'
     secrets:
       DockerPass: docker-pass
@@ -57,8 +57,8 @@ expect:
 
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
   to_not_exist:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
@@ -119,3 +119,4 @@ with_answers:
   XlrReportDbPass: xl-release-report
   XlrReportDbUser: xl-release-report
   XlrVersion: xl-release:8.5.3
+  UseInternalLoadBalancer: true
