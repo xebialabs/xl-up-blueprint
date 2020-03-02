@@ -3,8 +3,9 @@ UseKubeconfig: false
 K8sApiServerURL: {{AKS_ENDPOINT}}
 K8sAuthentication: Token
 K8sToken: {{AKS_TOKEN}}
-UseCustomNamespace: true
+UseCustomNamespace: false
 Namespace: xebialabs
+IsHybridCluster: false
 UseCustomRegistry: false
 InstallXLD: true
 InstallXLR: true
