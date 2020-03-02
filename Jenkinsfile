@@ -384,9 +384,7 @@ def runXlUpOnAks() {
     sh "sed -ie 's@{{AKS_ENDPOINT}}@${AKS_ENDPOINT}@g' integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{AKS_TOKEN}}@${AKS_TOKEN}@g' integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml"
 
-    dir('temp/xl-up-blueprint') {
-        sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-        sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
-        sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-    }
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }
