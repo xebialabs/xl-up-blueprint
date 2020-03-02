@@ -18,7 +18,7 @@ pipeline {
 
     environment {
         REPOSITORY_NAME = 'xl-up-blueprint'
-        SEED_VERSION = '9.6.0-alpha.4'
+        SEED_VERSION = '9.6.1-alpha.2'
         DIST_SERVER_CRED = credentials('distserver')
         ON_PREM_CERT = "${env.ON_PREM_CERT}"
         ON_PREM_CERT_WINDOWS = "${env.ON_PREM_CERT_WINDOWS}"
@@ -98,10 +98,80 @@ pipeline {
 
 
             parallel {
-                stage('e2e tests on AWS EKS') {
+                // stage('e2e tests on AWS EKS') {
+                //     agent {
+                //         label "xld||xlr||xli"
+                //     }
+                //     when {
+                //         expression {
+                //             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                //                     githubLabelsPresent(this, ['run-xl-up-pr'])
+                //         }
+                //     }
+
+                //     steps {
+                //         script {
+                //             try {
+                //                 sh "mkdir -p temp"
+                //                 dir('temp') {
+                //                     unstash name: "xl-cli-linux"
+                //                 }
+                //                 awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
+                //                 awsAccessKeyIdLine = awsConfigure.split("\n")[1]
+                //                 awsSecretKeyIdLine = awsConfigure.split("\n")[2]
+                //                 awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
+                //                 awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
+                //                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                //                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                //                 eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
+                //                 efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
+                //                 runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                //                 sh "rm -rf temp"
+                //             } catch (err) {
+                //                 sh "rm -rf temp"
+                //                 throw err
+                //             }
+                //         }
+
+                //     }
+
+                // }
+
+                // stage('e2e tests on GCP GKE') {
+                //     agent {
+                //         label "xld||xlr||xli"
+                //     }
+                //     when {
+                //         expression {
+                //             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                //                     githubLabelsPresent(this, ['run-xl-up-pr'])
+                //         }
+                //     }
+
+                //     steps {
+                //         script {
+                //             try {
+                //                 sh "mkdir -p temp"
+                //                 dir('temp') {
+                //                     unstash name: "xl-cli-linux"
+                //                 }
+                //                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                //                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                //                 runXlUpOnGke()
+                //                 sh "rm -rf temp"
+                //             } catch (err) {
+                //                 sh "rm -rf temp"
+                //                 throw err
+                //             }
+                //         }
+                //     }
+                // }
+
+                stage('e2e tests on Azure AKS') {
                     agent {
                         label "xld||xlr||xli"
                     }
+
                     when {
                         expression {
                             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
@@ -116,90 +186,50 @@ pipeline {
                                 dir('temp') {
                                     unstash name: "xl-cli-linux"
                                 }
-                                awsConfigure = readFile "/var/lib/jenkins/.aws/credentials"
-                                awsAccessKeyIdLine = awsConfigure.split("\n")[1]
-                                awsSecretKeyIdLine = awsConfigure.split("\n")[2]
-                                awsAccessKeyId = awsAccessKeyIdLine.split(" ")[2]
-                                awsSecretKeyId = awsSecretKeyIdLine.split(" ")[2]
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
-                                eksEndpoint = sh (script: 'aws eks describe-cluster --region eu-west-1 --name xl-up-master --query \'cluster.endpoint\' --output text', returnStdout: true).trim()
-                                efsFileId = sh (script: 'aws efs describe-file-systems --region eu-west-1 --query \'FileSystems[0].FileSystemId\' --output text', returnStdout: true).trim()
-                                runXlUpOnEks(awsAccessKeyId, awsSecretKeyId, eksEndpoint, efsFileId)
+                                runXlUpOnAks()
                                 sh "rm -rf temp"
                             } catch (err) {
                                 sh "rm -rf temp"
                                 throw err
                             }
                         }
-
                     }
-
                 }
 
-                stage('e2e tests on GCP GKE') {
-                    agent {
-                        label "xld||xlr||xli"
-                    }
-                    when {
-                        expression {
-                            !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
-                                    githubLabelsPresent(this, ['run-xl-up-pr'])
-                        }
-                    }
+                // stage('e2e tests on On-Prem') {
+                //     agent {
+                //         label "xld||xlr||xli"
+                //     }
+                //     when {
+                //         expression {
+                //             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                //                     githubLabelsPresent(this, ['run-xl-up-pr'])
+                //         }
+                //     }
 
-                    steps {
-                        script {
-                            try {
-                                sh "mkdir -p temp"
-                                dir('temp') {
-                                    unstash name: "xl-cli-linux"
-                                }
-                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
-                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
-                                runXlUpOnGke()
-                                sh "rm -rf temp"
-                            } catch (err) {
-                                sh "rm -rf temp"
-                                throw err
-                            }
-                        }
+                //     steps {
+                //         script {
+                //             try {
+                //                 sh "mkdir -p temp"
+                //                 dir('temp') {
+                //                     unstash name: "xl-cli-linux"
+                //                 }
+                //                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                //                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                //                 nfsSharePath = "xebialabs-k8s"
+                //                 runXlUpOnPrem(nfsSharePath)
+                //                 sh "rm -rf temp"
+                //             } catch (err) {
+                //                 sh "rm -rf temp"
+                //                 throw err
+                //             }
+                //         }
 
-                    }
+                //     }
 
-                }
-                stage('e2e tests on On-Prem') {
-                    agent {
-                        label "xld||xlr||xli"
-                    }
-                    when {
-                        expression {
-                            !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
-                                    githubLabelsPresent(this, ['run-xl-up-pr'])
-                        }
-                    }
-
-                    steps {
-                        script {
-                            try {
-                                sh "mkdir -p temp"
-                                dir('temp') {
-                                    unstash name: "xl-cli-linux"
-                                }
-                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
-                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
-                                nfsSharePath = "xebialabs-k8s"
-                                runXlUpOnPrem(nfsSharePath)
-                                sh "rm -rf temp"
-                            } catch (err) {
-                                sh "rm -rf temp"
-                                throw err
-                            }
-                        }
-
-                    }
-
-                }
+                // }
 
 
             }
@@ -208,43 +238,43 @@ pipeline {
 
         }
 
-        stage('Run XL UP Branch Windows') {
-            agent {
-                node {
-                    label 'windows-jdk8'
-                }
-            }
+        // stage('Run XL UP Branch Windows') {
+        //     agent {
+        //         node {
+        //             label 'windows-jdk8'
+        //         }
+        //     }
 
-            when {
-                expression {
-                    !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
-                            githubLabelsPresent(this, ['run-xl-up-pr'])
-                }
-            }
+        //     when {
+        //         expression {
+        //             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+        //                     githubLabelsPresent(this, ['run-xl-up-pr'])
+        //         }
+        //     }
 
-            steps {
-                script {
-                    try {
-                        bat "if not exist temp mkdir temp"
+        //     steps {
+        //         script {
+        //             try {
+        //                 bat "if not exist temp mkdir temp"
 
-                        dir('temp') {
-                            unstash name: "xl-cli-windows"
-                        }
+        //                 dir('temp') {
+        //                     unstash name: "xl-cli-windows"
+        //                 }
 
-                        bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
-                        bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
-                        nfsSharePath = "xebialabs-k8s"
-                        runXlUpOnPremWindows(nfsSharePath)
+        //                 bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+        //                 bat "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+        //                 nfsSharePath = "xebialabs-k8s"
+        //                 runXlUpOnPremWindows(nfsSharePath)
 
-                        bat "rmdir /q /s temp"
-                    } catch (err) {
-                        bat "rmdir /q /s temp"
-                        throw err
-                    }
-                }
+        //                 bat "rmdir /q /s temp"
+        //             } catch (err) {
+        //                 bat "rmdir /q /s temp"
+        //                 throw err
+        //             }
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
     }
 }
@@ -341,4 +371,22 @@ def runXlUpOnGke() {
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/gke-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+}
+
+def runXlUpOnAks() {
+    sh "az account set --subscription 2c7e7531-85ec-400b-81b4-fe6158191c7d"
+    sh "az aks get-credentials --name xl-up-aks --resource-group xl-up-aks --overwrite-existing"
+
+    AKS_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim()
+    SECRET_NAME = sh(script: "kubectl get secrets -o custom-columns=:metadata.name -n default | grep default-token", returnStdout: true).trim()
+    AKS_TOKEN = sh(script: "kubectl get secrets --field-selector metadata.name=${SECRET_NAME} -n default -o=jsonpath='{.items[].data.token}' | base64 -d", returnStdout: true).trim()
+
+    sh "sed -ie 's@{{AKS_ENDPOINT}}@${AKS_ENDPOINT}@g' integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{AKS_TOKEN}}@${AKS_TOKEN}@g' integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml"
+
+    dir('temp/xl-up-blueprint') {
+        sh "../../temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+        sh "../../temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
+        sh "../../temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    }
 }
