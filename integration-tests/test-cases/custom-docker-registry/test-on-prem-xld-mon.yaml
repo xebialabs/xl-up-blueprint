@@ -1,6 +1,14 @@
 expect:
   assertion:
-    generated_files: []
+    generated_files:
+    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+      has_elements:
+        '[3]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
     secrets:
       DockerPass: docker-pass
       MonitoringUserPass: mon-pass

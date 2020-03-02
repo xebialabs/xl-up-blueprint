@@ -11,6 +11,14 @@ expect:
         '[3]spec.template.spec.containers[0].env[13].value': 'amqp://some.rabbitmq:5672'
         '[3]spec.template.spec.containers[0].env[14].value': 'test'
         '[3]spec.template.spec.containers[0].env[15].value': 'place'
+    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+      has_elements:
+        '[2]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
+        '[2]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
+        '[2]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
+        '[2]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
+        '[2]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
+        '[2]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
     secrets:
       MonitoringUserPass: mon-pass
       RabbitMQPassword: place
@@ -104,7 +112,7 @@ expect:
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-with_answers: 
+with_answers:
   ExternalDatabase: true
   InstallXLD: true
   InstallXLR: true

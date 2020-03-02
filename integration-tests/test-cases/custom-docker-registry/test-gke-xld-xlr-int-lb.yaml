@@ -5,14 +5,20 @@ expect:
     generated_files:
     - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
       has_elements:
-        '[2]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
-        '[2]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
-        '[2]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
-        '[2]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
-        '[2]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
-        '[2]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
+        '[3]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
+    - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+      has_elements:
+        '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
+      excludes_elements:
+        '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-internal': 'true'
+        '[0]metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-internal': 'true'
     secrets:
-      MonitoringUserPass: mon-pass
+      DockerPass: docker-pass
       XlKeyStorePass: test123
       XldAdminPass: password
       XldDbPass: xl-deploy
@@ -20,48 +26,39 @@ expect:
       XlrDbPass: xl-release
       XlrReportDbPass: xl-release-report
     values:
-      ExternalDatabase: true
+      DockerUser: docker-user
       InstallXLD: true
       InstallXLR: true
-      MonitoringElasticsearchDataPvcSize: 5Gi
-      MonitoringGrafanaDashboardsPvcSize: 5Gi
-      MonitoringInstall: true
-      MonitoringPrometheusDataPvcSize: 5Gi
-      MonitoringUser: mon-user
-      XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
+      MonitoringInstall: false
+      PostgresEffectCacheSize: 2GB
+      PostgresMaxConn: 400
+      PostgresMaxWallSize: 512MB
+      PostgresSharedBuff: 612MB
+      PostgresSyncCommit: 'off'
+      RegistryURL: docker.io/xebialabs
+      UseCustomRegistry: true
+      XldDbName: xl-deploy
       XldDbUser: xl-deploy
-      XldExportPvcSize: 5Gi
-      XldMasterCPULimit: 3
-      XldMasterCPURequest: 0.7
-      XldMasterCount: 2
-      XldMasterRAMLimit: 6Gi
-      XldMasterRAMRequest: 1600Mi
-      XldOfficialVersion: 9.5.1
-      XldWorkPvcSize: 5Gi
-      XldWorkerCPULimit: 3
-      XldWorkerCPURequest: 0.7
-      XldWorkerCount: 2
-      XldWorkerRAMLimit: 6Gi
-      XldWorkerRAMRequest: 1600Mi
-      XlrCPULimit: 3
-      XlrCPURequest: 0.7
-      XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
+      XldVersion: xl-deploy:8.5.3
+      XlrDbName: xl-release
       XlrDbUser: xl-release
-      XlrOfficialVersion: 9.5.2
-      XlrRAMLimit: 6Gi
-      XlrRAMRequest: 1700Mi
-      XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
+      XlrReportDbName: xl-release-report
       XlrReportDbUser: xl-release-report
-      XlrReportsPvcSize: 5Gi
+      XlrVersion: xl-release:8.5.3
   to_exist:
   - xebialabs/xl-deploy.yaml
   - xebialabs/xl-release.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
 
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
   - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
+  to_not_exist:
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
   - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
@@ -88,40 +85,34 @@ expect:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-  to_not_exist:
-  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
 with_answers:
-  ExternalDatabase: true
+  DockerPass: docker-pass
+  DockerUser: docker-user
   InstallXLD: true
   InstallXLR: true
-  MonitoringElasticsearchDataPvcSize: 5Gi
-  MonitoringGrafanaDashboardsPvcSize: 5Gi
-  MonitoringInstall: true
-  MonitoringPrometheusDataPvcSize: 5Gi
-  MonitoringUser: mon-user
-  MonitoringUserPass: mon-pass
+  MonitoringInstall: false
+  PostgresEffectCacheSize: 2GB
+  PostgresMaxConn: 400
+  PostgresMaxWallSize: 512MB
+  PostgresSharedBuff: 612MB
+  PostgresSyncCommit: 'off'
+  RegistryURL: docker.io/xebialabs
+  UseCustomRegistry: true
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XldAdminPass: password
+  XldDbName: xl-deploy
   XldDbPass: xl-deploy
-  XldDbUrl: jdbc:postgresql://postgresql:5432/xl-deploy
   XldDbUser: xl-deploy
-  XldExportPvcSize: 5Gi
   XldLic: ../integration-tests/files/test-file
-  XldOfficialVersion: 9.5.1
-  XldWorkPvcSize: 5Gi
+  XldVersion: xl-deploy:8.5.3
   XlrAdminPass: password
+  XlrDbName: xl-release
   XlrDbPass: xl-release
-  XlrDbUrl: jdbc:postgresql://postgresql:5432/xl-release
   XlrDbUser: xl-release
   XlrLic: ../integration-tests/files/test-file
-  XlrOfficialVersion: 9.5.2
+  XlrReportDbName: xl-release-report
   XlrReportDbPass: xl-release-report
-  XlrReportDbUrl: jdbc:postgresql://postgresql:5432/xl-release-report
   XlrReportDbUser: xl-release-report
-  XlrReportsPvcSize: 5Gi
+  XlrVersion: xl-release:8.5.3
+  UseInternalLoadBalancer: true
