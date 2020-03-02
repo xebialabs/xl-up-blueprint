@@ -38,10 +38,10 @@ spec:
       type: Confirm
       prompt: "Is this a hybrid cluster?"
       promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
-      default: false
+      default: true
       saveInXlvals: true
-      ignoreIfSkipped: false
-      description: "If the current cluster contains both linux and windows nodes"
+      ignoreIfSkipped: true
+      description: "If the target cluster contains both linux and windows nodes"
 
     - name: RegistryURL
       type: Input
