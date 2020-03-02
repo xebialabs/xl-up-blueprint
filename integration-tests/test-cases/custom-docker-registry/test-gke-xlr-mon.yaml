@@ -2,12 +2,6 @@ extends: ../gke-base.yaml
 xl_mode: up
 expect:
   assertion:
-    generated_files:
-    - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-      excludes_elements:
-        '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-internal': 'true'
-        '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
-        '[0]metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-internal': 'true'
     secrets:
       DockerPass: docker-pass
       MonitoringUserPass: mon-pass

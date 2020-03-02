@@ -8,17 +8,16 @@ metadata:
     app.kubernetes.io/part-of: haproxy-ingress
   annotations:
     {{- if eq .K8sSetup "AwsEKS"}}
-    # replace with the correct value of the generated certificate in the AWS console
-    #service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{CERT_ARN}"
-    # the backend instances are HTTP
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
-    # Map port 443
-    #service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
-    # Ensure the ELB idle timeout is less than nginx keep-alive timeout. By default,
-    # NGINX keep-alive is set to 75s. If using WebSockets, the value will need to be
-    # increased to '3600' to avoid any potential issues.
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
     {{- end }}
+    {{- if eq .K8sSetup "AzureAKS"}}
+    service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "300"
+    {{- end }}
+    #{{- if eq .K8sSetup "GoogleGKE"}}
+    #beta.cloud.google.com/backend-config: '{"ports": {"80":"xl-backendconfig"}}'
+    #{{- end }}
+
     # Internal load balancer tags 
     {{- if and (eq .K8sSetup "AwsEKS") (eq .UseInternalLoadBalancer true)}}
     service.beta.kubernetes.io/aws-load-balancer-internal: "true"

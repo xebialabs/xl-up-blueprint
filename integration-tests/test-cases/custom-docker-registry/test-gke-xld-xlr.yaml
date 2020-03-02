@@ -11,11 +11,6 @@ expect:
         '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
         '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
         '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
-    - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-      excludes_elements:
-        '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-internal': 'true'
-        '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
-        '[0]metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-internal': 'true'
     secrets:
       DockerPass: docker-pass
       XlKeyStorePass: test123
