@@ -189,9 +189,9 @@ pipeline {
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
                                 runXlUpOnAks()
-                                sh "rm -rf temp"
+                                // sh "rm -rf temp"
                             } catch (err) {
-                                sh "rm -rf temp"
+                                // sh "rm -rf temp"
                                 throw err
                             }
                         }
