@@ -198,6 +198,48 @@ pipeline {
                     }
                 }
 
+                stage('e2e tests on Azure AKS') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+
+                    when {
+                        expression {
+                            !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    unstash name: "xl-cli-linux"
+                                }
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+                                runXlUpOnAks()
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+                    }
+                }
+
+                stage('e2e tests on On-Prem') {
+                    agent {
+                        label "xld||xlr||xli"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr'])
+                        }
+                    }
+
                 stage('e2e tests on On-Prem') {
                     agent {
                         label "xld||xlr||xli"
