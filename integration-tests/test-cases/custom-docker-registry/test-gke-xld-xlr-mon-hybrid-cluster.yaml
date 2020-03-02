@@ -5,55 +5,55 @@ expect:
     generated_files:
       - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
         has_elements:
-          '[0]spec.jobTemplate.spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.jobTemplate.spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
         has_elements:
-          '[4]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[4]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
         has_elements:
-          '[1]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[1]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
         has_elements:
-          '[3]spec.template.spec.nodeSelector':  {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[3]spec.template.spec.nodeSelector':  {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
         has_elements:
-          '[6]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[6]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[0]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
         has_elements:
-          '[1]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[1]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
         has_elements:
-          '[1]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux', 'kubernetes.io/arch': 'amd64'}
+          '[1]spec.template.spec.nodeSelector': {'kubernetes.io/os': 'linux'}
     secrets:
       DockerPass: docker-pass
       MonitoringUserPass: mon-pass
