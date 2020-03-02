@@ -54,6 +54,16 @@ spec:
           readOnly: true
         - name: config-volume
           mountPath: /etc/fluent/config.d
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog

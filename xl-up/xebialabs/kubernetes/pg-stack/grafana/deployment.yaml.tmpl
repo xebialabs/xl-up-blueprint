@@ -66,6 +66,16 @@ spec:
         - mountPath: /var/lib/grafana
           name: grafana-storage
           readOnly: false
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       volumes:
       - name: grafana-storage
         persistentVolumeClaim:

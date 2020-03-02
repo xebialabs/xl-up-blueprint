@@ -193,6 +193,16 @@ spec:
           volumeMounts:
             - name: work
               mountPath: /opt/xebialabs/xl-deploy-server/work
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       {{if .UseCustomRegistry }}
       imagePullSecrets:
       - name: dockercred

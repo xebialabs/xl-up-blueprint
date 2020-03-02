@@ -224,6 +224,16 @@ spec:
           volumeMounts:
             - name: reports-dir
               mountPath: /opt/xebialabs/xl-release-server/reports
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       {{if .UseCustomRegistry }}
       imagePullSecrets:
       - name: dockercred

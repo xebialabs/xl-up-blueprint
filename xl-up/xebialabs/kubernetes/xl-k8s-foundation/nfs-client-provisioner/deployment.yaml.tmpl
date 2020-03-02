@@ -35,6 +35,16 @@ spec:
               value: {{$NFS_SERVER}}
             - name: NFS_PATH
               value: {{$NFS_PATH}}
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       volumes:
         - name: nfs-client-root
           nfs:

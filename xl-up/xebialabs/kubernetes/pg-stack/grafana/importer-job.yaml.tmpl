@@ -52,6 +52,16 @@ spec:
         - name: grafana-importer
           mountPath: /dashboard-importer.sh
           subPath: dashboard-importer.sh
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       restartPolicy: Never
       volumes:
       - name: config-volume
