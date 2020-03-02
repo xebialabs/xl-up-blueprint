@@ -11,8 +11,6 @@ expect:
         '[2]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
         '[2]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
         '[2]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
-        '[2]metadata.annotations.ingress\.kubernetes\.io/config-backend': |
-          option httpchk GET /deployit/ha/health HTTP/1.0
     secrets:
       MonitoringUserPass: mon-pass
       XlKeyStorePass: test123
