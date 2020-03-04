@@ -18,7 +18,7 @@ pipeline {
 
     environment {
         REPOSITORY_NAME = 'xl-up-blueprint'
-        SEED_VERSION = '9.6.0-alpha.4'
+        SEED_VERSION = '9.6.1-alpha.2'
         DIST_SERVER_CRED = credentials('distserver')
         ON_PREM_CERT = "${env.ON_PREM_CERT}"
         ON_PREM_CERT_WINDOWS = "${env.ON_PREM_CERT_WINDOWS}"
