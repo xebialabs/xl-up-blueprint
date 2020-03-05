@@ -20,7 +20,11 @@ spec:
     spec:
       initContainers:
       - name: wait-for-elasticsearch
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/busybox:1
+        {{else}}
         image: busybox:1
+        {{end}}
         command:
         - 'sh'
         - '-c'
@@ -31,7 +35,11 @@ spec:
           done
       containers:
       - name: kibana-logging
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/kibana-oss:6.5.0
+        {{else}}
         image: docker.elastic.co/kibana/kibana-oss:6.5.0
+        {{end}}
         resources:
           limits:
             cpu: 1
@@ -50,6 +58,10 @@ spec:
         - containerPort: 5601
           name: ui
           protocol: TCP
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
 ---
 apiVersion: v1
 kind: Service

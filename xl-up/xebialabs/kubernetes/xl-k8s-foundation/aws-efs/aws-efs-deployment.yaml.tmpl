@@ -23,7 +23,11 @@ spec:
       serviceAccount: efs-provisioner
       containers:
         - name: efs-provisioner
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/efs-provisioner:v1.0.0-k8s1.10
+          {{else}}
           image: quay.io/external_storage/efs-provisioner:v1.0.0-k8s1.10
+          {{end}}
           env:
             - name: FILE_SYSTEM_ID
               valueFrom:
@@ -43,6 +47,10 @@ spec:
           volumeMounts:
             - name: pv-volume
               mountPath: /persistentvolumes
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       volumes:
         - name: pv-volume
           nfs:

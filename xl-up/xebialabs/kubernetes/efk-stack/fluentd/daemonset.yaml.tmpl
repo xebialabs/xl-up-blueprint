@@ -31,7 +31,11 @@ spec:
       serviceAccountName: fluentd-es
       containers:
       - name: fluentd-es
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/fluentd-elasticsearch:v2.3.2
+        {{else}}
         image: k8s.gcr.io/fluentd-elasticsearch:v2.3.2
+        {{end}}
         securityContext:
           ##on prem depending on the mount type (ie hostpath) it may not run as non-root user
           privileged: true
@@ -55,6 +59,10 @@ spec:
         - name: config-volume
           mountPath: /etc/fluent/config.d
       terminationGracePeriodSeconds: 30
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       volumes:
       - name: varlog
         hostPath:

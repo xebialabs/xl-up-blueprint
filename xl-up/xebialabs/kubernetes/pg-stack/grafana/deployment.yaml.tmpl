@@ -19,7 +19,11 @@ spec:
     spec:
       initContainers:
         - name: fix-the-volume-permission
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/busybox
+          {{else}}
           image: busybox
+          {{end}}
           command:
             - sh
             - -c
@@ -28,8 +32,12 @@ spec:
             - name: grafana-storage
               mountPath: /var/lib/grafana
       containers:
-      - image: grafana/grafana:5.4.4
-        name: grafana
+      - name: grafana
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/grafana:5.4.4
+        {{else}}
+        image: grafana/grafana:5.4.4
+        {{end}}
         env:
           # The following env variables set up basic auth twith the default admin user and admin password.
           - name: GF_AUTH_BASIC_ENABLED
@@ -66,6 +74,10 @@ spec:
         - mountPath: /var/lib/grafana
           name: grafana-storage
           readOnly: false
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       volumes:
       - name: grafana-storage
         persistentVolumeClaim:

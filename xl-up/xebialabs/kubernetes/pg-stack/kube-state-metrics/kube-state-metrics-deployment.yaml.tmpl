@@ -19,7 +19,12 @@ spec:
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/kube-state-metrics:v1.5.0
+        {{else}}
         image: quay.io/coreos/kube-state-metrics:v1.5.0
+        {{end}}
+        image:
         ports:
         - name: http-metrics
           containerPort: 8080
@@ -32,7 +37,11 @@ spec:
           initialDelaySeconds: 5
           timeoutSeconds: 5
       - name: addon-resizer
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/addon-resizer:1.8.3
+        {{else}}
         image: k8s.gcr.io/addon-resizer:1.8.3
+        {{end}}
         resources:
           limits:
             cpu: 0.15
@@ -58,3 +67,7 @@ spec:
           - --extra-memory=2Mi
           - --threshold=5
           - --deployment=kube-state-metrics
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
