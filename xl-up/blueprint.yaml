@@ -17,24 +17,6 @@ spec:
       overrideDefault: true
       description: "When running in a segregated network setup you may have downloaded the official Xebialabs docker containers and pushed them into your private docker registry. Another use case is when you have created a custom Xebialabs docker container for having additional plugins, extensions or java libraries, like jdbc drivers to connect to external databases, and pushed these custom container to your custom docker registry. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs Devops Platform images from."
 
-    - name: UseInternalLoadBalancer
-      type: Confirm
-      prompt: "Do you want to use an internal load balancer"
-      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
-      default: true
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
-
-    - name: IsHybridCluster
-      type: Confirm
-      prompt: "Is this a hybrid cluster?"
-      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
-      default: true
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "If the target cluster contains both linux and windows nodes"
-
     - name: RegistryURL
       type: Input
       prompt: "Enter your Docker registry URL and organization:"
@@ -66,6 +48,44 @@ spec:
       overrideDefault: true
       allowEmpty: true
       description: "When using a custom Docker registry that requires authentication, pass that password in here"
+
+    - name: UseCustomRegistryForAllImages
+      type: Confirm
+      prompt: "Do you want to use the provided custom Docker Registry for all images deployed to the Kubernetes cluster?"
+      promptIf: !expr "UseCustomRegistry && RegistryURL"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      overrideDefault: true
+      description: "When running your cluster in a segregated network setup you may have downloaded the docker containers and pushed them into your private docker registry. Another use case is when you have created a custom docker containers. If this is the case the image name and tag needs to be the same as ours which you will find documented on docs.xebialabs.com."
+
+    - name: UseCustomRegistryForSeed
+      type: Confirm
+      prompt: "Do you want to use the provided custom Docker Registry for the xl seed image?"
+      promptIf: !expr "UseCustomRegistry && RegistryURL"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      overrideDefault: true
+      description: "When running a segregated network setup locally you may have downloaded the official Xebialabs seed docker container and pushed them into your private docker registry or stored them locally onto your machine. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs seed image from."
+
+    - name: UseInternalLoadBalancer
+      type: Confirm
+      prompt: "Do you want to use an internal load balancer"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      default: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
+
+    - name: IsHybridCluster
+      type: Confirm
+      prompt: "Is this a hybrid cluster?"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      default: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "If the target cluster contains both linux and windows nodes"
 
     - name: InstallXLD
       type: Confirm
