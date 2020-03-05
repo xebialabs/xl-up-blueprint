@@ -17,7 +17,11 @@ spec:
       restartPolicy: OnFailure
       initContainers:
       - name: wait-for-elasticsearch
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/busybox:1
+        {{else}}
         image: busybox:1
+        {{end}}
         command:
         - 'sh'
         - '-c'
@@ -27,7 +31,11 @@ spec:
           sleep 2;
           done
       - name: wait-for-kibana
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/busybox:1
+        {{else}}
         image: busybox:1
+        {{end}}
         command:
         - 'sh'
         - '-c'
@@ -40,7 +48,11 @@ spec:
       - name: kibana-dashboards
         labels:
           organization: xebialabs
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/kibana-dashboard:1.0.0
+        {{else}}
         image: xebialabs/kibana-dashboard:1.0.0
+        {{end}}
         imagePullPolicy: Always
         env:
           - name: ELASTICSEARCH_URL
@@ -57,5 +69,10 @@ spec:
         kubernetes.io/os: linux
         {{- end}}
       {{- end}}
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ else }}
       imagePullSecrets:
         - name: xebialabs-pull-secret
+      {{ end }}

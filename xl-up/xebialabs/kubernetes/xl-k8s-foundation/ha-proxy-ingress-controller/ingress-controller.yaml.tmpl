@@ -173,7 +173,11 @@ spec:
       serviceAccountName: haproxy-ingress-serviceaccount
       containers:
         - name: haproxy-ingress
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/haproxy-ingress:v0.6
+          {{else}}
           image: quay.io/jcmoraisjr/haproxy-ingress:v0.6
+          {{end}}
           args:
             - --default-backend-service=$(POD_NAMESPACE)/ingress-default-backend
             - --default-ssl-certificate=$(POD_NAMESPACE)/tls-secret
@@ -194,6 +198,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       {{- if .IsHybridCluster}}
       nodeSelector:
         {{- if eq .K8sSetup "AwsEKS"}}

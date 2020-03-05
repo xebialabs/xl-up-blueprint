@@ -18,10 +18,18 @@ spec:
         spec:
           containers:
             - name: curator
+              {{if .UseCustomRegistryForAllImages }}
+              image: {{.RegistryURL}}/xl-es-curator
+              {{else}}
               image: xebialabsunsupported/xl-es-curator
+              {{end}}
               volumeMounts:
                 - name: config
                   mountPath: /etc/config
+          {{if .UseCustomRegistryForAllImages }}
+          imagePullSecrets:
+          - name: dockercred
+          {{ end }}
           {{- if .IsHybridCluster}}
           nodeSelector:
             {{- if eq .K8sSetup "AwsEKS"}}

@@ -38,7 +38,11 @@ spec:
         organization: xebialabs
     spec:
       containers:
+        {{if .UseCustomRegistryForAllImages }}
+        - image: {{.RegistryURL}}/rabbitmq:3.8.0-management
+        {{else}}
         - image: rabbitmq:3.8.0-management
+        {{end}}
           name: rabbitmq
           resources:
             requests:
@@ -84,6 +88,10 @@ spec:
               mountPath: /var/lib/rabbitmq
             - name: config-volume
               mountPath: /etc/rabbitmq
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       {{- if .IsHybridCluster}}
       nodeSelector:
         {{- if eq .K8sSetup "AwsEKS"}}
