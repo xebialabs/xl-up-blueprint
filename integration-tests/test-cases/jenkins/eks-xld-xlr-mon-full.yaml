@@ -10,7 +10,9 @@ EksClusterName: test-eks-master
 IsAwsCfgAvailable: true
 AWSAccessKey: SOMEKEY
 AWSAccessSecret: SOMEMOREKEY
+UseCustomNamespace: false
 Namespace: xebialabs
+IsHybridCluster: false
 UseCustomRegistry: false
 InstallXLD: true
 InstallXLR: true
