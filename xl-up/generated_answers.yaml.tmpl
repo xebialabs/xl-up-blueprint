@@ -34,6 +34,7 @@ UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 Namespace: {{.Namespace}}
 UseCustomNamespace: {{.UseCustomNamespace}}
 UseCustomRegistry: {{.UseCustomRegistry}}
+
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
 {{- if .UseCustomRegistry }}
@@ -42,6 +43,8 @@ XldVersion: {{ .XldVersion }}
 DockerUser: {{ .DockerUser }}
 DockerPass: {{ .DockerPass }}
 RegistryURL: {{ .RegistryURL }}
+UseCustomRegistryForAllImages: {{ .UseCustomRegistryForAllImages}}
+UseCustomRegistryForSeed: {{ .UseCustomRegistryForSeed}}
 {{- else }}
   {{- if .InstallXLD}}
 XldOfficialVersion: {{ .XldOfficialVersion }}
