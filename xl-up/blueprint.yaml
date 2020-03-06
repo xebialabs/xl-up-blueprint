@@ -52,7 +52,7 @@ spec:
     - name: UseCustomRegistryForAllImages
       type: Confirm
       prompt: "Do you want to use the provided custom Docker Registry for all images deployed to the Kubernetes cluster?"
-      promptIf: !expr "UseCustomRegistry && RegistryURL"
+      promptIf: !expr "UseCustomRegistry"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -62,7 +62,7 @@ spec:
     - name: UseCustomRegistryForSeed
       type: Confirm
       prompt: "Do you want to use the provided custom Docker Registry for the xl seed image?"
-      promptIf: !expr "UseCustomRegistry && RegistryURL"
+      promptIf: !expr "UseCustomRegistry"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
