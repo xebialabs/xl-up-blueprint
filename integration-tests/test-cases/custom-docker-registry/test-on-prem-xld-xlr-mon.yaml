@@ -123,6 +123,7 @@ with_answers:
   PostgresSyncCommit: 'off'
   RegistryURL: docker.io/xebialabs
   UseCustomRegistry: true
+  UseCustomRegistryForAllImages: true
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
