@@ -1,0 +1,118 @@
+extends: ../gke-base.yaml
+xl_mode: up
+expect:
+  assertion:
+    generated_files:
+    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+      has_elements:
+        '[3]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
+        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
+    - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+      has_elements:
+        '[0]metadata.annotations.cloud\.google\.com/load-balancer-type': 'Internal'
+      excludes_elements:
+        '[0]metadata.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-internal': 'true'
+        '[0]metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-internal': 'true'
+    secrets:
+      DockerPass: docker-pass
+      XlKeyStorePass: test123
+      XldAdminPass: password
+      XldDbPass: xl-deploy
+      XlrAdminPass: password
+      XlrDbPass: xl-release
+      XlrReportDbPass: xl-release-report
+    values:
+      DockerUser: docker-user
+      InstallXLD: true
+      InstallXLR: true
+      MonitoringInstall: false
+      PostgresEffectCacheSize: 2GB
+      PostgresMaxConn: 400
+      PostgresMaxWallSize: 512MB
+      PostgresSharedBuff: 612MB
+      PostgresSyncCommit: 'off'
+      RegistryURL: docker.io/xebialabs
+      UseCustomRegistry: true
+      XldDbName: xl-deploy
+      XldDbUser: xl-deploy
+      XldVersion: xl-deploy:8.5.3
+      XlrDbName: xl-release
+      XlrDbUser: xl-release
+      XlrReportDbName: xl-release-report
+      XlrReportDbUser: xl-release-report
+      XlrVersion: xl-release:8.5.3
+  to_exist:
+  - xebialabs/xl-deploy.yaml
+  - xebialabs/xl-release.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
+
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+  - xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml
+  to_not_exist:
+  - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/configmap.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
+  - xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
+  - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/rbac.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/configmap.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/secret.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-role-binding.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
+  - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
+with_answers:
+  DockerPass: docker-pass
+  DockerUser: docker-user
+  InstallXLD: true
+  InstallXLR: true
+  MonitoringInstall: false
+  PostgresEffectCacheSize: 2GB
+  PostgresMaxConn: 400
+  PostgresMaxWallSize: 512MB
+  PostgresSharedBuff: 612MB
+  PostgresSyncCommit: 'off'
+  RegistryURL: docker.io/xebialabs
+  UseCustomRegistry: true
+  XlKeyStore: ../integration-tests/files/test-file
+  XlKeyStorePass: test123
+  XldAdminPass: password
+  XldDbName: xl-deploy
+  XldDbPass: xl-deploy
+  XldDbUser: xl-deploy
+  XldLic: ../integration-tests/files/test-file
+  XldVersion: xl-deploy:8.5.3
+  XlrAdminPass: password
+  XlrDbName: xl-release
+  XlrDbPass: xl-release
+  XlrDbUser: xl-release
+  XlrLic: ../integration-tests/files/test-file
+  XlrReportDbName: xl-release-report
+  XlrReportDbPass: xl-release-report
+  XlrReportDbUser: xl-release-report
+  XlrVersion: xl-release:8.5.3
+  UseInternalLoadBalancer: true

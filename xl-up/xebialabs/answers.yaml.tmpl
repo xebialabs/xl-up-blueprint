@@ -3,9 +3,12 @@ apiVersion: v1
 metadata:
   name: answers-config-map
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 data:
   answers.yaml: |-
     UseCustomRegistry: {{.UseCustomRegistry}}
+    Namespace: {{.Namespace}}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
     {{- if .UseCustomRegistry }}

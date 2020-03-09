@@ -3,6 +3,8 @@ kind: ServiceAccount
 metadata:
   name: efs-provisioner
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1

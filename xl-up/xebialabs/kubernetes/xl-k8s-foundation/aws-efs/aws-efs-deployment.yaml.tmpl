@@ -5,6 +5,8 @@ apiVersion: apps/v1
 metadata:
   name: efs-provisioner
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 spec:
   replicas: 1
   selector:
@@ -16,6 +18,7 @@ spec:
     metadata:
       labels:
         app: efs-provisioner
+        organization: xebialabs
     spec:
       serviceAccount: efs-provisioner
       containers:
@@ -40,6 +43,16 @@ spec:
           volumeMounts:
             - name: pv-volume
               mountPath: /persistentvolumes
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       volumes:
         - name: pv-volume
           nfs:

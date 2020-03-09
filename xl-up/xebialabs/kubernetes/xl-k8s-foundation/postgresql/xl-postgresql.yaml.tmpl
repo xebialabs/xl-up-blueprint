@@ -12,6 +12,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: postgresql
+    organization: xebialabs
 spec:
   ports:
     - port: 5432
@@ -25,6 +26,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: postgresql
+    organization: xebialabs
 spec:
   serviceName: postgresql
   replicas: 1
@@ -35,6 +37,7 @@ spec:
     metadata:
       labels:
         app: postgresql
+        organization: xebialabs
     spec:
       initContainers:
         - name: fix-the-volume-permission
@@ -87,6 +90,17 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
+      volumes:
   {{- if or (eq .K8sSetup "DockerDesktopK8s") (eq .K8sSetup "MinikubeK8s")}}
       volumes:
         - name: data

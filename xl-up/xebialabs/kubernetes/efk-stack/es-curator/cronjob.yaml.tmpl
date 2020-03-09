@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: curator
+    organization: xebialabs
 spec:
   schedule: "0 1 * * *"
   successfulJobsHistoryLimit: 1
@@ -21,6 +22,16 @@ spec:
               volumeMounts:
                 - name: config
                   mountPath: /etc/config
+          {{- if .IsHybridCluster}}
+          nodeSelector:
+            {{- if eq .K8sSetup "AwsEKS"}}
+            beta.kubernetes.io/os: linux
+            {{- else if eq .K8sSetup "GoogleGKE"}}
+            kubernetes.io/os: linux
+            {{- else if eq .K8sSetup "AzureAKS"}}
+            kubernetes.io/os: linux
+            {{- end}}
+          {{- end}}
           volumes:
             - name: config
               configMap:

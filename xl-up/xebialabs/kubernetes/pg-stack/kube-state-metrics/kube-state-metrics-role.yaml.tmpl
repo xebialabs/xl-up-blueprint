@@ -4,6 +4,8 @@ kind: Role
 metadata:
   namespace: {{ .Namespace }}
   name: xebialabs-kube-state-metrics-resizer
+  labels:
+    organization: xebialabs
 rules:
 - apiGroups: [""]
   resources:

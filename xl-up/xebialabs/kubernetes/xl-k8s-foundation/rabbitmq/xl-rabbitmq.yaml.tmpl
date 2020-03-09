@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: rabbitmq
+    organization: xebialabs
 spec:
   type: NodePort
   ports:
@@ -22,6 +23,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: rabbitmq
+    organization: xebialabs
 spec:
   serviceAccountName: rabbitmq
   serviceName: rabbitmq
@@ -33,6 +35,7 @@ spec:
     metadata:
       labels:
         app: rabbitmq
+        organization: xebialabs
     spec:
       containers:
         - image: rabbitmq:3.8.0-management
@@ -81,6 +84,16 @@ spec:
               mountPath: /var/lib/rabbitmq
             - name: config-volume
               mountPath: /etc/rabbitmq
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       volumes:
         - name: config-volume
           configMap:

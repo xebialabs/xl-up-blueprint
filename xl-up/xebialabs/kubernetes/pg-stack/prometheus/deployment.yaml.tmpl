@@ -6,6 +6,7 @@ metadata:
   labels:
     app: prometheus
     purpose: metrics-collector
+    organization: xebialabs
 spec:
   serviceName: "prometheus"
   replicas: 1
@@ -18,6 +19,7 @@ spec:
       labels:
         app: prometheus
         purpose: metrics-collector
+        organization: xebialabs
     spec:
       serviceAccountName: prometheus
       initContainers:
@@ -47,6 +49,16 @@ spec:
           - name: data
             mountPath: /data
             subPath: ""
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       volumes:
         - name: config-volume
           configMap:
@@ -76,6 +88,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: prometheus
+    organization: xebialabs
 spec:
   selector:
     app: prometheus

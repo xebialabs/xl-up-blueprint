@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: kube-state-metrics
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 spec:
   selector:
     matchLabels:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: kube-state-metrics
+        organization: xebialabs
     spec:
       serviceAccountName: kube-state-metrics
       containers:
@@ -55,3 +58,13 @@ spec:
           - --extra-memory=2Mi
           - --threshold=5
           - --deployment=kube-state-metrics
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}

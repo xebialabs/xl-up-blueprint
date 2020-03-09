@@ -8,6 +8,7 @@ metadata:
     version: v2.12.5
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+    organization: xebialabs
 spec:
   selector:
     matchLabels:
@@ -19,6 +20,7 @@ spec:
         app: fluentd-es
         kubernetes.io/cluster-service: "true"
         version: v2.12.5
+        organization: xebialabs
       # This annotation ensures that fluentd does not get evicted if the node
       # supports critical pod annotation based priority scheme.
       # Note that this does not guarantee admission on the nodes (#40573).
@@ -52,6 +54,16 @@ spec:
           readOnly: true
         - name: config-volume
           mountPath: /etc/fluent/config.d
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog

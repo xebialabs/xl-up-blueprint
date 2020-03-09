@@ -5,8 +5,14 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: kibana-dashboards
+    organization: xebialabs
 spec:
   template:
+    metadata:
+      name: kibana-dashboards
+      labels:
+        app: kibana-dashboards
+        organization: xebialabs
     spec:
       restartPolicy: OnFailure
       initContainers:
@@ -31,7 +37,9 @@ spec:
           sleep 2;
           done
       containers:
-      - name: dashboards
+      - name: kibana-dashboards
+        labels:
+          organization: xebialabs
         image: xebialabs/kibana-dashboard:1.0.0
         imagePullPolicy: Always
         env:
@@ -39,5 +47,15 @@ spec:
             value: "http://elasticsearch-logging.{{- .Namespace }}.svc:9200"
           - name: KIBANA_URL
             value: "http://kibana-logging.{{- .Namespace }}.svc:5601"
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       imagePullSecrets:
         - name: xebialabs-pull-secret

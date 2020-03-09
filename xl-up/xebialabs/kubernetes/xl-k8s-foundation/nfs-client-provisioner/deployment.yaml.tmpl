@@ -6,6 +6,8 @@ apiVersion: apps/v1
 metadata:
   name: nfs-client-provisioner
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 spec:
   replicas: 1
   selector:
@@ -17,6 +19,7 @@ spec:
     metadata:
       labels:
         app: nfs-client-provisioner
+        organization: xebialabs
     spec:
       serviceAccountName: xebialabs-nfs-client-provisioner
       containers:
@@ -32,6 +35,16 @@ spec:
               value: {{$NFS_SERVER}}
             - name: NFS_PATH
               value: {{$NFS_PATH}}
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       volumes:
         - name: nfs-client-root
           nfs:

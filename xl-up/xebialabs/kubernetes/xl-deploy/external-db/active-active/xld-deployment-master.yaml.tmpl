@@ -13,6 +13,8 @@ apiVersion: v1
 metadata:
   name: postgresql-init-sql-xld
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 data:
   init-sql.sh: |-
     #!/bin/sh
@@ -38,6 +40,7 @@ metadata:
   labels:
     app: xl-deploy
     component: master
+    organization: xebialabs
 spec:
   selector:
     app: xl-deploy
@@ -57,6 +60,7 @@ metadata:
   labels:
     app: xl-deploy
     component: master
+    organization: xebialabs
 spec:
   selector:
     app: xl-deploy
@@ -75,6 +79,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     app: xl-deploy
+    organization: xebialabs
   annotations:
     kubernetes.io/ingress.class: haproxy
     ingress.kubernetes.io/rewrite-target: /
@@ -98,6 +103,8 @@ kind: StatefulSet
 metadata:
   name: xl-deploy-master
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 spec:
   serviceName: "xl-deploy-master"
   replicas: {{ .XldMasterCount }}
@@ -112,6 +119,7 @@ spec:
       labels:
         app: xl-deploy
         component: master
+        organization: xebialabs
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
@@ -240,6 +248,16 @@ spec:
           volumeMounts:
             - name: export-dir
               mountPath: /opt/xebialabs/xl-deploy-server/export
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       {{if .UseCustomRegistry }}
       imagePullSecrets:
       - name: dockercred

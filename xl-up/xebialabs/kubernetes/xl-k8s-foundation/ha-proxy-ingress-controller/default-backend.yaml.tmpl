@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     run: ingress-default-backend
+    organization: xebialabs
   name: ingress-default-backend
   namespace: {{ .Namespace }}
 spec:
@@ -20,12 +21,23 @@ spec:
           image: gcr.io/google_containers/defaultbackend:1.4
           ports:
             - containerPort: 8080
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     run: ingress-default-backend
+    organization: xebialabs
   name: ingress-default-backend
   namespace: {{ .Namespace }}
 spec:
@@ -43,6 +55,7 @@ metadata:
   name: ingress-default-backend
   namespace: {{ .Namespace }}
   labels:
+    organization: xebialabs
     app: ingress-default-backend
   annotations:
     kubernetes.io/ingress.class: haproxy

@@ -8,14 +8,6 @@ metadata:
   version: 1.0
 spec:
   parameters:
-    - name: Namespace
-      type: Input
-      prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
-      value: xebialabs
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The namespace to install the XebiaLabs Devops Platform into"
-
     - name: UseCustomRegistry
       type: Confirm
       prompt: "Do you want to use custom Docker Registry and custom images?"
@@ -33,6 +25,15 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
+
+    - name: IsHybridCluster
+      type: Confirm
+      prompt: "Is this a hybrid cluster?"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      default: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "If the target cluster contains both linux and windows nodes"
 
     - name: RegistryURL
       type: Input

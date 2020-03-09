@@ -8,6 +8,8 @@ kind: ConfigMap
 metadata:
   name: grafana-importer
   namespace: {{ .Namespace }}
+  labels: 
+    organization: xebialabs
 data:
   dashboard-importer.sh: |
       for file in *-datasource.json ; do
@@ -46,6 +48,8 @@ kind: ConfigMap
 metadata:
   name: grafana-import-dashboards
   namespace: {{ .Namespace }}
+  label: 
+    organization: xebialabs
 data:
   set-default.json: |
     {

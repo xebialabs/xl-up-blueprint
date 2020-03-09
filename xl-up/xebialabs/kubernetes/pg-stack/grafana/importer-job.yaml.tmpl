@@ -6,6 +6,7 @@ metadata:
   labels:
     app: grafana
     component: import-dashboards
+    organization: xebialabs
 spec:
   template:
     metadata:
@@ -13,6 +14,7 @@ spec:
       labels:
         app: grafana
         component: import-dashboards
+        organization: xebialabs
     spec:
       initContainers:
       - name: wait-for-grafana
@@ -28,6 +30,8 @@ spec:
           done
       containers:
       - name: grafana-import-dashboards
+        labels:
+          organization: xebialabs
         image: giantswarm/tiny-tools
         command: ["/bin/sh", "/dashboard-importer.sh"]
         workingDir: /opt/grafana-import-dashboards
@@ -48,11 +52,23 @@ spec:
         - name: grafana-importer
           mountPath: /dashboard-importer.sh
           subPath: dashboard-importer.sh
+      {{- if .IsHybridCluster}}
+      nodeSelector:
+        {{- if eq .K8sSetup "AwsEKS"}}
+        beta.kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "GoogleGKE"}}
+        kubernetes.io/os: linux
+        {{- else if eq .K8sSetup "AzureAKS"}}
+        kubernetes.io/os: linux
+        {{- end}}
+      {{- end}}
       restartPolicy: Never
       volumes:
       - name: config-volume
         configMap:
           name: grafana-import-dashboards
+          labels:                 
+            organization: xebialabs
       - name: grafana-importer
         configMap:
           name: grafana-importer

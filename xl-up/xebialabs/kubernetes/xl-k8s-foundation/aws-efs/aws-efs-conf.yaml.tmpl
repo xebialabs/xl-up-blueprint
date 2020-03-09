@@ -5,6 +5,8 @@ kind: ConfigMap
 metadata:
   name: efs-provisioner
   namespace: {{ .Namespace }}
+  labels:
+    organization: xebialabs
 data:
   file.system.id: {{$EFS_ID}}
   aws.region: {{$EFS_REGION}}
