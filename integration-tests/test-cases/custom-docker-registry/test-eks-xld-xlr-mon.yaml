@@ -3,6 +3,92 @@ xl_mode: up
 expect:
   assertion:
     generated_files:
+      - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+        has_elements:
+          '[3]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[3]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          '[3]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-release:8.5.3'
+          '[3]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
+        has_elements:
+          '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/rabbitmq:3.8.0-management'
+          '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+        has_elements:
+          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1.26.2'
+          '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/postgres:10.5'
+          '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+        has_elements:
+          '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/defaultbackend:1.4'
+          '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+        has_elements:
+          '[6]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/haproxy-ingress:v0.6'
+          '[6]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/aws-efs/aws-efs-deployment.yaml
+        has_elements:
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/efs-provisioner:v1.0.0-k8s1.10'
+          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+        has_elements:
+          '[4]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[4]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[4]spec.template.spec.initContainers[2].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          '[4]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-deploy:8.5.3'
+          '[4]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
+        has_elements:
+          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-deploy:8.5.3'
+          '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
+        has_elements:
+          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/grafana:5.4.4'
+          '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
+        has_elements:
+          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools-xebialabs'
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/tiny-tools-giantswarm'
+          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
+        has_elements:
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/kube-state-metrics:v1.5.0'
+          'spec.template.spec.containers[1].image': 'docker.io/xebialabsunsupported/addon-resizer:1.8.3'
+          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
+        has_elements:
+          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox:latest'
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/prometheus:v2.7.2'
+          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
+        has_elements:
+          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[0]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox'
+          '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/elasticsearch-oss:6.5.0'
+          '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
+        has_elements:
+          'spec.jobTemplate.spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-es-curator'
+          'spec.jobTemplate.spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
+        has_elements:
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/fluentd-elasticsearch:v2.3.2'
+          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
+        has_elements:
+          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox:1'
+          '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/kibana-oss:6.5.0'
+          '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
+        has_elements:
+          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox:1'
+          'spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1'
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/kibana-dashboard:1.0.0'
+          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
     - file_name: xebialabs/xl-release.yaml
       has_elements:
         '[0]spec.children[0].children[0].name': 'xl-release:8.5.3'
@@ -97,7 +183,7 @@ expect:
       PostgresMaxWallSize: 512MB
       PostgresSharedBuff: 612MB
       PostgresSyncCommit: 'off'
-      RegistryURL: docker.io/xebialabs
+      RegistryURL: docker.io/xebialabsunsupported
       UseCustomRegistry: true
       XldDbName: xl-deploy
       XldDbUser: xl-deploy
@@ -147,6 +233,8 @@ expect:
   to_not_exist:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/ingress-controller.yaml
 with_answers:
   DockerPass: docker-pass
   DockerUser: docker-user
