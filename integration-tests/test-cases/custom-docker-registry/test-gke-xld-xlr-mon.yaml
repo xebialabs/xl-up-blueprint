@@ -87,6 +87,7 @@ with_answers:
   PostgresSyncCommit: 'off'
   RegistryURL: docker.io/xebialabs
   UseCustomRegistry: true
+  UseCustomRegistryForAllImages: true
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123
   XldAdminPass: password

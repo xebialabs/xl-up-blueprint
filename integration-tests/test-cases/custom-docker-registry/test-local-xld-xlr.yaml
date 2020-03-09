@@ -94,6 +94,7 @@ with_answers:
   K8sSetup: DockerDesktopK8s
   RegistryURL: docker.io/xebialabs
   UseCustomRegistry: true
+  UseCustomRegistryForAllImages: true
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123

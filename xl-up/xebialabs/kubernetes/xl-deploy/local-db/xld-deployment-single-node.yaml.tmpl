@@ -95,7 +95,11 @@ spec:
     spec:
       initContainers:
         - name: fix-the-volume-permission
+          {{if .UseCustomRegistry }}
+          image: {{.RegistryURL}}/busybox
+          {{ else }}
           image: busybox
+          {{ end }}
           command:
             - sh
             - -c
@@ -107,7 +111,11 @@ spec:
               mountPath: /opt/xebialabs/xl-deploy-server/work
         {{if not .ExternalDatabase}}
         - name: wait-for-postgresql
+          {{if .UseCustomRegistry }}
+          image: {{.RegistryURL}}/alpine:3.6
+          {{ else }}
           image: alpine:3.6
+          {{ end }}
           command:
             - sh
             - -c
@@ -121,7 +129,11 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
         - name: create-db
-          image: xebialabs/tiny-tools
+          {{if .UseCustomRegistry }}
+          image: {{.RegistryURL}}/tiny-tools
+          {{ else }}
+          image: tiny-tools
+          {{ end }}
           imagePullPolicy: Always
           command:
             - '/bin/sh'
