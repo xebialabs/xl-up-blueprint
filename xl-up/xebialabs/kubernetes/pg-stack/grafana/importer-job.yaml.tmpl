@@ -18,7 +18,11 @@ spec:
     spec:
       initContainers:
       - name: wait-for-grafana
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/tiny-tools-xebialabs
+        {{else}}
         image: xebialabs/tiny-tools
+        {{end}}
         args:
         - /bin/sh
         - -c
@@ -33,7 +37,7 @@ spec:
         labels:
           organization: xebialabs
         {{if .UseCustomRegistryForAllImages }}
-        image: {{.RegistryURL}}/tiny-tools
+        image: {{.RegistryURL}}/tiny-tools-giantswarm
         {{else}}
         image: giantswarm/tiny-tools
         {{end}}
