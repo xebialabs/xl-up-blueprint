@@ -117,14 +117,6 @@ expect:
           '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1.26.2'
           '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/postgres:10.5'
           '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-        has_elements:
-          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/nfs-client-provisioner:latest'
-          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-        has_elements:
-          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/defaultbackend:1.4'
-          'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/ingress-controller.yaml
         has_elements:
           '[6]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/haproxy-ingress:v0.6'
