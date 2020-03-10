@@ -87,15 +87,14 @@ expect:
           'spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1'
           'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/kibana-dashboard:1.0.0'
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
-    generated_files:
-    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
-      has_elements:
-        '[3]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
-        '[3]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
-        '[3]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
-        '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
-        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
-        '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
+      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+        has_elements:
+          '[3]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
+          '[3]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
+          '[3]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
+          '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
+          '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
+          '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
     secrets:
       DockerPass: docker-pass
       MonitoringUserPass: mon-pass

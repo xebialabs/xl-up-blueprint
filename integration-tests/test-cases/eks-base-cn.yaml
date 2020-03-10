@@ -58,4 +58,5 @@ with_answers:
   UseInternalLoadBalancer: false
   UseAWSconfig: false
   UseKubeconfig: false
-  UseCustomNamespace: false
+  UseCustomNamespace: true
+  Namespace: customNamespace

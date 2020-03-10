@@ -41,4 +41,5 @@ with_answers:
   K8sSetup: AzureAKS
   UseKubeconfig: false
   UseInternalLoadBalancer: false
-  UseCustomNamespace: false
+  UseCustomNamespace: true
+  Namespace: customNamespace

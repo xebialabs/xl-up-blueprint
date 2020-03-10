@@ -8,14 +8,6 @@ metadata:
   version: 1.0
 spec:
   parameters:
-    - name: Namespace
-      type: Input
-      prompt: "Enter the name of the Kubernetes namespace where the XebiaLabs DevOps Platform will be installed:"
-      value: xebialabs
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The namespace to install the XebiaLabs Devops Platform into"
-
     - name: UseCustomRegistry
       type: Confirm
       prompt: "Do you want to use custom Docker Registry and custom images?"
@@ -76,6 +68,16 @@ spec:
       ignoreIfSkipped: true
       overrideDefault: true
       description: "When running a segregated network setup locally you may have downloaded the official Xebialabs seed docker container and pushed them into your private docker registry or stored them locally onto your machine. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs seed image from."
+
+    - name: IsHybridCluster
+      type: Confirm
+      prompt: "Is this a hybrid cluster?"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      default: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "If the target cluster contains both linux and windows nodes"
+
 
     - name: UseInternalLoadBalancer
       type: Confirm
