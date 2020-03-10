@@ -6,7 +6,7 @@ expect:
       - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
-          '[3]spec.template.spec.initContainers[1].image': 'tiny-tools'
+          '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
         has_elements:
@@ -42,12 +42,12 @@ expect:
           '[0]spec.template.spec.containers[0].image': 'grafana/grafana:5.4.4'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
         has_elements:
-          'spec.template.spec.initContainers[0].image': 'tiny-tools-xebialabs'
-          'spec.template.spec.containers[0].image': 'tiny-tools-giantswarm'
+          'spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          'spec.template.spec.containers[0].image': 'giantswarm/tiny-tools'
       - file_name: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
         has_elements:
-          'spec.template.spec.containers[0].image': 'kube-state-metrics:v1.5.0'
-          'spec.template.spec.containers[1].image': 'addon-resizer:1.8.3'
+          'spec.template.spec.containers[0].image': 'quay.io/coreos/kube-state-metrics:v1.5.0'
+          'spec.template.spec.containers[1].image': 'k8s.gcr.io/addon-resizer:1.8.3'
       - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
         has_elements:
           'spec.template.spec.initContainers[0].image': 'busybox:latest'
@@ -59,19 +59,19 @@ expect:
           '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.0'
       - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
         has_elements:
-          'spec.jobTemplate.spec.template.spec.containers[0].image': 'xl-es-curator'
+          'spec.jobTemplate.spec.template.spec.containers[0].image': 'xebialabsunsupported/xl-es-curator'
       - file_name: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
         has_elements:
-          'spec.template.spec.containers[0].image': 'fluentd-elasticsearch:v2.3.2'
+          'spec.template.spec.containers[0].image': 'k8s.gcr.io/fluentd-elasticsearch:v2.3.2'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
         has_elements:
           '[0]spec.template.spec.initContainers[0].image': 'busybox:1'
-          '[0]spec.template.spec.containers[0].image': 'kibana-oss:6.5.0'
+          '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/kibana/kibana-oss:6.5.0'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
         has_elements:
           'spec.template.spec.initContainers[0].image': 'busybox:1'
           'spec.template.spec.initContainers[1].image': 'busybox:1'
-          'spec.template.spec.containers[0].image': 'kibana-dashboard:1.0.0'
+          'spec.template.spec.containers[0].image': 'xebialabs/kibana-dashboard:1.0.0'
     secrets:
       MonitoringUserPass: mon-pass
       XlKeyStorePass: test123

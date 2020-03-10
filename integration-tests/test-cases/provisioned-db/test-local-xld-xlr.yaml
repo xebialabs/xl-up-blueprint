@@ -4,7 +4,7 @@ expect:
       - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
-          '[3]spec.template.spec.initContainers[1].image': 'tiny-tools'
+          '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
         has_elements:
@@ -33,7 +33,7 @@ expect:
         has_elements:
           '[1]spec.template.spec.initContainers[0].image': 'busybox'
           '[1]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[1]spec.template.spec.containers[0].image': 'xl-deploy:8.5.3'
+          '[1]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
     secrets:
       XlKeyStorePass: test123
       XldAdminPass: password
