@@ -125,13 +125,6 @@ expect:
         has_elements:
           'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/efs-provisioner:v1.0.0-k8s1.10'
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
-      - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
-        has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
-          '[3]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
-          '[3]spec.template.spec.initContainers[2].image': 'docker.io/xebialabsunsupported/tiny-tools'
-          '[3]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-release:8.5.3'
-          '[3]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/xlr-deployment-active.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/alpine:3.6'
