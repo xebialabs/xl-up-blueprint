@@ -7,10 +7,6 @@ expect:
           '[3]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-release:8.5.3'
           '[3]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-        has_elements:
-          '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/rabbitmq:3.8.0-management'
-          '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
         has_elements:
           '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
