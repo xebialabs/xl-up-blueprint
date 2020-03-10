@@ -1,7 +1,7 @@
 expect:
   assertion:
     generated_files:
-      - file_name: xebialabs/kubernetes/xl-release/local-db/active-active/xlr-deployment-single-node.yaml
+      - file_name: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/alpine:3.6'
           '[3]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
