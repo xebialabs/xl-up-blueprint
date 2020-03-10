@@ -128,8 +128,6 @@ spec:
           command:
             - '/bin/sh'
             - '/tmp/init-sql.sh'
-          securityContext:
-            privileged: true
           env:
             - name: POSTGRES_USER
               value: postgres
