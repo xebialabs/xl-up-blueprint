@@ -19,10 +19,10 @@ expect:
           '[6]spec.template.spec.containers[0].image': 'quay.io/jcmoraisjr/haproxy-ingress:v0.6'
       - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
-          '[4]spec.template.spec.initContainers[0].image': 'busybox'
-          '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[4]spec.template.spec.initContainers[2].image': 'tiny-tools'
-          '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
+          '[3]spec.template.spec.initContainers[0].image': 'busybox'
+          '[3]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[2].image': 'tiny-tools'
+          '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
     secrets:
       XlKeyStorePass: test123
       XldAdminPass: password
