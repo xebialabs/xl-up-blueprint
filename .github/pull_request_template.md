@@ -1,7 +1,6 @@
 ## Definition of Done
 
 **General**
- - [ ] Branch is up-to-date with beta
  - [ ] Blueprint can be tested by Jenkins
  - [ ] Code is reviewed and tested by someone else in the team
 
