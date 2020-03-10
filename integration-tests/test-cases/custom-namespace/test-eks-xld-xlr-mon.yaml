@@ -65,6 +65,7 @@ expect:
           '[0]spec.template.spec.initContainers[0].image': 'busybox'
           '[0]spec.template.spec.containers[0].image': 'grafana/grafana:5.4.4'
           '[0]metadata.namespace': 'customNamespace'
+          '[1]metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
         has_elements:
           'spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
@@ -86,6 +87,7 @@ expect:
           '[0]spec.template.spec.initContainers[1].image': 'busybox'
           '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.0'
           '[0]metadata.namespace': 'customNamespace'
+          '[1]metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
         has_elements:
           'spec.jobTemplate.spec.template.spec.containers[0].image': 'xebialabsunsupported/xl-es-curator'
@@ -99,6 +101,7 @@ expect:
           '[0]spec.template.spec.initContainers[0].image': 'busybox:1'
           '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/kibana/kibana-oss:6.5.0'
           '[0]metadata.namespace': 'customNamespace'
+          '[1]metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
         has_elements:
           'spec.template.spec.initContainers[0].image': 'busybox:1'
