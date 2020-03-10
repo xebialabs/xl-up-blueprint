@@ -1,7 +1,7 @@
 expect:
   assertion:
     generated_files:
-      - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+      - file_name: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
           '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
@@ -23,17 +23,12 @@ expect:
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
         has_elements:
           'spec.template.spec.containers[0].image': 'nfs-client-provisioner:latest'
-      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+      - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
           '[4]spec.template.spec.initContainers[0].image': 'busybox'
           '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
           '[4]spec.template.spec.initContainers[2].image': 'tiny-tools'
           '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
-      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-        has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'busybox'
-          '[1]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[1]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
     secrets:
       XlKeyStorePass: test123
       XldAdminPass: password

@@ -1,15 +1,11 @@
 expect:
   assertion:
     generated_files:
-      - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
+      - file_name: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
           '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
-          '[0]metadata.namespace': 'customNamespace'
-          '[1]metadata.namespace': 'customNamespace'
-          '[2]metadata.namespace': 'customNamespace'
-          '[3]metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
         has_elements:
           '[1]spec.template.spec.containers[0].image': 'rabbitmq:3.8.0-management'
@@ -40,24 +36,13 @@ expect:
         has_elements:
           'spec.template.spec.containers[0].image': 'nfs-client-provisioner:latest'
           'metadata.namespace': 'customNamespace'
-      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
+      - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
-          '[4]spec.template.spec.initContainers[0].image': 'busybox'
-          '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[4]spec.template.spec.initContainers[2].image': 'tiny-tools'
-          '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
-          '[0]metadata.namespace': 'customNamespace'
-          '[1]metadata.namespace': 'customNamespace'
-          '[2]metadata.namespace': 'customNamespace'
-          '[3]metadata.namespace': 'customNamespace'
-          '[4]metadata.namespace': 'customNamespace'
-      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-        has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'busybox'
-          '[1]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[1]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
-          '[0]metadata.namespace': 'customNamespace'
-          '[1]metadata.namespace': 'customNamespace'
+          '[4]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[4]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[4]spec.template.spec.initContainers[2].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          '[4]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-deploy:8.5.3'
+          '[4]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
     secrets:
       XlKeyStorePass: test123
       XldAdminPass: password
