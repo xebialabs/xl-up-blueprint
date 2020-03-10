@@ -27,10 +27,6 @@ expect:
           '[4]metadata.namespace': 'customNamespace'
           '[5]metadata.namespace': 'customNamespace'
           '[6]metadata.namespace': 'customNamespace'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-        has_elements:
-          'spec.template.spec.containers[0].image': 'nfs-client-provisioner:latest'
-          'metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
           '[4]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'

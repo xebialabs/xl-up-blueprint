@@ -17,9 +17,6 @@ expect:
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
         has_elements:
           '[6]spec.template.spec.containers[0].image': 'quay.io/jcmoraisjr/haproxy-ingress:v0.6'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml
-        has_elements:
-          'spec.template.spec.containers[0].image': 'nfs-client-provisioner:latest'
       - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
           '[4]spec.template.spec.initContainers[0].image': 'busybox'
