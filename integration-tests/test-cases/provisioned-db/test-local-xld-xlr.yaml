@@ -21,7 +21,7 @@ expect:
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'busybox'
           '[3]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[3]spec.template.spec.initContainers[2].image': 'tiny-tools'
+          '[3]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
     secrets:
       XlKeyStorePass: test123

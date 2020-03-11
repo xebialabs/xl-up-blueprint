@@ -44,7 +44,7 @@ expect:
         has_elements:
           '[4]spec.template.spec.initContainers[0].image': 'busybox'
           '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[4]spec.template.spec.initContainers[2].image': 'tiny-tools'
+          '[4]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
           '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
         has_elements:
