@@ -51,8 +51,8 @@ expect:
           '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
         has_elements:
-          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools-xebialabs'
-          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/tiny-tools-giantswarm'
+          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
         has_elements:

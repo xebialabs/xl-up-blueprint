@@ -19,7 +19,7 @@ spec:
       initContainers:
       - name: wait-for-grafana
         {{if .UseCustomRegistryForAllImages }}
-        image: {{.RegistryURL}}/tiny-tools-xebialabs
+        image: {{.RegistryURL}}/tiny-tools
         {{else}}
         image: xebialabs/tiny-tools
         {{end}}
@@ -37,7 +37,7 @@ spec:
         labels:
           organization: xebialabs
         {{if .UseCustomRegistryForAllImages }}
-        image: {{.RegistryURL}}/tiny-tools-giantswarm
+        image: {{.RegistryURL}}/tiny-tools
         {{else}}
         image: giantswarm/tiny-tools
         {{end}}
