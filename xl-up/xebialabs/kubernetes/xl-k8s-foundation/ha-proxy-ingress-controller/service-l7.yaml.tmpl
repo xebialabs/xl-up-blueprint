@@ -13,13 +13,12 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
     {{- end }}
     {{- if eq .K8sSetup "AzureAKS"}}
-    service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "300"
+    service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "20"
     {{- end }}
     #{{- if eq .K8sSetup "GoogleGKE"}}
     #beta.cloud.google.com/backend-config: '{"ports": {"80":"xl-backendconfig"}}'
     #{{- end }}
-
-    # Internal load balancer tags 
+    #Internal load balancer tags
     {{- if and (eq .K8sSetup "AwsEKS") (eq .UseInternalLoadBalancer true)}}
     service.beta.kubernetes.io/aws-load-balancer-internal: "true"
     {{- else if and (eq .K8sSetup "GoogleGKE") (eq .UseInternalLoadBalancer true)}}
