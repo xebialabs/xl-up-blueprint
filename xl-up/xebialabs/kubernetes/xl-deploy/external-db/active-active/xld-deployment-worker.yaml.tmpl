@@ -63,7 +63,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       initContainers:
         - name: fix-the-volume-permission
-          {{if .UseCustomRegistry }}
+          {{if .UseCustomRegistryForAllImages }}
           image: {{.RegistryURL}}/busybox
           {{ else }}
           image: busybox
@@ -79,7 +79,7 @@ spec:
               mountPath: /opt/xebialabs/xl-deploy-server/work
         {{if not .ExternalDatabase}}
         - name: wait-for-postgresql
-          {{if .UseCustomRegistry }}
+          {{if .UseCustomRegistryForAllImages }}
           image: {{.RegistryURL}}/alpine:3.6
           {{ else }}
           image: alpine:3.6
