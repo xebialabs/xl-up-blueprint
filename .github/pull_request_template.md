@@ -1,9 +1,10 @@
 ## Definition of Done
 
 **General**
- - [ ] Branch is up-to-date with beta
- - [ ] Blueprint can be tested by Jenkins
+ - [ ] Branch is up-to-date with master
+ - [ ] Blueprint can be tested by Jenkins (unit and e2e)
  - [ ] Code is reviewed and tested by someone else in the team
+ - [ ] Draft docs are created if needed
 
 **Testing**
 - [ ] Works on Linux, Windows and Mac

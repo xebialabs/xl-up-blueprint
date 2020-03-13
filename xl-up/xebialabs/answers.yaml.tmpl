@@ -18,7 +18,6 @@ data:
     DockerPass: {{ .DockerPass }}
     RegistryURL: {{ .RegistryURL }}
     UseCustomRegistryForAllImages: {{ .UseCustomRegistryForAllImages}}
-    UseCustomRegistryForSeed: {{ .UseCustomRegistryForSeed}}
     {{- else }}
       {{- if .InstallXLD}}
     XldOfficialVersion: {{ .XldOfficialVersion }}
