@@ -67,6 +67,30 @@ spec:
       allowEmpty: true
       description: "When using a custom Docker registry that requires authentication, pass that password in here"
 
+    - name: UseExistingStorageClasses
+      type: Confirm
+      prompt: "Do you want to an existing storage class?"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Use storage classes you have set up manually for this deployment with XL Up"
+
+    - name: StorageClassName
+      type: Input
+      prompt: "Please enter the name of the storage class"
+      promptIf: !expr "UseExistingStorageClasses"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Enter the name of the storage class you have set up to use for this deployment with XL Up"
+
+    - name: SharedStorageClassName
+      type: Input
+      prompt: "Please enter the name of the storage class to be used for storage shared between pods"
+      promptIf: !expr "UseExistingStorageClasses"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Enter the name of the shared storage class you have set up to use for pods that need shared access to storage for this deployment with XL Up"
+
     - name: InstallXLD
       type: Confirm
       prompt: "Would you like to install XL Deploy?"
@@ -591,7 +615,7 @@ spec:
     - name: EfsId
       type: Input
       prompt: "Enter your Amazon EFS ID:"
-      promptIf: !expr "K8sSetup == 'AwsEKS'"
+      promptIf: !expr "K8sSetup == 'AwsEKS' && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The ID of the AWS EFS instance which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your AWS EFS instance can be mounted in the nodes of your AWS EKS cluster"
@@ -599,7 +623,7 @@ spec:
     - name: EfsRegion
       type: Input
       prompt: "Enter your Amazon EFS region:"
-      promptIf: !expr "K8sSetup == 'AwsEKS'"
+      promptIf: !expr "K8sSetup == 'AwsEKS' && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The region where your AWS EFS instance is created, for example 'eu-west-1'"
@@ -607,7 +631,7 @@ spec:
     - name: NfsServerHost
       type: Input
       prompt: "Enter your NFS server name or IP address:"
-      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
+      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
@@ -617,7 +641,7 @@ spec:
     - name: NfsSharePath
       type: Input
       prompt: "Enter your NFS share path:"
-      promptIf: !expr "K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE'"
+      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       validate: !expr "isValidAbsPath(NfsSharePath)"
