@@ -138,8 +138,6 @@ spec:
           command:
             - '/bin/sh'
             - '/tmp/init-sql.sh'
-          securityContext:
-            privileged: true
           env:
             - name: POSTGRES_USER
               value: postgres
@@ -154,7 +152,7 @@ spec:
           {{end}}
       containers:
         - name: xl-deploy
-          {{if .UseCustomRegistry }}                    
+          {{if .UseCustomRegistry }}
           image: {{.RegistryURL}}/{{.XldVersion}}
           {{ else }}
           image: xebialabs/xl-deploy:{{$XLD_OFFICIAL_VERSION}}
