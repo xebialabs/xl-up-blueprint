@@ -110,10 +110,10 @@ spec:
           {{- end }}
           XLD_DB_USER: !value XldDbUser
         {{- end }}
-        {{- if eq .K8sSetup "AwsEKS"}}
+        {{- if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses)}}
           EFS_ID: !value EfsId
           EFS_REGION: !value EfsRegion
-        {{- else if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
+        {{- else if and (or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE") ) (not .UseExistingStorageClasses)}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
           NFS_SERVER: !value NfsServerHost
           NFS_PATH: !value NfsSharePath
@@ -187,11 +187,11 @@ spec:
                 {{- if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
                 {{- else }}
-                   {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
+                   {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (not .UseExistingStorageClasses)}}
                     {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
-                    {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                    {{- if (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster"))}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                     {{- else if eq .K8sSetup "AwsEKS" }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
@@ -256,7 +256,7 @@ spec:
                     {{- end }}
                   {{- end }}
                 undeployDependencies: "true"
-          {{- if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")}}
+          {{- if and (or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")) (not .UseExistingStorageClasses)}}
           - name: K8s-StorageClass
             type: udm.Application
             children:
@@ -265,7 +265,7 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  {{- if eq .K8sSetup "AwsEKS" }}
+                  {{- if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses) }}
                   - name: gp2
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
@@ -274,12 +274,12 @@ spec:
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/aws-efs/aws-efs-storageclass.yaml
-                  {{- else if eq .K8sSetup "GoogleGKE" }}
+                  {{- else if and (eq .K8sSetup "GoogleGKE") (not .UseExistingStorageClasses) }}
                   - name: pd-retain
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml
-                  {{- else if eq .K8sSetup "AzureAKS" }}
+                  {{- else if and (eq .K8sSetup "AzureAKS") (not .UseExistingStorageClasses) }}
                   - name: azuredisk-retain
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
@@ -290,7 +290,7 @@ spec:
                     file: !file kubernetes/xl-k8s-foundation/azurefile-storageclass.yaml
                   {{- end }}
           {{- end }}
-          {{- if eq .K8sSetup "AwsEKS" }}
+          {{- if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses)  }}
           - name: K8S-EFS-Provisioner
             type: udm.Application
             children:
@@ -350,20 +350,20 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
-                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-                    {{- if ne .K8sSetup "PlainK8SCluster"}}
+                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") }}
+                    {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
-                    {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                    {{- if and (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")) (.UseExistingStorageClasses)}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                    {{- else if eq .K8sSetup "AwsEKS" }}
+                    {{- else if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses) }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
                     {{- end }}
                   XL-PVC-Claims: "1.0.0"
                   {{- end }}
                 undeployDependencies: "true"
           {{- end }}
-          {{- if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")}}
+          {{- if and (or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")) (not .UseExistingStorageClasses)}}
           - name: K8s-NFS-Client-Provisioner
             type: udm.Application
             children:

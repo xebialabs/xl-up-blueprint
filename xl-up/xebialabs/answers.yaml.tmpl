@@ -63,11 +63,11 @@ data:
     XldExportPvcSize: {{ .XldExportPvcSize }}
       {{- end }}
     {{- end}}
-    {{- if eq .K8sSetup "AwsEKS" }}
+    {{- if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses)}}
     EfsId: {{ .EfsId }}
     EfsRegion: {{ .EfsRegion }}
     {{- end}}
-    {{- if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster"))}}
+    {{- if and (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster")) (not .UseExistingStorageClasses)}}
     NfsServerHost: {{ .NfsServerHost }}
     NfsSharePath: {{ .NfsSharePath }}
     {{- end}}
@@ -115,5 +115,8 @@ data:
     PostgresSyncCommit: {{ .PostgresSyncCommit }}
     PostgresMaxWallSize: {{ .PostgresMaxWallSize }}
     {{- end}}
-    StorageClassName: {{ .StorageClassName }}
     UseExistingStorageClasses: {{ .UseExistingStorageClasses }}
+    {{- if .UseExistingStorageClasses}}
+    SharedStorageClassName: {{ .SharedStorageClassName }}
+    StorageClassName: {{ .StorageClassName }}
+    {{- end}}
