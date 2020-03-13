@@ -7,6 +7,9 @@ metadata:
     organization: xebialabs
 data:
   answers.yaml: |-
+    {{- if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "AwsEKS") (eq .K8sSetup "AzureAKS"))}}
+    IsHybridCluster: {{ .IsHybridCluster }}
+    {{- end}}
     UseCustomRegistry: {{.UseCustomRegistry}}
     Namespace: {{.Namespace}}
     InstallXLD: {{ .InstallXLD }}

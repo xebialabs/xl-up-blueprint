@@ -15,6 +15,9 @@ K8sClientKey: {{ .K8sClientKey }}
 {{- else}}
 K8sToken: {{ .K8sToken}}
 {{- end}}
+{{- if (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "AwsEKS") (eq .K8sSetup "AzureAKS"))}}
+IsHybridCluster: {{ .IsHybridCluster }}
+{{- end}}
 {{- if eq .K8sSetup "GoogleGKE" }}
 IsGKE: {{eq .K8sSetup "GoogleGKE"}}
 UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
@@ -23,7 +26,6 @@ UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 IsEKS: {{eq .K8sSetup "AwsEKS"}}
 UseAWSconfig: {{ .UseAWSconfig }}
 EksClusterName: {{ .EksClusterName }}
-IsHybridCluster: {{ .IsHybridCluster }}
 AWSAccessKey: {{ .AWSAccessKey }}
 AWSAccessSecret: {{ .AWSAccessSecret }}
 UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}

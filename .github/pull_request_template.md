@@ -1,8 +1,7 @@
 ## Definition of Done
 
 **General**
- - [ ] Branch is up-to-date with master
- - [ ] Blueprint can be tested by Jenkins (unit and e2e)
+ - [ ] Blueprint can be tested by Jenkins
  - [ ] Code is reviewed and tested by someone else in the team
  - [ ] Draft docs are created if needed
 
