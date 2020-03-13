@@ -51,23 +51,13 @@ spec:
 
     - name: UseCustomRegistryForAllImages
       type: Confirm
-      prompt: "Do you want to use the provided custom Docker Registry for all images deployed to the Kubernetes cluster?"
+      prompt: "Do you want to use the provided custom Docker Registry for all docker images used by xl-up?"
       promptIf: !expr "UseCustomRegistry"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
-      description: "When running your cluster in a segregated network setup you may have downloaded the docker containers and pushed them into your private docker registry. Another use case is when you have created a custom docker containers. If this is the case the image name and tag needs to be the same as ours which you will find documented on docs.xebialabs.com."
-
-    - name: UseCustomRegistryForSeed
-      type: Confirm
-      prompt: "Do you want to use the provided custom Docker Registry for the xl seed image?"
-      promptIf: !expr "UseCustomRegistry"
-      default: false
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      overrideDefault: true
-      description: "When running a segregated network setup locally you may have downloaded the official Xebialabs seed docker container and pushed them into your private docker registry or stored them locally onto your machine. It might be necessary to specify a custom internal Docker registry to pull the XebiaLabs seed image from."
+      description: "When running in a segregated network setup you may have downloaded the docker containers and pushed them into your private docker registry. If this is the case the image name and tag needs to be the same as ours which you will find documented on docs.xebialabs.com."
 
     - name: IsHybridCluster
       type: Confirm

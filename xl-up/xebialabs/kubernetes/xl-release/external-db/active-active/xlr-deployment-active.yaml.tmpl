@@ -124,7 +124,7 @@ spec:
       initContainers:
         {{if not .ExternalDatabase}}
         - name: wait-for-db
-          {{if .UseCustomRegistry }}
+          {{if .UseCustomRegistryForAllImages }}
           image: {{.RegistryURL}}/alpine:3.6
           {{ else }}
           image: alpine:3.6
@@ -142,7 +142,7 @@ spec:
            - name: POSTGRES_PORT
              value: "5432"
         - name: create-db
-          {{if .UseCustomRegistry }}
+          {{if .UseCustomRegistryForAllImages }}
           image: {{.RegistryURL}}/tiny-tools
           {{ else }}
           image: xebialabs/tiny-tools
@@ -151,8 +151,6 @@ spec:
           command:
             - '/bin/sh'
             - '/tmp/init-sql.sh'
-          securityContext:
-            privileged: true
           env:
             - name: POSTGRES_USER
               value: postgres
