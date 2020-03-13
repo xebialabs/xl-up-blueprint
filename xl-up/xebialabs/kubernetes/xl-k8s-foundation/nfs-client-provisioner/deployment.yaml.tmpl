@@ -1,4 +1,4 @@
-{{$NFS_PROVISIONER_NAME := "{{NFS_PROVISIONER_NAME}}"}}
+ {{$NFS_PROVISIONER_NAME := "{{NFS_PROVISIONER_NAME}}"}}
 {{$NFS_SERVER := "{{NFS_SERVER}}"}}
 {{$NFS_PATH := "{{NFS_PATH}}"}}
 kind: Deployment
@@ -24,7 +24,11 @@ spec:
       serviceAccountName: xebialabs-nfs-client-provisioner
       containers:
         - name: nfs-client-provisioner
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/nfs-client-provisioner:latest
+          {{else}}
           image: quay.io/external_storage/nfs-client-provisioner:latest
+          {{end}}
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes
@@ -35,6 +39,10 @@ spec:
               value: {{$NFS_SERVER}}
             - name: NFS_PATH
               value: {{$NFS_PATH}}
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       {{- if .IsHybridCluster}}
       nodeSelector:
         {{- if eq .K8sSetup "AwsEKS"}}

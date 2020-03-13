@@ -41,7 +41,11 @@ spec:
     spec:
       initContainers:
         - name: fix-the-volume-permission
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/busybox
+          {{else}}
           image: busybox
+          {{end}}
           imagePullPolicy: Always
           command:
             - sh
@@ -53,7 +57,11 @@ spec:
             - name: data
               mountPath: /var/lib/postgresql/data
         - name: "remove-lost-found"
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/busybox:1.26.2
+          {{else}}
           image: "busybox:1.26.2"
+          {{end}}
           imagePullPolicy: "IfNotPresent"
           command:
             - 'sh'
@@ -62,9 +70,14 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: data
+
       containers:
-        - image: postgres:10.5
-          name: postgresql
+        - name: postgresql
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/postgres:10.5
+          {{else}}
+          image: postgres:10.5
+          {{end}}
           command: ["docker-entrypoint.sh"]
           args:
             - "-c"
@@ -90,6 +103,10 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       {{- if .IsHybridCluster}}
       nodeSelector:
         {{- if eq .K8sSetup "AwsEKS"}}

@@ -45,6 +45,7 @@ XldVersion: {{ .XldVersion }}
 DockerUser: {{ .DockerUser }}
 DockerPass: {{ .DockerPass }}
 RegistryURL: {{ .RegistryURL }}
+UseCustomRegistryForAllImages: {{ .UseCustomRegistryForAllImages}}
 {{- else }}
   {{- if .InstallXLD}}
 XldOfficialVersion: {{ .XldOfficialVersion }}

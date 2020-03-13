@@ -43,3 +43,4 @@ with_answers:
   UseKubeconfig: false
   UseInternalLoadBalancer: false
   UseCustomNamespace: false
+  IsHybridCluster: true

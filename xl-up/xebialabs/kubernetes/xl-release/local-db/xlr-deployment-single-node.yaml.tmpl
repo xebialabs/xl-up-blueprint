@@ -109,7 +109,11 @@ spec:
       initContainers:
         {{if not .ExternalDatabase}}
         - name: wait-for-db
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/alpine:3.6
+          {{ else }}
           image: alpine:3.6
+          {{ end }}
           command:
             - sh
             - -c
@@ -123,7 +127,11 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
         - name: create-db
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/tiny-tools
+          {{ else }}
           image: xebialabs/tiny-tools
+          {{ end }}
           imagePullPolicy: Always
           command:
             - '/bin/sh'

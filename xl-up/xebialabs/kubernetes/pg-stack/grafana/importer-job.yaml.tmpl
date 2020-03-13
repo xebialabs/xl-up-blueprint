@@ -18,7 +18,11 @@ spec:
     spec:
       initContainers:
       - name: wait-for-grafana
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/tiny-tools
+        {{else}}
         image: xebialabs/tiny-tools
+        {{end}}
         args:
         - /bin/sh
         - -c
@@ -32,7 +36,11 @@ spec:
       - name: grafana-import-dashboards
         labels:
           organization: xebialabs
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/tiny-tools
+        {{else}}
         image: giantswarm/tiny-tools
+        {{end}}
         command: ["/bin/sh", "/dashboard-importer.sh"]
         workingDir: /opt/grafana-import-dashboards
         env:
@@ -63,6 +71,10 @@ spec:
         {{- end}}
       {{- end}}
       restartPolicy: Never
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       volumes:
       - name: config-volume
         configMap:

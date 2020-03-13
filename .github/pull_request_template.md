@@ -3,6 +3,7 @@
 **General**
  - [ ] Blueprint can be tested by Jenkins
  - [ ] Code is reviewed and tested by someone else in the team
+ - [ ] Draft docs are created if needed
 
 **Testing**
 - [ ] Works on Linux, Windows and Mac

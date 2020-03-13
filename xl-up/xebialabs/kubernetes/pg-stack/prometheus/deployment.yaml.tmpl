@@ -24,7 +24,11 @@ spec:
       serviceAccountName: prometheus
       initContainers:
         - name: "init-chown-data"
-          image: "busybox:latest"
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/busybox:latest
+          {{else}}
+          image: busybox:latest
+          {{end}}
           command: ["chown", "-R", "65534:65534", "/data"]
           volumeMounts:
             - name: data
@@ -32,7 +36,11 @@ spec:
               subPath: ""
       containers:
       - name: prometheus
+        {{if .UseCustomRegistryForAllImages }}
+        image: {{.RegistryURL}}/prometheus:v2.7.2
+        {{else}}
         image: prom/prometheus:v2.7.2
+        {{end}}
         args:
           - --config.file=/etc/prometheus/prometheus.yml
           - --storage.tsdb.path=/data
@@ -49,6 +57,10 @@ spec:
           - name: data
             mountPath: /data
             subPath: ""
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       {{- if .IsHybridCluster}}
       nodeSelector:
         {{- if eq .K8sSetup "AwsEKS"}}

@@ -60,3 +60,4 @@ with_answers:
   UseAWSconfig: false
   UseKubeconfig: false
   UseCustomNamespace: false
+  IsHybridCluster: true

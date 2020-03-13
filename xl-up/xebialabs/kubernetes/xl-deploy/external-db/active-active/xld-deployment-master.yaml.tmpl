@@ -134,7 +134,11 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       initContainers:
         - name: fix-the-volume-permission
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/busybox
+          {{ else }}
           image: busybox
+          {{ end }}
           command:
             - sh
             - -c
@@ -146,7 +150,11 @@ spec:
               mountPath: /opt/xebialabs/xl-deploy-server/export
         {{if not .ExternalDatabase}}
         - name: wait-for-postgresql
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/alpine:3.6
+          {{ else }}
           image: alpine:3.6
+          {{ end }}
           command:
             - sh
             - -c
@@ -160,7 +168,11 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
         - name: create-db
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/tiny-tools
+          {{ else }}
           image: xebialabs/tiny-tools
+          {{ end }}
           imagePullPolicy: Always
           command:
             - '/bin/sh'

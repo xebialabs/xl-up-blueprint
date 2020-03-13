@@ -1,6 +1,33 @@
 expect:
   assertion:
-    generated_files: []
+    generated_files:
+      - file_name: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+        has_elements:
+          '[3]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[3]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          '[3]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-release:8.5.3'
+          '[3]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
+        has_elements:
+          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1.26.2'
+          '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/postgres:10.5'
+          '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+        has_elements:
+          '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/defaultbackend:1.4'
+          '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+        has_elements:
+          '[6]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/haproxy-ingress:v0.6'
+          '[6]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
+      - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
+        has_elements:
+          '[3]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[3]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
+          '[3]spec.template.spec.initContainers[2].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          '[3]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-deploy:8.5.3'
+          '[3]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
     secrets:
       DockerPass: docker-pass
       XlKeyStorePass: test123
@@ -16,7 +43,7 @@ expect:
       K8sAuthentication: FilePath
       K8sLocalApiServerURL: https://DockerDesktopK8s.com:8443
       K8sSetup: DockerDesktopK8s
-      RegistryURL: docker.io/xebialabs
+      RegistryURL: docker.io/xebialabsunsupported
       UseCustomRegistry: true
       UseKubeconfig: false
       XldDbName: xl-deploy
@@ -92,8 +119,9 @@ with_answers:
   K8sClientKeyFile: ../integration-tests/files/test-file
   K8sLocalApiServerURL: https://DockerDesktopK8s.com:8443
   K8sSetup: DockerDesktopK8s
-  RegistryURL: docker.io/xebialabs
+  RegistryURL: docker.io/xebialabsunsupported
   UseCustomRegistry: true
+  UseCustomRegistryForAllImages: true
   UseKubeconfig: false
   XlKeyStore: ../integration-tests/files/test-file
   XlKeyStorePass: test123

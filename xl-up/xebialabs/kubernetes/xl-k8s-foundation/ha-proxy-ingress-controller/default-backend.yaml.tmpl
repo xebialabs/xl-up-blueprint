@@ -18,9 +18,17 @@ spec:
     spec:
       containers:
         - name: ingress-default-backend
+          {{if .UseCustomRegistryForAllImages }}
+          image: {{.RegistryURL}}/defaultbackend:1.4
+          {{else}}
           image: gcr.io/google_containers/defaultbackend:1.4
+          {{end}}
           ports:
             - containerPort: 8080
+      {{if .UseCustomRegistryForAllImages }}
+      imagePullSecrets:
+      - name: dockercred
+      {{ end }}
       {{- if .IsHybridCluster}}
       nodeSelector:
         {{- if eq .K8sSetup "AwsEKS"}}
