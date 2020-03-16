@@ -29,18 +29,18 @@ expect:
     - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
       has_elements:
         '[1]spec.volumeClaimTemplates[0].spec.storageClassName': 'testClass'
-    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xl-deployment-worker.yaml
+    - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
       has_elements:
-        '[1]spec.volumeClaimTemplates.spec.storageClassName': 'testClass'
+        '[1]spec.volumeClaimTemplates[0].spec.storageClassName': 'testClass'
     - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
       has_elements:
-        '[0]spec.volumeClaimTemplates.spec.storageClassName': 'testClass'
+        '[0]spec.volumeClaimTemplates[0].spec.storageClassName': 'testClass'
     - file_name: xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
       has_elements:
-        'spec.volumeClaimTemplates.spec.storageClassName': 'testClass'
+        'spec.storageClassName': 'testClass'
     - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
       has_elements:
-        'spec.volumeClaimTemplates.spec.storageClassName': 'testClass'
+        '[0]spec.volumeClaimTemplates[0].spec.storageClassName': 'testClass'
     secrets:
       MonitoringUserPass: mon-pass
       XlKeyStorePass: test123
