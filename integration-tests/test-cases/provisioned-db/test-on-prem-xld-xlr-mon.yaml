@@ -101,7 +101,7 @@ expect:
           'spec.storageClassName': 'xebialabs-managed-nfs-storage'
       - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
         has_elements:
-          '[0]spec.volumeClaimTemplates[0].spec.storageClassName': 'xebialabs-managed-nfs-storage'
+          '[0]specvolumeClaimTemplates[0].spec.storageClassName': 'xebialabs-managed-nfs-storage'
     secrets:
       MonitoringUserPass: mon-pass
       XlKeyStorePass: test123
