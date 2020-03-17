@@ -795,12 +795,12 @@ spec:
 
     - name: XLDVersionHash
       value: !expr "md5HashOfAnswersIncluding('UseCustomRegistry', 'RegistryURL', 'XldTag', 'XldOfficialVersion', 'XldVersion', 'XldMasterCount', 'XldMasterRAMRequest', 'XldMasterRAMLimit', 'XldMasterCPURequest', 'XldMasterCPULimit', 'XldWorkerCount','XldWorkerRAMRequest', 'XldWorkerRAMLimit', 'XldWorkerCPURequest', 'XldWorkerCPULimit', 'XldLic', 'XldDbUrl', 'XldDbUser', 'XldDbPass',
-      'RabbitMQUrl', 'RabbitMQDriver', 'RabbitMQUsername', 'RabbitMQPassword', 'UseExistingStorageClasses', 'StorageClassName', 'SharedStorageClassName')"
+      'RabbitMQUrl', 'RabbitMQDriver', 'RabbitMQUsername', 'RabbitMQPassword')"
       description: "A unique hash based on the answers to ensure XLD is deployed on update"
       ignoreIfSkipped: true
 
     - name: XLRVersionHash
-      value: !expr "md5HashOfAnswersIncluding('UseCustomRegistry', 'RegistryURL', 'XlrTag', 'XlrOfficialVersion', 'XlrVersion', 'XlrLic', 'XlrDbUrl', 'XlrDbUser', 'XlrDbPass', 'XlrReportDbUrl', 'XlrReportDbUser', 'XlrReportDbPass', 'XlrRAMRequest', 'XlrRAMLimit', 'XlrCPURequest', 'XlrCPULimit', 'UseExistingStorageClasses', 'StorageClassName', 'SharedStorageClassName')"
+      value: !expr "md5HashOfAnswersIncluding('UseCustomRegistry', 'RegistryURL', 'XlrTag', 'XlrOfficialVersion', 'XlrVersion', 'XlrLic', 'XlrDbUrl', 'XlrDbUser', 'XlrDbPass', 'XlrReportDbUrl', 'XlrReportDbUser', 'XlrReportDbPass', 'XlrRAMRequest', 'XlrRAMLimit', 'XlrCPURequest', 'XlrCPULimit')"
       description: "A unique hash based on the answers to ensure XLR is deployed on update"
       ignoreIfSkipped: true
 
