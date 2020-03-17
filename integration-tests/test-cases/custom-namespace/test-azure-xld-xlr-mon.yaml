@@ -5,7 +5,7 @@ expect:
     generated_files:
       - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
         has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
           '[0]metadata.namespace': 'customNamespace'
@@ -41,7 +41,7 @@ expect:
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
         has_elements:
           '[4]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
-          '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[4]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[4]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
           '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
           '[0]metadata.namespace': 'customNamespace'
@@ -52,7 +52,7 @@ expect:
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
         has_elements:
           '[1]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
-          '[1]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[1]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[1]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
           '[0]metadata.namespace': 'customNamespace'
           '[1]metadata.namespace': 'customNamespace'
@@ -78,7 +78,7 @@ expect:
           'metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.initContainers[0].image': 'alpine:3.6'
+          '[0]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[0]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.0'
           '[0]metadata.namespace': 'customNamespace'

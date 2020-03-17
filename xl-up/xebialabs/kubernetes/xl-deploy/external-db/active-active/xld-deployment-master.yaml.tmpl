@@ -151,9 +151,9 @@ spec:
         {{if not .ExternalDatabase}}
         - name: wait-for-postgresql
           {{if .UseCustomRegistryForAllImages }}
-          image: {{.RegistryURL}}/alpine:3.6
+          image: {{.RegistryURL}}/tiny-tools
           {{ else }}
-          image: alpine:3.6
+          image: xebialabs/tiny-tools
           {{ end }}
           command:
             - sh

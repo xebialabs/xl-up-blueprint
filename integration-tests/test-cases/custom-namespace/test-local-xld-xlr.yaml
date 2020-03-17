@@ -3,7 +3,7 @@ expect:
     generated_files:
       - file_name: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
         has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
@@ -30,7 +30,7 @@ expect:
       - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
           '[3]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
-          '[3]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
           '[0]metadata.namespace': 'customNamespace'

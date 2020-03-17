@@ -28,9 +28,9 @@ spec:
       initContainers:
       - name: elasticsearch-logging-init
         {{if .UseCustomRegistryForAllImages }}
-        image: {{.RegistryURL}}/alpine:3.6
+        image: {{.RegistryURL}}/tiny-tools
         {{else}}
-        image: alpine:3.6
+        image: xebialabs/tiny-tools
         {{end}}
         command: ["/sbin/sysctl", "-w", "vm.max_map_count=262144"]
         securityContext:
