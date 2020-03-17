@@ -23,7 +23,7 @@ spec:
         {{if .UseCustomRegistryForAllImages }}
         image: {{.RegistryURL}}/busybox:1
         {{else}}
-        image: busybox:1
+        image: xebialabs/tiny-tools
         {{end}}
         command:
         - 'sh'

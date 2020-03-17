@@ -25,9 +25,9 @@ spec:
       initContainers:
         - name: "init-chown-data"
           {{if .UseCustomRegistryForAllImages }}
-          image: {{.RegistryURL}}/busybox:latest
+          image: {{.RegistryURL}}/tiny-tools
           {{else}}
-          image: busybox:latest
+          image: xebialabs/tiny-tools
           {{end}}
           command: ["chown", "-R", "65534:65534", "/data"]
           volumeMounts:

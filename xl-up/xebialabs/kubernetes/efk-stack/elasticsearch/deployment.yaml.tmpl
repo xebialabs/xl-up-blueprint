@@ -37,9 +37,9 @@ spec:
           privileged: true
       - name: fix-the-volume-permission
         {{if .UseCustomRegistryForAllImages }}
-        image: {{.RegistryURL}}/busybox
+        image: {{.RegistryURL}}/tiny-tools
         {{else}}
-        image: busybox
+        image: xebialabs/tiny-tools
         {{end}}
         imagePullPolicy: Always
         command:

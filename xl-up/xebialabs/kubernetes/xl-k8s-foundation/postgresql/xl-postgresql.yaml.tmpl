@@ -42,9 +42,9 @@ spec:
       initContainers:
         - name: fix-the-volume-permission
           {{if .UseCustomRegistryForAllImages }}
-          image: {{.RegistryURL}}/busybox
+          image: {{.RegistryURL}}/tiny-tools
           {{else}}
-          image: busybox
+          image: xebialabs/tiny-tools
           {{end}}
           imagePullPolicy: Always
           command:
@@ -58,9 +58,9 @@ spec:
               mountPath: /var/lib/postgresql/data
         - name: "remove-lost-found"
           {{if .UseCustomRegistryForAllImages }}
-          image: {{.RegistryURL}}/busybox:1.26.2
+          image: {{.RegistryURL}}/tiny-tools
           {{else}}
-          image: "busybox:1.26.2"
+          image: xebialabs/tiny-tools
           {{end}}
           imagePullPolicy: "IfNotPresent"
           command:
