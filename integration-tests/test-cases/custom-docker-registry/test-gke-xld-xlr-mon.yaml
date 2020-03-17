@@ -15,8 +15,8 @@ expect:
           '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
         has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
-          '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1.26.2'
+          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/postgres:10.5'
           '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
@@ -33,20 +33,20 @@ expect:
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
         has_elements:
-          '[4]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[4]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[4]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
           '[4]spec.template.spec.initContainers[2].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[4]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-deploy:8.5.3'
           '[4]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
         has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[1]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[1]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/alpine:3.6'
           '[1]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/xl-deploy:8.5.3'
           '[1]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox'
+          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/grafana:5.4.4'
           '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
@@ -61,13 +61,13 @@ expect:
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
         has_elements:
-          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox:latest'
+          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
           'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/prometheus:v2.7.2'
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
         has_elements:
           '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/alpine:3.6'
-          '[0]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox'
+          '[0]spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/elasticsearch-oss:6.5.0'
           '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
@@ -80,13 +80,13 @@ expect:
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox:1'
+          '[0]spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/kibana-oss:6.5.0'
           '[0]spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
         has_elements:
-          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/busybox:1'
-          'spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/busybox:1'
+          'spec.template.spec.initContainers[0].image': 'docker.io/xebialabsunsupported/tiny-tools'
+          'spec.template.spec.initContainers[1].image': 'docker.io/xebialabsunsupported/tiny-tools'
           'spec.template.spec.containers[0].image': 'docker.io/xebialabsunsupported/kibana-dashboard:1.0.0'
           'spec.template.spec.imagePullSecrets[0].name': 'dockercred'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
