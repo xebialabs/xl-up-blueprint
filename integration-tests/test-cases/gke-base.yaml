@@ -55,3 +55,4 @@ with_answers:
   UseKubeconfig: false
   UseCustomNamespace: false
   IsHybridCluster: true
+  UseExistingStorageClasses: false

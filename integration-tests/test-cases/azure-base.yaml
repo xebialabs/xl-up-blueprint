@@ -44,3 +44,4 @@ with_answers:
   UseInternalLoadBalancer: false
   UseCustomNamespace: false
   IsHybridCluster: true
+  UseExistingStorageClasses: false

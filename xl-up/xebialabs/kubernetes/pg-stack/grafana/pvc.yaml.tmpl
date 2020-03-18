@@ -9,7 +9,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  {{if eq .K8sSetup "AwsEKS" }}
+  {{if .UseExistingStorageClasses }}
+  storageClassName: {{.StorageClassName}}
+  {{ else if eq .K8sSetup "AwsEKS" }}
   storageClassName: xebialabs-gp2-retain
   {{else if eq .K8sSetup "GoogleGKE"}}
   storageClassName: xebialabs-standard-retain

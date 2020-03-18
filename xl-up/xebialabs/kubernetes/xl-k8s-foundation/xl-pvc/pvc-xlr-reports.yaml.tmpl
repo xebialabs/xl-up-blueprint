@@ -8,7 +8,9 @@ metadata:
     organization: xebialabs
     organization: xebialabs
   annotations:
-    {{if eq .K8sSetup "AwsEKS" }}
+    {{if .UseExistingStorageClasses }}
+    volume.beta.kubernetes.io/storage-class: {{.SharedStorageClassName}}
+    {{ else if eq .K8sSetup "AwsEKS" }}
     volume.beta.kubernetes.io/storage-class: "xebialabs-aws-efs"
     {{else if eq .K8sSetup "AzureAKS"}}
     volume.beta.kubernetes.io/storage-class: "xebialabs-managed-azurefile"

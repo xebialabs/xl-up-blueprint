@@ -60,3 +60,4 @@ with_answers:
   UseKubeconfig: false
   UseCustomNamespace: true
   Namespace: customNamespace
+  UseExistingStorageClasses: false
