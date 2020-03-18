@@ -51,19 +51,19 @@ spec:
 
     - name: UseExistingStorageClasses
       type: Confirm
-      prompt: "Do you want to an existing storage class?"
+      prompt: "Do you want to existing storage classes from your kubernetes cluster?"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "Use storage classes you have set up manually for this deployment with XL Up"
+      description: "xl up will create storage classes into your kubernetes cluster. Type yes in this question if yoiu want to use storage classes that already exist in your kuberenetes cluster."
 
     - name: StorageClassName
       type: Input
-      prompt: "Please enter the name of the storage class"
+      prompt: "Please enter the name of the storage that can be used  for non shared storage"
       promptIf: !expr "UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "Enter the name of the storage class you have set up to use for this deployment with XL Up"
+      description: "Enter the name of the storage class that can be used for volumes with ReadWriteOnce accessMode"
 
     - name: SharedStorageClassName
       type: Input
@@ -71,7 +71,7 @@ spec:
       promptIf: !expr "UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "Enter the name of the shared storage class you have set up to use for pods that need shared access to storage for this deployment with XL Up"
+      description: "Enter the name of the storage class that can be used for volumes with ReadWriteMany accessMode. This storage class can be used also for ReadWriteOnce accessMode but may impact performance in some cases"
 
     - name: UseCustomRegistryForAllImages
       type: Confirm
