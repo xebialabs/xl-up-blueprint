@@ -51,7 +51,7 @@ spec:
 
     - name: UseExistingStorageClasses
       type: Confirm
-      prompt: "Do you want to existing storage classes from your kubernetes cluster?"
+      prompt: "Do you want to use existing storage classes from your kubernetes cluster?"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -101,6 +101,14 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
+
+    - name: UseExternalIngress
+      type: Confirm
+      prompt: "Do you want to use existing ingresses from your kubernetes cluster?"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Use ingress controllers already present in your deployment. XL Up will not deploy any ingress controllers and just deploy services that you can use with your own ingress controllers"
 
     - name: InstallXLD
       type: Confirm

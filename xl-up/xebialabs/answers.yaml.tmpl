@@ -43,7 +43,7 @@ data:
     XldDbUser: {{ .XldDbUser }}
     XldDbPass: {{ .XldDbPass }}
       {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-    RabbitMQExternal: {{ .RabbitMQExternal }}
+    RaUseExternalIngress: {{ .UseExternalIngress }}bbitMQExternal: {{ .RabbitMQExternal }}
     RabbitMQDriver: {{ .RabbitMQDriver }}
     {{- if .RabbitMQExternal }}
     RabbitMQUrl: {{ .RabbitMQUrl }}
@@ -121,3 +121,4 @@ data:
     SharedStorageClassName: {{ .SharedStorageClassName }}
     StorageClassName: {{ .StorageClassName }}
     {{- end}}
+    UseExternalIngress: {{ .UseExternalIngress }}
