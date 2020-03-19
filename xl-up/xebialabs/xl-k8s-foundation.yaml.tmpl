@@ -354,7 +354,7 @@ spec:
                     {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
-                    {{- if and (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")) (.UseExistingStorageClasses)}}
+                    {{- if and (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")) (not .UseExistingStorageClasses)}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                     {{- else if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses) }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
