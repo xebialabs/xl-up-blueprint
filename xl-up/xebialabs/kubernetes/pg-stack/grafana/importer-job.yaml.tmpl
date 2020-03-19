@@ -39,7 +39,7 @@ spec:
         {{if .UseCustomRegistryForAllImages }}
         image: {{.RegistryURL}}/tiny-tools
         {{else}}
-        image: giantswarm/tiny-tools
+        image: xebialabs/tiny-tools
         {{end}}
         command: ["/bin/sh", "/dashboard-importer.sh"]
         workingDir: /opt/grafana-import-dashboards
