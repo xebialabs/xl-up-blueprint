@@ -248,10 +248,11 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{if eq .K8sSetup "AwsEKS" }}
+        {{ if .UseExistingStorageClasses }}
+        storageClassName: {{.StorageClassName}}
+        {{else if eq .K8sSetup "AwsEKS" }}
         storageClassName: xebialabs-gp2-retain
-        {{end}}
-        {{if eq .K8sSetup "PlainK8SCluster" }}
+        {{else if eq .K8sSetup "PlainK8SCluster" }}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:

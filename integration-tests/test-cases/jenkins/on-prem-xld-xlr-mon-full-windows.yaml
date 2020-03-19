@@ -65,3 +65,4 @@ RabbitMQExternal: false
 RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
 RabbitMQUsername: guest
 RabbitMQPassword: hnBpgI63nuDoHrcb
+UseExistingStorageClasses: false
