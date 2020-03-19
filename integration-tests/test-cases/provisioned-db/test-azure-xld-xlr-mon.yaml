@@ -40,7 +40,7 @@ expect:
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
         has_elements:
           'spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
-          'spec.template.spec.containers[0].image': 'giantswarm/tiny-tools'
+          'spec.template.spec.containers[0].image': 'xebialabs/tiny-tools'
       - file_name: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
         has_elements:
           'spec.template.spec.containers[0].image': 'quay.io/coreos/kube-state-metrics:v1.5.0'
