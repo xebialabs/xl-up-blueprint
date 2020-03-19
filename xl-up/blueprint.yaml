@@ -104,11 +104,11 @@ spec:
 
     - name: UseExternalIngress
       type: Confirm
-      prompt: "Do you want to use existing ingresses from your kubernetes cluster?"
+      prompt: "Do you want to use existing ingress controller from your kubernetes cluster?"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
-      description: "Use ingress controllers already present in your deployment. XL Up will not deploy any ingress controllers and just deploy services that you can use with your own ingress controllers"
+      description: "Use an existing ingress controllers that already present in your Kubernetes cluster. XL Up will not deploy any ingress controllers, load balancer or ingress rules. This resources has to be created by the user. Follow the documentation for more information"
 
     - name: InstallXLD
       type: Confirm
@@ -816,9 +816,11 @@ spec:
     #xl-k8s-foundation
     - path: xebialabs/xl-k8s-foundation.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
+      writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-      writeIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
+      writeIf: !expr "(K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS) && !UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
+      writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
       writeIf: !expr "K8sSetup == 'AwsEKS' && !UseExistingStorageClasses"
@@ -884,7 +886,7 @@ spec:
     - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
-      writeIf: !expr "MonitoringInstall"
+      writeIf: !expr "MonitoringInstall && !UseExternalIngress"
     - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     #pg-stack
@@ -903,7 +905,7 @@ spec:
     - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
-      writeIf: !expr "MonitoringInstall"
+      writeIf: !expr "MonitoringInstall && !UseExternalIngress"
     - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
@@ -924,7 +926,7 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml.tmpl
       writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      writeIf: !expr "(!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s') && !UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml.tmpl
       writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml.tmpl
