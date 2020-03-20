@@ -5,7 +5,7 @@ expect:
     generated_files:
       - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
         has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
@@ -13,8 +13,8 @@ expect:
           '[1]spec.template.spec.containers[0].image': 'rabbitmq:3.8.0-management'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
         has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'busybox'
-          '[1]spec.template.spec.initContainers[1].image': 'busybox:1.26.2'
+          '[1]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          '[1]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[1]spec.template.spec.containers[0].image': 'postgres:10.5'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
         has_elements:
@@ -27,35 +27,35 @@ expect:
           'spec.template.spec.containers[0].image': 'quay.io/external_storage/efs-provisioner:v1.0.0-k8s1.10'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
         has_elements:
-          '[4]spec.template.spec.initContainers[0].image': 'busybox'
-          '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[4]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          '[4]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[4]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
           '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
         has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'busybox'
-          '[1]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[1]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          '[1]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[1]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.initContainers[0].image': 'busybox'
+          '[0]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'grafana/grafana:5.4.4'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
         has_elements:
           'spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
-          'spec.template.spec.containers[0].image': 'giantswarm/tiny-tools'
+          'spec.template.spec.containers[0].image': 'xebialabs/tiny-tools'
       - file_name: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml
         has_elements:
           'spec.template.spec.containers[0].image': 'quay.io/coreos/kube-state-metrics:v1.5.0'
           'spec.template.spec.containers[1].image': 'k8s.gcr.io/addon-resizer:1.8.3'
       - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
         has_elements:
-          'spec.template.spec.initContainers[0].image': 'busybox:latest'
+          'spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           'spec.template.spec.containers[0].image': 'prom/prometheus:v2.7.2'
       - file_name: xebialabs/kubernetes/efk-stack/elasticsearch/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.initContainers[0].image': 'alpine:3.6'
-          '[0]spec.template.spec.initContainers[1].image': 'busybox'
+          '[0]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          '[0]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.0'
       - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
         has_elements:
@@ -65,12 +65,12 @@ expect:
           'spec.template.spec.containers[0].image': 'k8s.gcr.io/fluentd-elasticsearch:v2.3.2'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
         has_elements:
-          '[0]spec.template.spec.initContainers[0].image': 'busybox:1'
+          '[0]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[0]spec.template.spec.containers[0].image': 'docker.elastic.co/kibana/kibana-oss:6.5.0'
       - file_name: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
         has_elements:
-          'spec.template.spec.initContainers[0].image': 'busybox:1'
-          'spec.template.spec.initContainers[1].image': 'busybox:1'
+          'spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          'spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           'spec.template.spec.containers[0].image': 'xebialabs/kibana-dashboard:1.0.0'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
         has_elements:

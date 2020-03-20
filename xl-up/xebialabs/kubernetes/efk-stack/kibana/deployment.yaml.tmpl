@@ -21,9 +21,9 @@ spec:
       initContainers:
       - name: wait-for-elasticsearch
         {{if .UseCustomRegistryForAllImages }}
-        image: {{.RegistryURL}}/busybox:1
+        image: {{.RegistryURL}}/tiny-tools
         {{else}}
-        image: busybox:1
+        image: xebialabs/tiny-tools
         {{end}}
         command:
         - 'sh'

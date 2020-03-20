@@ -3,13 +3,13 @@ expect:
     generated_files:
       - file_name: xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
         has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
         has_elements:
-          '[1]spec.template.spec.initContainers[0].image': 'busybox'
-          '[1]spec.template.spec.initContainers[1].image': 'busybox:1.26.2'
+          '[1]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          '[1]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[1]spec.template.spec.containers[0].image': 'postgres:10.5'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
         has_elements:
@@ -19,8 +19,8 @@ expect:
           '[6]spec.template.spec.containers[0].image': 'quay.io/jcmoraisjr/haproxy-ingress:v0.6'
       - file_name: xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
         has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'busybox'
-          '[3]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[0].image': 'xebialabs/tiny-tools'
+          '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
           '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
     secrets:
