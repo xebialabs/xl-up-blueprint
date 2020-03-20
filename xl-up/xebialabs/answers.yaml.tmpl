@@ -43,7 +43,8 @@ data:
     XldDbUser: {{ .XldDbUser }}
     XldDbPass: {{ .XldDbPass }}
       {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-    RaUseExternalIngress: {{ .UseExternalIngress }}bbitMQExternal: {{ .RabbitMQExternal }}
+    UseExternalIngress: {{ .UseExternalIngress }}
+    RabbitMQExternal: {{ .RabbitMQExternal }}
     RabbitMQDriver: {{ .RabbitMQDriver }}
     {{- if .RabbitMQExternal }}
     RabbitMQUrl: {{ .RabbitMQUrl }}
