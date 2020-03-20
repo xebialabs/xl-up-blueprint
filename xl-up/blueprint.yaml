@@ -59,7 +59,7 @@ spec:
 
     - name: StorageClassName
       type: Input
-      prompt: "Please enter the name of the storage that can be used  for non shared storage"
+      prompt: "Please enter the name of the storage class that can be used for non-shared storage"
       promptIf: !expr "UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
