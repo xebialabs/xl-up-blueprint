@@ -736,6 +736,26 @@ spec:
       revealOnSummary: true
       description: "The password to use for accessing Grafana and Kibana"
 
+    - name: GrafanaUser
+      type: Input
+      prompt: "What is the username for the Grafana user?"
+      promptIf: !expr "MonitoringInstall && UseExternalIngress"
+      default: admin
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "The username to use for accessing Grafana"
+
+    - name: GrafanaUserPass
+      type: SecretInput
+      prompt: "What is the password for the Grafana user?"
+      promptIf: !expr "MonitoringInstall && UseExternalIngress"
+      default: !expr "randPassword()"
+      replaceAsIs: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      revealOnSummary: true
+      description: "The password to use for accessing Grafana"
+
     - name: PostgresqlDataPvcSize
       type: Input
       saveInXlvals: true

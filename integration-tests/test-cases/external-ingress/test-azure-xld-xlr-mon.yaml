@@ -91,7 +91,9 @@ expect:
       XlrAdminPass: password
       XlrDbPass: xl-release
       XlrReportDbPass: xl-release-report
+      GrafanaUserPass: test123
     values:
+      GrafanaUser: user
       InstallXLD: true
       InstallXLR: true
       MonitoringInstall: true
@@ -151,9 +153,9 @@ expect:
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
   - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
-#  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-#  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-#  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
 with_answers:
   K8sAuthentication: FilePath
   K8sClientCertFile: ../integration-tests/files/test-file
@@ -206,4 +208,6 @@ with_answers:
   XlrReportDbPass: xl-release-report
   XlrReportDbUser: xl-release-report
   UseExternalIngress: true
+  GrafanaUserPass: test123
+  GrafanaUser: user
 
