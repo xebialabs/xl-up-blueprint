@@ -1,13 +1,12 @@
-extends: ../azure-base.yaml
 xl_mode: up
 expect:
   assertion:
     generated_files:
       - file_name: xebialabs/kubernetes/xl-release/external-db/active-active/xlr-deployment-active.yaml
         has_elements:
-          '[3]spec.template.spec.initContainers[0].image': 'alpine:3.6'
-          '[3]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
-          '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
+          '[2]spec.template.spec.initContainers[0].image': 'alpine:3.6'
+          '[2]spec.template.spec.initContainers[1].image': 'xebialabs/tiny-tools'
+          '[2]spec.template.spec.containers[0].image': 'xebialabs/xl-release:{{XLR_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
         has_elements:
           '[1]spec.template.spec.containers[0].image': 'rabbitmq:3.8.0-management'
@@ -16,23 +15,18 @@ expect:
           '[1]spec.template.spec.initContainers[0].image': 'busybox'
           '[1]spec.template.spec.initContainers[1].image': 'busybox:1.26.2'
           '[1]spec.template.spec.containers[0].image': 'postgres:10.5'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-        has_elements:
-          '[0]spec.template.spec.containers[0].image': 'gcr.io/google_containers/defaultbackend:1.4'
-      - file_name: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-        has_elements:
-          '[6]spec.template.spec.containers[0].image': 'quay.io/jcmoraisjr/haproxy-ingress:v0.6'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
         has_elements:
-          '[4]spec.template.spec.initContainers[0].image': 'busybox'
-          '[4]spec.template.spec.initContainers[1].image': 'alpine:3.6'
-          '[4]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
-          '[4]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
+          '[3]spec.template.spec.initContainers[0].image': 'busybox'
+          '[3]spec.template.spec.initContainers[1].image': 'alpine:3.6'
+          '[3]spec.template.spec.initContainers[2].image': 'xebialabs/tiny-tools'
+          '[3]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
       - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
         has_elements:
           '[1]spec.template.spec.initContainers[0].image': 'busybox'
           '[1]spec.template.spec.initContainers[1].image': 'alpine:3.6'
           '[1]spec.template.spec.containers[0].image': 'xebialabs/xl-deploy:{{XLD_OFFICIAL_VERSION}}'
+          '[1]spec.volumeClaimTemplates[0].spec.storageClassName': 'xebialabs-default-retain'
       - file_name: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
         has_elements:
           '[0]spec.template.spec.initContainers[0].image': 'busybox'
@@ -69,14 +63,6 @@ expect:
           'spec.template.spec.initContainers[0].image': 'busybox:1'
           'spec.template.spec.initContainers[1].image': 'busybox:1'
           'spec.template.spec.containers[0].image': 'xebialabs/kibana-dashboard:1.0.0'
-      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-master.yaml
-        has_elements:
-          '[3]metadata.annotations.kubernetes\.io/ingress\.class': 'haproxy'
-          '[3]metadata.annotations.ingress\.kubernetes\.io/rewrite-target': '/'
-          '[3]metadata.annotations.ingress\.kubernetes\.io/ssl-redirect': 'false'
-          '[3]metadata.annotations.ingress\.kubernetes\.io/affinity': 'cookie'
-          '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-name': 'SESSION_XLD'
-          '[3]metadata.annotations.ingress\.kubernetes\.io/session-cookie-strategy': 'prefix'
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/xl-pvc/pvc-xld-export.yaml
         has_elements:
           'metadata.annotations.volume\.beta\.kubernetes\.io/storage-class': 'xebialabs-managed-azurefile'
@@ -89,9 +75,6 @@ expect:
       - file_name: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
         has_elements:
           '[1]spec.volumeClaimTemplates[0].spec.storageClassName': 'xebialabs-default-retain'
-      - file_name: xebialabs/kubernetes/xl-deploy/external-db/active-active/xld-deployment-worker.yaml
-        has_elements:
-          '[1]spec.volumeClaimTemplates[0].spec.storageClassName': 'xebialabs-default-retain'
       - file_name: xebialabs/kubernetes/pg-stack/prometheus/deployment.yaml
         has_elements:
           '[0]spec.volumeClaimTemplates[0].spec.storageClassName': 'xebialabs-default-retain'
@@ -102,7 +85,6 @@ expect:
         has_elements:
           '[0]spec.volumeClaimTemplates[0].spec.storageClassName': 'xebialabs-default-retain'
     secrets:
-      MonitoringUserPass: mon-pass
       XlKeyStorePass: test123
       XldAdminPass: password
       XldDbPass: xl-deploy
@@ -113,7 +95,6 @@ expect:
       InstallXLD: true
       InstallXLR: true
       MonitoringInstall: true
-      MonitoringUser: mon-user
       PostgresEffectCacheSize: 2GB
       PostgresMaxConn: 400
       PostgresMaxWallSize: 512MB
@@ -143,7 +124,6 @@ expect:
   - xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
   - xebialabs/kubernetes/efk-stack/fluentd/rbac.yaml
   - xebialabs/kubernetes/efk-stack/kibana/deployment.yaml
-  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
   - xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
   - xebialabs/kubernetes/efk-stack/es-curator/configmap.yaml
@@ -154,7 +134,6 @@ expect:
   - xebialabs/kubernetes/pg-stack/grafana/secret.yaml
   - xebialabs/kubernetes/pg-stack/grafana/deployment.yaml
   - xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml
-  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
   - xebialabs/kubernetes/pg-stack/grafana/pvc.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role-binding.yaml
@@ -164,20 +143,31 @@ expect:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
-  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
   to_not_exist:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
+  - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
+  - xebialabs/kubernetes/efk-stack/kibana/ingress.yaml
+  - xebialabs/kubernetes/pg-stack/grafana/ingress.yaml
+#  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+#  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+#  - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
 with_answers:
+  K8sAuthentication: FilePath
+  K8sClientCertFile: ../integration-tests/files/test-file
+  K8sClientKeyFile: ../integration-tests/files/test-file
+  K8sSetup: AzureAKS
+  UseInternalLoadBalancer: false
+  UseCustomNamespace: false
+  IsHybridCluster: true
+  UseExistingStorageClasses: false
   ExternalDatabase: false
   InstallXLD: true
   InstallXLR: true
   MonitoringDataRetention: 7
   MonitoringInstall: true
-  MonitoringUser: mon-user
-  MonitoringUserPass: mon-pass
   PostgresEffectCacheSize: 2GB
   PostgresMaxConn: 400
   PostgresMaxWallSize: 512MB
@@ -216,3 +206,4 @@ with_answers:
   XlrReportDbPass: xl-release-report
   XlrReportDbUser: xl-release-report
   UseExternalIngress: true
+
