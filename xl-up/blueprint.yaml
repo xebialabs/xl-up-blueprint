@@ -92,16 +92,6 @@ spec:
       ignoreIfSkipped: true
       description: "If the target cluster contains both linux and windows nodes"
 
-
-    - name: UseInternalLoadBalancer
-      type: Confirm
-      prompt: "Do you want to use an internal load balancer"
-      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
-      default: true
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
-
     - name: UseExternalIngress
       type: Confirm
       prompt: "Do you want to use existing ingress controller from your kubernetes cluster?"
@@ -109,6 +99,15 @@ spec:
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "Use an existing ingress controllers that already present in your Kubernetes cluster. XL Up will not deploy any ingress controllers, load balancer or ingress rules. This resources has to be created by the user. Follow the documentation for more information"
+
+    - name: UseInternalLoadBalancer
+      type: Confirm
+      prompt: "Do you want to use an internal load balancer"
+      promptIf: !expr "(K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS') && !UseExternalIngress"
+      default: true
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      description: "Use an internal (private) load balancer instead of a external (public) load balancer to access the services built by up"
 
     - name: InstallXLD
       type: Confirm
@@ -720,7 +719,7 @@ spec:
     - name: MonitoringUser
       type: Input
       prompt: "What is the username for the monitoring user?"
-      promptIf: !expr "MonitoringInstall"
+      promptIf: !expr "MonitoringInstall && !UseExternalIngress"
       default: admin
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -729,7 +728,7 @@ spec:
     - name: MonitoringUserPass
       type: SecretInput
       prompt: "What is the password for the monitoring user?"
-      promptIf: !expr "MonitoringInstall"
+      promptIf: !expr "MonitoringInstall && !UseExternalIngress"
       default: !expr "randPassword()"
       replaceAsIs: true
       saveInXlvals: true
@@ -818,7 +817,7 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
       writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS) && !UseExternalIngress"
+      writeIf: !expr "(K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS') && !UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
       writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
