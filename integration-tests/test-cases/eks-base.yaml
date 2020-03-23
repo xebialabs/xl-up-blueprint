@@ -62,3 +62,4 @@ with_answers:
   UseCustomNamespace: false
   IsHybridCluster: true
   UseExistingStorageClasses: false
+  UseExternalIngress: false

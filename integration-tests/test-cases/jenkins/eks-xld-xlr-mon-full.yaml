@@ -72,3 +72,4 @@ RabbitMQUsername: guest
 RabbitMQPassword: hnBpgI63nuDoHrcb
 UseInternalLoadBalancer: false
 UseExistingStorageClasses: false
+UseExternalIngress: false
