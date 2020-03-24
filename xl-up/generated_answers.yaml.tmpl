@@ -142,3 +142,7 @@ SharedStorageClassName: {{ .SharedStorageClassName }}
 StorageClassName: {{ .StorageClassName }}
 {{end}}
 UseExternalIngress: {{ .UseExternalIngress }}
+{{if .UseExternalIngress}}
+GrafanaUser: {{ .GrafanaUser }}
+GrafanaUserPass: {{ .GrafanaUserPass }}
+{{end}}

@@ -816,7 +816,7 @@ spec:
       validate: !expr "regex('\\\\d+[G|M]B', PostgresMaxWallSize)"
 
     - name: AnswersConfigmapHash
-      value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass')"
+      value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass', UseExternalIngress ? '' : 'GrafanaUserPass', UseExternalIngress ? '' : 'GrafanaUserPass', 'UseExternalIngress')"
       description: "A unique hash based on the answers to ensure config map is deployed on update"
       ignoreIfSkipped: true
 
