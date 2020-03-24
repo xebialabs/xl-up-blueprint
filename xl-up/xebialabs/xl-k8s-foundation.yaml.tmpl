@@ -180,7 +180,7 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file "answers.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "v0.6"
+                  K8s-Dependencies: "v0.6"
                {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                   XL-PVC-Claims: "1.0.0"
                {{- end }}
@@ -206,7 +206,7 @@ spec:
                   RabbitMQ: "3.8.0-management"
                 {{- end }}
                 undeployDependencies: "true"
-          - name: K8s-Ingress-Controller
+          - name: K8s-Dependencies
             type: udm.Application
             children:
               - name: "v0.6"
@@ -220,26 +220,6 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/dockercred.yaml
                   {{- end }}
-                  {{ if not .UseExternalIngress }}
-                  - name: haproxy-ingress-controller
-                    readinessProbeRetry: 120
-                    type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
-                  {{- if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")}}
-                  - name: service-l7
-                    readinessProbeRetry: 120
-                    type: k8s.ResourcesFile
-                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
-                  {{- end }}
-                  - name: default-backend
-                    type: k8s.ResourcesFile
-                    readinessProbeRetry: 120
-                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
-                  {{ end }}
-                  - name: xebialabs-service-internal
-                    type: k8s.ResourcesFile
-                    readinessProbeRetry: 120
-                    file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
                   {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                     {{- if not .ExternalDatabase}}
@@ -257,7 +237,41 @@ spec:
                       {{- end }}
                     {{- end }}
                   {{- end }}
+                  {{ if not .UseExternalIngress }}
+                  K8s-Ingress-Controller: "v0.6"
+                  {{ end }}
                 undeployDependencies: "true"
+         {{ if not .UseExternalIngress }}
+          - name: K8s-Ingress-Controller
+            type: udm.Application
+            children:
+              - name: "v0.6"
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: haproxy-ingress-controller
+                    readinessProbeRetry: 120
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml
+                  {{- if or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")}}
+                  - name: service-l7
+                    readinessProbeRetry: 120
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
+                  {{- end }}
+                  - name: default-backend
+                    type: k8s.ResourcesFile
+                    readinessProbeRetry: 120
+                    file: !file kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml
+                  - name: xebialabs-service-internal
+                    type: k8s.ResourcesFile
+                    readinessProbeRetry: 120
+                    file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+                applicationDependencies:
+                  K8s-Dependencies: "v0.6"
+                undeployDependencies: "true"
+          {{ end }}
           {{- if and (or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")) (not .UseExistingStorageClasses)}}
           - name: K8s-StorageClass
             type: udm.Application
@@ -445,7 +459,7 @@ spec:
                   readinessProbeRetry: 120
                   file: !file "kubernetes/efk-stack/es-curator/configmap.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "v0.6"
+                  K8s-Dependencies: "v0.6"
                 undeployDependencies: "true"
             - name: Fluentd
               type: udm.Application
@@ -532,7 +546,7 @@ spec:
                   readinessProbeRetry: 120
                   file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "v0.6"
+                  K8s-Dependencies: "v0.6"
                 undeployDependencies: "true"
             - name: Prometheus
               type: udm.Application

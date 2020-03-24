@@ -841,6 +841,7 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
       writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
+      writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
       writeIf: !expr "K8sSetup == 'AwsEKS' && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml.tmpl
