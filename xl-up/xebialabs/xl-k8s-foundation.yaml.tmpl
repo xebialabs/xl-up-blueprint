@@ -269,7 +269,6 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
-                  K8s-Dependencies: "v0.6"
                 undeployDependencies: "true"
           {{ end }}
           {{- if and (or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")) (not .UseExistingStorageClasses)}}
