@@ -148,6 +148,7 @@ expect:
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml
   to_not_exist:
+  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml

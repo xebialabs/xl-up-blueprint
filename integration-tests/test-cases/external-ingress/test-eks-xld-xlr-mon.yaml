@@ -151,6 +151,7 @@ expect:
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service.yaml
   - xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-service-account.yaml
   to_not_exist:
+  - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
