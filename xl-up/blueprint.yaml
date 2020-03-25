@@ -95,6 +95,7 @@ spec:
     - name: UseExternalIngress
       type: Confirm
       prompt: "Do you want to use existing ingress controller from your kubernetes cluster?"
+      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true

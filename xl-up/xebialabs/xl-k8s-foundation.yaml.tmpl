@@ -183,22 +183,19 @@ spec:
                 {{- if .UseCustomRegistry}}
                   K8s-Docker-Credentials: "v0.6"
                 {{end}}
-                {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-                    {{- if not .ExternalDatabase}}
+                {{  if not .ExternalDatabase}}
                   PostgreSQL: "10.5"
-                    {{- else }}
-                      {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-                        {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
+                {{ end }}
+                {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
+                  {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
-                        {{- end }}
-                        {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
-                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                        {{- else if eq .K8sSetup "AwsEKS" }}
-                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
-                        {{- end }}
-                      {{- end }}
-                    {{- end }}
                   {{- end }}
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
+                {{- end }}
                   {{ if not .UseExternalIngress }}
                   K8s-Ingress-Controller: "v0.6"
                   {{ end }}
