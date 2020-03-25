@@ -439,6 +439,11 @@ spec:
                   K8s-StorageClass: "1.0"
                     {{- end }}
                   XL-PVC-Claims: "1.0.0"
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
                   {{- end }}
                 undeployDependencies: "true"
           {{- end }}
@@ -473,6 +478,11 @@ spec:
                    {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
                 undeployDependencies: "true"
             - name: Fluentd
               type: udm.Application
