@@ -48,8 +48,8 @@ expect:
   - xebialabs/kubernetes/xl-deploy/local-db/xld-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-release/local-db/xlr-deployment-single-node.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
-  to_not_exist:
   - xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
+  to_not_exist:
   - xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml
   - xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml
