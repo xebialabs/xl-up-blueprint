@@ -53,6 +53,7 @@ spec:
       type: Confirm
       prompt: "Do you want to use existing storage classes from your kubernetes cluster?"
       default: false
+      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "xl up will create storage classes into your kubernetes cluster. Type yes in this question if yoiu want to use storage classes that already exist in your kuberenetes cluster."
