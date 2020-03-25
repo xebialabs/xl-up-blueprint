@@ -470,7 +470,9 @@ spec:
                   readinessProbeRetry: 120
                   file: !file "kubernetes/efk-stack/es-curator/configmap.yaml"
                 applicationDependencies:
+                   {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
+                    {{- end }}
                 undeployDependencies: "true"
             - name: Fluentd
               type: udm.Application
