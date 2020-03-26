@@ -180,24 +180,28 @@ spec:
                     type: k8s.ResourcesFile
                     file: !file "answers.yaml"
                 applicationDependencies:
+                {{- if .UseCustomRegistry}}
+                  K8s-Docker-Credentials: "v0.6"
+                {{end}}
+                {{  if not .ExternalDatabase}}
+                  PostgreSQL: "10.5"
+                {{ end }}
+                {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
+                  {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
+                  K8s-StorageClass: "1.0"
+                  {{- end }}
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
+                {{- end }}
+                  {{ if not .UseExternalIngress }}
                   K8s-Ingress-Controller: "v0.6"
+                  {{ end }}
                {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
                   XL-PVC-Claims: "1.0.0"
                {{- end }}
-                {{- if not .ExternalDatabase}}
-                  PostgreSQL: "10.5"
-                {{- else }}
-                   {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (not .UseExistingStorageClasses)}}
-                    {{- if ne .K8sSetup "PlainK8SCluster"}}
-                  K8s-StorageClass: "1.0"
-                    {{- end }}
-                    {{- if (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster"))}}
-                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                    {{- else if eq .K8sSetup "AwsEKS" }}
-                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
-                    {{- end }}
-                  {{- end }}
-                {{- end }}
                 {{- if .MonitoringInstall }}
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
@@ -206,6 +210,38 @@ spec:
                   RabbitMQ: "3.8.0-management"
                 {{- end }}
                 undeployDependencies: "true"
+          {{- if .UseCustomRegistry}}
+          - name: K8s-Docker-Credentials
+            type: udm.Application
+            children:
+              - name: "v0.6"
+                type: udm.DeploymentPackage
+                orchestrator:
+                  - sequential-by-dependency
+                deployables:
+                  - name: dockercreds
+                    type: k8s.ResourcesFile
+                    readinessProbeRetry: 120
+                    file: !file kubernetes/xl-k8s-foundation/dockercred.yaml
+                applicationDependencies:
+                {{- if not .ExternalDatabase}}
+                  PostgreSQL: "10.5"
+                {{- end }}
+                {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
+                    {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
+                      {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
+                  K8s-StorageClass: "1.0"
+                      {{- end }}
+                      {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                      {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                      {{- end }}
+                  {{- end }}
+                {{- end }}
+                undeployDependencies: "true"
+          {{- end }}
+         {{ if not .UseExternalIngress }}
           - name: K8s-Ingress-Controller
             type: udm.Application
             children:
@@ -214,12 +250,6 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  {{- if .UseCustomRegistry}}
-                  - name: dockercreds
-                    type: k8s.ResourcesFile
-                    readinessProbeRetry: 120
-                    file: !file kubernetes/xl-k8s-foundation/dockercred.yaml
-                  {{- end }}
                   - name: haproxy-ingress-controller
                     readinessProbeRetry: 120
                     type: k8s.ResourcesFile
@@ -239,23 +269,8 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml
                 applicationDependencies:
-                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-                    {{- if not .ExternalDatabase}}
-                  PostgreSQL: "10.5"
-                    {{- else }}
-                      {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-                        {{- if ne .K8sSetup "PlainK8SCluster"}}
-                  K8s-StorageClass: "1.0"
-                        {{- end }}
-                        {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
-                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
-                        {{- else if eq .K8sSetup "AwsEKS" }}
-                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
-                        {{- end }}
-                      {{- end }}
-                    {{- end }}
-                  {{- end }}
                 undeployDependencies: "true"
+          {{ end }}
           {{- if and (or (eq .K8sSetup "AwsEKS") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "AzureAKS")) (not .UseExistingStorageClasses)}}
           - name: K8s-StorageClass
             type: udm.Application
@@ -265,7 +280,7 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  {{- if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses) }}
+                  {{- if and (eq .K8sSetup "AwsEKS") ( not .UseExistingStorageClasses) }}
                   - name: gp2
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
@@ -334,6 +349,11 @@ spec:
                     file: !file "kubernetes/xl-k8s-foundation/xl-pvc/pvc-xlr-reports.yaml"
                   {{- end }}
                 applicationDependencies:
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
                 undeployDependencies: "true"
           {{- end }}
           {{- if not .ExternalDatabase }}
@@ -404,9 +424,24 @@ spec:
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml
+                  {{if not .UseExternalIngress}}
                   - name: RabbitMQ-ingress
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml
+                  {{end}}
+                applicationDependencies:
+                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") }}
+                    {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
+                  K8s-StorageClass: "1.0"
+                    {{- end }}
+                  XL-PVC-Claims: "1.0.0"
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
+                  {{- end }}
+                undeployDependencies: "true"
           {{- end }}
           {{- if .MonitoringInstall }}
           - directory: Applications/XEBIALABS/XL-K8S-FOUNDATION/MONITORING
@@ -419,24 +454,31 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                 - name: Elasticsearch-rbac
-                   type: k8s.ResourcesFile
-                   readinessProbeRetry: 120
-                   file: !file "kubernetes/efk-stack/elasticsearch/rbac.yaml"
-                 - name: Elasticsearch-logging
-                   type: k8s.ResourcesFile
-                   readinessProbeRetry: 120
-                   file: !file "kubernetes/efk-stack/elasticsearch/deployment.yaml"
-                 - name: Elasticsearch-curator-cronjob
-                   type: k8s.ResourcesFile
-                   readinessProbeRetry: 120
-                   file: !file "kubernetes/efk-stack/es-curator/cronjob.yaml"
-                 - name: Elasticsearch-curator-configmap
-                   type: k8s.ResourcesFile
-                   readinessProbeRetry: 120
-                   file: !file "kubernetes/efk-stack/es-curator/configmap.yaml"
+                - name: Elasticsearch-rbac
+                  type: k8s.ResourcesFile
+                  readinessProbeRetry: 120
+                  file: !file "kubernetes/efk-stack/elasticsearch/rbac.yaml"
+                - name: Elasticsearch-logging
+                  type: k8s.ResourcesFile
+                  readinessProbeRetry: 120
+                  file: !file "kubernetes/efk-stack/elasticsearch/deployment.yaml"
+                - name: Elasticsearch-curator-cronjob
+                  type: k8s.ResourcesFile
+                  readinessProbeRetry: 120
+                  file: !file "kubernetes/efk-stack/es-curator/cronjob.yaml"
+                - name: Elasticsearch-curator-configmap
+                  type: k8s.ResourcesFile
+                  readinessProbeRetry: 120
+                  file: !file "kubernetes/efk-stack/es-curator/configmap.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "v0.6"
+                   {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
+                  K8s-StorageClass: "1.0"
+                    {{- end }}
+                  {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                  K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
+                  {{- else if eq .K8sSetup "AwsEKS" }}
+                  K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
+                  {{- end }}
                 undeployDependencies: "true"
             - name: Fluentd
               type: udm.Application
@@ -473,10 +515,12 @@ spec:
                   type: k8s.ResourcesFile
                   readinessProbeRetry: 120
                   file: !file "kubernetes/efk-stack/kibana/deployment.yaml"
+                {{ if not .UseExternalIngress }}
                 - name: Kibana-ingress
                   type: k8s.ResourcesFile
                   readinessProbeRetry: 120
                   file: !file "kubernetes/efk-stack/kibana/ingress.yaml"
+                {{ end}}
                 - name: Kibana-dashboard-job
                   type: k8s.ResourcesFile
                   readinessProbeRetry: 120
@@ -521,7 +565,6 @@ spec:
                   readinessProbeRetry: 120
                   file: !file "kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-deployment.yaml"
                 applicationDependencies:
-                  K8s-Ingress-Controller: "v0.6"
                 undeployDependencies: "true"
             - name: Prometheus
               type: udm.Application
@@ -571,10 +614,12 @@ spec:
                   type: k8s.ResourcesFile
                   readinessProbeRetry: 120
                   file: !file "kubernetes/pg-stack/grafana/deployment.yaml"
+                {{ if not .UseExternalIngress }}
                 - name: Grafana-ingress
                   type: k8s.ResourcesFile
                   readinessProbeRetry: 120
                   file: !file "kubernetes/pg-stack/grafana/ingress.yaml"
+                {{ end}}
                 - name: Grafana-importer
                   type: k8s.ResourcesFile
                   readinessProbeRetry: 120

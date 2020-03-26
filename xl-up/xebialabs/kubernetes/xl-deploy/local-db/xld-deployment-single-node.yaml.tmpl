@@ -51,6 +51,7 @@ spec:
       targetPort: 4516
       protocol: TCP
 ---
+{{- if not .UseExternalIngress}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -72,6 +73,7 @@ spec:
               serviceName: xl-deploy
               servicePort: 4516
 ---
+{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

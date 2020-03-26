@@ -5,14 +5,18 @@ metadata:
   name: xebialabs-internal
   namespace: {{ .Namespace }}
   labels:
+    {{ if not .UseExternalIngress }}
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: haproxy-ingress
+    {{end}}
     organization: xebialabs
 spec:
   type: NodePort
   selector:
+    {{ if not .UseExternalIngress }}
     app.kubernetes.io/name: haproxy-ingress
     app.kubernetes.io/part-of: haproxy-ingress
+    {{end}}
   ports:
     - name: http
       port: 80

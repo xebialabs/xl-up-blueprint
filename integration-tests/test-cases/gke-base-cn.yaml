@@ -55,3 +55,4 @@ with_answers:
   UseCustomNamespace: true
   Namespace: customNamespace
   UseExistingStorageClasses: false
+  UseExternalIngress: false
