@@ -90,7 +90,7 @@ expect:
           '[1]metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/efk-stack/es-curator/cronjob.yaml
         has_elements:
-          'spec.jobTemplate.spec.template.spec.containers[0].image': 'xebialabsunsupported/xl-es-curator'
+          'spec.jobTemplate.spec.template.spec.containers[0].image': 'xebialabs/xl-es-curator'
           'metadata.namespace': 'customNamespace'
       - file_name: xebialabs/kubernetes/efk-stack/fluentd/daemonset.yaml
         has_elements:

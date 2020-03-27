@@ -21,7 +21,7 @@ spec:
               {{if .UseCustomRegistryForAllImages }}
               image: {{.RegistryURL}}/xl-es-curator
               {{else}}
-              image: xebialabsunsupported/xl-es-curator
+              image: xebialabs/xl-es-curator
               {{end}}
               volumeMounts:
                 - name: config
