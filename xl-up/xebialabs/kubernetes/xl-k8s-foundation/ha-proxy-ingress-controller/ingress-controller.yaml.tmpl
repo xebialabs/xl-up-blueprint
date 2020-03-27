@@ -1,3 +1,4 @@
+{{- if ne .K8sSetup "Openshift" }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -5,6 +6,7 @@ metadata:
   namespace: {{ .Namespace }}
   labels:
     organization: xebialabs
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -111,11 +113,19 @@ roleRef:
   name: xebialabs-ingress-controller
 subjects:
   - kind: ServiceAccount
+    {{- if eq .K8sSetup "Openshift" }}
+    name: {{ .ServiceAccount }}
+    {{- else }}
     name: haproxy-ingress-serviceaccount
+    {{- end }}
     namespace: {{ .Namespace }}
   - apiGroup: rbac.authorization.k8s.io
     kind: User
+    {{- if eq .K8sSetup "Openshift" }}
+    name: {{ .ServiceAccount }}
+    {{- else }}
     name: haproxy-ingress-serviceaccount
+    {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -130,11 +140,19 @@ roleRef:
   name: ingress-controller
 subjects:
   - kind: ServiceAccount
+    {{- if eq .K8sSetup "Openshift" }}
+    name: {{ .ServiceAccount }}
+    {{- else }}
     name: haproxy-ingress-serviceaccount
+    {{ end }}
     namespace: {{ .Namespace }}
   - apiGroup: rbac.authorization.k8s.io
     kind: User
+    {{- if eq .K8sSetup "Openshift" }}
+    name: {{ .ServiceAccount }}
+    {{- else }}
     name: haproxy-ingress-serviceaccount
+    {{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -170,7 +188,11 @@ spec:
         app: haproxy-ingress
         organization: xebialabs
     spec:
+      {{- if eq .K8sSetup "Openshift" }}
+      serviceAccountName: {{ .ServiceAccount }}
+      {{- else }}
       serviceAccountName: haproxy-ingress-serviceaccount
+      {{- end }}
       containers:
         - name: haproxy-ingress
           {{if .UseCustomRegistryForAllImages }}

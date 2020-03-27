@@ -53,6 +53,9 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
     spec:
+      {{- if eq .K8sSetup "Openshift" }}
+      serviceAccountName: {{ .ServiceAccount }}
+      {{- end }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -197,6 +200,8 @@ spec:
         {{else if eq .K8sSetup "AzureAKS" }}
         storageClassName: xebialabs-default-retain
         {{else if eq .K8sSetup "PlainK8SCluster" }}
+        storageClassName: xebialabs-managed-nfs-storage
+        {{else if eq .K8sSetup "Openshift" }}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:

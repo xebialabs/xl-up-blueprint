@@ -51,7 +51,6 @@ spec:
       targetPort: 4516
       protocol: TCP
 ---
-{{- if not .UseExternalIngress}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -73,7 +72,6 @@ spec:
               serviceName: xl-deploy
               servicePort: 4516
 ---
-{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -95,6 +93,9 @@ spec:
         app: xl-deploy
         organization: xebialabs
     spec:
+      {{- if eq .K8sSetup "Openshift" }}
+      serviceAccountName: {{ .ServiceAccount }}
+      {{- end }}
       initContainers:
         - name: fix-the-volume-permission
           {{if .UseCustomRegistryForAllImages }}
@@ -230,7 +231,7 @@ spec:
             defaultMode: 0777
         {{- end }}
       {{end}}
-  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster" ))}}
+  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster" ) (eq .K8sSetup "Openshift" ))}}
   volumeClaimTemplates:
     - metadata:
         name: repository
@@ -240,6 +241,8 @@ spec:
         storageClassName: xebialabs-gp2-retain
         {{end}}
         {{if eq .K8sSetup "PlainK8SCluster" }}
+        storageClassName: xebialabs-managed-nfs-storage
+        {{if eq .K8sSetup "Openshift" }}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:
@@ -255,6 +258,8 @@ spec:
         {{else if eq .K8sSetup "AwsEKS" }}
         storageClassName: xebialabs-gp2-retain
         {{else if eq .K8sSetup "PlainK8SCluster" }}
+        storageClassName: xebialabs-managed-nfs-storage
+        {{else if eq .K8sSetup "Openshift" }}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:

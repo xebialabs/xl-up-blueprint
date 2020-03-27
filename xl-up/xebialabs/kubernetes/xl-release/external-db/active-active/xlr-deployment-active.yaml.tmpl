@@ -62,7 +62,6 @@ spec:
       targetPort: 5516
       protocol: TCP
 ---
-{{ if not .UseExternalIngress }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -89,7 +88,6 @@ spec:
               serviceName: xl-release
               servicePort: 5516
 ---
-{{end}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -113,6 +111,9 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9100'
     spec:
+      {{- if eq .K8sSetup "Openshift" }}
+      serviceAccountName: {{ .ServiceAccount }}
+      {{- end }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

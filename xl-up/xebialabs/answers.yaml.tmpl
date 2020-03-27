@@ -12,6 +12,10 @@ data:
     {{- end}}
     UseCustomRegistry: {{.UseCustomRegistry}}
     Namespace: {{.Namespace}}
+    UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
+    {{- if .UseCustomServiceAccount }}
+    ServiceAccount: {{ .ServiceAccount }}
+    {{- end }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
     {{- if .UseCustomRegistry }}
@@ -121,8 +125,3 @@ data:
     SharedStorageClassName: {{ .SharedStorageClassName }}
     StorageClassName: {{ .StorageClassName }}
     {{- end}}
-    UseExternalIngress: {{ .UseExternalIngress }}
-    {{if .UseExternalIngress}}
-    GrafanaUser: {{ .GrafanaUser }}
-    GrafanaUserPass: {{ .GrafanaUserPass }}
-    {{end}}

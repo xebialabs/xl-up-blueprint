@@ -1,3 +1,4 @@
+{{- if ne .K8sSetup "Openshift" }}
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -6,6 +7,7 @@ metadata:
   labels:
     organization: xebialabs
     organization: xebialabs
+{{-end }}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -37,7 +39,11 @@ metadata:
     organization: xebialabs
 subjects:
   - kind: ServiceAccount
+    {{- if eq .K8sSetup "Openshift" }}
+    name: {{ .ServiceAccount }}
+    {{- else }}
     name: xebialabs-nfs-client-provisioner
+    {{- end}}
     namespace: {{ .Namespace }}
 roleRef:
   kind: ClusterRole
@@ -67,7 +73,11 @@ metadata:
     organization: xebialabs
 subjects:
   - kind: ServiceAccount
+    {{- if eq .K8sSetup "Openshift" }}
+    name: {{ .ServiceAccount }}
+    {{- else }}
     name: xebialabs-nfs-client-provisioner
+    {{- end }}
     # replace with namespace where provisioner is deployed
     namespace: {{ .Namespace }}
 roleRef:

@@ -39,6 +39,9 @@ spec:
         app: postgresql
         organization: xebialabs
     spec:
+      {{- if eq .K8sSetup "Openshift" }}
+      serviceAccountName: {{ .ServiceAccount }}
+      {{- end }}
       initContainers:
         - name: fix-the-volume-permission
           {{if .UseCustomRegistryForAllImages }}
@@ -137,6 +140,8 @@ spec:
         {{else if eq .K8sSetup "AzureAKS" }}
         storageClassName: xebialabs-default-retain
         {{else if eq .K8sSetup "PlainK8SCluster" }}
+        storageClassName: xebialabs-managed-nfs-storage
+        {{else if eq .K8sSetup "Openshift" }}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:

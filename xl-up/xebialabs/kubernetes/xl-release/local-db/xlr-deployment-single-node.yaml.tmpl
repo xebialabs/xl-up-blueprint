@@ -62,7 +62,6 @@ spec:
       targetPort: 5516
       protocol: TCP
 ---
-{{- if not .UseExternalIngress}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -87,7 +86,6 @@ spec:
               serviceName: xl-release
               servicePort: 5516
 ---
-{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -108,6 +106,9 @@ spec:
       labels:
         app: xl-release
     spec:
+      {{- if eq .K8sSetup "Openshift" }}
+      serviceAccountName: {{ .ServiceAccount }}
+      {{- end }}
       initContainers:
         {{if not .ExternalDatabase}}
         - name: wait-for-db
@@ -233,7 +234,7 @@ spec:
             name: postgresql-init-sql-xlr
             defaultMode: 0777
       {{- end }}
-  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster"))}}
+  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift" ))}}
   volumeClaimTemplates:
     - metadata:
         name: repository
@@ -245,6 +246,8 @@ spec:
         {{ else if eq .K8sSetup "AwsEKS" }}
         storageClassName: xebialabs-gp2-retain
         {{else if eq .K8sSetup "PlainK8SCluster"}}
+        storageClassName: xebialabs-managed-nfs-storage
+        {{else if eq .K8sSetup "Openshift"}}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:

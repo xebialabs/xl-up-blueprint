@@ -8,6 +8,26 @@ metadata:
   version: 1.0
 spec:
   parameters:
+    - name: UseCustomServiceAccount
+      type: Confirm
+      prompt: "Do you want to use custom Service Account?"
+      promptIf: !expr "K8sSetup == 'Openshift'"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      overrideDefault: true
+      description: "When using custom Service Account you have to attach An Existing Security Contex Constraint."
+
+    - name: ServiceAccount
+      type: Input
+      prompt: "Enter your Service Account Name:"
+      promptIf: !expr "UseCustomServiceAccount"
+      default: "xebialabs"
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      overrideDefault: true
+      description: "Enter the name of existing Service Account to be used while deploying to Openshift Cluster."
+
     - name: UseCustomRegistry
       type: Confirm
       prompt: "Do you want to use custom Docker Registry and custom images?"
@@ -51,16 +71,15 @@ spec:
 
     - name: UseExistingStorageClasses
       type: Confirm
-      prompt: "Do you want to use existing storage classes from your kubernetes cluster?"
+      prompt: "Do you want to existing storage classes from your kubernetes cluster?"
       default: false
-      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "xl up will create storage classes into your kubernetes cluster. Type yes in this question if yoiu want to use storage classes that already exist in your kuberenetes cluster."
 
     - name: StorageClassName
       type: Input
-      prompt: "Please enter the name of the storage class that can be used for non-shared storage"
+      prompt: "Please enter the name of the storage that can be used  for non shared storage"
       promptIf: !expr "UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -93,19 +112,11 @@ spec:
       ignoreIfSkipped: true
       description: "If the target cluster contains both linux and windows nodes"
 
-    - name: UseExternalIngress
-      type: Confirm
-      prompt: "Do you want to use existing ingress controller from your kubernetes cluster?"
-      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
-      default: false
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "Use an existing ingress controllers that already present in your Kubernetes cluster. XL Up will not deploy any ingress controllers, load balancer or ingress rules. This resources has to be created by the user. Follow the documentation for more information"
 
     - name: UseInternalLoadBalancer
       type: Confirm
       prompt: "Do you want to use an internal load balancer"
-      promptIf: !expr "(K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS') && !UseExternalIngress"
+      promptIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
       default: true
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -721,7 +732,7 @@ spec:
     - name: MonitoringUser
       type: Input
       prompt: "What is the username for the monitoring user?"
-      promptIf: !expr "MonitoringInstall && !UseExternalIngress"
+      promptIf: !expr "MonitoringInstall"
       default: admin
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -730,33 +741,13 @@ spec:
     - name: MonitoringUserPass
       type: SecretInput
       prompt: "What is the password for the monitoring user?"
-      promptIf: !expr "MonitoringInstall && !UseExternalIngress"
+      promptIf: !expr "MonitoringInstall"
       default: !expr "randPassword()"
       replaceAsIs: true
       saveInXlvals: true
       ignoreIfSkipped: true
       revealOnSummary: true
       description: "The password to use for accessing Grafana and Kibana"
-
-    - name: GrafanaUser
-      type: Input
-      prompt: "What is the username for the Grafana user?"
-      promptIf: !expr "MonitoringInstall && UseExternalIngress"
-      default: admin
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      description: "The username to use for accessing Grafana"
-
-    - name: GrafanaUserPass
-      type: SecretInput
-      prompt: "What is the password for the Grafana user?"
-      promptIf: !expr "MonitoringInstall && UseExternalIngress"
-      default: !expr "randPassword()"
-      replaceAsIs: true
-      saveInXlvals: true
-      ignoreIfSkipped: true
-      revealOnSummary: true
-      description: "The password to use for accessing Grafana"
 
     - name: PostgresqlDataPvcSize
       type: Input
@@ -818,7 +809,7 @@ spec:
       validate: !expr "regex('\\\\d+[G|M]B', PostgresMaxWallSize)"
 
     - name: AnswersConfigmapHash
-      value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass', UseExternalIngress ? '' : 'GrafanaUserPass', UseExternalIngress ? '' : 'GrafanaUserPass', 'UseExternalIngress')"
+      value: !expr "md5HashOfAnswersNotIncluding('XldAdminPass', 'XlrAdminPass', 'MonitoringUserPass', RabbitMQExternal ? '' : 'RabbitMQPassword', ExternalDatabase ? '' : 'XldDbPass', ExternalDatabase ? '' : 'XlrDbPass', ExternalDatabase ? '' : 'XlrReportDbPass')"
       description: "A unique hash based on the answers to ensure config map is deployed on update"
       ignoreIfSkipped: true
 
@@ -837,13 +828,10 @@ spec:
     #xl-k8s-foundation
     - path: xebialabs/xl-k8s-foundation.yaml.tmpl
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/ingress-controller.yaml.tmpl
-      writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/service-l7.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS') && !UseExternalIngress"
+      writeIf: !expr "K8sSetup == 'AwsEKS' || K8sSetup == 'GoogleGKE' || K8sSetup == 'AzureAKS'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/ha-proxy-ingress-controller/default-backend.yaml.tmpl
-      writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/xebialabs-service-internal.yaml.tmpl
-      writeIf: !expr "!UseExternalIngress"
     - path: xebialabs/kubernetes/xl-k8s-foundation/aws-gp2-storageclass.yaml.tmpl
       writeIf: !expr "K8sSetup == 'AwsEKS' && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/gcp-pd-retain-storageclass.yaml.tmpl
@@ -908,7 +896,7 @@ spec:
     - path: xebialabs/kubernetes/efk-stack/kibana/deployment.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/kibana/ingress.yaml.tmpl
-      writeIf: !expr "MonitoringInstall && !UseExternalIngress"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/efk-stack/kibana/dashboard-job.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     #pg-stack
@@ -927,7 +915,7 @@ spec:
     - path: xebialabs/kubernetes/pg-stack/grafana/deployment.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/ingress.yaml.tmpl
-      writeIf: !expr "MonitoringInstall && !UseExternalIngress"
+      writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/grafana/importer-job.yaml.tmpl
       writeIf: !expr "MonitoringInstall"
     - path: xebialabs/kubernetes/pg-stack/kube-state-metrics/kube-state-metrics-cluster-role.yaml.tmpl
@@ -948,7 +936,7 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml.tmpl
       writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml.tmpl
-      writeIf: !expr "(!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s') && !UseExternalIngress"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml.tmpl
       writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml.tmpl

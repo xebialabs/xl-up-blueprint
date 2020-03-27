@@ -36,6 +36,10 @@ UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
 Namespace: {{.Namespace}}
 UseCustomNamespace: {{.UseCustomNamespace}}
+UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
+{{- if .UseCustomServiceAccount }}
+ServiceAccount: {{ .ServiceAccount }}
+{{- end }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
@@ -140,9 +144,4 @@ UseExistingStorageClasses: {{ .UseExistingStorageClasses }}
 {{if .UseExistingStorageClasses}}
 SharedStorageClassName: {{ .SharedStorageClassName }}
 StorageClassName: {{ .StorageClassName }}
-{{end}}
-UseExternalIngress: {{ .UseExternalIngress }}
-{{if .UseExternalIngress}}
-GrafanaUser: {{ .GrafanaUser }}
-GrafanaUserPass: {{ .GrafanaUserPass }}
 {{end}}
