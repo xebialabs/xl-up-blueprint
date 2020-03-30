@@ -20,7 +20,7 @@ Session Cookie Name: JSESSIONID<br/>
 Service Name: kibana-logging<br/>
 Service Port: 5601<br/>
 Authentication on Gloo requires Gloo Enterprise and is not available in Gloo community.<br/>
-You can follow <a href='https://docs.solo.io/gloo/latest/security/auth/basic_auth/'>this tutorial</a> to provide a basic authentication for Kibana.
+You can follow <a href='https://docs.solo.io/gloo/latest/guides/security/auth/basic_auth/'>this tutorial</a> to provide a basic authentication for Kibana.
 4. Grafana<br/>
 Service Name: grafana<br/>
 Service Port: 3000
