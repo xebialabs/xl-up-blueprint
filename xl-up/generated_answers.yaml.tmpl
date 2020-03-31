@@ -60,7 +60,7 @@ XlrOfficialVersion: {{ .XlrOfficialVersion }}
 {{- end }}
 ExternalDatabase: {{ .ExternalDatabase }}
 {{- if .InstallXLD}}
-  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
+  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (ne .K8sSetup "Openshift")}}
 RabbitMQExternal: {{ .RabbitMQExternal }}
 RabbitMQDriver: {{ .RabbitMQDriver }}
   {{- if .RabbitMQExternal }}
@@ -95,7 +95,7 @@ XldDbPass: {{ .XldDbPass }}
 EfsId: {{ .EfsId }}
 EfsRegion: {{ .EfsRegion }}
 {{- end}}
-{{- if and (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster")) (not .UseExistingStorageClasses)}}
+{{- if and (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")) (not .UseExistingStorageClasses)}}
 NfsServerHost: {{ .NfsServerHost }}
 NfsSharePath: {{ .NfsSharePath }}
 {{- end}}
