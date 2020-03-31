@@ -417,7 +417,7 @@ spec:
     - name: RabbitMQExternal
       type: Confirm
       prompt: Would you like to use an existing RabbitMQ/ActiveMQ server for XL Deploy?
-      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -426,7 +426,7 @@ spec:
     - name: RabbitMQUrl
       type: Input
       prompt: "Specify the URL of your RabbitMQ/ActiveMQ instance"
-      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
@@ -441,7 +441,7 @@ spec:
         - label: ActiveMQ
           value: org.apache.activemq.ActiveMQConnectionFactory
       prompt: "Select the type of driver you need to use to connect to your external MQ instance"
-      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       default: "com.rabbitmq.jms.admin.RMQConnectionFactory"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -451,7 +451,7 @@ spec:
     - name: RabbitMQUsername
       type: Input
       prompt: "Specify the username for the default RabbitMQ user"
-      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       default: "guest"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -462,7 +462,7 @@ spec:
       type: SecretInput
       prompt: "Specify the password for the default RabbitMQ user"
       default: !expr "randPassword()"
-      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       saveInXlvals: true
       ignoreIfSkipped: true
       revealOnSummary: true
@@ -662,7 +662,7 @@ spec:
     - name: NfsServerHost
       type: Input
       prompt: "Enter your NFS server name or IP address:"
-      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
@@ -672,7 +672,7 @@ spec:
     - name: NfsSharePath
       type: Input
       prompt: "Enter your NFS share path:"
-      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       validate: !expr "isValidAbsPath(NfsSharePath)"
@@ -681,8 +681,8 @@ spec:
     - name: MonitoringInstall
       type: Confirm
       prompt: "Do you want to install monitoring?"
-      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
-      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
@@ -845,11 +845,11 @@ spec:
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
       writeIf: !expr "!ExternalDatabase"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
     #xl-deploy
     - path: xebialabs/xl-deploy.yaml.tmpl
       writeIf: !expr InstallXLD
