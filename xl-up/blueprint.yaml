@@ -934,13 +934,13 @@ spec:
       writeIf: !expr "MonitoringInstall"
     #rabbitmq
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
     #xebialabs files
     - path: generated_answers.yaml.tmpl
     - path: xebialabs.yaml.tmpl
