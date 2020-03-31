@@ -113,7 +113,7 @@ spec:
         {{- if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses)}}
           EFS_ID: !value EfsId
           EFS_REGION: !value EfsRegion
-        {{- else if and (or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE") ) (not .UseExistingStorageClasses)}}
+        {{- else if and (or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "Openshift")) (not .UseExistingStorageClasses)}}
           NFS_PROVISIONER_NAME: "xebialabs-nfs-storage-provisioner"
           NFS_SERVER: !value NfsServerHost
           NFS_PATH: !value NfsSharePath
@@ -188,10 +188,10 @@ spec:
                   PostgreSQL: "10.5"
                 {{- else }}
                    {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (not .UseExistingStorageClasses)}}
-                    {{- if ne .K8sSetup "PlainK8SCluster"}}
+                    {{- if ne .K8sSetup "PlainK8SCluster"} {- if ne .K8sSetup "Openshift"}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
-                    {{- if (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster"))}}
+                    {{- if (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift"))}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                     {{- else if eq .K8sSetup "AwsEKS" }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
@@ -202,7 +202,7 @@ spec:
                   Grafana-Dashboard: "5.4.4"
                   Kibana: "6.5.0"
                 {{- end }}
-                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") ( .InstallXLD)}}
+                {{- if and (not .RabbitMQExternal) (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (ne .K8sSetup "Openshift") ( .InstallXLD)}}
                   RabbitMQ: "3.8.0-management"
                 {{- end }}
                 undeployDependencies: "true"
@@ -247,7 +247,7 @@ spec:
                         {{- if ne .K8sSetup "PlainK8SCluster"}}
                   K8s-StorageClass: "1.0"
                         {{- end }}
-                        {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")}}
+                        {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                         {{- else if eq .K8sSetup "AwsEKS" }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
@@ -354,7 +354,7 @@ spec:
                     {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
-                    {{- if and (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster")) (not .UseExistingStorageClasses)}}
+                    {{- if and (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")) (not .UseExistingStorageClasses)}}
                   K8s-NFS-Client-Provisioner: "v3.1.0-k8s1.11"
                     {{- else if and (eq .K8sSetup "AwsEKS") (not .UseExistingStorageClasses) }}
                   K8S-EFS-Provisioner: "v1.0.0-k8s1.10"
@@ -363,7 +363,7 @@ spec:
                   {{- end }}
                 undeployDependencies: "true"
           {{- end }}
-          {{- if and (or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE")) (not .UseExistingStorageClasses)}}
+          {{- if and (or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "Openshift")) (not .UseExistingStorageClasses)}}
           - name: K8s-NFS-Client-Provisioner
             type: udm.Application
             children:
@@ -385,7 +385,7 @@ spec:
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml
           {{- end }}
-          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") ( .InstallXLD)}}
+          {{- if and (not .RabbitMQExternal) (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (ne .K8sSetup "Openshift") ( .InstallXLD)}}
           - name: RabbitMQ
             type: udm.Application
             children:
