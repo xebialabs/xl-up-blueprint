@@ -5,7 +5,7 @@ Tutorial Link: <a href="https://docs.solo.io/gloo/1.3.0/installation/gateway/kub
 Ingress Rules:
 - For every ingress rule, a route should be created in Gloo.<br/> 
 `glooctl add route --path-prefix /{PREFIX}/ --dest-name {APP_UPSTREAM_NAME} --prefix-rewrite /`
-- Example on configuring routes can be found <a href='https://docs.solo.io/gloo/1.3.0/gloo_routing/hello_world/#verify-the-upstream-for-the-pet-store-application'>here</a>
+- Example on configuring routes can be found <a href='https://docs.solo.io/gloo/1.3.0/gloo_routing/hello_world/#verify-the-upstream-for-the-pet-store-application'>here</a> however remember to use the command above to add routes. 
 1. XL Deploy <br/>
 Service Name: xl-deploy-lb<br/>
 Service Port: 4516<br/>
