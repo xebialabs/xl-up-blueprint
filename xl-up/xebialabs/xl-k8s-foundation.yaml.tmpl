@@ -188,7 +188,7 @@ spec:
                   PostgreSQL: "10.5"
                 {{- else }}
                    {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (not .UseExistingStorageClasses)}}
-                    {{- if ne .K8sSetup "PlainK8SCluster"} {- if ne .K8sSetup "Openshift"}}
+                    {{- if and (ne .K8sSetup "PlainK8SCluster") ( ne .K8sSetup "Openshift")}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
                     {{- if (or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift"))}}
