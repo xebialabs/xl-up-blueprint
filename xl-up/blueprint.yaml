@@ -417,7 +417,7 @@ spec:
     - name: RabbitMQExternal
       type: Confirm
       prompt: Would you like to use an existing RabbitMQ/ActiveMQ server for XL Deploy?
-      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -426,7 +426,7 @@ spec:
     - name: RabbitMQUrl
       type: Input
       prompt: "Specify the URL of your RabbitMQ/ActiveMQ instance"
-      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
@@ -441,7 +441,7 @@ spec:
         - label: ActiveMQ
           value: org.apache.activemq.ActiveMQConnectionFactory
       prompt: "Select the type of driver you need to use to connect to your external MQ instance"
-      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      promptIf: !expr "RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "com.rabbitmq.jms.admin.RMQConnectionFactory"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -451,7 +451,7 @@ spec:
     - name: RabbitMQUsername
       type: Input
       prompt: "Specify the username for the default RabbitMQ user"
-      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       default: "guest"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -462,7 +462,7 @@ spec:
       type: SecretInput
       prompt: "Specify the password for the default RabbitMQ user"
       default: !expr "randPassword()"
-      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      promptIf: !expr "InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       revealOnSummary: true
@@ -934,13 +934,13 @@ spec:
       writeIf: !expr "MonitoringInstall"
     #rabbitmq
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/xl-rabbitmq.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/ingress.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/rbac.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/rabbitmq/configmap.yaml.tmpl
-      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      writeIf: !expr "!RabbitMQExternal && InstallXLD && K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
     #xebialabs files
     - path: generated_answers.yaml.tmpl
     - path: xebialabs.yaml.tmpl
