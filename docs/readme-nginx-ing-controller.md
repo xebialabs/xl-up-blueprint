@@ -1,6 +1,6 @@
 ##Using Custom Ingress Controller in XL UP<br/>(NGINX)
 
-Tutorial Link: <a href="https://github.com/uswitch/ingress/tree/master/deploy">NGINX Installation Guide</a>
+Tutorial Link: <a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md">NGINX Installation Guide</a>
 
 Ingress Rules:
 1. XL Deploy <br/>
