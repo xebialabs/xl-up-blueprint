@@ -12,10 +12,7 @@ data:
     {{- end}}
     UseCustomRegistry: {{.UseCustomRegistry}}
     Namespace: {{.Namespace}}
-    UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
-    {{- if .UseCustomServiceAccount }}
     ServiceAccount: {{ .ServiceAccount }}
-    {{- end }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}
     {{- if .UseCustomRegistry }}
