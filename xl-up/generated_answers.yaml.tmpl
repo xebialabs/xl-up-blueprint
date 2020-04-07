@@ -36,10 +36,8 @@ UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
 Namespace: {{.Namespace}}
 UseCustomNamespace: {{.UseCustomNamespace}}
-UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
-{{- if .UseCustomServiceAccount }}
 ServiceAccount: {{ .ServiceAccount }}
-{{- end }}
+UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}
