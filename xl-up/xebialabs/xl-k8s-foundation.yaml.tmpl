@@ -244,7 +244,7 @@ spec:
                   PostgreSQL: "10.5"
                     {{- else }}
                       {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s")}}
-                        {{- if ne .K8sSetup "PlainK8SCluster"}}
+                        {{- if and  (ne .K8sSetup "PlainK8SCluster") (ne .K8sSetup "Openshift")}}
                   K8s-StorageClass: "1.0"
                         {{- end }}
                         {{- if or (eq .K8sSetup "GoogleGKE") (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")}}
@@ -345,12 +345,15 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
+                  - name: sa-scc
+                    type: k8s.ResourcesFile
+                    file: !file kubernetes/xl-k8s-foundation/postgresql/sa-scc.yaml
                   - name: xl-PostgreSQL
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
                     file: !file kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml
                 applicationDependencies:
-                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") }}
+                  {{- if and (ne .K8sSetup "DockerDesktopK8s") (ne .K8sSetup "MinikubeK8s") (ne .K8sSetup "Openshift") }}
                     {{- if and (ne .K8sSetup "PlainK8SCluster") (not .UseExistingStorageClasses)}}
                   K8s-StorageClass: "1.0"
                     {{- end }}
