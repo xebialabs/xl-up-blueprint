@@ -143,7 +143,7 @@ spec:
           {{- if .UseCustomNamespace }}
           - Infrastructure/XEBIALABS/K8s-MASTER/{{.Namespace}}
           {{- end }}
-          {{- end }}         
+          {{- end }}
         dictionaries:
           - Environments/XEBIALABS/DICTIONARY
 ---
@@ -345,9 +345,11 @@ spec:
                 orchestrator:
                   - sequential-by-dependency
                 deployables:
-                  - name: sa-scc
+                  {{- if eq .K8sSetup "Openshift" }}
+                  - name: ServiceAccount-SCC
                     type: k8s.ResourcesFile
                     file: !file kubernetes/xl-k8s-foundation/postgresql/sa-scc.yaml
+                  {{- end }}
                   - name: xl-PostgreSQL
                     type: k8s.ResourcesFile
                     readinessProbeRetry: 120
