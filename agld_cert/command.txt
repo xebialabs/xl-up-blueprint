@@ -1,0 +1,55 @@
+gDWZaUUEwp7yQDZstUR-Z_IfpPZL_-dIErr9mlthEQN
+
+1. Generating private keys and Certificates using OpenSSL.
+
+
+openssl genrsa -out agld.key 2048
+
+openssl  req -new -key agld.key -out agld.csr -subj "/CN=agld"
+
+scp root@172.16.16.30:/etc/origin/master/ca.{crt,key} .
+
+openssl x509 -req -in agld.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out agld.crt -days 365
+
+
+
+2. Generating .kube/config file using oc (openshift client)
+
+oc login 
+
+oc config set-cluster devops-ocpm-xebialabs-com:8443 --server=https://devops-ocpm.xebialabs.com:8443 --certificate-authority='/home/oc3/agld_cert/ca.crt'
+
+oc config set-context test/devops-ocpm-xebialabs-com:8443/agld --cluster=devops-ocpm-xebialabs-com:8443 --namespace=test --user=agld/devops-ocpm-xebialabs-com:8443
+
+oc config set current-context test/devops-ocpm-xebialabs-com:8443/agld
+
+oc config set-credentials agld/devops-ocpm-xebialabs-com:8443 --client-certificate='/home/oc3/agld_cert/agld.crt' --client-key='/home/oc3/agld_cert/agld.key'
+
+Note: make sure check the file path first
+
+
+3.Generating role and rolebinding file using oc
+
+oc get  clusterrole
+oc get clusterrolebinding
+
+oc create -f <filename.yaml>
+
+oc create -f agld-user.yaml
+oc create -f agld-user_binding.yaml
+
+
+Note: Replace the certificate path with your certificate path.
+And make sure your VPN is connected.
+
+
+oc config set-cluster <cluster_nickname> [--server=<master_ip_or_fqdn>]
+[--certificate-authority=<path/to/certificate/authority>]
+
+oc config set-context <context_nickname> [--cluster=<cluster_nickname>]
+[--user=<user_nickname>] [--namespace=<namespace>]
+
+oc config set current-context <context_nickname>
+
+ oc config set-credentials <user_nickname>
+[--client-certificate=<path/to/certfile>] [--client-key=<path/to/keyfile>]

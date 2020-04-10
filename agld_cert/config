@@ -1,0 +1,28 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /home/oc3/agld_cert/ca.crt
+    server: https://devops-ocpm.xebialabs.com:8443
+  name: devops-ocpm-xebialabs-com:8443
+contexts:
+- context:
+    cluster: devops-ocpm-xebialabs-com:8443
+    namespace: default
+    user: admin/devops-ocpm-xebialabs-com:8443
+  name: default/devops-ocpm-xebialabs-com:8443/admin
+- context:
+    cluster: devops-ocpm-xebialabs-com:8443
+    namespace: test
+    user: agld/devops-ocpm-xebialabs-com:8443
+  name: test/devops-ocpm-xebialabs-com:8443/agld
+current-context: test/devops-ocpm-xebialabs-com:8443/agld
+kind: Config
+preferences: {}
+users:
+- name: admin/devops-ocpm-xebialabs-com:8443
+  user:
+    token: gDWZaUUEwp7yQDZstUR-Z_IfpPZL_-dIErr9mlthEQU
+- name: agld/devops-ocpm-xebialabs-com:8443
+  user:
+    client-certificate: /home/oc3/agld_cert/agld.crt
+    client-key: /home/oc3/agld_cert/agld.key

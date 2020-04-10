@@ -1,0 +1,13 @@
+apiVersion: authorization.openshift.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    openshift.io/reconcile-protect: "false"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: agld
+roleRef:
+  name: agld
+subjects:
+- kind: User
+  name: agld

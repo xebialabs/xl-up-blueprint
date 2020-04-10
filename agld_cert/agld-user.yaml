@@ -1,0 +1,24 @@
+apiVersion: authorization.openshift.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    authorization.openshift.io/system-only: "true"
+    openshift.io/reconcile-protect: "false"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: agld
+rules:
+- apiGroups:
+  - '*'
+  attributeRestrictions: null
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups: null
+  attributeRestrictions: null
+  nonResourceURLs:
+  - '*'
+  resources: []
+  verbs:
+  - '*'
