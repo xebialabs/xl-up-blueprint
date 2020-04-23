@@ -91,7 +91,7 @@ XldDbPass: {{ .XldDbPass }}
 EfsId: {{ .EfsId }}
 EfsRegion: {{ .EfsRegion }}
 {{- end}}
-{{- if and (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster")) (not .UseExistingStorageClasses)}}
+{{- if and (or (eq .K8sSetup "GoogleGKE" ) (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")) (not .UseExistingStorageClasses)}}
 NfsServerHost: {{ .NfsServerHost }}
 NfsSharePath: {{ .NfsSharePath }}
 {{- end}}
