@@ -36,6 +36,10 @@ UseInternalLoadBalancer: {{ .UseInternalLoadBalancer }}
 {{- end }}
 Namespace: {{.Namespace}}
 UseCustomNamespace: {{.UseCustomNamespace}}
+{{- if eq .K8sSetup "Openshift" }}
+ServiceAccount: {{ .ServiceAccount }}
+UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
+{{- end }}
 UseCustomRegistry: {{.UseCustomRegistry}}
 InstallXLD: {{ .InstallXLD }}
 InstallXLR: {{ .InstallXLR }}

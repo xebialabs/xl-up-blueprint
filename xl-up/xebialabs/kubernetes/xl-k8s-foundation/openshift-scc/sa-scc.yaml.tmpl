@@ -2,74 +2,40 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: xebialabs
+  name: {{ .ServiceAccount }}
   namespace: {{ .Namespace }}
 ---
-allowHostDirVolumePlugin: true
-allowHostIPC: true
-allowHostNetwork: true
-allowHostPID: true
-allowHostPorts: true
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: true
-allowedCapabilities:
-- '*'
-allowedUnsafeSysctls:
-- '*'
 apiVersion: security.openshift.io/v1
-defaultAddCapabilities: null
 fsGroup:
   type: RunAsAny
-groups:
-- system:cluster-admins
-- system:nodes
-- system:masters
+groups: []
 kind: SecurityContextConstraints
 metadata:
-  annotations:
-    kubernetes.io/description: 'privileged allows access to all privileged and host
-      features and the ability to run as any user, any group, any fsGroup, and with
-      any SELinux context.'
   name: xebialabs-privileged
-  namespace: xebialabs
-priority: null
-readOnlyRootFilesystem: false
-requiredDropCapabilities: null
 runAsUser:
   type: RunAsAny
 seLinuxContext:
-  type: RunAsAny
-seccompProfiles:
-- '*'
+  type: MustRunAs
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:{{ .Namespace }}:xebialabs
+- system:serviceaccount:{{ .Namespace }}:{{ .ServiceAccount }}
 volumes:
 - '*'
+{{- if not .UseExternalIngress }}
 ---
-allowHostDirVolumePlugin: false
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
-allowHostPorts: false
 allowPrivilegeEscalation: true
-allowPrivilegedContainer: false
-allowedCapabilities: null
 apiVersion: security.openshift.io/v1
-defaultAddCapabilities: null
 fsGroup:
   type: RunAsAny
 groups:
 - system:cluster-admins
 kind: SecurityContextConstraints
 metadata:
-  annotations:
-    kubernetes.io/description: anyuid provides all features of the restricted SCC
-      but allows users to run with any UID and any GID.
   name: xebialabs-anyuid
 priority: 10
-readOnlyRootFilesystem: false
 requiredDropCapabilities:
 - MKNOD
 runAsUser:
@@ -87,28 +53,18 @@ volumes:
 - persistentVolumeClaim
 - projected
 - secret
+{{- end }}
+{{- if and (eq .K8sSetup "Openshift") (not .UseExistingStorageClasses)}}
 ---
 allowHostDirVolumePlugin: true
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
-allowHostPorts: false
 allowPrivilegeEscalation: true
-allowPrivilegedContainer: false
-allowedCapabilities: null
 apiVersion: security.openshift.io/v1
-defaultAddCapabilities: null
 fsGroup:
   type: RunAsAny
 groups: []
 kind: SecurityContextConstraints
 metadata:
-  annotations:
-    kubernetes.io/description: hostmount-anyuid provides all the features of the
-      restricted SCC but allows host mounts and any UID by a pod
   name: xebialabs-hostmount-anyuid
-priority: null
-readOnlyRootFilesystem: false
 requiredDropCapabilities:
 - MKNOD
 runAsUser:
@@ -128,4 +84,5 @@ volumes:
 - persistentVolumeClaim
 - projected
 - secret
+{{- end}}
 {{- end }}

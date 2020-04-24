@@ -6,14 +6,6 @@ spec:
   environment: Environments/XEBIALABS/K8S
 ---
 {{- end }}
-{{- if eq .K8sSetup "Openshift" }}
-apiVersion: xl-deploy/v1
-kind: Deployment
-spec:
-  package: Applications/XEBIALABS/XL-K8S-FOUNDATION/Openshift-SCC/1.0
-  environment: Environments/XEBIALABS/K8S
----
-{{- end }}
 apiVersion: xl-deploy/v1
 kind: Deployment
 spec:

@@ -54,7 +54,7 @@ spec:
         prometheus.io/port: '9100'
     spec:
       {{- if eq .K8sSetup "Openshift" }}
-      serviceAccountName: xebialabs
+      serviceAccountName: {{ .ServiceAccount }}
       {{- end }}
       affinity:
         podAntiAffinity:

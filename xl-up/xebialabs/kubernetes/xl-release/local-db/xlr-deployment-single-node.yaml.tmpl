@@ -108,9 +108,6 @@ spec:
       labels:
         app: xl-release
     spec:
-      {{- if eq .K8sSetup "Openshift" }}
-      serviceAccountName: xebialabs
-      {{- end }}
       initContainers:
         {{if not .ExternalDatabase}}
         - name: wait-for-db
@@ -236,7 +233,7 @@ spec:
             name: postgresql-init-sql-xlr
             defaultMode: 0777
       {{- end }}
-  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift" ))}}
+  {{if or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster")}}
   volumeClaimTemplates:
     - metadata:
         name: repository
@@ -247,7 +244,7 @@ spec:
         storageClassName: {{.StorageClassName}}
         {{ else if eq .K8sSetup "AwsEKS" }}
         storageClassName: xebialabs-gp2-retain
-        {{else if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")}}
+        {{else if (eq .K8sSetup "PlainK8SCluster")}}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:
