@@ -230,7 +230,7 @@ spec:
             defaultMode: 0777
         {{- end }}
       {{end}}
-  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster" ))}}
+  {{if or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster" )}}
   volumeClaimTemplates:
     - metadata:
         name: repository
