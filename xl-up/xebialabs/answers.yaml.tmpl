@@ -13,8 +13,8 @@ data:
     UseCustomRegistry: {{.UseCustomRegistry}}
     Namespace: {{.Namespace}}
     {{- if eq .K8sSetup "Openshift" }}
-    UseCustomServiceAccount: {{ .UseCustomServiceAccount }}
-    ServiceAccount: {{ .ServiceAccount }}
+    UseExistingOpenshiftServiceAccount: {{ .UseExistingOpenshiftServiceAccount }}
+    OpenshiftServiceAccount: {{ .OpenshiftServiceAccount }}
     {{- end }}
     InstallXLD: {{ .InstallXLD }}
     InstallXLR: {{ .InstallXLR }}

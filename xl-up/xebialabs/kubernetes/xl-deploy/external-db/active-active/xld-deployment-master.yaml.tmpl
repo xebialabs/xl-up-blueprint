@@ -127,7 +127,7 @@ spec:
         prometheus.io/port: '9100'
     spec:
       {{- if eq .K8sSetup "Openshift" }}
-      serviceAccountName: {{ .ServiceAccount }}
+      serviceAccountName: {{ .OpenshiftServiceAccount }}
       {{- end }}
       affinity:
         podAntiAffinity:

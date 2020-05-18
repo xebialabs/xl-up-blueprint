@@ -40,7 +40,7 @@ spec:
         organization: xebialabs
     spec:
       {{- if eq .K8sSetup "Openshift" }}
-      serviceAccount: {{ .ServiceAccount }}
+      serviceAccount: {{ .OpenshiftServiceAccount }}
       {{- end }}
       initContainers:
         - name: fix-the-volume-permission

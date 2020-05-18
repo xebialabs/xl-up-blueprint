@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .ServiceAccount }}
+  name: {{ .OpenshiftServiceAccount }}
   namespace: {{ .Namespace }}
 ---
 allowPrivilegeEscalation: true
@@ -21,7 +21,7 @@ seLinuxContext:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:{{ .Namespace }}:{{ .ServiceAccount }}
+- system:serviceaccount:{{ .Namespace }}:{{ .OpenshiftServiceAccount }}
 volumes:
 - '*'
 {{- if not .UseExternalIngress }}

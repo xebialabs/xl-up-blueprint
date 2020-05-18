@@ -8,24 +8,24 @@ metadata:
   version: 1.0
 spec:
   parameters:
-    - name: UseCustomServiceAccount
+    - name: UseExistingOpenshiftServiceAccount
       type: Confirm
       prompt: "Do you want to use an existing Service Account?"
       promptIf: !expr "K8sSetup == 'Openshift'"
       default: false
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
-      description: "When using custom Service Account you have to attach An Existing Security Context Constraint."
+      overrideDefault: false
+      description: "When using existing Service Account you have to attach An Existing Security Context Constraint."
 
-    - name: ServiceAccount
+    - name: OpenshiftServiceAccount
       type: Input
       prompt: "Enter the name of the existing Service Account where the XebiaLabs DevOps Platform will be installed, updated or undeployed:"
-      promptIf: !expr "UseCustomServiceAccount"
+      promptIf: !expr "UseExistingOpenshiftServiceAccount"
       default: xebialabs
       saveInXlvals: true
       ignoreIfSkipped: true
-      overrideDefault: true
+      overrideDefault: false
       description: "Enter the name of existing Service Account to be used while deploying DevOps Platform to Openshift Cluster."
 
     - name: UseCustomRegistry
@@ -690,8 +690,8 @@ spec:
     - name: MonitoringInstall
       type: Confirm
       prompt: "Do you want to install monitoring?"
-      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
-      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
