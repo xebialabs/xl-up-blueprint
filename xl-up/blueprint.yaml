@@ -690,8 +690,8 @@ spec:
     - name: MonitoringInstall
       type: Confirm
       prompt: "Do you want to install monitoring?"
-      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
-      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s' && K8sSetup != 'Openshift'"
+      promptIf: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
+      default: !expr "K8sSetup != 'DockerDesktopK8s' && K8sSetup != 'MinikubeK8s'"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
