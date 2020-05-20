@@ -122,7 +122,7 @@ spec:
         storageClassName: xebialabs-gp2-retain
         {{else if eq .K8sSetup "GoogleGKE" }}
         storageClassName: xebialabs-standard-retain
-        {{else if eq .K8sSetup "PlainK8SCluster" }}
+        {{else if or (eq .K8sSetup "PlainK8SCluster") (eq .K8sSetup "Openshift")}}
         storageClassName: xebialabs-managed-nfs-storage
         {{else if eq .K8sSetup "AzureAKS" }}
         storageClassName: xebialabs-default-retain
