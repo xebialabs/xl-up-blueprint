@@ -8,6 +8,26 @@ metadata:
   version: 1.0
 spec:
   parameters:
+    - name: UseCustomServiceAccount
+      type: Confirm
+      prompt: "Do you want to use an existing Service Account?"
+      promptIf: !expr "K8sSetup == 'Openshift'"
+      default: false
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      overrideDefault: true
+      description: "When using custom Service Account you have to attach An Existing Security Context Constraint."
+
+    - name: ServiceAccount
+      type: Input
+      prompt: "Enter the name of the existing Service Account where the XebiaLabs DevOps Platform will be installed, updated or undeployed:"
+      promptIf: !expr "UseCustomServiceAccount"
+      default: xebialabs
+      saveInXlvals: true
+      ignoreIfSkipped: true
+      overrideDefault: true
+      description: "Enter the name of existing Service Account to be used while deploying DevOps Platform to Openshift Cluster."
+
     - name: UseCustomRegistry
       type: Confirm
       prompt: "Do you want to use custom Docker Registry and custom images?"
@@ -651,7 +671,7 @@ spec:
     - name: NfsServerHost
       type: Input
       prompt: "Enter your NFS server name or IP address:"
-      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The IP address of the NFS server which will be used for creating Kubernetes volumes for the shared folders of XL Deploy (work and export directories) or XL Release (export folder). Make sure that the your NFS instance can be reached from nodes of your Kubernetes cluster"
@@ -661,7 +681,7 @@ spec:
     - name: NfsSharePath
       type: Input
       prompt: "Enter your NFS share path:"
-      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      promptIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
       saveInXlvals: true
       ignoreIfSkipped: true
       validate: !expr "isValidAbsPath(NfsSharePath)"
@@ -854,14 +874,16 @@ spec:
       writeIf: !expr "K8sSetup == 'AzureAKS' && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/dockercred.yaml.tmpl
       writeIf: !expr "UseCustomRegistry"
+    - path: xebialabs/kubernetes/xl-k8s-foundation/openshift-scc/sa-scc.yaml.tmpl
+      writeIf: !expr "K8sSetup == 'Openshift'"
     - path: xebialabs/kubernetes/xl-k8s-foundation/postgresql/xl-postgresql.yaml.tmpl
       writeIf: !expr "!ExternalDatabase"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/rbac.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/deployment.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
     - path: xebialabs/kubernetes/xl-k8s-foundation/nfs-client-provisioner/storageclass.yaml.tmpl
-      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE') && !UseExistingStorageClasses"
+      writeIf: !expr "(K8sSetup == 'PlainK8SCluster' || K8sSetup == 'GoogleGKE' || K8sSetup == 'Openshift') && !UseExistingStorageClasses"
     #xl-deploy
     - path: xebialabs/xl-deploy.yaml.tmpl
       writeIf: !expr InstallXLD
