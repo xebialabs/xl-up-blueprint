@@ -233,7 +233,7 @@ spec:
             name: postgresql-init-sql-xlr
             defaultMode: 0777
       {{- end }}
-  {{if (or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster"))}}
+  {{if or (eq .K8sSetup "AwsEKS" ) (eq .K8sSetup "PlainK8SCluster")}}
   volumeClaimTemplates:
     - metadata:
         name: repository
@@ -244,7 +244,7 @@ spec:
         storageClassName: {{.StorageClassName}}
         {{ else if eq .K8sSetup "AwsEKS" }}
         storageClassName: xebialabs-gp2-retain
-        {{else if eq .K8sSetup "PlainK8SCluster"}}
+        {{else if (eq .K8sSetup "PlainK8SCluster")}}
         storageClassName: xebialabs-managed-nfs-storage
         {{end}}
         resources:
