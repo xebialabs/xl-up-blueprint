@@ -233,7 +233,7 @@ pipeline {
                 }
                 stage('e2e tests on Openshift') {
                     environment{
-                        OPENSHIFT_SERVER = credentials('openshift-ci-user')
+                        OPENSHIFT_SERVER = credentials('oc-ci-user')
                      }
                     agent {
                         label "xlp"
