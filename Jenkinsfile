@@ -256,7 +256,6 @@ pipeline {
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
 
-                                echo "==== Preparing e2e test for openshift"
                                 runXlUpOnOpenshift(OPENSHIFT_SERVER_USR, OPENSHIFT_SERVER_PSW)
                                 sh "rm -rf temp"
                             } catch (err) {
@@ -422,17 +421,13 @@ def runXlUpOnAks() {
 }
 
 def runXlUpOnOpenshift(String oc_user, String oc_psw){
-    echo "Running e2e on Openshift----------------------"
+    echo "Running xlup on Openshift----------------------"
     /* TODO - This URL needs to be accessed using command, similar as below */
     /*OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim() */
     OC_ENDPOINT="https://devops-ocpm.xebialabs.com:8443"
-    sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}  --insecure-skip-tls-verify"
+    sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw} --insecure-skip-tls-verify"
 
     OC_LOGIN_TOKEN = sh(script: "oc whoami -t", returnStdout: true).trim()
-
-    echo "nsf_path for oc ${env.NSF_PATH}"
-    echo "nsf server host ${NSF_SERVER_HOST}"
-    echo "token ${OC_LOGIN_TOKEN}"
 
     sh "sed -ie 's@{{OC_ENDPOINT}}@${OC_ENDPOINT}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
     sh "sed -ie 's@{{OC_TOKEN}}@${OC_LOGIN_TOKEN}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
@@ -442,7 +437,5 @@ def runXlUpOnOpenshift(String oc_user, String oc_psw){
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
-
-
 }
 
