@@ -423,6 +423,7 @@ def runXlUpOnAks() {
 
 def runXlUpOnOpenshift(String oc_user, String oc_psw){
 
+    echo "Running e2e on Openshift"
     OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim()
     sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}"
     OC_LOGIN_TOKEN = sh(script: "oc whoami -t", returnStdout: true).trim()
