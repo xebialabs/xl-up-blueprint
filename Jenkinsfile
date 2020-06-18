@@ -257,8 +257,10 @@ pipeline {
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
 
                                 echo "==== Preparing e2e test for openshift"
-                                oc_user = ${OPENSHIFT_SERVER_USR}
-                                oc_psw = ${OPENSHIFT_SERVER_PSW}
+                                oc_user = OPENSHIFT_SERVER_USR
+                                echo "==== oc user- ${oc_user}"
+                                oc_psw = OPENSHIFT_SERVER_PSW
+                                echo "==== oc psw- ${oc_psw}"
                                 runXlUpOnOpenshift(oc_user, oc_psw)
                                 sh "rm -rf temp"
                             } catch (err) {
@@ -424,16 +426,14 @@ def runXlUpOnAks() {
 }
 
 def runXlUpOnOpenshift(String oc_user, String oc_psw){
-
     echo "Running e2e on Openshift----------------------"
     OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim()
     sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}"
+
     OC_LOGIN_TOKEN = sh(script: "oc whoami -t", returnStdout: true).trim()
 
     echo "nsf_path for oc ${env.NSF_PATH}"
     echo "nsf server host ${NSF_SERVER_HOST}"
-    echo "user ${OPENSHIFT_SERVER_USR}"
-    echo "psw  ${OPENSHIFT_SERVER_PSW}"
     echo "token ${OC_LOGIN_TOKEN}"
 
     sh "sed -ie 's@{{OC_ENDPOINT}}@${OC_ENDPOINT}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
