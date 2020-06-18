@@ -257,7 +257,7 @@ pipeline {
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
 
 
-                                runXlUpOnOpenshift($OPENSHIFT_SERVER_USR, $OPENSHIFT_SERVER_PSW)
+                                runXlUpOnOpenshift(${OPENSHIFT_SERVER_USR}, ${OPENSHIFT_SERVER_PSW})
                                 sh "rm -rf temp"
                             } catch (err) {
                                 sh "rm -rf temp"
