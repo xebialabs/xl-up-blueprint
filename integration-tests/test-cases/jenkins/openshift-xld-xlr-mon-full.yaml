@@ -11,7 +11,7 @@ UseCustomRegistry: false
 InstallXLD: true
 InstallXLR: true
 XldOfficialVersion: 9.6
-XlrOfficialVersion: 9.6.0
+XlrOfficialVersion: 9.6
 ExternalDatabase: false
 RabbitMQExternal: false
 RabbitMQDriver: com.rabbitmq.jms.admin.RMQConnectionFactory
