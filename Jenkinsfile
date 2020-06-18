@@ -257,8 +257,6 @@ pipeline {
                                 sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
 
                                 echo "==== Preparing e2e test for openshift"
-                                oc_user = OPENSHIFT_SERVER_USR
-                                oc_psw = OPENSHIFT_SERVER_PSW
                                 runXlUpOnOpenshift(OPENSHIFT_SERVER_USR, OPENSHIFT_SERVER_PSW)
                                 sh "rm -rf temp"
                             } catch (err) {
@@ -425,6 +423,7 @@ def runXlUpOnAks() {
 
 def runXlUpOnOpenshift(String oc_user, String oc_psw){
     echo "Running e2e on Openshift----------------------"
+    /* TODO - This URL needs to be accessed using command, similar as below */
     /*OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim() */
     OC_ENDPOINT="https://devops-ocpm.xebialabs.com:8443"
     sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}  --insecure-skip-tls-verify"
