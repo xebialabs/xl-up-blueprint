@@ -238,7 +238,6 @@ pipeline {
                     agent {
                         label "xlp"
                     }
-
                     when {
                         expression {
                             !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
