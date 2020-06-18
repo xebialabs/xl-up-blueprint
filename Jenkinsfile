@@ -258,10 +258,8 @@ pipeline {
 
                                 echo "==== Preparing e2e test for openshift"
                                 oc_user = OPENSHIFT_SERVER_USR
-                                echo "==== oc user- ${oc_user}"
                                 oc_psw = OPENSHIFT_SERVER_PSW
-                                echo "==== oc psw- ${oc_psw}"
-                                runXlUpOnOpenshift(oc_user, oc_psw)
+                                runXlUpOnOpenshift(OPENSHIFT_SERVER_USR, OPENSHIFT_SERVER_PSW)
                                 sh "rm -rf temp"
                             } catch (err) {
                                 sh "rm -rf temp"
@@ -427,7 +425,8 @@ def runXlUpOnAks() {
 
 def runXlUpOnOpenshift(String oc_user, String oc_psw){
     echo "Running e2e on Openshift----------------------"
-    OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim()
+    /*OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim() */
+    OC_ENDPOINT="https://devops-ocpm.xebialabs.com:8443"
     sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}"
 
     OC_LOGIN_TOKEN = sh(script: "oc whoami -t", returnStdout: true).trim()
