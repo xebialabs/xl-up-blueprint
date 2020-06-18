@@ -427,7 +427,7 @@ def runXlUpOnOpenshift(String oc_user, String oc_psw){
     echo "Running e2e on Openshift----------------------"
     /*OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim() */
     OC_ENDPOINT="https://devops-ocpm.xebialabs.com:8443"
-    sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}"
+    sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw}  --insecure-skip-tls-verify"
 
     OC_LOGIN_TOKEN = sh(script: "oc whoami -t", returnStdout: true).trim()
 
