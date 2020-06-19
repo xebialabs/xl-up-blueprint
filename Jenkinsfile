@@ -230,12 +230,41 @@ pipeline {
                     }
 
                 }
+                stage('e2e tests on Openshift') {
+                    environment{
+                        OPENSHIFT_SERVER = credentials('oc-ci-user')
+                     }
+                    agent {
+                        label "xlp"
+                    }
+                    when {
+                        expression {
+                            !Branches.onMasterOrMaintenanceBranch(env.BRANCH_NAME) &&
+                                    githubLabelsPresent(this, ['run-xl-up-pr','run-xl-up-oc-e2e'])
+                        }
+                    }
 
+                    steps {
+                        script {
+                            try {
+                                sh "mkdir -p temp"
+                                dir('temp') {
+                                    unstash name: "xl-cli-linux"
+                                }
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/deployit-license.lic -u ${DIST_SERVER_CRED} -o ./deployit-license.lic"
+                                sh "curl https://dist.xebialabs.com/customer/licenses/download/v3/xl-release-license.lic -u ${DIST_SERVER_CRED} -o ./xl-release.lic"
+
+                                runXlUpOnOpenshift(OPENSHIFT_SERVER_USR, OPENSHIFT_SERVER_PSW)
+                                sh "rm -rf temp"
+                            } catch (err) {
+                                sh "rm -rf temp"
+                                throw err
+                            }
+                        }
+                    }
+                }
 
             }
-
-
-
         }
 
         stage('Run XL UP Branch Windows') {
@@ -388,3 +417,23 @@ def runXlUpOnAks() {
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
     sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/aks-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
 }
+
+def runXlUpOnOpenshift(String oc_user, String oc_psw){
+    echo "=========================== Running xlup on Openshift ================================"
+    /* TODO - This URL needs to be accessed using command, similar as below */
+    /*OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim() */
+    OC_ENDPOINT="https://devops-ocpm.xebialabs.com:8443"
+    sh "oc login ${OC_ENDPOINT} -u ${oc_user} -p ${oc_psw} --insecure-skip-tls-verify"
+
+    OC_LOGIN_TOKEN = sh(script: "oc whoami -t", returnStdout: true).trim()
+
+    sh "sed -ie 's@{{OC_ENDPOINT}}@${OC_ENDPOINT}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{OC_TOKEN}}@${OC_LOGIN_TOKEN}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{NFS_SERVER_HOST}}@${NSF_SERVER_HOST}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
+    sh "sed -ie 's@{{NFS_SHARE_PATH}}@${env.NSF_PATH}@g' integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml"
+
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml -b xl-infra -l . --seed-version ${SEED_VERSION} --skip-prompts -v"
+    sh "./temp/build/linux-amd64/xl up -d -a integration-tests/test-cases/jenkins/openshift-xld-xlr-mon-full.yaml -b xl-infra -l . --undeploy --skip-prompts"
+}
+
