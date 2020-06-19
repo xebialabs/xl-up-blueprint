@@ -38,8 +38,7 @@ pipeline {
 
             steps {
                 script {
-                    echo "Skipping integration test temporarily to verify e2e run. This will be reverted"
-                    /*try {
+                    try {
                         githubNotify context: "Testing blueprint", status: "PENDING"
                         checkout scm
                         sh "./tester --local-repo-path \$(pwd) --blueprint-directory xl-infra --test-path './integration-tests/test-cases'"
@@ -49,7 +48,7 @@ pipeline {
                         githubNotify context: "Testing blueprint", status: "FAILURE"
                         notifySlack("Testing blueprint failed", "danger")
                         throw err
-                    }*/
+                    }
                 }
 
             }
@@ -420,7 +419,7 @@ def runXlUpOnAks() {
 }
 
 def runXlUpOnOpenshift(String oc_user, String oc_psw){
-    echo "Running xlup on Openshift----------------------"
+    echo "=========================== Running xlup on Openshift ================================"
     /* TODO - This URL needs to be accessed using command, similar as below */
     /*OC_ENDPOINT = sh(script: 'kubectl config view --minify -o jsonpath=\'{.clusters[0].cluster.server}\'', returnStdout: true).trim() */
     OC_ENDPOINT="https://devops-ocpm.xebialabs.com:8443"
