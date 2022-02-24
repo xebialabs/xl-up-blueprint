@@ -1,1 +1,1 @@
-./gradlew clean build publishToMavenLocal snapshot
+./gradlew clean build publishToMavenLocal snapshot dumpVersion

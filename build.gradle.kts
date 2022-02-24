@@ -34,12 +34,14 @@ plugins {
 
 apply(plugin = "ai.digital.gradle-commit")
 
-group = "ai.digital.xlclient.opblueprints"
+group = "ai.digital.xlclient.blueprints"
 project.defaultTasks = listOf("build")
 
-val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: "22.0.0-${
-    LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))
-}"
+val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: if (project.version.toString().contains("SNAPSHOT")) {
+    project.version.toString()
+} else {
+    "22.0.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
+}
 project.extra.set("releasedVersion", releasedVersion)
 
 repositories {
@@ -75,6 +77,7 @@ tasks.named<Test>("test") {
 tasks {
     register("dumpVersion") {
         doLast {
+            project.logger.lifecycle("Dumping version $releasedVersion")
             file(buildDir).mkdirs()
             file("$buildDir/version.dump").writeText("version=${releasedVersion}")
         }
@@ -170,7 +173,7 @@ publishing {
 
     repositories {
         maven {
-            url = uri("${project.property("nexusBaseUrl")}/repositories/releases")
+            url = uri("${project.property("nexusBaseUrl")}/repositories/digitalai-public")
             credentials {
                 username = project.property("nexusUserName").toString()
                 password = project.property("nexusPassword").toString()
