@@ -134,13 +134,40 @@ tasks {
         dependsOn(named("buildOperators"), named("updateDocs"))
     }
 
-    register<Exec>("syncBlueprintsArchives") {
+    register<Exec>("copyBlueprintsArchives") {
         dependsOn("blueprintsArchives")
-        val command =
-            "ssh xebialabs@nexus1.xebialabs.cyso.net rsync -razv --delete --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='/xl-infra/***' " +
-                    "--include='/xl-up/***' --include='index.json' --include='LICENCE.txt' --exclude='*' . " +
-                    "xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/public/xl-up-blueprints/$releasedVersion"
-        commandLine(command.split(" "))
+
+        if (project.hasProperty("versionToSync") && project.property("versionToSync") != "") {
+            val versionToSync = project.property("versionToSync")
+            val commandUnzip =
+                "ssh xebialabs@nexus1.xebialabs.cyso.net " +
+                        "rm -fr /tmp/xl-up-blueprints/$versionToSync/; mkdir -p /tmp/xl-up-blueprints/$versionToSync; " +
+                        "cd /tmp/xl-up-blueprints/$versionToSync/;" +
+                        "unzip -o /opt/sonatype-work/nexus/storage/digitalai-public/ai/digital/xlclient/blueprints/xl-up-blueprints/$versionToSync/xl-up-blueprints-$versionToSync.zip"
+
+            commandLine(commandUnzip.split(" "))
+        } else {
+            commandLine("echo",
+                "You have to specify which version you want to sync, ex. ./gradlew syncBlueprintsArchives -PversionToSync=22.2.0")
+        }
+    }
+
+    register<Exec>("syncBlueprintsArchives") {
+        dependsOn("blueprintsArchives", "copyBlueprintsArchives")
+
+        if (project.hasProperty("versionToSync") && project.property("versionToSync") != "") {
+            val versionToSync = project.property("versionToSync")
+
+            val commandRsync =
+                "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='*' " +
+                        "/tmp/xl-up-blueprints/$versionToSync/ " +
+                        "xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/public/xl-up-blueprints/$versionToSync"
+
+            commandLine(commandRsync.split(" "))
+        } else {
+            commandLine("echo",
+                "You have to specify which version you want to sync, ex. ./gradlew syncBlueprintsArchives -PversionToSync=22.2.0")
+        }
     }
 
     register("syncToDistServer") {
