@@ -140,7 +140,7 @@ tasks {
         if (project.hasProperty("versionToSync") && project.property("versionToSync") != "") {
             val versionToSync = project.property("versionToSync")
             val commandUnzip =
-                "ssh xebialabs@nexus1.xebialabs.cyso.net " +
+                "ssh xebialabs@nexus.xebialabs.com " +
                         "rm -fr /tmp/xl-up-blueprints/$versionToSync/; mkdir -p /tmp/xl-up-blueprints/$versionToSync; " +
                         "cd /tmp/xl-up-blueprints/$versionToSync/;" +
                         "unzip -o /opt/sonatype-work/nexus/storage/digitalai-public/ai/digital/xlclient/blueprints/xl-up-blueprints/$versionToSync/xl-up-blueprints-$versionToSync.zip"
@@ -159,7 +159,7 @@ tasks {
             val versionToSync = project.property("versionToSync")
 
             val commandRsync =
-                "ssh xebialabs@nexus1.xebialabs.cyso.net rsync --update -raz -i --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='*' " +
+                "ssh xebialabs@nexus.xebialabs.com rsync --update -raz -i --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --include='*' " +
                         "/tmp/xl-up-blueprints/$versionToSync/ " +
                         "xldown@dist.xebialabs.com:/var/www/dist.xebialabs.com/public/xl-up-blueprints/$versionToSync"
 
