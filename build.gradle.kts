@@ -24,9 +24,9 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.4.20"
+    kotlin("jvm") version "1.8.10"
 
-    id("com.github.node-gradle.node") version "3.1.0"
+    id("com.github.node-gradle.node") version "4.0.0"
     id("idea")
     id("nebula.release") version (properties["nebulaReleasePluginVersion"] as String)
     id("maven-publish")
@@ -40,7 +40,7 @@ project.defaultTasks = listOf("build")
 val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: if (project.version.toString().contains("SNAPSHOT")) {
     project.version.toString()
 } else {
-    "22.3.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
+    "23.3.0-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))}"
 }
 project.extra.set("releasedVersion", releasedVersion)
 
@@ -75,49 +75,9 @@ tasks.named<Test>("test") {
 }
 
 tasks {
-    register("dumpVersion") {
-        doLast {
-            project.logger.lifecycle("Dumping version $releasedVersion")
-            file(buildDir).mkdirs()
-            file("$buildDir/version.dump").writeText("version=${releasedVersion}")
-        }
-    }
-
-    named<YarnTask>("yarn_install") {
-        args.set(listOf("--mutex", "network"))
-        workingDir.set(file("${rootDir}/documentation"))
-    }
-
-    register<YarnTask>("yarnRunStart") {
-        dependsOn(named("yarn_install"))
-        args.set(listOf("run", "start"))
-        workingDir.set(file("${rootDir}/documentation"))
-    }
-
-    register<YarnTask>("yarnRunBuild") {
-        dependsOn(named("yarn_install"))
-        args.set(listOf("run", "build"))
-        workingDir.set(file("${rootDir}/documentation"))
-    }
-
-    register<Delete>("docCleanUp") {
-        delete(file("${rootDir}/docs"))
-        delete(file("${rootDir}/documentation/build"))
-        delete(file("${rootDir}/documentation/.docusaurus"))
-        delete(file("${rootDir}/documentation/node_modules"))
-    }
-
-    register<Copy>("docBuild") {
-        dependsOn(named("yarnRunBuild"), named("docCleanUp"))
-        from(file("${rootDir}/documentation/build"))
-        into(file("${rootDir}/docs"))
-    }
-
-    register<GenerateDocumentation>("updateDocs") {
-        dependsOn(named("docBuild"))
-    }
 
     register<Zip>("blueprintsArchives") {
+        group = "blueprint"
         from("./") {
             include("xl-infra/**/*")
             include("xl-up/**/*")
@@ -129,12 +89,8 @@ tasks {
         }
     }
 
-
-    register<NebulaRelease>("nebulaRelease") {
-        dependsOn(named("buildOperators"), named("updateDocs"))
-    }
-
     register<Exec>("copyBlueprintsArchives") {
+        group = "blueprint-dist"
         dependsOn("blueprintsArchives")
 
         if (project.hasProperty("versionToSync") && project.property("versionToSync") != "") {
@@ -153,6 +109,7 @@ tasks {
     }
 
     register<Exec>("syncBlueprintsArchives") {
+        group = "blueprint-dist"
         dependsOn("blueprintsArchives", "copyBlueprintsArchives")
 
         if (project.hasProperty("versionToSync") && project.property("versionToSync") != "") {
@@ -171,21 +128,95 @@ tasks {
     }
 
     register("syncToDistServer") {
+        group = "blueprint-dist"
         dependsOn("syncBlueprintsArchives")
     }
 
-    named<Upload>("uploadArchives") {
-        dependsOn(named("dumpVersion"))
-        dependsOn(named("publish"))
-    }
-
-    register("buildOperators") {
+    register("buildBlueprints") {
+        group = "blueprint"
         dependsOn("blueprintsArchives")
     }
 
     register("checkDependencyVersions") {
         // a placeholder to unify with release in jenkins-job
     }
+
+    register("uploadArchives") {
+        group = "upload"
+        dependsOn("dumpVersion", "publish")
+    }
+
+    register("uploadArchivesMavenRepository") {
+        group = "upload"
+        dependsOn("dumpVersion", "publishAllPublicationsToMavenRepository")
+    }
+
+    register("uploadArchivesToMavenLocal") {
+        group = "upload"
+        dependsOn("dumpVersion", "publishToMavenLocal")
+    }
+
+    register("dumpVersion") {
+        group = "release"
+        doLast {
+            project.logger.lifecycle("Dumping version $releasedVersion")
+            file(buildDir).mkdirs()
+            file("$buildDir/version.dump").writeText("version=${releasedVersion}")
+        }
+    }
+
+    register<NebulaRelease>("nebulaRelease") {
+        group = "release"
+        dependsOn(named("buildOperators"), named("updateDocs"))
+    }
+
+    named<YarnTask>("yarn_install") {
+        group = "doc"
+        args.set(listOf("--mutex", "network"))
+        workingDir.set(file("${rootDir}/documentation"))
+    }
+
+    register<YarnTask>("yarnRunStart") {
+        group = "doc"
+        dependsOn(named("yarn_install"))
+        args.set(listOf("run", "start"))
+        workingDir.set(file("${rootDir}/documentation"))
+    }
+
+    register<YarnTask>("yarnRunBuild") {
+        group = "doc"
+        dependsOn(named("yarn_install"))
+        args.set(listOf("run", "build"))
+        workingDir.set(file("${rootDir}/documentation"))
+    }
+
+    register<Delete>("docCleanUp") {
+        group = "doc"
+        delete(file("${rootDir}/docs"))
+        delete(file("${rootDir}/documentation/build"))
+        delete(file("${rootDir}/documentation/.docusaurus"))
+        delete(file("${rootDir}/documentation/node_modules"))
+    }
+
+    register<Copy>("docBuild") {
+        group = "doc"
+        dependsOn(named("yarnRunBuild"), named("docCleanUp"))
+        from(file("${rootDir}/documentation/build"))
+        into(file("${rootDir}/docs"))
+    }
+
+    register<GenerateDocumentation>("updateDocs") {
+        group = "doc"
+        dependsOn(named("docBuild"))
+    }
+}
+
+tasks.withType<AbstractPublishToMaven> {
+    dependsOn("build")
+}
+
+tasks.named("build") {
+    dependsOn("buildBlueprints")
 }
 
 publishing {
