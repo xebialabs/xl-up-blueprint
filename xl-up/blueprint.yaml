@@ -130,7 +130,7 @@ spec:
 
     - name: XldOfficialVersion
       type: Input
-      prompt: "Choose the version of the XL Deploy:"
+      prompt: "Enter the version of the XL Deploy:"
       promptIf: !expr "!UseCustomRegistry && InstallXLD"
       saveInXlvals: true
       ignoreIfSkipped: true
@@ -173,7 +173,7 @@ spec:
 
     - name: XlrOfficialVersion
       type: Input
-      prompt: "Choose the version of the XL Release:"
+      prompt: "Enter the version of the XL Release:"
       promptIf: !expr "!UseCustomRegistry && InstallXLR"
       saveInXlvals: true
       ignoreIfSkipped: true
