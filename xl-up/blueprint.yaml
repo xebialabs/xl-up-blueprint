@@ -129,11 +129,9 @@ spec:
       description: "Timeout interval of XL Deploy masters and workers deployment. The value of this parameter is the number of retries until readiness probe check passes and not the number of seconds. The interval between each try is 5 seconds"
 
     - name: XldOfficialVersion
-      type: Select
-      prompt: "Choose the version of the XL Deploy:"
+      type: Input
+      prompt: "Enter the version of XL Deploy:"
       promptIf: !expr "!UseCustomRegistry && InstallXLD"
-      options:
-        - !expr "version('_showapplicableversions', 'xld')"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The version of both XL Deploy you would like to install"
@@ -144,18 +142,17 @@ spec:
       ignoreIfSkipped: true
       prompt: "Enter your custom XL Deploy image and tag:"
       promptIf: !expr "UseCustomRegistry && InstallXLD"
-      validate: !expr "version('checkversion', 'xld', XldVersion)"
       overrideDefault: true
       description: "This will be the XL Deploy docker image and tag that lives in your private docker registry. For example xl-deploy:9.0.3 . When using custom xebialabs docker images from your own private docker registry make sure that the tag follows Semantic Versioning (https://semver.org/)"
 
       # This question will not be asked but used to extract the tag information which will be used as version
     - name: XldTag
       type: Input
-      value: !expr "(UseCustomRegistry && InstallXLD) ? version('getversionfromtag', XldVersion) : ''"
+      prompt: "Enter the XLD image tag:"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
-      description: "Enter the XLD custom image:"
+      description: "Enter the XLD custom image (same as version from tag):"
 
     - name: InstallXLR
       type: Confirm
@@ -175,11 +172,9 @@ spec:
       description: "Timeout interval of XL Release nodes deployment. The value of this parameter is the number of retries until readiness probe check passes and not the number of seconds. The interval between each try is 5 seconds "
 
     - name: XlrOfficialVersion
-      type: Select
-      prompt: "Choose the version of the XL Release:"
+      type: Input
+      prompt: "Enter the version of XL Release:"
       promptIf: !expr "!UseCustomRegistry && InstallXLR"
-      options:
-        - !expr "version('_showapplicableversions', 'xlr')"
       saveInXlvals: true
       ignoreIfSkipped: true
       description: "The version of both XL Release you would like to install"
@@ -188,7 +183,6 @@ spec:
       type: Input
       prompt: "Enter your custom XL Release image and tag:"
       promptIf: !expr "UseCustomRegistry && InstallXLR"
-      validate: !expr "version('checkversion', 'xlr', XlrVersion)"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
@@ -197,11 +191,11 @@ spec:
       # This question will not be asked but used to extract the tag information which will be used as version
     - name: XlrTag
       type: Input
-      value: !expr "(UseCustomRegistry && InstallXLR) ? version('getversionfromtag', XlrVersion) : ''"
+      prompt: "Enter the XLR image tag:"
       saveInXlvals: true
       ignoreIfSkipped: true
       overrideDefault: true
-      description: "Enter the XLR custom image:"
+      description: "Enter the XLR custom image (same as version from tag):"
 
     - name: ExternalDatabase
       type: Confirm
