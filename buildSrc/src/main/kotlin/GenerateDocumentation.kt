@@ -7,7 +7,7 @@ open class GenerateDocumentation @Inject constructor(private val execOperations:
 
     @TaskAction
     fun doRelease() {
-        project.logger.lifecycle("Generating documentation from markdown files")
+        logger.lifecycle("Generating documentation from markdown files")
 
         execOperations.exec {
             executable = "./gradlew"

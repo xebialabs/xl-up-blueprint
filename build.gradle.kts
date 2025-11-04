@@ -38,6 +38,8 @@ group = "ai.digital.xlclient.blueprints"
 project.defaultTasks = listOf("build")
 
 val languageLevel = properties["languageLevel"] as String
+val nodeVersion = properties["nodeVersion"] as String
+val yarnVersion = properties["yarnVersion"] as String
 val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: if (project.version.toString().contains("SNAPSHOT")) {
     project.version.toString()
 } else {
@@ -168,6 +170,7 @@ tasks {
 
     register<NebulaRelease>("nebulaRelease") {
         group = "release"
+        version = releasedVersion
         dependsOn(named("buildOperators"), named("updateDocs"))
     }
 
@@ -242,7 +245,7 @@ publishing {
 }
 
 node {
-    version.set("16.13.2")
-    yarnVersion.set("1.22.17")
+    version.set(nodeVersion)
+    yarnVersion.set(yarnVersion)
     download.set(true)
 }

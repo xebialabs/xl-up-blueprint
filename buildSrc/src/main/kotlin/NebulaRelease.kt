@@ -5,11 +5,11 @@ import org.gradle.process.ExecOperations
 import javax.inject.Inject
 
 open class NebulaRelease @Inject constructor(private val execOperations: ExecOperations) : DefaultTask() {
+    var version: String = ""
 
     @TaskAction
     fun doRelease() {
-        val version = project.extra.get("releasedVersion")
-        project.logger.lifecycle("Releasing version is: $version")
+        logger.lifecycle("Releasing version is: $version")
 
         execOperations.exec {
             executable = "./gradlew"
